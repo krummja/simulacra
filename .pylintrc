@@ -1,0 +1,4 @@
+[MESSAGES CONTROL]
+disable=unused-variable
+disable=line-too-long
+disable=unused-wildcard-import
