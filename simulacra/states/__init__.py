@@ -4,12 +4,12 @@ from typing import Callable, Generic, Optional, TypeVar, TYPE_CHECKING
 import tcod
 import tcod.event
 
-if TYPE_CHECKING:
-    import tcod.console as Console
-    import tcod.context as Context
-
 from simulacra.consoles import *
 from simulacra.constants import *
+
+if TYPE_CHECKING:
+    import tcod.console as Console
+
 
 T = TypeVar("T")
 
@@ -62,12 +62,13 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
         tcod.event.K_KP_ENTER: "confirm",
     }
 
-    def loop(self, context: Context) -> Optional[T]:
+    def loop(self) -> Optional[T]:
         """Run a state-based game loop."""
 
         while True:
             self.on_draw(CONSOLES)
             context.present(CONSOLES['ROOT'])
+            
             for event in tcod.event.wait():
                 try: 
                     value = self.dispatch(event)

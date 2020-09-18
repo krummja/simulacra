@@ -107,3 +107,7 @@ class Area:
 
     def render(self, consoles: Dict[str, Console]) -> None:
         pass
+
+    def __getitem__(self, key: Tuple[int, int]) -> AreaLocation:
+        """Return the AreaLocation for an x,y index."""
+        return AreaLocation(self, *key)

@@ -3,11 +3,9 @@ from typing import TYPE_CHECKING
 
 import tcod
 from simulacra.constants import *
-context: tcod.context.Context
 
 if TYPE_CHECKING:
     import tcod.console as Console
-    import tcod.context as Context
 
 
 CONSOLES = {

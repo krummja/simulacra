@@ -8,7 +8,7 @@ from simulacra.constants import *
 from simulacra.engine.model import Model
 from simulacra.engine.area import Area
 
-from . import State
+from simulacra.states import State
 
 if TYPE_CHECKING:
     import tcod.console as Console

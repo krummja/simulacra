@@ -8,7 +8,6 @@ import tcod
 from simulacra.states.main_menu import MainMenu
 from simulacra import CONSOLES, CONSOLE_WIDTH, CONSOLE_HEIGHT, TILESET
 
-
 def main() -> None:
     with tcod.context.new_terminal(
             columns=CONSOLE_WIDTH,
@@ -19,7 +18,7 @@ def main() -> None:
         ) as context:
         
         while True:
-            MainMenu().loop(context)
+            MainMenu().loop()
 
 
 if __name__ == '__main__':
