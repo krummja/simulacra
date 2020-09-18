@@ -1,6 +1,12 @@
 from __future__ import annotations  # type: ignore
 from typing import List, TYPE_CHECKING
 
+# TODO: states.ingame
+from .queue import EventQueue
+
+if TYPE_CHECKING:
+    from .area import Area
+
 
 class Message:
     def __init__(self, text: str) -> None:
@@ -16,8 +22,11 @@ class Message:
 class Model:
     """The model contains everything from a session which should be saved."""
 
+    current_area: Area
+
     def __init__(self) -> None:
         self.log: List[Message] = []
+        self.scheduler = EventQueue()
 
     @property
     def player(self):
@@ -28,4 +37,4 @@ class Model:
 
     def loop(self) -> None:
         while True:
-            pass
+            self.scheduler.invoke_next()

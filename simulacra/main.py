@@ -1,8 +1,12 @@
+#!/usr/lib/python3.8
+
 from __future__ import annotations  # type: ignore
 from typing import TYPE_CHECKING
 
-from simulacra.consoles import *
-from simulacra.constants import *
+import tcod
+
+from simulacra.states.main_menu import MainMenu
+from simulacra import CONSOLES, CONSOLE_WIDTH, CONSOLE_HEIGHT, TILESET
 
 
 def main() -> None:
@@ -15,7 +19,7 @@ def main() -> None:
         ) as context:
         
         while True:
-            pass
+            MainMenu().loop(context)
 
 
 if __name__ == '__main__':

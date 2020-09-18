@@ -3,7 +3,7 @@ from tcod.tileset import Tileset
 
 
 TILE_SCALE: int = 16
-TILESET: Tileset = tcod.tileset.load_truetype_font("./assets/simulacra.ttf", TILE_SCALE, TILE_SCALE)
+TILESET: Tileset = tcod.tileset.load_truetype_font("./simulacra/assets/simulacra.ttf", TILE_SCALE, TILE_SCALE)
 
 CONSOLE_WIDTH: int = 110
 CONSOLE_HEIGHT: int = 55
