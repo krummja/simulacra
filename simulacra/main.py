@@ -5,8 +5,12 @@ from typing import TYPE_CHECKING
 
 import tcod
 
-from simulacra.states.main_menu import MainMenu
-from simulacra import CONSOLES, CONSOLE_WIDTH, CONSOLE_HEIGHT, TILESET
+from states.main_menu import MainMenu
+
+import globals as g
+from consoles import CONSOLES, CONSOLE_WIDTH, CONSOLE_HEIGHT, TILESET
+from constants import *
+
 
 def main() -> None:
     with tcod.context.new_terminal(
@@ -15,7 +19,7 @@ def main() -> None:
             tileset=TILESET,
             title="Simulacra",
             vsync=True
-        ) as context:
+        ) as g.context:
         
         while True:
             MainMenu().loop()

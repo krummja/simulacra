@@ -2,7 +2,7 @@ from __future__ import annotations  # type: ignore
 from typing import TYPE_CHECKING
 
 import tcod
-from simulacra.constants import *
+from constants import *
 
 if TYPE_CHECKING:
     import tcod.console as Console
@@ -12,26 +12,26 @@ CONSOLES = {
     'BACKGROUND': tcod.Console(
         CONSOLE_WIDTH,
         CONSOLE_HEIGHT,
-        order="F"
+        # order="F"
     ),
     'FOREGROUND': tcod.Console(
         CONSOLE_WIDTH,
         CONSOLE_HEIGHT,
-        order="F"
+        # order="F"
     ),
     'EFFECTS': tcod.Console(
         CONSOLE_WIDTH,
         CONSOLE_HEIGHT,
-        order="F"
+        # order="F"
     ),
     'INTERFACE': tcod.Console(
         CONSOLE_WIDTH,
         CONSOLE_HEIGHT,
-        order="F"
+        # order="F"
     ),
     'ROOT': tcod.Console(
         CONSOLE_WIDTH,
         CONSOLE_HEIGHT,
-        order="F"
+        # order="F"
     ),
 }

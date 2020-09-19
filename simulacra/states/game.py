@@ -4,20 +4,21 @@ from typing import Any, Dict, Generic, Optional, TypeVar, TYPE_CHECKING, Tuple
 import tcod
 import tcod.console as Console
 
-from simulacra.engine.actions import common
-from simulacra.engine.rendering import *
+from engine.actions import Action
+from engine.actions import common
+from engine.rendering import *
 from . import State, StateBreak
 
 if TYPE_CHECKING:
     import tcod.console as Console
-    from simulacra.engine.actions import Action
-    from simulacra.engine.model import Model
-    from simulacra.engine.item import Item
+    from engine.model import Model
+    from engine.item import Item
 
 T = TypeVar("T")
 
 
 class AreaState(Generic[T], State[T]):
+
     def __init__(self, model: Model) -> None:
         super().__init__()
         self.model = model

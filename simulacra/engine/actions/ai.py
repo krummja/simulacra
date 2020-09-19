@@ -4,12 +4,11 @@ from typing import List, Tuple, TYPE_CHECKING, Optional
 import numpy as np
 import tcod.path
 
-from simulacra.engine.actions import Action, Impossible
-from simulacra.engine.actions import common
-from simulacra.states.game import PlayerReady
+from engine.actions import Action, common, Impossible
+from states.game import PlayerReady
 
 if TYPE_CHECKING:
-    from simulacra.engine.actor import Actor
+    from engine.actor import Actor
 
 
 class AI(Action):
@@ -22,10 +21,11 @@ class PlayerControl(AI):
         event = self.actor.event
         while event is self.actor.event:
             next_action = PlayerReady(self.actor.location.area.model).loop()
+            # print("Debug in engine.actions.ai.PlayerControl")
+            # print(next_action)
             if next_action is None:
                 continue
             try:
-                # TODO: I have NO IDEA why this is misbehaving...
-                next_action.plan().act()  # type: ignore
+                next_action.plan().act()
             except Impossible as exc:
                 self.report(exc.args[0])

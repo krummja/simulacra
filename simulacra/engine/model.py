@@ -2,10 +2,10 @@ from __future__ import annotations  # type: ignore
 from typing import List, TYPE_CHECKING
 
 # TODO: states.ingame
-from .queue import EventQueue
+from engine.queue import EventQueue
 
 if TYPE_CHECKING:
-    from .area import Area
+    from engine.area import Area
 
 
 class Message:
@@ -29,8 +29,8 @@ class Model:
         self.scheduler = EventQueue()
 
     @property
-    def player(self):
-        pass
+    def player(self) -> Actor:
+        return self.current_area.player
 
     def report(self, text: str) -> None:
         pass

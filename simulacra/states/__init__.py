@@ -1,11 +1,12 @@
 from __future__ import annotations  # type: ignore
-from typing import Callable, Generic, Optional, TypeVar, TYPE_CHECKING
+from typing import Dict, Callable, Generic, Optional, TypeVar, TYPE_CHECKING
 
 import tcod
 import tcod.event
 
-from simulacra.consoles import *
-from simulacra.constants import *
+import globals as g
+from consoles import *
+from constants import *
 
 if TYPE_CHECKING:
     import tcod.console as Console
@@ -67,7 +68,7 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
 
         while True:
             self.on_draw(CONSOLES)
-            context.present(CONSOLES['ROOT'])
+            g.context.present(CONSOLES['ROOT'])
             
             for event in tcod.event.wait():
                 try: 
@@ -77,7 +78,7 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
                 if value is not None:
                     return value
 
-    def on_draw(self, console: Console) -> None:
+    def on_draw(self, consoles: Dict[str, Console]) -> None:
         raise NotImplementedError()
 
     def ev_quit(self, event: tcod.event.Quit) -> Optional[T]:

@@ -5,7 +5,7 @@ import tcod.console
 
 if TYPE_CHECKING:
     import tcod.console as Console
-    from .model import Model
+    from engine.model import Model
 
 
 def draw_main_view(model: Model, consoles: Dict[str, Console]) -> None:

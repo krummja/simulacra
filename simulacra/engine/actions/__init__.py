@@ -2,11 +2,11 @@ from __future__ import annotations  # type: ignore
 from typing import Tuple, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from simulacra.engine.actor import Actor
-    from simulacra.engine.area import Area
-    from simulacra.engine.item import Item
-    from simulacra.engine.location import Location
-    from simulacra.engine.model import Model
+    from engine.actor import Actor
+    from engine.area import Area
+    from engine.item import Item
+    from engine.location import Location
+    from engine.model import Model
 
 
 class Impossible(Exception):

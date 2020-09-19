@@ -12,8 +12,9 @@ if TYPE_CHECKING:
 
 class Actor:
     
-    def __init__(self, location: Location, ai_cls: Type[Action]) -> None:
+    def __init__(self, location: Location, fighter, ai_cls: Type[Action]) -> None:
         self.location = location
+        self.fighter = fighter
         location.area.actors.add(self)
         self.event: Optional[Event] = self.scheduler.schedule(0, self.act)
         self.ai = ai_cls(self)

@@ -4,11 +4,12 @@ from typing import Dict, Optional, TYPE_CHECKING
 import tcod
 import numpy as np
 
-from simulacra.constants import *
-from simulacra.engine.model import Model
-from simulacra.engine.area import Area
+from constants import *
+from engine.model import Model
+from engine.area import Area
+from engine.procgen.dungeon import *
 
-from simulacra.states import State
+from states import State
 
 if TYPE_CHECKING:
     import tcod.console as Console
@@ -113,7 +114,7 @@ class MainMenu(State[None]):
 
     def new_game(self) -> None:
         self.model = Model()
-        self.model.current_area = Area(self.model, STAGE_WIDTH, STAGE_HEIGHT)
+        self.model.current_area = generate(self.model, 110, 55)
         self.start()
         
     def start(self) -> None:
@@ -122,6 +123,7 @@ class MainMenu(State[None]):
             self.model.loop()
         except SystemExit:
             raise
+        self.continue_message = str(self.model)
 
     def save(self) -> None:
         pass

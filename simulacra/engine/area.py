@@ -5,16 +5,18 @@ from collections import defaultdict
 import numpy as np
 import tcod
 
-from simulacra.constants import CONSOLE_WIDTH, CONSOLE_HEIGHT
-from .actor import Actor
-from .item import Item
-from .location import Location 
-from .tile import tile_dt, Tile
+from constants import CONSOLE_WIDTH, CONSOLE_HEIGHT
+from engine.actor import Actor
+from engine.item import Item
+from engine.location import Location 
+from engine.graphic import Graphic
+from engine.tile import tile_dt, tile_graphic, Tile
 
 if TYPE_CHECKING:
     from numpy import ndarray
     import tcod.console as Console
-    from .model import Model
+    from engine.model import Model
+
 
 
 class AreaLocation(Location):
@@ -30,6 +32,8 @@ class Area:
     
     It holds the tile and entity data for that area.
     """
+
+    DARKNESS = np.asarray((0, (0, 0, 0), (0, 0, 0)), dtype=tile_graphic)
 
     player: Actor
 
@@ -74,8 +78,8 @@ class Area:
 
     def get_camera_pos(self) -> Tuple[int, int]:
         """Get the upper left XY camera position."""
-        cam_x = self.camera_pos[0] - CONSOLE_WIDTH // 2
-        cam_y = self.camera_pos[1] - CONSOLE_HEIGHT // 2
+        cam_x = self.camera_pos[0] - 110 // 2
+        cam_y = self.camera_pos[1] - 55 // 2
         return cam_x, cam_y
 
     def get_camera_view(
@@ -90,8 +94,8 @@ class Area:
         world_left = max(0, cam_x)
         world_top = max(0, cam_y)
 
-        screen_width = min(CONSOLE_WIDTH - screen_left, self.width - world_left)
-        screen_height = min(CONSOLE_HEIGHT - screen_top, self.height - world_top)
+        screen_width = min(110 - screen_left, self.width - world_left)
+        screen_height = min(55 - screen_top, self.height - world_top)
 
         screen_view = np.s_[
             screen_top : screen_top + screen_height,
@@ -106,7 +110,29 @@ class Area:
         return screen_view, world_view
 
     def render(self, consoles: Dict[str, Console]) -> None:
-        pass
+        cam_x, cam_y = self.get_camera_pos()
+
+        screen_view, world_view = self.get_camera_view(consoles)
+
+        consoles['ROOT'].tiles_rgb[screen_view] = np.select(
+            (self.visible[world_view], self.explored[world_view]),
+            (self.tiles["light"][world_view], self.tiles["dark"][world_view]),
+            self.DARKNESS,
+        )
+
+        visible_objs: Dict[Tuple[int, int], List[Graphic]] = defaultdict(list)
+        for obj in self.actors:
+            obj_x, obj_y = obj.location.x - cam_x, obj.location.y - cam_y
+            if not (0 <= obj_x < 110 and 0 <= obj_y < 55):
+                continue
+            if not self.visible[obj.location.ij]:
+                continue
+            visible_objs[obj_y, obj_x].append(obj.fighter)
+        
+        for ij, graphics in visible_objs.items():
+            graphic = min(graphics)
+            consoles['ROOT'].tiles_rgb[["ch", "fg"]][ij] = graphic.char, graphic.color
+
 
     def __getitem__(self, key: Tuple[int, int]) -> AreaLocation:
         """Return the AreaLocation for an x,y index."""
