@@ -55,6 +55,7 @@ class Room:
         index: Tuple[slice, slice] = np.s_[
             self.x1 + 1 : self.x2 - 1, self.y1 + 1 : self.y2 - 1
         ]
+        return index
 
     @property
     def center(self) -> Tuple[slice, slice]:
@@ -93,9 +94,9 @@ class Room:
 def generate(model: Model, width: int, height: int) -> Area:
     """Return a randomly generated Area."""
 
-    room_max_size = 10
-    room_min_size = 6
-    max_rooms = 30
+    room_max_size = 30
+    room_min_size = 15
+    max_rooms = 100
 
     area = Area(model, width, height)
     area.tiles[...] = WALL

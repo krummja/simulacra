@@ -114,7 +114,7 @@ class MainMenu(State[None]):
 
     def new_game(self) -> None:
         self.model = Model()
-        self.model.current_area = generate(self.model, 110, 55)
+        self.model.current_area = generate(self.model, 256, 256)
         self.start()
         
     def start(self) -> None:
