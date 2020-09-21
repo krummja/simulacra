@@ -30,26 +30,81 @@ class MainMenu(State[None]):
     def on_draw(self, consoles: Dict[str, Console]) -> None:
         draw_logo(0, 0, consoles)
 
-        character_panel = Panel(
-            position=("bottom", "center"),
-            width=20,
-            height=20,
-            vertical_offset=-4,
-            bg=(50, 50, 50)
-        )
-        character_panel.on_draw(consoles)
+        # x_center = CONSOLE_WIDTH // 2
+        # y_center = CONSOLE_HEIGHT // 2
 
-        Panel(
-            parent=character_panel,
-            position=("center", "center"),
-            width=20,
-            height=5,
-            bg=(100, 0, 0)
-        ).on_draw(consoles)
+        # for x in range(0, CONSOLE_WIDTH):
+        #     consoles['ROOT'].tiles_rgb[["bg"]][Point(x, y_center).ij] = [100, 0, 0]
+        # for y in range(0, CONSOLE_HEIGHT):
+        #     consoles['ROOT'].tiles_rgb[["bg"]][Point(x_center, y).ij] = [100, 0, 0]
+
+        # x_grid = {
+        #     0: 1,
+        #     1: (CONSOLE_WIDTH // 4) * 1,
+        #     2: (CONSOLE_WIDTH // 4) * 2,
+        #     3: (CONSOLE_WIDTH // 4) * 3,
+        #     4: (CONSOLE_WIDTH // 4) * 4
+        # }
+
+        # for x_pos in x_grid.values():
+        #     for y in range(0, CONSOLE_HEIGHT):
+        #         consoles['ROOT'].tiles_rgb[["bg"]][Point(x_pos, y).ij] = [100, 0, 0]
+
+        character_panel = Panel(position=("bottom", "center"),
+                                width=64,
+                                height=20,
+                                vertical_offset=-4,
+                                bg=(50, 50, 50))
+
+        slot1 = Panel(position=("top", "left"),
+                      parent=character_panel,
+                      width=18,
+                      height=8,
+                      margin=1,
+                      horizontal_offset=1,
+                      bg=(50, 0, 0)).on_draw(consoles)
+
+        slot2 = Panel(position=("top", "center"),
+                      parent=character_panel,
+                      width=18,
+                      height=8,
+                      margin=1,
+                      bg=(50, 0, 0)).on_draw(consoles)
+
+        slot3 = Panel(position=("top", "right"),
+                      parent=character_panel,
+                      width=18,
+                      height=8,
+                      margin=1,
+                      horizontal_offset=-1,
+                      bg=(50, 0, 0)).on_draw(consoles)
+
+        slot4 = Panel(position=("bottom", "left"),
+                      parent=character_panel,
+                      width=18,
+                      height=8,
+                      margin=1,
+                      horizontal_offset=1,
+                      bg=(50, 0, 0)).on_draw(consoles)
+
+        slot5 = Panel(position=("bottom", "center"),
+                      parent=character_panel,
+                      width=18,
+                      height=8,
+                      margin=1,
+                      bg=(50, 0, 0)).on_draw(consoles)
+
+        slot6 = Panel(position=("bottom", "right"),
+                      parent=character_panel,
+                      width=18,
+                      height=8,
+                      margin=1,
+                      horizontal_offset=-1,
+                      bg=(50, 0, 0)).on_draw(consoles)
 
         HelpText(content=[
             "[enter] select, ", 
-            "[⬆/⬇] change selection, ", 
+            "[⬆/⬇/⬅/➡] change selection, ", 
             "[n] create new, ", 
             "[d] delete, ",
             "[q] quit"

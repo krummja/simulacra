@@ -64,6 +64,10 @@ class Point(tuple):
         return self[1]
 
     @property
+    def ij(self):
+        return self[1], self[0]
+
+    @property
     def neighbors(self):
         return [self + d for d in Direction]
 

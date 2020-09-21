@@ -7,7 +7,6 @@ from constants import *
 if TYPE_CHECKING:
     import tcod.console as Console
 
-
 class Panel:
 
     def __init__(
@@ -28,38 +27,45 @@ class Panel:
         self.height = height
         self.parent = parent
 
-        if parent is None:
-            parent_top = 0
-            parent_bottom = CONSOLE_HEIGHT
-            parent_left = 0
-            parent_right = CONSOLE_WIDTH
-        else:
-            parent_top = self.parent.bounds.top
-            parent_bottom = self.parent.bounds.bottom
-            parent_left = self.parent.bounds.left
-            parent_right = self.parent.bounds.right
-
         if position is None:
             self.x = x
             self.y = y
         else:
-            if position[0] == "top":
-                self.y = parent_top + margin
-            elif position[0] == "bottom":
-                self.y = parent_bottom - self.height - margin
-            elif position[0] == "center":
-                self.y = (parent_bottom - self.height) // 2
-            
-            if position[1] == "left":
-                self.x = parent_left + margin
-            elif position[1] == "right":
-                self.x = parent_right - self.width - margin
-            elif position[1] == "center":
-                self.x = (parent_right - self.width) // 2
-                # self.x = parent_right - self.width - (self.width // 2)
+            if parent is None:
+                if position[0] == "top":
+                    self.y = 0 + margin
+                elif position[0] == "bottom":
+                    self.y = CONSOLE_HEIGHT - self.height - margin
+                elif position[0] == "center":
+                    self.y = (CONSOLE_HEIGHT - self.height) // 2
 
-        self.x = self.x + horizontal_offset
-        self.y = self.y + vertical_offset
+                if position[1] == "left":
+                    self.x = 0 + margin
+                elif position[1] == "right":
+                    self.x = CONSOLE_WIDTH - self.width - margin
+                elif position[1] == "center":
+                    self.x = (CONSOLE_WIDTH - self.width) // 2
+            else:
+                if position[0] == "top":
+                    self.y = self.parent.bounds.top + margin
+                elif position[0] == "bottom":
+                    self.y = self.parent.bounds.bottom - self.height - margin
+                elif position[0] == "center":
+                    self.y = (self.parent.bounds.bottom - (
+                              self.parent.height // 2)) - (
+                              self.height // 2)
+
+                if position[1] == "left":
+                    self.x = self.parent.bounds.left + margin
+                elif position[1] == "right":
+                    self.x = self.parent.bounds.right - self.width - margin
+                elif position[1] == "center":
+                    self.x = (self.parent.bounds.right - (
+                              self.parent.width // 2)) - (
+                              self.width // 2)
+
+        self.x += horizontal_offset
+        self.y += vertical_offset
 
         self.bounds = Rect.from_edges(
             top=self.y, 
