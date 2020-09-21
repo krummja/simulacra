@@ -74,6 +74,7 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
                 try: 
                     value = self.dispatch(event)
                 except StateBreak:
+                    print("Breaking current state...")
                     return None
                 if value is not None:
                     return value
