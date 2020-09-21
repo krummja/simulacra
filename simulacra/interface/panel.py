@@ -55,7 +55,8 @@ class Panel:
             elif position[1] == "right":
                 self.x = parent_right - self.width - margin
             elif position[1] == "center":
-                self.x = parent_right - self.width - (self.width // 2)
+                self.x = (parent_right - self.width) // 2
+                # self.x = parent_right - self.width - (self.width // 2)
 
         self.x = self.x + horizontal_offset
         self.y = self.y + vertical_offset
@@ -70,5 +71,7 @@ class Panel:
         self.fg = fg
         self.bg = bg
 
-    def on_draw(self, consoles: Dict[Console]) -> None:
+    def on_draw(self, consoles: Dict[str, Console]) -> None:
+        consoles['ROOT'].tiles_rgb[self.bounds.indices]["ch"] = 127
+        consoles['ROOT'].tiles_rgb[self.bounds.indices]["fg"] = self.bg
         consoles['ROOT'].tiles_rgb[self.bounds.indices]["bg"] = self.bg

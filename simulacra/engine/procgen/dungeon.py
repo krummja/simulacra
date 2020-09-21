@@ -23,15 +23,17 @@ if TYPE_CHECKING:
 WALL = Tile(
     move_cost=0,
     transparent=False,
-    light=(ord(" "), (255, 255, 255), (130, 110, 50)),
-    dark=(ord(" "), (255, 255, 255), (0, 0, 100))
+    char=130,
+    fg=(120, 100, 85),
+    bg=(0, 0, 0)
 )
 
 FLOOR = Tile(
     move_cost=1,
     transparent=True,
-    light=(ord(" "), (255, 255, 255), (200, 180, 50)),
-    dark=(ord(" "), (255, 255, 255), (50, 50, 150))
+    char=127,
+    fg=(75, 75, 75),
+    bg=(15, 15, 30)
 )
 
 

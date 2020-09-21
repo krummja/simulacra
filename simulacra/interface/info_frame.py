@@ -11,4 +11,24 @@ if TYPE_CHECKING:
 
 class InfoFrame(Panel):
 
-    pass
+    def __init__(
+            self,
+            x: int=0,
+            y: int=0,
+            position: Tuple[str, str]=None,
+            parent: Panel=None,
+            width: int=0,
+            height: int=0,
+            fg: Tuple[int, int, int]=(255, 255, 255),
+            bg: Tuple[int, int, int]=(0, 0, 0),
+        ) -> None:
+        super().__init__(
+            x=x,
+            y=y,
+            position=position,
+            parent=parent,
+            width=width,
+            height=height,
+            fg=fg,
+            bg=bg
+        )

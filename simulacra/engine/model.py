@@ -33,7 +33,11 @@ class Model:
         return self.current_area.player
 
     def report(self, text: str) -> None:
-        pass
+        print(text)
+        if self.log and self.log[-1].text == text:
+            self.log[-1].count += 1
+        else:
+            self.log.append(Message(text))
 
     def loop(self) -> None:
         while True:

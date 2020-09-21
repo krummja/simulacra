@@ -27,7 +27,6 @@ class AreaState(Generic[T], State[T]):
 
     def on_draw(self, consoles: Dict[str, Console]) -> None:
         draw_main_view(self.model, consoles)
-        interface_test(consoles)
 
 
 class PlayerReady(AreaState["Action"]):
@@ -63,47 +62,3 @@ class DropInventory(BaseInventoryMenu):
 class PickLocation(AreaState[Tuple[int, int]]):
     pass
 
-
-def interface_test(consoles: Dict[Console]):
-    
-    right_panel_width = 30
-    right_panel_height = CONSOLE_HEIGHT
-
-    right_panel = Panel(
-        position=("center", "right"),
-        width=right_panel_width,
-        height=right_panel_height,
-        bg=(40, 40, 40)
-    )
-    right_panel.on_draw(consoles)
-
-    Panel(position=("top", "left"),
-          parent=right_panel,
-          width=28,
-          height=10,
-          margin=1,
-          bg=(100, 40, 40)).on_draw(consoles)
-
-    Panel(position=("top", "left"),
-          parent=right_panel,
-          width=10,
-          height=10,
-          margin=1,
-          vertical_offset=11,
-          bg=(100, 100, 40)).on_draw(consoles)
-
-    Panel(position=("bottom", "right"),
-          parent=right_panel,
-          width=14,
-          height=10,
-          margin=1,
-        #   vertical_offset=11,
-          bg=(100, 40, 100)).on_draw(consoles)
-
-    Panel(position=("top", "right"),
-          parent=right_panel,
-          width=17,
-          height=20,
-          margin=1,
-          vertical_offset=11,
-          bg=(200, 0, 200)).on_draw(consoles)

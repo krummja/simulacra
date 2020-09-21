@@ -31,7 +31,6 @@ class MoveTo(ActionWithPosition):
             self.area.update_fov()
         self.actor.reschedule(100)
 
-
 class Move(ActionWithDirection):
 
     def plan(self) -> Action:

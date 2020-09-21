@@ -5,7 +5,7 @@ from collections import defaultdict
 import numpy as np
 import tcod
 
-from constants import CONSOLE_WIDTH, CONSOLE_HEIGHT
+from constants import *
 from engine.actor import Actor
 from engine.item import Item
 from engine.location import Location 
@@ -78,8 +78,8 @@ class Area:
 
     def get_camera_pos(self) -> Tuple[int, int]:
         """Get the upper left XY camera position."""
-        cam_x = self.camera_pos[0] - 110 // 2
-        cam_y = self.camera_pos[1] - 55 // 2
+        cam_x = self.camera_pos[0] - STAGE_PANEL_WIDTH // 2
+        cam_y = self.camera_pos[1] - STAGE_PANEL_HEIGHT // 2
         return cam_x, cam_y
 
     def get_camera_view(
@@ -94,8 +94,8 @@ class Area:
         world_left = max(0, cam_x)
         world_top = max(0, cam_y)
 
-        screen_width = min(110 - screen_left, self.width - world_left)
-        screen_height = min(55 - screen_top, self.height - world_top)
+        screen_width = min(STAGE_PANEL_WIDTH - screen_left, self.width - world_left)
+        screen_height = min(STAGE_PANEL_HEIGHT - screen_top, self.height - world_top)
 
         screen_view = np.s_[
             screen_top : screen_top + screen_height,
@@ -123,16 +123,20 @@ class Area:
         visible_objs: Dict[Tuple[int, int], List[Graphic]] = defaultdict(list)
         for obj in self.actors:
             obj_x, obj_y = obj.location.x - cam_x, obj.location.y - cam_y
-            if not (0 <= obj_x < 110 and 0 <= obj_y < 55):
+            if not (0 <= obj_x < STAGE_PANEL_WIDTH and 0 <= obj_y < STAGE_PANEL_HEIGHT):
                 continue
             if not self.visible[obj.location.ij]:
                 continue
+            obj.fighter.bg = self.get_bg_color(consoles, (obj.location.y, obj.location.x))
             visible_objs[obj_y, obj_x].append(obj.fighter)
-        
+
         for ij, graphics in visible_objs.items():
             graphic = min(graphics)
-            consoles['ROOT'].tiles_rgb[["ch", "fg"]][ij] = graphic.char, graphic.color
+            consoles['ROOT'].tiles_rgb[["ch", "fg", "bg"]][ij] = graphic.char, graphic.color, graphic.bg
 
+    def get_bg_color(self, consoles: Dict[str, Console], pos: Tuple[int, int]):
+        tile = self.tiles[pos[0], pos[1]]
+        return list(tile[2][1][0:3])
 
     def __getitem__(self, key: Tuple[int, int]) -> AreaLocation:
         """Return the AreaLocation for an x,y index."""
