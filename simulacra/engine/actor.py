@@ -10,14 +10,22 @@ if TYPE_CHECKING:
     from .actions import (Impossible, Action)
 
 
+# TODO: I need to reorganize this so that there is a 'data' object that holds
+# TODO: all of the character's data like name, level, etc.
 class Actor:
     
     def __init__(self, location: Location, fighter, ai_cls: Type[Action]) -> None:
         self.location = location
         self.fighter = fighter
         location.area.actors.add(self)
+
         self.event: Optional[Event] = self.scheduler.schedule(0, self.act)
         self.ai = ai_cls(self)
+
+        self.name: str = 'Aulia'
+        self.level: str = '1'
+        self.background: str = 'Commoner'
+        self.path: str = 'Fighter'
 
     def act(self, scheduler: EventQueue, event: Event) -> None:
         if event is not self.event:

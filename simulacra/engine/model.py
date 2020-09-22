@@ -1,10 +1,10 @@
 from __future__ import annotations  # type: ignore
 from typing import List, TYPE_CHECKING
 
-# TODO: states.ingame
 from engine.queue import EventQueue
 
 if TYPE_CHECKING:
+    from engine.paths.player import Player
     from engine.area import Area
 
 
@@ -29,7 +29,7 @@ class Model:
         self.scheduler = EventQueue()
 
     @property
-    def player(self) -> Actor:
+    def player(self) -> Player:
         return self.current_area.player
 
     def report(self, text: str) -> None:

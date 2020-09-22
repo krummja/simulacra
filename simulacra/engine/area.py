@@ -7,6 +7,7 @@ import tcod
 
 from constants import *
 from engine.actor import Actor
+from engine.paths.player import Player
 from engine.item import Item
 from engine.location import Location 
 from engine.graphic import Graphic
@@ -35,7 +36,7 @@ class Area:
 
     DARKNESS = np.asarray((0, (0, 0, 0), (0, 0, 0)), dtype=tile_graphic)
 
-    player: Actor
+    player: Player
 
     def __init__(self, model: Model, width: int, height: int) -> None:
         self.model: Model = model

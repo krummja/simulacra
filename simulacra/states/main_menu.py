@@ -15,6 +15,7 @@ import numpy as np
 from constants import *
 from engine.model import Model
 from engine.area import Area
+from engine.storage import Storage
 from engine.procgen.dungeon import *
 from geometry import *
 
@@ -22,6 +23,7 @@ from states import State
 from states.character_creation import CharacterCreation
 from interface.panel import Panel
 from interface.modal import Modal
+from interface.info_frame import InfoFrame
 from interface.help_text import HelpText
 from interface.logo import draw_logo
 
@@ -34,21 +36,12 @@ class MainMenu(State[None]):
     save_x: int = 0
     save_y: int = 0
 
-    SAVE_SLOTS = {
-        'slot_00': None,
-        'slot_10': None,
-        'slot_20': None,
-        'slot_01': None,
-        'slot_11': None,
-        'slot_21': None,
-    }
-
     def __init__(self) -> None:
         super().__init__()
         self.model: Optional[Model] = None
-        self.continue_message = "No characters! Please create a new one."
-        self.SAVE_FILE = f"slot_{self.save_x}{self.save_y}.sav.xz"
-
+        self.storage = Storage()
+        self.storage.load_from_file()
+            
     def on_draw(self, consoles: Dict[str, Console]) -> None:
         draw_logo(0, 0, consoles)
 
@@ -60,20 +53,32 @@ class MainMenu(State[None]):
 
         slot_inactive = (50, 0, 0)
         slot_active = (100, 0, 50)
-        slot_00_bg = slot_active if self.save_x == 0 and self.save_y == 0 else slot_inactive
-        slot_10_bg = slot_active if self.save_x == 1 and self.save_y == 0 else slot_inactive
-        slot_20_bg = slot_active if self.save_x == 2 and self.save_y == 0 else slot_inactive
-        slot_01_bg = slot_active if self.save_x == 0 and self.save_y == 1 else slot_inactive
-        slot_11_bg = slot_active if self.save_x == 1 and self.save_y == 1 else slot_inactive
-        slot_21_bg = slot_active if self.save_x == 2 and self.save_y == 1 else slot_inactive
+        slot_00_bg = slot_active if self.save_x == 0 and \
+                                    self.save_y == 0 else slot_inactive
+        slot_10_bg = slot_active if self.save_x == 1 and \
+                                    self.save_y == 0 else slot_inactive
+        slot_20_bg = slot_active if self.save_x == 2 and \
+                                    self.save_y == 0 else slot_inactive
+        slot_01_bg = slot_active if self.save_x == 0 and \
+                                    self.save_y == 1 else slot_inactive
+        slot_11_bg = slot_active if self.save_x == 1 and \
+                                    self.save_y == 1 else slot_inactive
+        slot_21_bg = slot_active if self.save_x == 2 and \
+                                    self.save_y == 1 else slot_inactive
 
-        slot00 = Panel(position=("top", "left"),
+        # TODO: This needs to be significantly cleaned up - what is the best way to access this kind of info?
+        slot00 = InfoFrame(position=("top", "left"),
                       parent=character_panel,
                       width=18,
                       height=8,
                       margin=1,
                       horizontal_offset=1,
-                      bg=slot_00_bg).on_draw(consoles)
+                      bg=slot_00_bg,
+                      name=self.storage.get_character_name(0, 0) if self.storage.save_slots['slot_00'] is not None else 'Empty',
+                      level="1",
+                      background=self.storage.get_character_background(0, 0) if self.storage.save_slots['slot_00'] is not None else 'Empty',
+                      path="",
+                      location="").on_draw(consoles)
 
         slot10 = Panel(position=("top", "center"),
                       parent=character_panel,
@@ -116,7 +121,9 @@ class MainMenu(State[None]):
         load_slot = "[enter] continue, "
         create_new = "[enter] create new, "
         HelpText(content=[
-            create_new if self.SAVE_SLOTS[f'slot_{self.save_x}{self.save_y}'] is None else load_slot, 
+            create_new if self.storage.save_slots[
+                f'slot_{self.save_x}{self.save_y}'
+            ] == 'Empty' else load_slot,
             "[⬆/⬇/⬅/➡] change selection, ", 
             "[d] delete, ",
             "[q] quit"
@@ -127,10 +134,12 @@ class MainMenu(State[None]):
         
         if key == tcod.event.K_c and self.model:
             self.start()
-        elif key == tcod.event.K_n:
-            self.new_game()
         elif key == tcod.event.K_q:
             self.cmd_quit()
+        elif key == tcod.event.K_d:
+            self.storage.del_save(self.save_x, self.save_y)
+            print(f"Deleted save file data at slot_{self.save_x}{self.save_y}")
+            self.storage.write_to_file()
         elif event.sym in self.MOVE_KEYS:
             offset_x = self.MOVE_KEYS[event.sym][0]
             offset_y = self.MOVE_KEYS[event.sym][1]
@@ -141,12 +150,12 @@ class MainMenu(State[None]):
             self.save_x = np.clip(self.save_x, 0, 2)
             self.save_y = np.clip(self.save_y, 0, 1)
 
-            self.SAVE_FILE = f"slot_{self.save_x}{self.save_y}.sav.xz"
         elif key == tcod.event.K_RETURN:
-            if self.SAVE_SLOTS[f'slot_{self.save_x}{self.save_y}'] is None:
+            if self.storage.save_slots[f'slot_{self.save_x}{self.save_y}'] is None:
                 self.new_game()
             else:
-                self.load()
+                self.model = self.storage.save_slots[f'slot_{self.save_x}{self.save_y}']
+                self.start()
         else:
             super().ev_keydown(event)
 
@@ -157,6 +166,7 @@ class MainMenu(State[None]):
         #     raise
         self.model = Model()
         self.model.current_area = generate(self.model, 256, 256)
+        self.storage.add_save(self.save_x, self.save_y, self.model)
         self.start()
         
     def start(self) -> None:
@@ -165,33 +175,5 @@ class MainMenu(State[None]):
             print("Starting up game loop.")
             self.model.loop()
         except SystemExit:
-            self.save()
+            self.storage.write_to_file()
             raise
-
-    def save(self) -> None:
-        data = pickle.dumps(self.model, protocol=4)
-        debug = f"Raw: {len(data)} bytes, "
-        data = pickletools.optimize(data)
-        debug += f"Optimized: {len(data)} bytes, "
-        data = lzma.compress(data)
-        debug += f"Compressed: {len(data)} bytes."
-        print(debug)
-        print("Game saved.")
-        with open(self.SAVE_FILE, "wb") as f:
-            f.write(data)
-
-        self.SAVE_SLOTS[f'{self.save_x}{self.save_y}'] = self.model
-
-    def load(self) -> None:
-        try:
-            with open(self.SAVE_FILE, "rb") as f:
-                self.model = pickle.loads(lzma.decompress(f.read()))
-            print(f"Loaded data from {self.SAVE_FILE}.")
-        except Exception:
-            traceback.print_exc(file=sys.stderr)
-            print("Error loading save.")
-
-    def remove_save(self) -> None:
-        if os.path.exists(self.SAVE_FILE):
-            os.remove(self.SAVE_FILE)
-

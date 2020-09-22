@@ -10,6 +10,7 @@ class Player(Fighter):
     char = ord("@")
     color = (255, 0, 255)
 
+    level = 1
     hp = 30
     power = 5
     defense = 2

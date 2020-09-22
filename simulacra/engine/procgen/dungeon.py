@@ -23,6 +23,14 @@ if TYPE_CHECKING:
 WALL = Tile(
     move_cost=0,
     transparent=False,
+    char=127,
+    fg=(120, 100, 85),
+    bg=(0, 0, 0)
+)
+
+CORNER = Tile(
+    move_cost=0,
+    transparent=False,
     char=130,
     fg=(120, 100, 85),
     bg=(0, 0, 0)
@@ -34,6 +42,15 @@ FLOOR = Tile(
     char=127,
     fg=(75, 75, 75),
     bg=(15, 15, 30)
+)
+
+
+TREE = Tile(
+    move_cost=0,
+    transparent=False,
+    char=140,
+    fg=(50, 200, 100),
+    bg=(0, 0, 0)
 )
 
 

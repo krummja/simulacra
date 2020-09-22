@@ -7,15 +7,7 @@ if TYPE_CHECKING:
     import tcod.console as Console
 
 
-class ScreenPoints:
-
-    def __init__(self, console: Console) -> None:
-        self.console = console
-
-    @property
-    def top_left(self):
-        return (0, 0)
-
-
-
-        
+class DataManager:
+    
+    def __init__(self) -> None:
+        pass

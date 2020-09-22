@@ -13,6 +13,7 @@ if TYPE_CHECKING:
 class Fighter(Graphic):
 
     render_order: int = 0
+    level: int = 0
     hp: int = 0
     power: int = 0
     defense: int = 0
