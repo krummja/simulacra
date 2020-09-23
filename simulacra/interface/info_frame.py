@@ -23,7 +23,6 @@ class InfoFrame(Panel):
             fg: Tuple[int, int, int]=(255, 255, 255),
             bg: Tuple[int, int, int]=(0, 0, 0),
             name: str="",
-            level: str="",
             background: str="",
             path: str="",
             location: str="",
@@ -41,7 +40,6 @@ class InfoFrame(Panel):
         )
 
         self.name = name
-        self.level = level
         self.background = background
         self.path = path
         self.location = location

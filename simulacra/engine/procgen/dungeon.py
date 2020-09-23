@@ -7,8 +7,7 @@ import numpy as np
 import tcod
 
 from engine.actions import ai, Action
-from engine.paths import Fighter
-from engine.paths.player import Player
+from engine.character.player import Player
 from engine.area import *
 from engine.tile import *
 from engine.graphic import *

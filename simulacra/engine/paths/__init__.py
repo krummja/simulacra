@@ -10,19 +10,5 @@ if TYPE_CHECKING:
     from engine.location import Location
 
 
-class Fighter(Graphic):
-
-    render_order: int = 0
-    level: int = 0
-    hp: int = 0
-    power: int = 0
-    defense: int = 0
-
-    def __init__(self) -> None:
-        self.alive = True
-        self.max_hp = self.hp
-    
-    @classmethod
-    def spawn(cls, location: Location, ai_cls: Optional[Type[Action]]=None) -> Actor: 
-        self = cls()
-        return Actor(location, self, ai_cls)
+class Path:
+    pass

@@ -16,34 +16,39 @@ import tcod
 import numpy as np
 
 if TYPE_CHECKING:
-    from engine.paths.player import Player
+    from engine.character.player import Player
     from engine.model import Model
 
 
 class Storage:
 
     def __init__(self) -> None:
-        self.save_slots: Dict[str, Optional[Model]] = {
-            'slot_00': None,
-            'slot_10': None,
-            'slot_20': None,
-            'slot_01': None,
-            'slot_11': None,
-            'slot_21': None,
+        self.save_slots: Dict[int, Optional[Model]] = {
+            0: None,
+            1: None,
+            2: None,
+            3: None,
+            4: None,
+            5: None,
         }
 
         self.save_file = "simulacra.sav.xz"
         self.save_time = datetime.datetime.now()
 
-    def add_save(self, x: int, y: int, model: Model) -> None:
-        if self.save_slots[f'slot_{x}{y}'] is None:
-            self.save_slots[f'slot_{x}{y}'] = model
+    def data_hook(self, index: int) -> Optional[Model]:
+        data = self.save_slots[index]
+        # TODO: Add some validation code in here.
+        return data
+
+    def add_save(self, index: int, model: Model) -> None:
+        if self.save_slots[index] is None:
+            self.save_slots[index] = model
         else:
             raise Exception("That slot currently has save data in it!")
 
-    def del_save(self, x: int, y: int) -> None:
-        if self.save_slots[f'slot_{x}{y}'] is not None:
-            self.save_slots[f'slot_{x}{y}'] = None
+    def del_save(self, index: int) -> None:
+        if self.save_slots[index] is not None:
+            self.save_slots[index] = None
         
     def write_to_file(self) -> None:
         data = pickle.dumps(self.save_slots, protocol=4)
@@ -66,16 +71,16 @@ class Storage:
             traceback.print_exc(file=sys.stderr)
             print("No save data found.")
 
-    def get_character_name(self, x: int, y: int) -> str:
-        if self.save_slots[f'slot_{x}{y}'] is not None:
-            player: Player = self.save_slots[f'slot_{x}{y}'].player
+    def get_character_name(self, index: int) -> str:
+        if self.save_slots[index] is not None:
+            player: Player = self.save_slots[index].player
             return player.name
         else:
             pass
         
-    def get_character_background(self, x: int, y: int) -> str:
-        if self.save_slots[f'slot_{x}{y}'] is not None:
-            player: Player = self.save_slots[f'slot_{x}{y}'].player
+    def get_character_background(self, index: int) -> str:
+        if self.save_slots[index] is not None:
+            player: Player = self.save_slots[index].player
             return player.background
         else:
             pass

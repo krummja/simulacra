@@ -5,6 +5,8 @@ import sys
 import traceback
 
 if TYPE_CHECKING:
+    from engine.backgrounds import Background
+    from engine.paths import Path
     from .location import Location
     from .queue import Event, EventQueue
     from .actions import (Impossible, Action)
@@ -14,18 +16,13 @@ if TYPE_CHECKING:
 # TODO: all of the character's data like name, level, etc.
 class Actor:
     
-    def __init__(self, location: Location, fighter, ai_cls: Type[Action]) -> None:
+    def __init__(self, location: Location, character, ai_cls: Type[Action]) -> None:
         self.location = location
-        self.fighter = fighter
+        self.character = character
         location.area.actors.add(self)
 
         self.event: Optional[Event] = self.scheduler.schedule(0, self.act)
         self.ai = ai_cls(self)
-
-        self.name: str = 'Aulia'
-        self.level: str = '1'
-        self.background: str = 'Commoner'
-        self.path: str = 'Fighter'
 
     def act(self, scheduler: EventQueue, event: Event) -> None:
         if event is not self.event:
@@ -38,6 +35,14 @@ class Actor:
             return self.reschedule(100)
         assert action is action.plan(), f"{action} was not fully resolved, {self}."
         action.act()
+
+    @property
+    def background(self) -> Background:
+        return self.character.background
+
+    @property
+    def path(self) -> Path:
+        return self.character.path
 
     @property
     def scheduler(self) -> EventQueue:

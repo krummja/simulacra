@@ -7,7 +7,7 @@ import tcod
 
 from constants import *
 from engine.actor import Actor
-from engine.paths.player import Player
+from engine.character.player import Player
 from engine.item import Item
 from engine.location import Location 
 from engine.graphic import Graphic

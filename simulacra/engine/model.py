@@ -4,7 +4,7 @@ from typing import List, TYPE_CHECKING
 from engine.queue import EventQueue
 
 if TYPE_CHECKING:
-    from engine.paths.player import Player
+    from engine.character.player import Player
     from engine.area import Area
 
 
