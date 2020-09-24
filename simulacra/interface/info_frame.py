@@ -11,6 +11,8 @@ if TYPE_CHECKING:
 
 class InfoFrame(Panel):
 
+    _id: int = 0
+
     def __init__(
             self,
             position: Tuple[str, str]=None,
@@ -44,6 +46,14 @@ class InfoFrame(Panel):
         self.path = path
         self.location = location
 
+    @property
+    def id(self) -> int:
+        return self._id
+
+    @id.setter
+    def id(self, value: int) -> None:
+        self._id = value
+
     def on_draw(self, consoles: Dict[str, Console]) -> None:
         consoles['ROOT'].tiles_rgb[self.bounds.indices]["bg"] = self.bg
         consoles['ROOT'].print(
@@ -57,7 +67,7 @@ class InfoFrame(Panel):
         consoles['ROOT'].print(
             x=self.x+1,
             y=self.y+2,
-            string=self.background,
+            string="",
             fg=self.fg,
             bg=self.bg
         )

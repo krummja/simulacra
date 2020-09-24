@@ -2,6 +2,7 @@ from __future__ import annotations  # type: ignore
 from typing import Dict, Tuple, TYPE_CHECKING
 
 import tcod.console
+from constants import *
 from interface.panel import Panel
 
 if TYPE_CHECKING:
@@ -17,18 +18,16 @@ def draw_main_view(model: Model, consoles: Dict[str, Console]) -> None:
     
     consoles['ROOT'].clear()
     model.current_area.render(consoles)
-    draw_log(model, consoles)
-
     
 def draw_log(model: Model, consoles: Dict[str, Console]) -> None:
-    log_width = 50
+    log_width = SIDE_PANEL_WIDTH-2
     i = 0
     
-    log_panel = Panel(position=("bottom", "left"),
-                      width=50,
+    log_panel = Panel(position=("bottom", "right"),
+                      width=log_width,
                       height=10,
                       margin=1,
-                      bg=(50, 50, 50))
+                      bg=(0, 0, 0))
     log_panel.on_draw(consoles)
     
     x = log_panel.bounds.left
@@ -39,5 +38,5 @@ def draw_log(model: Model, consoles: Dict[str, Console]) -> None:
         if i >= 10:
             break
         consoles['ROOT'].print_box(
-            x, y - i, log_width, 0, str(text), fg=(255, 255, 255), bg=(50, 50, 50)
+            x, y - i, log_width, 0, str(text), fg=(255, 255, 255), bg=(0, 0, 0)
         )

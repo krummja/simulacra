@@ -41,7 +41,9 @@ class GridMenu(Panel):
         self.rows = rows
         self.x_index: int = 0
         self.y_index: int = 0
-        self.grid_cells = np.arange(columns * rows).reshape(columns, rows) 
+        self.grid_cells = np.arange(
+            self.rows * self.columns
+        ).reshape(self.rows, self.columns)
 
     @property
     def data_source(self):
@@ -60,13 +62,17 @@ class GridMenu(Panel):
         self.x_index += offset[0]
         self.y_index += offset[1]
 
-        self.x_index = np.clip(self.x_index, 0, self.columns)
-        self.y_index = np.clip(self.y_index, 0, self.rows)
+        self.x_index = np.clip(self.x_index, 0, self.columns-1)
+        self.y_index = np.clip(self.y_index, 0, self.rows-1)
+
+    @property
+    def index_as_int(self) -> int:
+        return self.grid_cells[self.current_index]
 
     @property
     def data_at_index(self) -> int:
         if self.data_source:
-            return self.data_source.data_hook(self.grid_cells[self.current_index])
+            return self.data_source.data_hook(self.index_as_int)
         else:
             raise Exception("No data source assigned to this menu!")
 

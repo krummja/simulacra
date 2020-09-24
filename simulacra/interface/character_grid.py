@@ -47,29 +47,26 @@ class CharacterGrid(GridMenu):
 
     def make_info_frame(
             self,
+            position,
+            vertical_offset,
+            horizontal_offset,
             margin,
             fg,
             bg,
             slot,
         ) -> None:
-        position = ("top", "left")
         frame_width = self.width // self.columns - (2 * margin)
         frame_height = self.height // self.rows - (2 * margin)
-
-        # TODO: This is the tricky part... I'll need to math out how to position 
-        # TODO: ... the cells based on parent dims + rows/cols count.
-        vertical_offset = 0
-        horizontal_offset = 0
 
         # TODO: I should break this up into a separate function probably...
         slot_data: Model = self.data_source.save_slots[slot]
 
         if slot_data is not None:
-            character_name = slot_data.player.name
+            character_name = slot_data.player.character.name
             character_background = slot_data.player.background
         else:
             character_name = "<empty>"
-            character_background = ""
+            character_background = "---"
 
         new_frame = InfoFrame(
                 position=position,
@@ -84,8 +81,13 @@ class CharacterGrid(GridMenu):
                 name=character_name,
                 background=character_background
             )
+        new_frame.id = slot
         self.character_frames.append(new_frame)
 
     def on_draw(self, consoles: Dict[str, Console]) -> None:
         for frame in self.character_frames:
+            if frame.id == self.index_as_int:
+                frame.bg = (200, 100, 155)
+            else:
+                frame.bg = (50, 0, 0)
             frame.on_draw(consoles)

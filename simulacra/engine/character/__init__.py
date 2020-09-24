@@ -32,5 +32,7 @@ class Character(Graphic):
             location: Location, 
             ai_cls: Optional[Type[Action]]=None
         ) -> Actor:
-        self = cls()
+        background = None
+        path = None
+        self = cls(background, path)
         return Actor(location, self, ai_cls)

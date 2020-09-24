@@ -128,8 +128,8 @@ class Area:
                 continue
             if not self.visible[obj.location.ij]:
                 continue
-            obj.fighter.bg = self.get_bg_color(consoles, (obj.location.y, obj.location.x))
-            visible_objs[obj_y, obj_x].append(obj.fighter)
+            obj.character.bg = self.get_bg_color(consoles, (obj.location.y, obj.location.x))
+            visible_objs[obj_y, obj_x].append(obj.character)
 
         for ij, graphics in visible_objs.items():
             graphic = min(graphics)

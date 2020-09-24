@@ -6,6 +6,7 @@ import tcod.console as Console
 
 from constants import *
 from interface.panel import Panel
+from interface.frame import FramePanel
 from engine.actions import Action
 from engine.actions import common
 from engine.rendering import *
@@ -25,9 +26,17 @@ class AreaState(Generic[T], State[T]):
         super().__init__()
         self.model = model
 
+        self.side_panel = FramePanel(
+            position = ("top", "right"),
+            width = SIDE_PANEL_WIDTH,
+            height = SIDE_PANEL_HEIGHT,
+            bg=(50, 50, 50)
+        )
+
     def on_draw(self, consoles: Dict[str, Console]) -> None:
         draw_main_view(self.model, consoles)
-
+        self.side_panel.on_draw(consoles)
+        draw_log(self.model, consoles)
 
 class PlayerReady(AreaState["Action"]):
     

@@ -39,9 +39,10 @@ class MainMenu(State[None]):
         self.storage = Storage()
         self.storage.load_from_file()
 
+        # Character Menu
         self.character_menu = CharacterGrid(
             position=("bottom", "center"),
-            width=64,
+            width=62,
             height=20,
             vertical_offset=-4,
             bg=(50, 50, 50),
@@ -49,25 +50,85 @@ class MainMenu(State[None]):
             rows=2,
         )
         self.character_menu.data_source = self.storage
+
+        # SLOT 0
         self.character_menu.make_info_frame(
+            position=("top", "left"),
+            vertical_offset=0,
+            horizontal_offset=0,
             margin=1,
             fg=(255, 255, 255),
             bg=(100, 0, 0),
             slot=0
         )
 
-        load_slot = "[enter] continue, "
-        create_new = "[enter] create new, "
-        self.help_text = HelpText(content=[
-            # TODO: Fix load/create
-            "[⬆/⬇/⬅/➡] change selection, ", 
-            "[d] delete, ",
-            "[q] quit"
-        ])
+        # SLOT 1
+        self.character_menu.make_info_frame(
+            position=("top", "center"),
+            vertical_offset=0,
+            horizontal_offset=0,
+            margin=1,
+            fg=(255, 255, 255),
+            bg=(100, 0, 0),
+            slot=1
+        )
+
+        # SLOT 2
+        self.character_menu.make_info_frame(
+            position=("top", "right"),
+            vertical_offset=0,
+            horizontal_offset=0,
+            margin=1,
+            fg=(255, 255, 255),
+            bg=(100, 0, 0),
+            slot=2
+        )
+
+        # SLOT 3
+        self.character_menu.make_info_frame(
+            position=("bottom", "left"),
+            vertical_offset=0,
+            horizontal_offset=0,
+            margin=1,
+            fg=(255, 255, 255),
+            bg=(100, 0, 0),
+            slot=3
+        )
+
+        # SLOT 4
+        self.character_menu.make_info_frame(
+            position=("bottom", "center"),
+            vertical_offset=0,
+            horizontal_offset=0,
+            margin=1,
+            fg=(255, 255, 255),
+            bg=(100, 0, 0),
+            slot=4
+        )
+
+        # SLOT 5
+        self.character_menu.make_info_frame(
+            position=("bottom", "right"),
+            vertical_offset=0,
+            horizontal_offset=0,
+            margin=1,
+            fg=(255, 255, 255),
+            bg=(100, 0, 0),
+            slot=5
+        )
 
     def on_draw(self, consoles: Dict[str, Console]) -> None:
         draw_logo(0, 0, consoles)
 
+        load_slot = "[enter] continue, "
+        create_new = "[enter] create new, "
+        self.help_text = HelpText(content=[
+            load_slot if self.storage.save_slots[self.character_menu.index_as_int] is not None else create_new,
+            "[⬆/⬇/⬅/➡] change selection, ", 
+            "[d] delete, ",
+            "[q] quit"
+        ])
+        
         self.character_menu.on_draw(consoles)
         self.help_text.on_draw(consoles)
 
@@ -78,9 +139,11 @@ class MainMenu(State[None]):
             self.cmd_quit()
 
         elif key == tcod.event.K_d:
-            # TODO: FIX ME
-            # self.storage.del_save(self.character_menu.current_index)
-            # print(f"Deleted save file data at slot_{self.character_menu.current_index}")
+            index = self.character_menu.index_as_int
+            if self.storage.save_slots[index] is not None:
+                self.storage.save_slots[index] = None
+                self.character_menu.character_frames[index].name = "<Empty>"
+                self.character_menu.character_frames[index].background = ""                
             self.storage.write_to_file()
 
         elif event.sym in self.MOVE_KEYS:
@@ -95,7 +158,7 @@ class MainMenu(State[None]):
             if menu_data is None:
                 self.new_game()
             else:
-                index = self.character_menu.current_index
+                index = self.character_menu.index_as_int
                 self.model = self.storage.save_slots[index]
                 self.start()
 
@@ -106,13 +169,13 @@ class MainMenu(State[None]):
 
     def new_game(self) -> None:
         try:
-            CharacterCreation().loop()
+            self.model = Model()
+            self.model.current_area = generate(self.model, 256, 256)
+            self.storage.add_save(self.character_menu.index_as_int, self.model)
+            self.start()
+            # CharacterCreation(self.storage).loop()
         except SystemExit:
             raise
-        # self.model = Model()
-        # self.model.current_area = generate(self.model, 256, 256)
-        # self.storage.add_save(self.save_x, self.save_y, self.model)
-        # self.start()
         
     def start(self) -> None:
         assert self.model
@@ -125,9 +188,10 @@ class MainMenu(State[None]):
 
 class CharacterCreation(State[None]):
 
-    def __init__(self) -> None:
+    def __init__(self, storage: Storage) -> None:
         super().__init__()
         self.model: Optional[Model] = None
+        self.storage = storage
     
     def on_draw(self, consoles: Dict[str, Console]) -> None:
         consoles['ROOT'].clear()
@@ -152,5 +216,20 @@ class CharacterCreation(State[None]):
         else:
             super().ev_keydown(event)
 
-    def start(self) -> None:
-        pass
+
+class PathSelection(State[None]):
+
+    def __init__(self, model: Model) -> None:
+        super().__init__()
+        self.model = model
+
+    def on_draw(self, consoles: Dict[str, Console]) -> None:
+        consoles['ROOT'].clear()
+
+    def ev_keydown(self, event: tcod.event.KeyDown):
+        key = event.sym
+
+        if key == tcod.event.K_q:
+            self.cmd_quit()
+        else:
+            super().ev_keydown(event)

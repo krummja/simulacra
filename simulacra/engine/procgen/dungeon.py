@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 WALL = Tile(
     move_cost=0,
     transparent=False,
-    char=127,
+    char=130,
     fg=(120, 100, 85),
     bg=(0, 0, 0)
 )
