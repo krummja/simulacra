@@ -15,7 +15,7 @@
    viewBox="0 0 264.58333 264.58334"
    version="1.1"
    id="svg8"
-   sodipodi:docname="TEMPLATE.svg"
+   sodipodi:docname="floor_dot.svg"
    inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
   <defs
      id="defs2" />
@@ -26,16 +26,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.32"
-     inkscape:cx="600.15068"
-     inkscape:cy="764.81091"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="407.61478"
+     inkscape:cy="558.83723"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      units="px"
      showguides="false"
      inkscape:guide-bbox="true"
-     inkscape:window-width="1287"
+     inkscape:window-width="941"
      inkscape:window-height="1032"
      inkscape:window-x="1090"
      inkscape:window-y="1142"
@@ -77,7 +77,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -96,19 +96,25 @@
        height="1937.4115"
        width="1937.4115" />
     <path
-       style="fill:#000000;fill-opacity:1;stroke-width:0.26458332"
+       style="fill:#ff0000;fill-opacity:1;stroke-width:0.26458332"
        d="m 82.68229,-199.09376 v 16.53646 h 16.536464 v -16.53646 z m 16.536464,16.53646 v 16.53646 h 16.536456 v -16.53646 z m 16.536456,0 h 16.53645 v -16.53646 h -16.53645 z m 16.53645,0 v 16.53646 h 16.53646 v -16.53646 z m 16.53646,0 h 16.53646 v -16.53646 h -16.53646 z m 16.53646,0 v 16.53646 h 16.53646 v -16.53646 z m 0,16.53646 h -16.53646 v 16.53646 h 16.53646 z m 0,16.53646 v 16.53646 h 16.53646 v -16.53646 z m 0,16.53646 h -16.53646 v 16.53646 h 16.53646 z m 0,16.53646 v 16.536458 h 16.53646 v -16.536458 z m -33.07292,-49.60937 v 16.53645 l -16.53645,10e-6 v -16.53647 z m 0,16.53645 16.53646,10e-6 v 16.53645 l -16.53646,0 z"
        id="rect1931"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" />
     <path
        id="rect1934-2"
-       style="fill:#000000;fill-opacity:1;stroke-width:0.26458332"
-       d="m 16.536455,-116.41147 h 16.536459 v 16.536456 H 16.536455 Z m 0,-33.07292 h 16.536459 v 16.53646 H 16.536455 Z m 0,-33.07291 h 16.536459 v 16.53646 H 16.536455 Z m 16.536461,82.682285 h 16.536459 v 16.536459 H 33.072916 Z m 16.536457,-16.536455 h 16.536459 v 16.536456 H 49.609373 Z m -16.536457,-16.53645 h 16.536459 v 16.53646 H 33.072916 Z m 16.536457,-16.53647 h 16.536459 v 16.53646 H 49.609373 Z m -16.536449,-16.53645 h 16.536459 v 16.53646 H 33.072924 Z m 16.536453,-16.53646 h 16.536459 v 16.53646 H 49.609377 Z m -16.536461,-16.53645 h 16.536459 v 16.53646 H 33.072916 Z"
+       style="fill:#ff0000;fill-opacity:1;stroke-width:0.26458332"
+       d="m 33.07291,-83.338557 h 16.536459 v 16.536459 H 33.07291 Z m 0,-33.072913 h 16.536459 v 16.536458 H 33.07291 Z m 0,-33.07292 h 16.536459 v 16.53646 H 33.07291 Z m 16.536461,82.682291 H 66.14583 V -50.26564 H 49.609371 Z m 16.536457,-16.536458 h 16.536459 v 16.536459 H 66.145828 Z M 49.609371,-99.875007 H 66.14583 v 16.536459 H 49.609371 Z m 16.536457,-16.536463 h 16.536459 v 16.536458 H 66.145828 Z m -16.536449,-16.53645 h 16.536459 v 16.53645 H 49.609379 Z m 16.536453,-16.53646 h 16.536459 v 16.53646 H 66.145832 Z M 49.609371,-166.02084 H 66.14583 v 16.53646 H 49.609371 Z"
        inkscape:connector-curvature="0" />
     <path
        id="rect1934-75"
-       style="fill:#000000;fill-opacity:1;stroke-width:0.26458332"
+       style="fill:#ff0000;fill-opacity:1;stroke-width:0.26458332"
        d="m -66.145836,-182.55731 h 16.536459 v 16.53646 h -16.536459 z m 33.072914,33.07292 h 16.536459 v 16.53646 h -16.536459 z m 16.536459,16.53645 H -3.8146973e-6 v 16.53646 H -16.536463 Z m -66.145834,-66.14583 h 16.536459 v 16.53646 h -16.536459 z m 33.072918,33.07293 h 16.536459 v 16.53646 h -16.536459 z m 16.536457,-16.53647 h 16.536459 v 16.53646 h -16.536459 z m 16.536459,16.53647 H -3.8146973e-6 v 16.53646 H -16.536463 Z m -33.072916,-33.07293 h 16.536459 v 16.53646 h -16.536459 z m 33.072916,0 H -3.8146973e-6 v 16.53646 H -16.536463 Z" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:0.12065"
+       id="path1121"
+       cx="132.29167"
+       cy="164.78096"
+       r="15.081251" />
   </g>
 </svg>

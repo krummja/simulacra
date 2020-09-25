@@ -22,3 +22,6 @@ class Architect:
 
     def build_stage(self) -> Iterable[str]:
         pass
+
+    def can_carve(self, architecture, pos) -> bool:
+        pass

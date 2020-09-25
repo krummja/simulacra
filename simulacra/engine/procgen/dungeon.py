@@ -4,6 +4,7 @@ from typing import Iterator, List, Tuple, Type, TYPE_CHECKING
 import random
 
 import numpy as np
+from numpy import ndarray
 import tcod
 
 from engine.actions import ai, Action
@@ -11,46 +12,15 @@ from engine.character.player import Player
 from engine.area import *
 from engine.tile import *
 from engine.graphic import *
+from engine.tile_maps import *
+from engine.hues import COLOR
+from engine.model import Model
 import engine.tile_maps
 
 if TYPE_CHECKING:
     from engine.actor import Actor
     from engine.location import Location
     from engine.model import Model
-
-
-WALL = Tile(
-    move_cost=0,
-    transparent=False,
-    char=130,
-    fg=(120, 100, 85),
-    bg=(0, 0, 0)
-)
-
-CORNER = Tile(
-    move_cost=0,
-    transparent=False,
-    char=130,
-    fg=(120, 100, 85),
-    bg=(0, 0, 0)
-)
-
-FLOOR = Tile(
-    move_cost=1,
-    transparent=True,
-    char=127,
-    fg=(75, 75, 75),
-    bg=(15, 15, 30)
-)
-
-
-TREE = Tile(
-    move_cost=0,
-    transparent=False,
-    char=140,
-    fg=(50, 200, 100),
-    bg=(0, 0, 0)
-)
 
 
 class Room:
@@ -95,7 +65,11 @@ class Room:
         other_x, other_y = other.center
         return abs(other_x - x) + abs(other_y - y)
 
-    def get_free_spaces(self, area: Area, number: int) -> Iterator[Tuple[int, int]]:
+    def get_free_spaces(
+            self,
+            area: Area, 
+            number: int
+        ) -> Iterator[Tuple[int, int]]:
         """Iterate over the x,y coordinates up to `number` spaces."""
         for _ in range(number):
             x = random.randint(self.x1 + 1, self.x2 - 2)
@@ -117,7 +91,7 @@ def generate(model: Model, width: int, height: int) -> Area:
     max_rooms = 100
 
     area = Area(model, width, height)
-    area.tiles[...] = WALL
+    area.tiles[...] = WALL_01
     rooms: List[Room] = []
 
     for i in range(max_rooms):
@@ -154,4 +128,89 @@ def generate(model: Model, width: int, height: int) -> Area:
     area.player = Player.spawn(area[rooms[0].center], ai_cls=ai.PlayerControl)
 
     area.update_fov()
+    return area
+
+
+BASE_MAP = np.array([
+    "#######################",
+    '#.....................#',
+    '#...C.............C...#',
+    'w.....................w',
+    '#...C.............C...#',
+    'w.....................w',
+    '#...C.............C...#',
+    'w.....................w',
+    '#...C.............C...#',
+    'w.....................w',
+    '#...C.............C...#',
+    'w.....................w',
+    '#...C.............C...#',
+    'w.....................w',
+    '#...C.............C...#',
+    'w.....................w',
+    '#...C.............C...#',
+    'w.....................w',
+    '#...C.............C...#',
+    'w.....................w',
+    '#...C.............C...#',
+    'w.....................w',
+    '#...C.............C...#',
+    '#.....................#',
+    '##ww##ww##   ##ww##ww##',
+])
+
+rules = [
+    ('#', WALL_01),
+    ('.', FLOOR),
+    ('C', BARE_WALL_02),
+    ('G', FLOOR_GRATE_01),
+    ('c', CLUTTER_01),
+    ('w', WINDOW_01)
+]
+
+def process_map(
+        area: Area, 
+        base: ndarray, 
+        rules: List[Tuple[str, Tile]]
+    ) -> ndarray:
+    """Iterate through an 1D array consisting of char strings and replace
+    for Tile instances based on a supplied list of rewrite rules."""
+    height: int = base.shape[0]
+    row: int = 0
+    for line in base:
+        width: int = len(line)
+        col: int = 0
+        if row <= height:
+            for char in line:
+                if col <= width:
+                    for rule in rules:
+                        if char == rule[0]:
+                            area.tiles[row, col] = rule[1]
+                    col += 1
+            row += 1
+    return area
+
+
+# TODO: Oh now this is a neat idea - can I do rewrite rules based on broadcasting
+# TODO: an entire array to a subset of a larger array?
+
+array_rules = [
+    (
+        np.array(['###', '#.#', '###']),  # target template
+        # some replacement
+    )
+]
+
+map_test = process_map(Area(Model(), 50, 50), BASE_MAP, rules)
+
+def test_area(model: Model) -> Area:
+    area = Area(model, 110, 55)
+
+    test_room = Room(0, 0, 20, 20)
+    area.tiles[...] = FLOOR
+    process_map(area, BASE_MAP, rules)
+
+    area.player = Player.spawn(area[test_room.center], ai_cls=ai.PlayerControl)
+    area.update_fov()
+
     return area

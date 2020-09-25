@@ -123,7 +123,9 @@ class MainMenu(State[None]):
         load_slot = "[enter] continue, "
         create_new = "[enter] create new, "
         self.help_text = HelpText(content=[
-            load_slot if self.storage.save_slots[self.character_menu.index_as_int] is not None else create_new,
+            load_slot if self.storage.save_slots[
+                self.character_menu.index_as_int
+            ] is not None else create_new,
             "[⬆/⬇/⬅/➡] change selection, ", 
             "[d] delete, ",
             "[q] quit"
@@ -170,7 +172,8 @@ class MainMenu(State[None]):
     def new_game(self) -> None:
         try:
             self.model = Model()
-            self.model.current_area = generate(self.model, 256, 256)
+            # self.model.current_area = generate(self.model, 256, 256)
+            self.model.current_area = test_area(self.model)
             self.storage.add_save(self.character_menu.index_as_int, self.model)
             self.start()
             # CharacterCreation(self.storage).loop()
