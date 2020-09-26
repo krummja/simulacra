@@ -9,6 +9,8 @@ import tcod
 
 from engine.actions import ai, Action
 from engine.character.player import Player
+from engine.character import Character
+from engine.character.neutral import *
 from engine.area import *
 from engine.tile import *
 from engine.graphic import *
@@ -80,7 +82,12 @@ class Room:
 
     def place_entities(self, area: Area) -> None:
         """Spawn entities within this room."""
-        pass
+        npcs = random.randint(0, 3)
+        items_spawned = random.randint(0, 2)
+        for xy in self.get_free_spaces(area, npcs):
+            monster_cls: Type[Character]
+            monster_cls = NPC
+            monster_cls.spawn(area[xy])
 
 
 def generate(model: Model, width: int, height: int) -> Area:
@@ -211,6 +218,9 @@ def test_area(model: Model) -> Area:
     process_map(area, BASE_MAP, rules)
 
     area.player = Player.spawn(area[test_room.center], ai_cls=ai.PlayerControl)
+
+    test_room.place_entities(area)
+
     area.update_fov()
 
     return area

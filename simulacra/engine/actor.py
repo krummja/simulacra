@@ -4,6 +4,8 @@ from typing import Optional, Type, TYPE_CHECKING
 import sys
 import traceback
 
+from engine.actions import Impossible
+
 if TYPE_CHECKING:
     from engine.backgrounds import Background
     from engine.paths import Path

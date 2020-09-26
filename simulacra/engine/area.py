@@ -3,11 +3,14 @@ from typing import Dict, List, NamedTuple, Optional, Tuple, TYPE_CHECKING, Set
 from collections import defaultdict
 
 import numpy as np
+import time
 import tcod
 
 from constants import *
+from engine.particles import *
 from engine.actor import Actor
 from engine.character.player import Player
+from engine.character.neutral import *
 from engine.item import Item
 from engine.location import Location 
 from engine.graphic import Graphic
@@ -51,6 +54,8 @@ class Area:
         self.actors: Set[Actor] = set()
         self.items: Dict[Tuple[int, int], List[Item]] = {}
         self.camera_pos: Tuple[int, int] = (0, 0)
+
+        self.particle_system = ParticleSystem(30, 30)
 
     def is_blocked(self, x: int, y: int) -> bool:
         """Return True if this position is impassable."""

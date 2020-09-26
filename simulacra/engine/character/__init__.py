@@ -8,6 +8,7 @@ from __future__ import annotations  # type: ignore
 from typing import Optional, Type, TYPE_CHECKING
 
 from engine.actor import Actor
+from engine.actions.ai import *
 from engine.graphic import *
 
 if TYPE_CHECKING:
@@ -20,6 +21,8 @@ class Character(Graphic):
     
     render_order: int = 0
     
+    DEFAULT_AI: Type[Action] = BasicNPC
+
     def __init__(self, background, path) -> None:
         self.alive = True
         self.name = "<No Name>"
@@ -35,4 +38,4 @@ class Character(Graphic):
         background = None
         path = None
         self = cls(background, path)
-        return Actor(location, self, ai_cls)
+        return Actor(location, self, ai_cls or cls.DEFAULT_AI)
