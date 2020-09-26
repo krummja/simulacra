@@ -139,23 +139,23 @@ def generate(model: Model, width: int, height: int) -> Area:
 
 
 BASE_MAP = np.array([
-    "#######################",
+    "##wwwww##wwwww##wwwww##",
     '#.....................#',
-    '#...C.............C...#',
+    '#...C......A......C...#',
     'w.....................w',
     '#...C.............C...#',
     'w.....................w',
     '#...C.............C...#',
     'w.....................w',
-    '#...C.............C...#',
-    'w.....................w',
-    '#...C.............C...#',
-    'w.....................w',
-    '#...C.............C...#',
-    'w.....................w',
-    '#...C.............C...#',
-    'w.....................w',
-    '#...C.............C...#',
+    '#...C......M......C...#',
+    'w.......M..M..M.......w',
+    '#...C....M.M.M....C...#',
+    'w.........MMM.........w',
+    '#...C..MMMMMMMMM..C...#',
+    'w.........MMM.........w',
+    '#...C....M.M.M....C...#',
+    'w.......M..M..M.......w',
+    '#...C......M......C...#',
     'w.....................w',
     '#...C.............C...#',
     'w.....................w',
@@ -166,13 +166,19 @@ BASE_MAP = np.array([
     '##ww##ww##   ##ww##ww##',
 ])
 
+data_path = './simulacra/engine/procgen/map_test.csv'
+BASE_MAP_2 = np.genfromtxt(data_path, delimiter=',', dtype=str)
+
 rules = [
-    ('#', WALL_01),
-    ('.', FLOOR),
-    ('C', BARE_WALL_02),
+    ('W', WALL_01),
+    ('M', EMBOSSED_FLOOR_01),
+    ('.', FLOOR_02),
+    ('C', CLEAR),
     ('G', FLOOR_GRATE_01),
     ('c', CLUTTER_01),
-    ('w', WINDOW_01)
+    ('w', WINDOW_01),
+    ('A', ALTAR_01),
+    ('D', DOOR_01)
 ]
 
 def process_map(
@@ -192,30 +198,35 @@ def process_map(
                 if col <= width:
                     for rule in rules:
                         if char == rule[0]:
-                            area.tiles[row, col] = rule[1]
+                            area.tiles[row+20, col+20] = rule[1]
                     col += 1
             row += 1
     return area
-
-
-# TODO: Oh now this is a neat idea - can I do rewrite rules based on broadcasting
-# TODO: an entire array to a subset of a larger array?
-
-array_rules = [
-    (
-        np.array(['###', '#.#', '###']),  # target template
-        # some replacement
-    )
-]
 
 map_test = process_map(Area(Model(), 50, 50), BASE_MAP, rules)
 
 def test_area(model: Model) -> Area:
     area = Area(model, 110, 55)
 
-    test_room = Room(0, 0, 20, 20)
-    area.tiles[...] = FLOOR
-    process_map(area, BASE_MAP, rules)
+    test_room = Room(20, 20, 20, 20)
+    area.tiles[...] = FLOOR_01
+
+    for x in range(area.width):
+        for y in range(area.height):
+            roll1 = random.randint(0, 100)
+            if roll1 < 20:
+                area.tiles[y, x] = TREE
+            roll2 = random.randint(0, 100)
+            if roll2 < 15:
+                area.tiles[y, x] = CLUTTER_01
+            roll3 = random.randint(0, 100)
+            if roll3 < 2:
+                area.tiles[y, x] = BOULDER_02
+            roll4 = random.randint(0, 100)
+            if roll4 < 2:
+                area.tiles[y, x] = BOULDER_01
+
+    process_map(area, BASE_MAP_2, rules)
 
     area.player = Player.spawn(area[test_room.center], ai_cls=ai.PlayerControl)
 

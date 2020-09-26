@@ -10,6 +10,7 @@ from constants import *
 from engine.particles import *
 from engine.actor import Actor
 from engine.character.player import Player
+from engine.hues import COLOR
 from engine.character.neutral import *
 from engine.item import Item
 from engine.location import Location 
@@ -37,7 +38,7 @@ class Area:
     It holds the tile and entity data for that area.
     """
 
-    DARKNESS = np.asarray((0, (0, 0, 0), (0, 0, 0)), dtype=tile_graphic)
+    DARKNESS = np.asarray((0, COLOR['eclipse'], COLOR['black']), dtype=tile_graphic)
 
     player: Player
 
@@ -55,6 +56,8 @@ class Area:
         self.items: Dict[Tuple[int, int], List[Item]] = {}
         self.camera_pos: Tuple[int, int] = (0, 0)
 
+        self.fov_radius = 8
+
         self.particle_system = ParticleSystem(30, 30)
 
     def is_blocked(self, x: int, y: int) -> bool:
@@ -68,6 +71,10 @@ class Area:
 
         return False
 
+    def get_fov_light_attenuation(self, ox: int, oy: int, factor: float=1.0):
+        px, py = self.player.location.xy
+        return factor * ((px - ox) ** 2 + (py - oy) ** 2) / self.fov_radius
+
     def update_fov(self) -> None:
         """Update the player's fiew of view."""
         if not self.player.location:
@@ -75,7 +82,7 @@ class Area:
         self.visible = tcod.map.compute_fov(
             transparency=self.tiles["transparent"],
             pov=self.player.location.ij,
-            radius=20,
+            radius=10,
             light_walls=True,
             algorithm=tcod.FOV_RESTRICTIVE
         )
@@ -129,11 +136,15 @@ class Area:
         visible_objs: Dict[Tuple[int, int], List[Graphic]] = defaultdict(list)
         for obj in self.actors:
             obj_x, obj_y = obj.location.x - cam_x, obj.location.y - cam_y
-            if not (0 <= obj_x < STAGE_PANEL_WIDTH and 0 <= obj_y < STAGE_PANEL_HEIGHT):
+
+            if not (0 <= obj_x < STAGE_PANEL_WIDTH and 
+                    0 <= obj_y < STAGE_PANEL_HEIGHT):
                 continue
             if not self.visible[obj.location.ij]:
                 continue
-            obj.character.bg = self.get_bg_color(consoles, (obj.location.y, obj.location.x))
+            obj.character.bg = self.get_bg_color(
+                consoles, (obj.location.y, obj.location.x))
+
             visible_objs[obj_y, obj_x].append(obj.character)
 
         for ij, graphics in visible_objs.items():
@@ -147,3 +158,10 @@ class Area:
     def __getitem__(self, key: Tuple[int, int]) -> AreaLocation:
         """Return the AreaLocation for an x,y index."""
         return AreaLocation(self, *key)
+
+def dim_rgb(rgb, dc: int):
+    r, g, b = rgb
+    r = min(max(0, r - dc), 255)
+    g = min(max(0, g - dc), 255)
+    b = min(max(0, b - dc), 255)
+    return (r, g, b)

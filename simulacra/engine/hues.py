@@ -46,6 +46,7 @@ COLOR: Dict[str, Color] = {
     'sea green': (46, 139, 87),
     'medium aqua marine': (102, 205, 170),
     'medium sea green': (60, 179, 113),
+    'eden': (30, 110, 90),
     'light sea green': (32, 178, 170),
     'dark slate gray': (47, 79, 79),
     'teal': (0, 128, 128),
