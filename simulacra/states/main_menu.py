@@ -16,7 +16,7 @@ from constants import *
 from engine.model import Model
 from engine.area import Area
 from engine.storage import Storage
-from engine.procgen.dungeon import *
+from engine.procgen.test_area import *
 from geometry import *
 
 from states import State
