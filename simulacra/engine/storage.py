@@ -74,13 +74,13 @@ class Storage:
     def get_character_name(self, index: int) -> str:
         if self.save_slots[index] is not None:
             player: Player = self.save_slots[index].player
-            return player.name
+            return player.character.name
         else:
             pass
         
     def get_character_background(self, index: int) -> str:
         if self.save_slots[index] is not None:
             player: Player = self.save_slots[index].player
-            return player.background
+            return player.character.background
         else:
             pass

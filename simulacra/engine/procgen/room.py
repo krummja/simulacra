@@ -11,9 +11,11 @@ from engine.actions import ai, Action
 from engine.character.player import Player
 from engine.character import Character
 from engine.character.neutral import *
+from engine.character.hostile import *
 from engine.area import *
 from engine.tile import *
 from engine.graphic import *
+from engine.actions.ai import *
 from engine.hues import COLOR
 from engine.model import Model
 
@@ -25,11 +27,13 @@ if TYPE_CHECKING:
 
 class Room:
 
-    def __init__(self, x: int, y: int, width: int, height: int) -> None:
+    def __init__(self, x: int, y: int, width: int, height: int, max_entities: int=3) -> None:
         self.x1 = x
         self.y1 = y
         self.x2 = x + width
         self.y2 = y + height
+        self.entities = 0
+        self.max_entities = max_entities
 
     @property
     def outer(self) -> Tuple[slice, slice]:
@@ -78,11 +82,21 @@ class Room:
                 continue
             yield x, y
 
-    def place_entities(self, area: Area) -> None:
-        """Spawn entities within this room."""
+    def place_npcs(self, area: Area) -> None:
+        """Spawn neutral NPCs within this room."""
         npcs = random.randint(0, 3)
         items_spawned = random.randint(0, 2)
         for xy in self.get_free_spaces(area, npcs):
             monster_cls: Type[Character]
             monster_cls = NPC
             monster_cls.spawn(area[xy])
+            self.entities += 1
+
+    def place_hostiles(self, area: Area) -> None:
+        """Spawn hostile NPCs within this room."""
+        hostiles = random.randint(1, 3)
+        for xy in self.get_free_spaces(area, hostiles):
+            monster_cls: Type[Character]
+            monster_cls = Hostile
+            monster_cls.spawn(area[xy], BasicHostile)
+            self.entities += 1

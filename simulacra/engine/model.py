@@ -2,6 +2,7 @@ from __future__ import annotations  # type: ignore
 from typing import List, TYPE_CHECKING
 
 from engine.queue import EventQueue
+from states.game import GameOver
 
 if TYPE_CHECKING:
     from engine.character.player import Player
@@ -39,6 +40,13 @@ class Model:
         else:
             self.log.append(Message(text))
 
+    def is_player_dead(self) -> bool:
+        return not self.player.character or \
+            self.player.character.attributes['health'].current_value <= 0
+
     def loop(self) -> None:
         while True:
+            if self.is_player_dead():
+                GameOver(self).loop()
+                continue
             self.scheduler.invoke_next()

@@ -2,6 +2,7 @@ from __future__ import annotations  # type: ignore
 from typing import Dict, TYPE_CHECKING, Tuple
 
 from constants import *
+from consoles import *
 from interface.panel import Panel
 from geometry import *
 
@@ -53,6 +54,9 @@ class InfoFrame(Panel):
     @id.setter
     def id(self, value: int) -> None:
         self._id = value
+
+    def refresh(self) -> None:
+        self.on_draw(CONSOLES)
 
     def on_draw(self, consoles: Dict[str, Console]) -> None:
         consoles['ROOT'].tiles_rgb[self.bounds.indices]["bg"] = self.bg

@@ -10,6 +10,7 @@ from typing import Optional, Type, TYPE_CHECKING
 from engine.actor import Actor
 from engine.actions.ai import *
 from engine.graphic import *
+from engine.character.attribute import Attribute
 
 if TYPE_CHECKING:
     from engine.actions import Action
@@ -25,9 +26,33 @@ class Character(Graphic):
 
     def __init__(self, background, path) -> None:
         self.alive = True
-        self.name = "<No Name>"
+        self.name = "TEST CHARACTER"
         self.background = background
         self.path = path
+        self.combat_flag = False
+        self._attributes: Dict[str, Attribute] = {
+            'health': Attribute(self, 'health', 100),
+            'energy': Attribute(self, 'energy', 100),
+            'might': Attribute(self, 'might', 10),
+            'resilience': Attribute(self, 'resilience', 4),
+            'intellect': Attribute(self, 'intellect', 8),
+            'finesse': Attribute(self, 'finesse', 6),
+        }
+
+    @property
+    def is_combatant(self) -> bool:
+        return self.combat_flag
+
+    @is_combatant.setter
+    def is_combatant(self, value: bool) -> None:
+        self.combat_flag = value
+
+    @property
+    def attributes(self) -> Dict[str, Attribute]:
+        return self._attributes
+
+    def add_attribute(self, name: str, value: int) -> None:
+        self._attributes[name] = Attribute(self, name, value)
 
     @classmethod
     def spawn(

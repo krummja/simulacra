@@ -12,7 +12,7 @@ from engine.actor import Actor
 from engine.character.player import Player
 from engine.hues import COLOR
 from engine.character.neutral import *
-from engine.item import Item
+from engine.items import Item
 from engine.location import Location 
 from engine.graphic import Graphic
 from engine.tile import tile_dt, tile_graphic, Tile
@@ -60,6 +60,14 @@ class Area:
 
         self.particle_system = ParticleSystem(30, 30)
 
+    def combatant_at(self, x: int, y: int) -> Optional[Actor]:
+        """Return any combatant entity found at this position."""
+        for actor in self.actors:
+            if actor.location.xy == (x, y):
+                if actor.is_combatant:
+                    return actor
+        return None
+
     def is_blocked(self, x: int, y: int) -> bool:
         """Return True if this position is impassable."""
         if not (0 <= x < self.width and 0 <= y < self.height):
@@ -69,6 +77,12 @@ class Area:
         if any(actor.location.xy == (x, y) for actor in self.actors):
             return True
 
+        return False
+
+    def is_openable(self, x: int, y: int) -> bool:
+        """Return True if this position is openable, e.g. a door."""
+        if self.tiles[y, x]["move_cost"] == 2:
+            return True
         return False
 
     def get_fov_light_attenuation(self, ox: int, oy: int, factor: float=1.0):
@@ -146,6 +160,18 @@ class Area:
                 consoles, (obj.location.y, obj.location.x))
 
             visible_objs[obj_y, obj_x].append(obj.character)
+
+        for (item_x, item_y), items in self.items.items():
+            obj_x, obj_y = item_x - cam_x, item_y - cam_y
+            if not (0 <= obj_x < CONSOLE_WIDTH and 0 <= obj_y < CONSOLE_HEIGHT):
+                continue
+            if not self.visible[item_y, item_x]:
+                continue
+            for item in items:
+                item.bg = self.get_bg_color(
+                    consoles, (item.location.y, item.location.x)
+                )
+            visible_objs[obj_y, obj_x].extend(items)
 
         for ij, graphics in visible_objs.items():
             graphic = min(graphics)

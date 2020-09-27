@@ -19,6 +19,14 @@ class StateBreak(Exception):
     """Breaks out of the active State.loop and makes it return None."""
 
 
+class SaveAndQuit(Exception):
+    pass
+
+
+class GameOverQuit(Exception):
+    pass
+
+
 class State(Generic[T], tcod.event.EventDispatch[T]):
     
     MOVE_KEYS = {
@@ -83,7 +91,7 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
         raise NotImplementedError()
 
     def ev_quit(self, event: tcod.event.Quit) -> Optional[T]:
-        pass
+        return self.cmd_quit()
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[T]:
         func: Callable[[], Optional[T]]

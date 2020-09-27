@@ -13,13 +13,14 @@ import tcod
 import numpy as np
 
 from constants import *
+from consoles import *
 from engine.model import Model
 from engine.area import Area
 from engine.storage import Storage
 from engine.procgen.test_area import *
 from geometry import *
 
-from states import State
+from states import State, SaveAndQuit, GameOverQuit
 from interface.panel import Panel
 from interface.modal import Modal
 from interface.info_frame import InfoFrame
@@ -134,6 +135,10 @@ class MainMenu(State[None]):
         self.character_menu.on_draw(consoles)
         self.help_text.on_draw(consoles)
 
+    def refresh(self) -> None:
+        CONSOLES['ROOT'].clear()
+        self.on_draw(CONSOLES)
+
     def ev_keydown(self, event: tcod.event.KeyDown):
         key = event.sym
         
@@ -144,7 +149,7 @@ class MainMenu(State[None]):
             index = self.character_menu.index_as_int
             if self.storage.save_slots[index] is not None:
                 self.storage.save_slots[index] = None
-                self.character_menu.character_frames[index].name = "<Empty>"
+                self.character_menu.character_frames[index].name = "------"
                 self.character_menu.character_frames[index].background = ""                
             self.storage.write_to_file()
 
@@ -172,7 +177,6 @@ class MainMenu(State[None]):
     def new_game(self) -> None:
         try:
             self.model = Model()
-            # self.model.current_area = generate(self.model, 256, 256)
             self.model.current_area = test_area(self.model)
             self.storage.add_save(self.character_menu.index_as_int, self.model)
             self.start()
@@ -185,9 +189,22 @@ class MainMenu(State[None]):
         try:
             print("Starting up game loop.")
             self.model.loop()
-        except SystemExit:
+        except SaveAndQuit:
             self.storage.write_to_file()
+            index = self.character_menu.index_as_int
+            self.character_menu.load_slot_data(index)
+            self.character_menu.refresh(index)
+        except GameOverQuit:
+            self.model = None
+            self.storage.del_save(self.character_menu.index_as_int)
+        except SystemExit:
+            if self.model.player.alive:
+                self.storage.write_to_file()
+            else:
+                print("Player has died; removing save file.")
+                self.storage.del_save(self.character_menu.index_as_int)
             raise
+
 
 class CharacterCreation(State[None]):
 
@@ -215,6 +232,24 @@ class CharacterCreation(State[None]):
         elif key == tcod.event.K_q:
             # TODO: Raise a confirmation modal, as the player will likely be
             # TODO: abandoning character creation properties if they exit.
+            self.cmd_quit()
+        else:
+            super().ev_keydown(event)
+
+
+class BackgroundSelection(State[None]):
+
+    def __init__(self, model: Model) -> None:
+        super().__init__()
+        self.model = model
+
+    def on_draw(self, consoles: Dict[str, Console]) -> None:
+        consoles['ROOT'].clear()
+
+    def ev_keydown(self, event: tcod.event.KeyDown):
+        key = event.SystemExit
+
+        if key == tcod.event.K_q:
             self.cmd_quit()
         else:
             super().ev_keydown(event)

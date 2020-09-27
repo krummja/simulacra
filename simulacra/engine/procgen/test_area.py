@@ -41,18 +41,23 @@ data_path = './simulacra/engine/procgen/map_test.csv'
 BASE_MAP = np.genfromtxt(data_path, delimiter=',', dtype=str)
 
 rules = [
-    ('.', floors['bare']['blank']),
+    ('.', floors['bare']['wood']),
     ('W', walls['bare']['bricks_01']),
-    ('w', walls['bare']['window_01']),
+    ('_', walls['bare']['window_01']),
+    ('|', walls['bare']['window_02']),
+    ('b', walls['bare']['beveled_01']),
+    ('B', walls['bare']['barrel']),
+    ('D', walls['bare']['door_01']),
     ('p', basic_forest['paving_stones_01']),
     ('P', basic_forest['paving_stones_02']),
-    ('G', basic_forest['gravel_01'])
+    ('G', basic_forest['gravel_01']),
 ]
 
 def test_area(model: Model) -> Area:
     area = Area(model, 256, 256)
 
     test_room = Room(20, 20, 20, 20)
+    test_combat_area = Room(50, 50, 20, 20)
     area.tiles[...] = basic_forest['ground_01']
 
     roll_asset(area, basic_forest['flowers_01'], 5)
@@ -66,7 +71,11 @@ def test_area(model: Model) -> Area:
 
     area.player = Player.spawn(area[test_room.center], ai_cls=ai.PlayerControl)
 
-    test_room.place_entities(area)
+    test_room.place_npcs(area)
+    test_combat_area.place_hostiles(area)
+    for actor in area.actors:
+        actor.character.combat_flag = True
+    print(area.actors)
 
     area.update_fov()
 

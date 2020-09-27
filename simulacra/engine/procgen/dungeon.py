@@ -167,8 +167,6 @@ def test_area(model: Model) -> Area:
 
     area.player = Player.spawn(area[test_room.center], ai_cls=ai.PlayerControl)
 
-    test_room.place_entities(area)
-
     area.update_fov()
 
     return area

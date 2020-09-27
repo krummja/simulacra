@@ -4,7 +4,7 @@ from typing import Tuple, TYPE_CHECKING
 if TYPE_CHECKING:
     from engine.actor import Actor
     from engine.area import Area
-    from engine.item import Item
+    from engine.items import Item
     from engine.location import Location
     from engine.model import Model
 

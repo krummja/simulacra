@@ -141,6 +141,7 @@ COLOR: Dict[str, Color] = {
     'nero': (40, 40, 40),
     'wood bark': (38, 26, 26),
     'midnight express': (15, 15, 30),
+    'dark chocolate': (100, 65, 50),
     'roman coffee': (120, 100, 85),
     'eclipse': (60, 60, 60),
     'dim gray': (105, 105, 105),

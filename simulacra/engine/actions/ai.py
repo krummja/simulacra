@@ -71,6 +71,27 @@ class BasicNPC(AI):
             return common.Move(owner, (0, 0)).plan()
 
 
+class BasicHostile(AI):
+    def __init__(self, actor: Actor) -> None:
+        super().__init__(actor)
+        self.pathfinder: Optional[PathTo] = None
+
+    def plan(self) -> Action:
+        owner = self.actor
+        map_ = owner.location.area
+        if map_.visible[owner.location.ij]:
+            self.pathfinder = PathTo(owner, map_.player.location.xy)
+        if not self.pathfinder:
+            return common.Move(owner, (0, 0)).plan()
+        if owner.location.distance_to(*map_.player.location.xy) <= 1:
+            return common.AttackPlayer(owner).plan()
+        try:
+            return self.pathfinder.plan()
+        except Impossible:
+            self.pathfinder = None
+            return common.Move(owner, (0, 0)).plan()
+
+
 class PlayerControl(AI):
 
     def act(self) -> None:

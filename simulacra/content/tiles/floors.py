@@ -8,7 +8,7 @@ from content.tiles import font_map
 
 styles = {
     'bare': {
-        'foreground': COLOR['peru'],
+        'foreground': COLOR['dark chocolate'],
         'background': COLOR['nero']
     },
     'ornate': {
@@ -24,6 +24,13 @@ floors = {
             move_cost=1,
             transparent=True,
             char=font_map['blank'], 
+            fg=styles['bare']['foreground'], 
+            bg=styles['bare']['background'],
+        ),
+        'wood': Tile(
+            move_cost=1,
+            transparent=True,
+            char=font_map['wood_01'], 
             fg=styles['bare']['foreground'], 
             bg=styles['bare']['background'],
         ),

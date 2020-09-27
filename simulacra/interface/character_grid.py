@@ -2,6 +2,7 @@ from __future__ import annotations  # type: ignore
 from typing import Any, Dict, Optional, Tuple, TYPE_CHECKING
 
 import numpy as np
+from consoles import *
 from interface.grid_menu import GridMenu
 from interface.info_frame import InfoFrame
 from interface.panel import Panel
@@ -58,15 +59,7 @@ class CharacterGrid(GridMenu):
         frame_width = self.width // self.columns - (2 * margin)
         frame_height = self.height // self.rows - (2 * margin)
 
-        # TODO: I should break this up into a separate function probably...
-        slot_data: Model = self.data_source.save_slots[slot]
-
-        if slot_data is not None:
-            character_name = slot_data.player.character.name
-            character_background = slot_data.player.background
-        else:
-            character_name = "<empty>"
-            character_background = "---"
+        character_name, character_background = self.load_slot_data(slot)
 
         new_frame = InfoFrame(
                 position=position,
@@ -83,6 +76,24 @@ class CharacterGrid(GridMenu):
             )
         new_frame.id = slot
         self.character_frames.append(new_frame)
+
+    def load_slot_data(self, slot: int) -> Model:
+        slot_data: Model = self.data_source.save_slots[slot]
+
+        if slot_data is not None:
+            print("Found slot data.")
+            character_name = self.data_source.get_character_name(slot)
+            character_background = slot_data.player.background
+        else:
+            character_name = "------"
+            character_background = "---"
+
+        return character_name, character_background
+
+    def refresh(self, slot: int) -> None:
+        CONSOLES['ROOT'].clear()
+        frame = self.character_frames[slot]
+        frame.name = self.data_source.get_character_name(slot)
 
     def on_draw(self, consoles: Dict[str, Console]) -> None:
         for frame in self.character_frames:

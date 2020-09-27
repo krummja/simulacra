@@ -5,6 +5,7 @@ import sys
 import traceback
 
 from engine.actions import Impossible
+from engine.items.other import Corpse
 
 if TYPE_CHECKING:
     from engine.backgrounds import Background
@@ -14,8 +15,6 @@ if TYPE_CHECKING:
     from .actions import (Impossible, Action)
 
 
-# TODO: I need to reorganize this so that there is a 'data' object that holds
-# TODO: all of the character's data like name, level, etc.
 class Actor:
     
     def __init__(self, location: Location, character, ai_cls: Type[Action]) -> None:
@@ -58,5 +57,32 @@ class Actor:
     def is_visible(self) -> bool:
         return bool(self.location.area.visible[self.location.ij])
 
+    def is_combatant(self) -> bool:
+        return self.character.combat_flag
+
     def is_player(self) -> bool:
         return self.location.area.player is self
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.location!r}, {self.character!r})"
+
+    def die(self) -> None:
+        assert self.character.alive
+        self.character.alive = False
+        if self.is_visible():
+            if self.is_player():
+                self.location.area.model.report("You have died...")
+            else:
+                self.location.area.model.report(f"The {self.character.name} dies.")
+        Corpse(self).place(self.location)
+        self.location.area.actors.remove(self)
+        if self.scheduler.heap[0] is self.event:
+            # If the actor died durring its turn, modify the event queue.
+            self.scheduler.unschedule(self.event)
+        self.event = None  # Disable AI
+
+    def damage(self, damage: int) -> None:
+        assert damage >= 0
+        self.character.attributes['health'].current_value -= damage
+        if self.character.attributes['health'].current_value <= 0:
+            self.die()

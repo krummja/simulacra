@@ -2,6 +2,7 @@ from __future__ import annotations  # type: ignore
 from typing import Dict, Optional, TYPE_CHECKING, Tuple
 
 from constants import *
+from consoles import *
 from interface.panel import Panel
 
 if TYPE_CHECKING:
