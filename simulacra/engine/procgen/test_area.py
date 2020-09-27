@@ -43,17 +43,23 @@ BASE_MAP = np.genfromtxt(data_path, delimiter=',', dtype=str)
 rules = [
     ('.', floors['bare']['blank']),
     ('W', walls['bare']['bricks_01']),
-    ('w', walls['bare']['window_01'])
+    ('w', walls['bare']['window_01']),
+    ('p', basic_forest['paving_stones_01']),
+    ('P', basic_forest['paving_stones_02']),
+    ('G', basic_forest['gravel_01'])
 ]
 
 def test_area(model: Model) -> Area:
     area = Area(model, 256, 256)
 
     test_room = Room(20, 20, 20, 20)
-    area.tiles[...] = basic_forest['ground']
+    area.tiles[...] = basic_forest['ground_01']
 
+    roll_asset(area, basic_forest['flowers_01'], 5)
+    roll_asset(area, basic_forest['flowers_02'], 5)
     roll_asset(area, basic_forest['tree_01'], 20)
     roll_asset(area, basic_forest['clutter_01'], 10)
+    roll_asset(area, basic_forest['ground_02'], 10)
     roll_asset(area, basic_forest['rock_01'], 2)
     roll_asset(area, basic_forest['rock_02'], 2)
     process_map(area, BASE_MAP, rules)

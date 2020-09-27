@@ -8,29 +8,70 @@ from content.tiles import font_map
 
 styles = {
     'basic_forest': {
-        'ground': {
-            'foreground': COLOR['eden'],
+        'ground_01': {
+            'foreground': COLOR['rain forest'],
+            'background': COLOR['black']
+        },
+        'ground_02': {
+            'foreground': COLOR['olive'],
             'background': COLOR['black']
         },
         'trees': {
-            'foreground': COLOR['kelly green'],
-            'background': COLOR['eden']
+            'foreground': COLOR['ever green'],
+            'background': COLOR['rain forest']
         },
         'rocks': {
-            'foreground': COLOR['eden'],
-            'background': COLOR['dim gray'],
+            'foreground': COLOR['rain forest'],
+            'background': COLOR['nero'],
+        },
+        'clutter': {
+            'foreground': COLOR['rain forest'],
+            'background': COLOR['eclipse'],
+        },
+        'gravel': {
+            'foreground': COLOR['rain forest'],
+            'background': COLOR['bisque'],
+        },
+        'flowers_01': {
+            'foreground': COLOR['rain forest'],
+            'background': COLOR['deep pink'],
+        },
+        'flowers_02': {
+            'foreground': COLOR['rain forest'],
+            'background': COLOR['cyan'],
         }
     }
 }
 
 
 basic_forest = {
-    'ground': Tile(
+    'ground_01': Tile(
         move_cost=1,
         transparent=True,
         char=font_map['blank'],
-        fg=styles['basic_forest']['ground']['foreground'],
-        bg=styles['basic_forest']['ground']['background']
+        fg=styles['basic_forest']['ground_01']['foreground'],
+        bg=styles['basic_forest']['ground_01']['background']
+    ),
+    'ground_02': Tile(
+        move_cost=1,
+        transparent=True,
+        char=font_map['blank'],
+        fg=styles['basic_forest']['ground_02']['foreground'],
+        bg=styles['basic_forest']['ground_02']['background']
+    ),
+    'gravel_01': Tile(
+        move_cost=1,
+        transparent=True,
+        char=font_map['gravel_01'],
+        fg=styles['basic_forest']['gravel']['foreground'],
+        bg=styles['basic_forest']['gravel']['background'],
+    ),
+    'gravel_02': Tile(
+        move_cost=1,
+        transparent=True,
+        char=font_map['gravel_02'],
+        fg=styles['basic_forest']['gravel']['foreground'],
+        bg=styles['basic_forest']['gravel']['background'],
     ),
     'tree_01': Tile(
         move_cost=0,
@@ -57,7 +98,35 @@ basic_forest = {
         move_cost=1,
         transparent=True,
         char=font_map['clutter'],
-        fg=styles['basic_forest']['rocks']['foreground'],
-        bg=styles['basic_forest']['rocks']['background']
+        fg=styles['basic_forest']['clutter']['foreground'],
+        bg=styles['basic_forest']['clutter']['background']
+    ),
+    'paving_stones_01': Tile(
+        move_cost=1,
+        transparent=True,
+        char=font_map['paving_stones_01'],
+        fg=styles['basic_forest']['gravel']['foreground'],
+        bg=styles['basic_forest']['gravel']['background'],
+    ),
+    'paving_stones_02': Tile(
+        move_cost=1,
+        transparent=True,
+        char=font_map['paving_stones_02'],
+        fg=styles['basic_forest']['gravel']['foreground'],
+        bg=styles['basic_forest']['gravel']['background'],
+    ),
+    'flowers_01': Tile(
+        move_cost=1,
+        transparent=True,
+        char=font_map['flowers_01'],
+        fg=styles['basic_forest']['flowers_01']['foreground'],
+        bg=styles['basic_forest']['flowers_01']['background'],
+    ),
+    'flowers_02': Tile(
+        move_cost=1,
+        transparent=True,
+        char=font_map['flowers_01'],
+        fg=styles['basic_forest']['flowers_02']['foreground'],
+        bg=styles['basic_forest']['flowers_02']['background'],
     )
 }

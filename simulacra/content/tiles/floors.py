@@ -8,8 +8,8 @@ from content.tiles import font_map
 
 styles = {
     'bare': {
-        'foreground': COLOR['antique white'],
-        'background': COLOR['dim gray']
+        'foreground': COLOR['peru'],
+        'background': COLOR['nero']
     },
     'ornate': {
         # 'foreground': COLOR[''],

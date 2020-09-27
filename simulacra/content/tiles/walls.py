@@ -7,8 +7,12 @@ from content.tiles import font_map
 
 styles = {
     'bare': {
-        'foreground': COLOR['antique white'],
-        'background': COLOR['dim gray']
+        'foreground': COLOR['saddle brown'],
+        'background': COLOR['nero']
+    },
+    'window': {
+        'foreground': COLOR['light cyan'],
+        'background': COLOR['burly wood']
     }
 }
 
@@ -32,8 +36,8 @@ walls = {
             move_cost=0,
             transparent=True,
             char=font_map['checkered_01'],
-            fg=styles['bare']['foreground'],
-            bg=styles['bare']['background']
+            fg=styles['window']['foreground'],
+            bg=styles['window']['background']
         )
     }
 }

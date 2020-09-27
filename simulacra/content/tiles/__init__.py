@@ -10,6 +10,11 @@ font_map: Dict[str, int] = {
     'beveled_01': 134,
     'beveled_02': 135,
     'clutter': 136,
+    'gravel_01': 137,
+    'gravel_02': 138,
+    'paving_stones_01': 139,
+    'paving_stones_02': 140,
+    'flowers_01': 141,
 
     'bricks_01': 160,
     'bricks_02': 161,
