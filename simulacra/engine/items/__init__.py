@@ -48,9 +48,6 @@ class Item(Graphic):
         """
         return action
 
-    def action_activate(self, action: ActionWithItem) -> None:
-        raise Impossible(f"You can do nothing with the {self.name}")
-
     def consume(self, action: ActionWithItem) -> None:
         """Remove this item from the actor's inventory."""
         assert action.item is self

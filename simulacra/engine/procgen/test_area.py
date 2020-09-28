@@ -18,6 +18,7 @@ from engine.graphic import *
 from engine.hues import COLOR
 from engine.model import Model
 from engine.procgen.room import Room
+from engine.items.other import *
 
 from content.tiles.floors import *
 from content.tiles.walls import *
@@ -47,7 +48,7 @@ rules = [
     ('|', walls['bare']['window_02']),
     ('b', walls['bare']['beveled_01']),
     ('B', walls['bare']['barrel']),
-    ('D', walls['bare']['door_01']),
+    ('D', Door()),
     ('p', basic_forest['paving_stones_01']),
     ('P', basic_forest['paving_stones_02']),
     ('G', basic_forest['gravel_01']),

@@ -98,8 +98,6 @@ class PlayerControl(AI):
         event = self.actor.event
         while event is self.actor.event:
             next_action = PlayerReady(self.actor.location.area.model).loop()
-            # print("Debug in engine.actions.ai.PlayerControl")
-            # print(next_action)
             if next_action is None:
                 continue
             try:

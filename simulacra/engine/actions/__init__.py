@@ -22,9 +22,20 @@ class Action:
         self.actor = actor
 
     def plan(self) -> Action:
+        """Return the action to perform.
+        
+        This method can be overridden by specific `Action` types to control
+        the conditions on which it will successfully be returned.
+        """
         return self
 
     def act(self) -> None:
+        """Execute the action for this class.
+
+        This method must be implemented separately. If the `plan()` method
+        return successfully, this method will run next which activates the
+        actual behavior.
+        """
         raise RuntimeError(f"{self.__class__} has no act implementation.")
 
     @property
@@ -66,6 +77,13 @@ class ActionWithEntity(Action):
 
 
 class ActionWithItem(Action):
+    """A relation between some `Actor` and some `Item`.
+
+    For example, a `Player` `Actor` might wish to use a `Potion`, which would
+    entail that actor=player and target=potion. A specific action like 
+    `action.item.consume()` would then call the relevant `consume()` method on
+    the target item.
+    """
 
     def __init__(self, actor: Actor, target: Item) -> None:
         super().__init__(actor)

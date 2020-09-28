@@ -1,8 +1,10 @@
 from __future__ import annotations  # type: ignore
-from typing import List, TYPE_CHECKING, Tuple
+from typing import Callable, List, TYPE_CHECKING, Tuple
 
 import numpy as np
 from numpy import ndarray
+
+from engine.items.other import Door
 
 if TYPE_CHECKING:
     from engine.area import Area
@@ -26,7 +28,10 @@ def process_map(
                 if col <= width:
                     for rule in rules:
                         if char == rule[0]:
-                            area.tiles[row+20, col+20] = rule[1]
+                            if isinstance(rule[1], Door):
+                                Door().place(area[(col+20, row+20)])
+                            if not isinstance(rule[1], Door):
+                                area.tiles[row+20, col+20] = rule[1]
                     col += 1
             row += 1
     return area

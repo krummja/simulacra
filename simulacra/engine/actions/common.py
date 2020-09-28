@@ -8,6 +8,7 @@ from engine.actions import (
     ActionWithDirection,
     ActionWithItem
 )
+from engine.items.other import Door
 
 
 class MoveTo(ActionWithPosition):
@@ -21,10 +22,10 @@ class MoveTo(ActionWithPosition):
             return self
         if self.area.combatant_at(*self.target_pos):
             return Attack(self.actor, self.target_pos).plan()
+        if self.area.interactable_at(*self.target_pos):
+            return Interact(self.actor, self.target_pos).plan()
         if self.area.is_blocked(*self.target_pos):
             raise Impossible("The way is blocked.")
-        if self.area.is_openable(*self.target_pos):
-            pass
         return self
 
     def act(self) -> None:
@@ -33,6 +34,15 @@ class MoveTo(ActionWithPosition):
         if self.actor.is_player():
             self.area.update_fov()
         self.actor.reschedule(100)
+
+
+class Interact(ActionWithPosition):
+    
+    def plan(self) -> Interact:
+        for item in self.area.items[self.target_pos]:
+            if item.is_interactable:
+                return item.plan_activate(self)
+        return self
 
 
 class Move(ActionWithDirection):
@@ -50,6 +60,13 @@ class MoveTowards(ActionWithPosition):
         dx = int(round(dx / distance))
         dy = int(round(dy / distance))
         return Move(self.actor, (dx, dy)).plan()
+
+
+class Open(ActionWithItem):
+
+    def act(self) -> None:
+        self.item.open()
+        self.actor.reschedule(100)
 
 
 class Attack(ActionWithPosition):
@@ -72,9 +89,9 @@ class Attack(ActionWithPosition):
         damage = attack - against
 
         if self.actor.is_player():
-            who_desc = f"You attack the {target_name}."
+            who_desc = f"You attack the {target_name}"
         else:
-            who_desc = f"{attacker_name} attacks {target_name}."
+            who_desc = f"{attacker_name} attacks {target_name}"
         
         if damage > 0:
             self.report(f"{who_desc} for {damage}!")

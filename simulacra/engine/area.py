@@ -68,6 +68,15 @@ class Area:
                     return actor
         return None
 
+    def interactable_at(self, x: int, y: int) -> Optional[Item]:
+        """Return any item entity found at this position."""
+        try:
+            for item in self.items[(x, y)]:
+                if item.is_interactable:
+                    return item
+        except KeyError:
+            return None
+
     def is_blocked(self, x: int, y: int) -> bool:
         """Return True if this position is impassable."""
         if not (0 <= x < self.width and 0 <= y < self.height):
@@ -77,12 +86,6 @@ class Area:
         if any(actor.location.xy == (x, y) for actor in self.actors):
             return True
 
-        return False
-
-    def is_openable(self, x: int, y: int) -> bool:
-        """Return True if this position is openable, e.g. a door."""
-        if self.tiles[y, x]["move_cost"] == 2:
-            return True
         return False
 
     def get_fov_light_attenuation(self, ox: int, oy: int, factor: float=1.0):
