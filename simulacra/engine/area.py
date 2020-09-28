@@ -105,6 +105,7 @@ class Area:
         )
 
         self.explored |= self.visible
+        
 
     def get_camera_pos(self) -> Tuple[int, int]:
         """Get the upper left XY camera position."""
