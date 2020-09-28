@@ -231,7 +231,7 @@ class CharacterCreation(State[None]):
 
         elif key == tcod.event.K_q:
             # TODO: Raise a confirmation modal, as the player will likely be
-            # TODO: abandoning character creation properties if they exit.
+            # TODO: ...abandoning character creation properties if they exit.
             self.cmd_quit()
         else:
             super().ev_keydown(event)

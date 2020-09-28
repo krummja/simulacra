@@ -13,7 +13,7 @@ from engine.character.player import Player
 from engine.hues import COLOR
 from engine.character.neutral import *
 from engine.items import Item
-from engine.location import Location 
+from engine.location import Location
 from engine.graphic import Graphic
 from engine.tile import tile_dt, tile_graphic, Tile
 
@@ -21,7 +21,6 @@ if TYPE_CHECKING:
     from numpy import ndarray
     import tcod.console as Console
     from engine.model import Model
-
 
 
 class AreaLocation(Location):
@@ -88,7 +87,7 @@ class Area:
 
         return False
 
-    def get_fov_light_attenuation(self, ox: int, oy: int, factor: float=1.0):
+    def get_fov_light_attenuation(self, ox: int, oy: int, factor: float = 1.0):
         px, py = self.player.location.xy
         return factor * ((px - ox) ** 2 + (py - oy) ** 2) / self.fov_radius
 
@@ -105,7 +104,6 @@ class Area:
         )
 
         self.explored |= self.visible
-        
 
     def get_camera_pos(self) -> Tuple[int, int]:
         """Get the upper left XY camera position."""
@@ -115,7 +113,7 @@ class Area:
 
     def get_camera_view(
             self, consoles: Dict[str, Console]
-        ) -> Tuple[Tuple[ slice, slice], Tuple[slice, slice]]:
+    ) -> Tuple[Tuple[slice, slice], Tuple[slice, slice]]:
         """Return (screen_view, world_view) as 2D slices for NumPy."""
         cam_x, cam_y = self.get_camera_pos()
 
@@ -129,14 +127,14 @@ class Area:
         screen_height = min(STAGE_PANEL_HEIGHT - screen_top, self.height - world_top)
 
         screen_view = np.s_[
-            screen_top : screen_top + screen_height,
-            screen_left : screen_left + screen_width
-        ]
+                      screen_top: screen_top + screen_height,
+                      screen_left: screen_left + screen_width
+                      ]
 
         world_view = np.s_[
-            world_top : world_top + screen_height,
-            world_left : world_left + screen_width
-        ]
+                     world_top: world_top + screen_height,
+                     world_left: world_left + screen_width
+                     ]
 
         return screen_view, world_view
 
@@ -152,18 +150,8 @@ class Area:
         )
 
         visible_objs: Dict[Tuple[int, int], List[Graphic]] = defaultdict(list)
-        for obj in self.actors:
-            obj_x, obj_y = obj.location.x - cam_x, obj.location.y - cam_y
 
-            if not (0 <= obj_x < STAGE_PANEL_WIDTH and 
-                    0 <= obj_y < STAGE_PANEL_HEIGHT):
-                continue
-            if not self.visible[obj.location.ij]:
-                continue
-            obj.character.bg = self.get_bg_color(
-                consoles, (obj.location.y, obj.location.x))
-
-            visible_objs[obj_y, obj_x].append(obj.character)
+        self.render_actors(visible_objs, (cam_x, cam_y), consoles)
 
         for (item_x, item_y), items in self.items.items():
             obj_x, obj_y = item_x - cam_x, item_y - cam_y
@@ -181,6 +169,29 @@ class Area:
             graphic = min(graphics)
             consoles['ROOT'].tiles_rgb[["ch", "fg", "bg"]][ij] = graphic.char, graphic.color, graphic.bg
 
+    def render_actors(
+            self,
+            visible_objs: Dict[Tuple[int, int], List[Graphic]],
+            camera: Tuple[int, int],
+            consoles: Dict[str, Console]
+    ) -> None:
+        for obj in self.actors:
+            obj_x, obj_y = obj.location.x - camera[0], obj.location.y - camera[1]
+
+            if not (0 <= obj_x < STAGE_PANEL_WIDTH and
+                    0 <= obj_y < STAGE_PANEL_HEIGHT):
+                continue
+
+            if not self.visible[obj.location.ij]:
+                continue
+
+            obj.character.bg = self.get_bg_color(
+                consoles, (obj.location.y, obj.location.x)
+            )
+
+            visible_objs[obj_y, obj_x].append(obj.character)
+            return visible_objs
+
     def get_bg_color(self, consoles: Dict[str, Console], pos: Tuple[int, int]):
         tile = self.tiles[pos[0], pos[1]]
         return list(tile[2][1][0:3])
@@ -188,6 +199,7 @@ class Area:
     def __getitem__(self, key: Tuple[int, int]) -> AreaLocation:
         """Return the AreaLocation for an x,y index."""
         return AreaLocation(self, *key)
+
 
 def dim_rgb(rgb, dc: int):
     r, g, b = rgb
