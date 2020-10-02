@@ -1,5 +1,4 @@
 from __future__ import annotations  # type: ignore
-from typing import TYPE_CHECKING, Optional
 
 from engine.tile import Tile
 from engine.hues import COLOR
@@ -10,12 +9,8 @@ styles = {
     'bare': {
         'foreground': COLOR['dark chocolate'],
         'background': COLOR['nero']
-    },
-    'ornate': {
-        # 'foreground': COLOR[''],
-        # 'background': COLOR['']
+        },
     }
-}
 
 
 floors = {
@@ -24,24 +19,15 @@ floors = {
             move_cost=1,
             transparent=True,
             char=font_map['blank'], 
-            fg=styles['bare']['foreground'], 
+            color=styles['bare']['foreground'],
             bg=styles['bare']['background'],
-        ),
+            ),
         'wood': Tile(
             move_cost=1,
             transparent=True,
             char=font_map['wood_01'], 
-            fg=styles['bare']['foreground'], 
+            color=styles['bare']['foreground'],
             bg=styles['bare']['background'],
-        ),
-    },
-    # 'ornate': {
-    #     'blank': Tile(
-    #         move_cost=1,
-    #         transparent=True,
-    #         char=font_map['blank'], 
-    #         fg=styles['ornate']['foreground'], 
-    #         bg=styles['ornate']['background'],
-    #     ),
-    # }
-}
+            ),
+        },
+    }

@@ -1,28 +1,22 @@
-#!/usr/lib/python3.8
+from __future__ import annotations
 
-from __future__ import annotations  # type: ignore
-from typing import TYPE_CHECKING
+import tcod.context
 
-import tcod
-
-from states.main_menu import MainMenu
-
-import globals as g
-from consoles import CONSOLES, CONSOLE_WIDTH, CONSOLE_HEIGHT, TILESET
-from constants import *
+import config
+from states.test_state import TestState
 
 
 def main() -> None:
     with tcod.context.new_terminal(
-            columns=CONSOLE_WIDTH,
-            rows=CONSOLE_HEIGHT,
-            tileset=TILESET,
+            columns=config.CONSOLE_WIDTH,
+            rows=config.CONSOLE_HEIGHT,
+            tileset=config.TILESET,
             title="Simulacra",
             vsync=True
-        ) as g.context:
-        
+        ) as config.CONTEXT:
+
         while True:
-            MainMenu().loop()
+            TestState().loop()
 
 
 if __name__ == '__main__':

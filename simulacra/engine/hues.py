@@ -1,5 +1,5 @@
 from __future__ import annotations  # type: ignore
-from typing import Dict, Tuple, TYPE_CHECKING
+from typing import Dict, Tuple
 
 Color = Tuple[int, int, int]
 
@@ -152,4 +152,4 @@ COLOR: Dict[str, Color] = {
     'gainsboro': (220, 220, 220),
     'white smoke': (245, 245, 245),
     'white': (255, 255, 255),
-}
+    }

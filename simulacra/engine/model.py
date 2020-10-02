@@ -1,28 +1,13 @@
-from __future__ import annotations  # type: ignore
-from typing import List, TYPE_CHECKING
+from __future__ import annotations
+from typing import List
 
-from engine.queue import EventQueue
-from states.game import GameOver
-
-if TYPE_CHECKING:
-    from engine.character.player import Player
-    from engine.area import Area
-
-
-class Message:
-    def __init__(self, text: str) -> None:
-        self.text = text
-        self.count = 1
-
-    def __str__(self) -> str:
-        if self.count > 1:
-            return f"{self.text} (x{self.count})"
-        return self.text
+from engine.area import Area
+from engine.event_queue import EventQueue
+from engine.log import Message
+from engine.player import Player
 
 
 class Model:
-    """The model contains everything from a session which should be saved."""
-
     current_area: Area
 
     def __init__(self) -> None:
@@ -40,13 +25,6 @@ class Model:
         else:
             self.log.append(Message(text))
 
-    def is_player_dead(self) -> bool:
-        return not self.player.character or \
-            self.player.character.attributes['health'].current_value <= 0
-
     def loop(self) -> None:
         while True:
-            if self.is_player_dead():
-                GameOver(self).loop()
-                continue
             self.scheduler.invoke_next()
