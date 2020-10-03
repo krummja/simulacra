@@ -4,8 +4,10 @@ from typing import Dict, TYPE_CHECKING
 import random
 import numpy as np
 
+from content.tiles import font_map
 from content.tiles.floors import *
 from engine.area import Area
+from engine.items import Item
 from engine.player import Player
 from engine.actions.behaviors.player_control import PlayerControl
 
@@ -31,6 +33,16 @@ def test_area(model: Model) -> Area:
     area = Area(model, 256, 256)
 
     area.tiles[...] = floors['bare']['wood']
+
+    door = Item.spawn(
+        char=font_map['door_01'],
+        color=COLOR['chocolate'],
+        bg=(0, 0, 0),
+        noun_text="Test Door",
+        location=area[15, 15],
+        carryable=False,
+        equippable=False
+        )
 
     area.player = Player.spawn(
         ord("@"),

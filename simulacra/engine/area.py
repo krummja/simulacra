@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from numpy import ndarray
     from tcod.console import Console
     from engine.actor import Actor
-    from engine.item import Item
+    from engine.items import Item
     from engine.player import Player
 
 
@@ -58,10 +58,22 @@ class Area:
         """Return True if this position is impassable."""
         if not (0 <= x < self.width and 0 <= y < self.height):
             return True
+
+        # Tiles with high move cost are treated as blocking
         if not self.tiles[y, x]["move_cost"]:
             return True
+
+        # Can't walk through actors
         if any(actor.location.xy == (x, y) for actor in self.actors):
             return True
+
+        # Iterate through known location-item_list pairs
+        # For any that match target location, if any items is non-carryable
+        # prevent an actor from occupying that position
+        for location, items in self.items.items():
+            if (x, y) == location:
+                if any(item.carryable is False for item in self.items[x, y]):
+                    return True
 
         return False
 
@@ -137,9 +149,17 @@ class Area:
                 continue
             if not self.visible[obj.location.ij]:
                 continue
-            obj.bg = self.get_bg_color(obj.location.y, obj.location.x)
+            obj.game_object.bg = self.get_bg_color(obj.location.y, obj.location.x)
 
             visible_objs[obj_y, obj_x].append(obj.game_object)
+
+        for (item_x, item_y), items in self.items.items():
+            obj_x, obj_y = item_x - cam_x, item_y - cam_y
+            if not (0 <= obj_x < CONSOLE_WIDTH and 0 <= obj_y < CONSOLE_HEIGHT):
+                continue
+            if not self.visible[item_y, item_x]:
+                continue
+            visible_objs[obj_y, obj_x].extend(items)
 
         for ij, graphics in visible_objs.items():
             graphic = min(graphics)
@@ -148,7 +168,7 @@ class Area:
                 ][ij] = graphic.char, graphic.color, graphic.bg
 
     def get_bg_color(self: Area, x: int, y: int) -> List[int, int, int]:
-        tile = self.tiles[x, y]
+        tile = self.tiles[y, x]
         return list(tile[2][1][0:3])
 
     def __getitem__(self: Area, key: Tuple[int, int]) -> AreaLocation:

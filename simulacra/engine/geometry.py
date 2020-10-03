@@ -1,5 +1,5 @@
 from __future__ import annotations  # type: ignore
-from typing import TYPE_CHECKING
+from typing import List, Tuple
 
 from enum import Enum
 import numpy as np
@@ -14,14 +14,14 @@ class classproperty(object):
 
 
 class Direction(Enum):
-    up = (0, -1)
-    up_right = (1, -1)
-    right = (1, 0)
-    down_right = (1, 1)
-    down = (0, 1)
-    down_left = (-1, 1)
-    left = (-1, 0)
-    up_left = (-1, -1)
+    up: Tuple[int, int] = (0, -1)
+    up_right: Tuple[int, int] = (1, -1)
+    right: Tuple[int, int] = (1, 0)
+    down_right: Tuple[int, int] = (1, 1)
+    down: Tuple[int, int] = (0, 1)
+    down_left: Tuple[int, int] = (-1, 1)
+    left: Tuple[int, int] = (-1, 0)
+    up_left: Tuple[int, int] = (-1, -1)
 
     @classproperty
     def orthogonal(cls):
@@ -67,7 +67,7 @@ class Point(tuple):
         return self[1], self[0]
 
     @property
-    def neighbors(self):
+    def neighbors(self) -> List[Tuple[int, int]]:
         return [self + d for d in Direction]
 
     def __add__(self, other):

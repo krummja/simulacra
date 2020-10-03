@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import Tuple, TYPE_CHECKING
 
+import numpy as np
+
 if TYPE_CHECKING:
     from engine.area import Area
 
@@ -29,3 +31,6 @@ class Location:
 
     def relative(self: Location, x: int, y: int) -> Tuple[int, int]:
         return self.x + x, self.y + y
+
+    def adjacent(self: Location):
+        return np.s_[self.y-1:self.y+1, self.x-1:self.x+1]

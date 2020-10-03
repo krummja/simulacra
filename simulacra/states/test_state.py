@@ -30,6 +30,8 @@ class TestState(State[None]):
                 self.model.loop()
             except SystemExit:
                 raise
+        elif key == tcod.event.K_l:
+            pass
         else:
             super().ev_keydown(keycode)
         return None
@@ -37,3 +39,4 @@ class TestState(State[None]):
     def cmd_quit(self) -> None:
         """Save and quit."""
         raise SystemExit()
+
