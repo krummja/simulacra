@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from engine.area import Area
     from engine.location import Location
     from engine.model import Model
-
+    from engine.items import Item
 
 class Impossible(Exception):
     """Exception raised when an action cannot be performed."""
@@ -53,3 +53,10 @@ class ActionWithDirection(ActionWithPosition):
                    actor.location.y + direction[1]
         super().__init__(actor, position)
         self.direction = direction
+
+
+class ActionWithItem(Action):
+
+    def __init__(self, actor: Actor, target: Item):
+        super().__init__(actor)
+        self.item = target

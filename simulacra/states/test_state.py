@@ -2,9 +2,12 @@ from __future__ import annotations
 from typing import Dict, Optional, TYPE_CHECKING
 
 import tcod
+
 from states import State, T
 from engine.model import Model
 from engine.generation.test_area import test_area
+
+from interface.logo import draw_logo
 
 if TYPE_CHECKING:
     from tcod.console import Console
@@ -18,7 +21,7 @@ class TestState(State[None]):
         self.model.current_area = test_area(self.model)
 
     def on_draw(self, consoles: Dict[str, Console]) -> None:
-        consoles['ROOT'].print(1, 1, "Hello, world!")
+        draw_logo(consoles)
 
     def ev_keydown(self: TestState, keycode: tcod.event.KeyDown) -> Optional[T]:
         key = keycode.sym

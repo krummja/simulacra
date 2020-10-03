@@ -25,6 +25,7 @@ font_map: Dict[str, int] = {
     'window_02': 171,
 
     'door_01': 180,
+    'door_02': 181,
 
     'rock_01': 190,
     'rock_02': 191,
