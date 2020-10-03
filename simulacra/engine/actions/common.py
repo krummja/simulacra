@@ -3,10 +3,21 @@ from typing import List, TYPE_CHECKING
 
 from engine.geometry import *
 from engine.actions import (Impossible, Action, ActionWithPosition,
-                            ActionWithDirection)
+                            ActionWithDirection, ActionWithItem)
+from engine.items.door import Door
 
 if TYPE_CHECKING:
     from engine.items import Item
+
+
+class Wait(ActionWithPosition):
+
+    def act(self: Wait) -> None:
+        print("Wait action")
+        self.actor.location = self.actor.location
+        if self.actor.is_player():
+            self.area.update_fov()
+        self.actor.reschedule(100)
 
 
 class MoveTo(ActionWithPosition):
@@ -49,24 +60,33 @@ class Move(ActionWithDirection):
 
 class ExamineNearby(Action):
 
-    items = []
-
     def plan(self: ExamineNearby) -> Action:
         for position in Point(*self.location.xy).neighbors:
             try:
                 if self.area.items[position[0], position[1]]:
-                    self.items.append(self.area.items[position])
+                    self.area.nearby_items.append(self.area.items[position])
+                    print(self.area.nearby_items)
             except KeyError:
                 continue
         return self
 
-    # def act(self: ExamineNearby) -> None:
-    #     if len(self.items) > 0:
-    #         for items in self.items:
-    #             for item in items:
-    #                 self.model.report(f"You see {item.noun_text} nearby.")
-    #         self.items.clear()
-    #     else:
-    #         self.model.report("There is nothing of note nearby.")
+    def act(self: ExamineNearby) -> None:
+        if len(self.area.nearby_items) > 0:
+            for items in self.area.nearby_items:
+                for item in items:
+                    self.model.report(f"You see {item} nearby.")
+            self.area.nearby_items.clear()
+        else:
+            self.model.report("There is nothing of note nearby.")
 
 
+class ActivateNearby(ActionWithItem):
+
+    def plan(self: ActivateNearby):
+        # TODO: Replace with a check against "item.interactive"
+        assert isinstance(self.item, Door)
+        return self.item.plan_activate(self)
+
+    def act(self: ActivateNearby):
+        self.item.mut_state()
+        self.actor.reschedule(100)

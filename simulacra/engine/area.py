@@ -50,6 +50,7 @@ class Area:
 
         self.actors: Set[Actor] = set()
         self.items: Dict[Tuple[int, int], List[Item]] = {}
+        self.nearby_items: List[List[Item]] = []
         self.camera_pos: Tuple[int, int] = (0, 0)
 
         self.fov_radius = 8
@@ -72,7 +73,7 @@ class Area:
         # prevent an actor from occupying that position
         for location, items in self.items.items():
             if (x, y) == location:
-                if any(item.carryable is False for item in self.items[x, y]):
+                if any(item.passable is False for item in self.items[x, y]):
                     return True
 
         return False
@@ -129,6 +130,7 @@ class Area:
         return screen_view, world_view
 
     def render(self, consoles: Dict[str, Console]) -> None:
+        consoles['ROOT'].clear()
         cam_x, cam_y = self.get_camera_pos()
         screen_view, world_view = self.get_camera_view()
 
@@ -148,7 +150,7 @@ class Area:
                 continue
             if not self.visible[obj.location.ij]:
                 continue
-            obj.game_object.bg = self.get_bg_color(obj.location.y, obj.location.x)
+            obj.game_object.bg = self.get_bg_color(obj.location.x, obj.location.y)
 
             visible_objs[obj_y, obj_x].append(obj.game_object)
 
@@ -166,7 +168,7 @@ class Area:
                 ["ch", "fg", "bg"]
                 ][ij] = graphic.char, graphic.color, graphic.bg
 
-    def get_bg_color(self: Area, x: int, y: int) -> List[int, int, int]:
+    def get_bg_color(self: Area, x: int, y: int) -> Tuple[int, int, int]:
         tile = self.tiles[y, x]
         return list(tile[2][1][0:3])
 

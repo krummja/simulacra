@@ -16,11 +16,11 @@ class Item(GameObject):
             bg: Tuple[int, int, int],
             noun_text: str,
             location: Location,
-            carryable: bool,
+            passable: bool,
             equippable: bool
         ) -> None:
         super().__init__(char, color, bg, noun_text, location)
-        self.carryable = carryable
+        self.passable = passable
         self.equippable = equippable
 
     @classmethod
@@ -31,10 +31,10 @@ class Item(GameObject):
             bg: Tuple[int, int, int],
             noun_text: str,
             location: Location,
-            carryable: bool,
+            passable: bool,
             equippable: bool
         ) -> Item:
-        self = cls(char, color, bg, noun_text, location, carryable, equippable)
+        self = cls(char, color, bg, noun_text, location, passable, equippable)
         try:
             location.area.items[location.xy].append(self)
         except KeyError:
@@ -50,10 +50,10 @@ class Item(GameObject):
             noun_text: str,
             location: Location,
             behavior: Optional[Type[Behavior]],
-            carryable: bool,
+            passable: bool,
             equippable: bool
         ) -> Actor:
-        self = cls(char, color, bg, noun_text, location, carryable, equippable)
+        self = cls(char, color, bg, noun_text, location, passable, equippable)
         actor = Actor(location, self, behavior)
         self.location.area.actors.add(actor)
         return actor

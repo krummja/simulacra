@@ -5,8 +5,8 @@ import random
 import numpy as np
 
 from content.tiles.floors import *
+from content.tiles.walls import *
 from engine.area import Area
-from engine.items import Item
 from engine.items.door import Door
 from engine.player import Player
 from engine.actions.behaviors.player_control import PlayerControl
@@ -34,13 +34,15 @@ def test_area(model: Model) -> Area:
 
     area.tiles[...] = floors['bare']['wood']
 
+    area.tiles[15, 0:15] = walls['bare']['bricks_01']
+    area.tiles[15, 16:30] = walls['bare']['bricks_01']
     door = Door.spawn(
         char=font_map['door_01'],
         color=COLOR['chocolate'],
-        bg=(0, 0, 0),
+        bg=area.get_bg_color(15, 15),
         noun_text="Test Door",
         location=area[15, 15],
-        carryable=False,
+        passable=False,
         equippable=False
         )
 

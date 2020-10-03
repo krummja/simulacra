@@ -17,12 +17,7 @@ def draw_main_view(model: Model, consoles: Dict[str, Console]) -> None:
     if player.location:
         model.current_area.camera_pos = player.location.xy
 
-    consoles['ROOT'].clear()
     model.current_area.render(consoles)
-
-
-def refresh() -> None:
-    CONSOLES['ROOT'].clear()
 
 
 def draw_log(model: Model, consoles: Dict[str, Console]) -> None:

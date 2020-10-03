@@ -10,7 +10,9 @@ if TYPE_CHECKING:
 
 class OpenableState:
 
-    _is_open: bool
+    def __init__(self: OpenableState):
+        self._is_open: bool = False
+        self.state: str = "closed"
 
     @property
     def is_open(self: OpenableState) -> bool:
@@ -33,25 +35,39 @@ class Door(Item, OpenableState):
             bg: Tuple[int, int, int],
             noun_text: str,
             location: Location,
-            carryable: bool,
+            passable: bool,
             equippable: bool
         ) -> None:
-        super().__init__(
+        Item.__init__(
+            self,
             char,
             color,
             bg,
             noun_text,
             location,
-            carryable,
+            passable,
             equippable
             )
+        OpenableState.__init__(self)
+        self.location.area.tiles[self.location.x, self.location.y]["transparent"] = False
 
     def mut_state(self: Door) -> None:
         if self.is_open is True:
             self.is_open = False
+            self.state = "closed"
+            self.passable = False
             self.location.area.model.report(f"{self.noun_text} swings shut.")
+            self.location.area.tiles[self.location.x, self.location.y]["transparent"] = False
+            self.location.area.update_fov()
             self.char = self.closed_sprite
-        if self.is_open is False:
+        elif self.is_open is False:
             self.is_open = True
+            self.state = "open"
+            self.passable = True
             self.location.area.model.report(f"{self.noun_text} creaks open.")
+            self.location.area.tiles[self.location.x, self.location.y]["transparent"] = True
+            self.location.area.update_fov()
             self.char = self.open_sprite
+
+    def plan_activate(self: Door, action):
+        return action

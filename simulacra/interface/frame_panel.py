@@ -21,6 +21,7 @@ class FramePanel(Panel):
             horizontal_offset: int = 0,
             fg: Tuple[int, int, int] = (255, 255, 255),
             bg: Tuple[int, int, int] = (0, 0, 0),
+            title: str=""
             ) -> None:
         super().__init__(
             position=position,
@@ -33,11 +34,23 @@ class FramePanel(Panel):
             fg=fg,
             bg=bg
             )
+        self.title = title
 
     def on_draw(self, consoles: Dict[str, Console]) -> None:
-        consoles['ROOT'].draw_frame(
+        consoles['INTERFACE'].draw_frame(
             x=self.x,
             y=self.y,
+            width=self.width,
+            height=self.height,
+            title=self.title
+            )
+
+        consoles['INTERFACE'].blit(
+            dest=consoles['ROOT'],
+            dest_x=self.x,
+            dest_y=self.y,
+            src_x=self.x,
+            src_y=self.y,
             width=self.width,
             height=self.height
             )
