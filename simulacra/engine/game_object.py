@@ -20,7 +20,11 @@ class GameObject(Sprite, Noun):
             ) -> None:
         Sprite.__init__(self, char, color, bg)
         Noun.__init__(self, noun_text)
-        self.location = location
+        self._location = location
+
+    @property
+    def location(self: GameObject) -> Location:
+        return self._location
 
     def is_visible(self: GameObject) -> bool:
         return bool(self.location.area.visible[self.location.ij])

@@ -1,7 +1,12 @@
 from __future__ import annotations
+from typing import List, TYPE_CHECKING
 
+from engine.geometry import *
 from engine.actions import (Impossible, Action, ActionWithPosition,
                             ActionWithDirection)
+
+if TYPE_CHECKING:
+    from engine.items import Item
 
 
 class MoveTo(ActionWithPosition):
@@ -40,3 +45,26 @@ class Move(ActionWithDirection):
 
     def plan(self: Move) -> Action:
         return MoveTo(self.actor, self.target_position).plan()
+
+
+class ExamineNearby(Action):
+
+    items = []
+
+    def plan(self: ExamineNearby) -> Action:
+        for position in Point(*self.location.xy).neighbors:
+            try:
+                if self.area.items[position[0], position[1]]:
+                    self.items.append(self.area.items[position])
+            except KeyError:
+                continue
+        return self
+
+    def act(self: ExamineNearby) -> None:
+        if len(self.items) > 0:
+            for items in self.items:
+                for item in items:
+                    self.model.report(f"You see {item.noun_text} nearby.")
+            self.items.clear()
+        else:
+            self.model.report("There is nothing of note nearby.")

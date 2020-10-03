@@ -45,6 +45,7 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
             tcod.event.K_ESCAPE: "escape",
             tcod.event.K_RETURN: "confirm",
             tcod.event.K_KP_ENTER: "confirm",
+            tcod.event.K_l: "examine",
             }
 
         self.MOVE_KEYS: Dict[int, Vec] = {

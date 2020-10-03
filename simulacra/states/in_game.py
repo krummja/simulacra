@@ -36,3 +36,6 @@ class PlayerReady(AreaState["Action"]):
 
     def cmd_drop(self) -> Optional[Action]:
         pass
+
+    def cmd_examine(self) -> Optional[Action]:
+        return common.ExamineNearby(self.model.player)
