@@ -60,11 +60,13 @@ class ExamineNearby(Action):
                 continue
         return self
 
-    def act(self: ExamineNearby) -> None:
-        if len(self.items) > 0:
-            for items in self.items:
-                for item in items:
-                    self.model.report(f"You see {item.noun_text} nearby.")
-            self.items.clear()
-        else:
-            self.model.report("There is nothing of note nearby.")
+    # def act(self: ExamineNearby) -> None:
+    #     if len(self.items) > 0:
+    #         for items in self.items:
+    #             for item in items:
+    #                 self.model.report(f"You see {item.noun_text} nearby.")
+    #         self.items.clear()
+    #     else:
+    #         self.model.report("There is nothing of note nearby.")
+
+

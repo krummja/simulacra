@@ -130,7 +130,6 @@ class Area:
 
     def render(self, consoles: Dict[str, Console]) -> None:
         cam_x, cam_y = self.get_camera_pos()
-
         screen_view, world_view = self.get_camera_view()
 
         # noinspection PyTypeChecker
