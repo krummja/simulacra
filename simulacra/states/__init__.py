@@ -40,6 +40,7 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
         super().__init__()
         self.COMMAND_KEYS: Dict[int, str] = {
             tcod.event.K_d: "drop",
+            tcod.event.K_e: "equipment",
             tcod.event.K_i: "inventory",
             tcod.event.K_g: "pickup",
             tcod.event.K_ESCAPE: "escape",
@@ -100,14 +101,17 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
     def ev_quit(self: State[T], event: tcod.event.Quit) -> Optional[T]:
         return self.cmd_quit()
 
-    def ev_keydown(self: State[T], keycode: tcod.event.KeyDown) -> Optional[T]:
+    def ev_keydown(self: State[T], event: tcod.event.KeyDown) -> Optional[T]:
         func: Callable[[], Optional[T]]
-        if keycode.sym in self.COMMAND_KEYS:
-            func = getattr(self, f"cmd_{self.COMMAND_KEYS[keycode.sym]}")
+        if event.sym in self.COMMAND_KEYS:
+            func = getattr(self, f"cmd_{self.COMMAND_KEYS[event.sym]}")
             return func()
-        if keycode.sym in self.MOVE_KEYS:
-            return self.cmd_move(*self.MOVE_KEYS[keycode.sym])
+        if event.sym in self.MOVE_KEYS:
+            return self.cmd_move(*self.MOVE_KEYS[event.sym])
         return None
+
+    def cmd_drop(self: State[T]) -> Optional[T]:
+        pass
 
     def cmd_confirm(self: State[T]) -> Optional[T]:
         pass
@@ -115,7 +119,19 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
     def cmd_escape(self: State[T]) -> Optional[T]:
         raise StateBreak()
 
+    def cmd_examine(self: State[T]) -> Optional[T]:
+        pass
+
+    def cmd_equipment(self: State[T]) -> Optional[T]:
+        pass
+
+    def cmd_inventory(self: State[T]) -> Optional[T]:
+        pass
+
     def cmd_move(self: State[T], x: int, y: int) -> Optional[T]:
+        pass
+
+    def cmd_pickup(self: State[T]) -> Optional[T]:
         pass
 
     def cmd_quit(self: State[T]) -> Optional[T]:

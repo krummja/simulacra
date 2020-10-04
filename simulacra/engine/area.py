@@ -36,7 +36,7 @@ class Area:
 
     location = Location()
     location.xy = 0, 0
-    player: Player = Player(ord("@"), (255, 0, 255), (0, 0, 0), "Player", location)
+    player: Player = None
 
     def __init__(self, model, width, height) -> None:
         self.model = model
@@ -67,14 +67,6 @@ class Area:
         # Can't walk through actors
         if any(actor.location.xy == (x, y) for actor in self.actors):
             return True
-
-        # Iterate through known location-item_list pairs
-        # For any that match target location, if any items is non-carryable
-        # prevent an actor from occupying that position
-        for location, items in self.items.items():
-            if (x, y) == location:
-                if any(item.passable is False for item in self.items[x, y]):
-                    return True
 
         return False
 
@@ -150,7 +142,10 @@ class Area:
                 continue
             if not self.visible[obj.location.ij]:
                 continue
-            obj.game_object.bg = self.get_bg_color(obj.location.x, obj.location.y)
+            obj.game_object.bg = self.get_bg_color(
+                obj.location.x,
+                obj.location.y
+                )
 
             visible_objs[obj_y, obj_x].append(obj.game_object)
 
