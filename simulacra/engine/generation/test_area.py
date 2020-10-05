@@ -10,7 +10,6 @@ from engine.area import Area
 from engine.items.door import Door
 from engine.player import Player
 from engine.actions.behaviors.player_control import PlayerControl
-from engine.items.weapon import weapons, Weapon
 
 if TYPE_CHECKING:
     from engine.tile import Tile
@@ -37,22 +36,13 @@ def test_area(model: Model) -> Area:
 
     area.tiles[15, 0:15] = walls['bare']['bricks_01']
     area.tiles[15, 16:30] = walls['bare']['bricks_01']
-    Door.spawn(
+
+    Door.place(
         char=font_map['door_01'],
         color=COLOR['chocolate'],
         bg=area.get_bg_color(15, 15),
         noun_text="Test Door",
-        location=area[15, 15],
-        equippable=False,
-        )
-
-    Weapon.spawn(
-        char=weapons['basic sword']['char'],
-        color=weapons['basic sword']['color'],
-        bg=weapons['basic sword']['bg'],
-        noun_text=weapons['basic sword']['noun_text'],
-        location=area[20, 20],
-        equippable=True,
+        location=area[15, 15]
         )
 
     area.player = Player.spawn(
@@ -61,7 +51,6 @@ def test_area(model: Model) -> Area:
         (0, 0, 0),
         "Player",
         area[10, 10],
-        PlayerControl
         )
     area.update_fov()
 

@@ -1,21 +1,16 @@
 from __future__ import annotations
-from typing import List, TYPE_CHECKING
 
 from engine.geometry import *
 from engine.actions import (Impossible, Action, ActionWithPosition,
                             ActionWithDirection, ActionWithItem)
 from engine.items.door import Door
 
-if TYPE_CHECKING:
-    from engine.items import Item
 
-
-class Wait(ActionWithPosition):
+class Wait(Action):
 
     def act(self: Wait) -> None:
-        print("Wait action")
         self.actor.location = self.actor.location
-        if self.actor.is_player():
+        if self.actor.is_player:
             self.area.update_fov()
         self.actor.reschedule(100)
 
@@ -36,7 +31,7 @@ class MoveTo(ActionWithPosition):
 
     def act(self: MoveTo) -> None:
         self.actor.location = self.area[self.target_position]
-        if self.actor.is_player():
+        if self.actor.is_player:
             self.area.update_fov()
         self.actor.reschedule(100)
 
@@ -84,11 +79,11 @@ class ActivateItem(ActionWithItem):
 
     def plan(self: ActivateItem) -> ActionWithItem:
         # TODO: Hmm... this is a bit of a messy situation
-        assert self.item in self.actor.game_object.components['inventory'].contents
+        assert self.item in self.actor.game_object.components['INVENTORY'].contents
         return self.item.plan_activate(self)
 
     def act(self: ActivateItem) -> None:
-        assert self.item in self.actor.game_object.components['inventory'].contents
+        assert self.item in self.actor.game_object.components['INVENTORY'].contents
         self.item.action_activate(self)
         self.actor.reschedule(100)
 
@@ -101,6 +96,7 @@ class ActivateNearby(ActionWithItem):
         return self.item.plan_activate(self)
 
     def act(self: ActivateNearby) -> None:
+        assert isinstance(self.item, Door)
         self.item.mut_state()
         self.actor.reschedule(100)
 

@@ -1,11 +1,10 @@
 from __future__ import annotations
-from typing import Generic, Optional
+from typing import Generic, Optional, TYPE_CHECKING
 
 from config import *
 
-from states import SaveAndQuit, State, T
+from states import SaveAndQuit, State, StateBreak, T
 from engine.actions import Action, common
-from engine.model import Model
 from engine.rendering import draw_main_view, draw_log
 from engine.geometry import *
 
@@ -15,6 +14,7 @@ from interface.frame_panel import FramePanel
 if TYPE_CHECKING:
     from tcod.console import Console
     from engine.items import Item
+    from engine.model import Model
 
 
 class AreaState(Generic[T], State[T]):
@@ -68,10 +68,10 @@ class PlayerReady(AreaState["Action"]):
         return state.loop()
 
     def cmd_move(self, x: int, y: int) -> Action:
-        return common.Move(self.model.player, (x, y))
+        return common.Move(self.model.player.components['ACTOR'], (x, y))
 
     def cmd_pickup(self) -> Action:
-        return common.Pickup(self.model.player)
+        return common.Pickup(self.model.player.components['ACTOR'])
 
     def cmd_use(self) -> Optional[Action]:
         pass
@@ -108,12 +108,12 @@ class OverlayState(AreaState["Action"]):
         key = event.sym
 
         if key == tcod.event.K_ESCAPE:
-            return self.cmd_quit()
+            return self.cmd_escape()
         else:
             super().ev_keydown(event)
 
-    def cmd_quit(self: OverlayState) -> Action:
-        return common.Wait(self.model.player, self.model.player.location.xy)
+    def cmd_escape(self: OverlayState):
+        return common.Wait(self.model.player.components['ACTOR'])
 
 
 class ExamineState(OverlayState):
@@ -175,7 +175,7 @@ class ExamineState(OverlayState):
         return super().ev_keydown(event)
 
     def pick_item(self: ExamineState, item) -> Action:
-        return common.ActivateNearby(self.model.player, item)
+        return common.ActivateNearby(self.model.player.components['ACTOR'], item)
 
 
 class BaseEquipmentMenu(OverlayState):
@@ -183,7 +183,7 @@ class BaseEquipmentMenu(OverlayState):
     def __init__(self: BaseEquipmentMenu, model: Model) -> None:
         super().__init__(model)
 
-        self.equipment = self.model.player.game_object.components['equipment']
+        self.equipment = self.model.player.components['EQUIPMENT']
         self.left_panel = FramePanel(
             parent=self.wrapper_panel,
             position=("center", "left"),
@@ -234,7 +234,7 @@ class BaseInventoryMenu(OverlayState):
     def __init__(self: BaseInventoryMenu, model: Model) -> None:
         super().__init__(model)
 
-        self.inventory = self.model.player.game_object.components['inventory']
+        self.inventory = self.model.player.components['INVENTORY']
         self.right_panel = FramePanel(
             parent=self.wrapper_panel,
             position=("center", "right"),
@@ -283,4 +283,4 @@ class BaseInventoryMenu(OverlayState):
 class UseInventory(BaseInventoryMenu):
 
     def pick_item(self: UseInventory, item: Item) -> Action:
-        return common.ActivateItem(self.model.player, item)
+        return common.ActivateItem(self.model.player.components['ACTOR'], item)

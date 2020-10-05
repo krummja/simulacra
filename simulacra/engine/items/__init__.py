@@ -1,9 +1,7 @@
 from __future__ import annotations
-from typing import Optional, Tuple, Type, TYPE_CHECKING
+from typing import Optional, Tuple, TYPE_CHECKING
 
 from engine.actions import ActionWithItem, Impossible
-from engine.actions.behaviors import Behavior
-from engine.actor import Actor
 from engine.game_object import GameObject
 from engine.location import Location
 
@@ -19,14 +17,46 @@ class Item(GameObject):
             color: Tuple[int, int, int],
             bg: Tuple[int, int, int],
             noun_text: str,
-            location: Location,
-            equippable: bool,
+            location: Location
         ) -> None:
-        super().__init__(char, color, bg, noun_text, location)
-        self.equippable = equippable
-        self.owner: Optional[Inventory] = None
-        self.suffix = ""
-        self.liftable: bool = False
+        super().__init__(char, color, bg, noun_text)
+        self._equippable: bool = False
+        self._liftable: bool = False
+        self._owner: Optional[Inventory] = None
+        self._suffix = ""
+        self._location = location
+
+    @property
+    def equippable(self: Item) -> bool:
+        return self._equippable
+
+    @equippable.setter
+    def equippable(self: Item, value: bool) -> None:
+        self._equippable = value
+
+    @property
+    def liftable(self: Item) -> bool:
+        return self._liftable
+
+    @liftable.setter
+    def liftable(self: Item, value: bool) -> None:
+        self._liftable = value
+
+    @property
+    def owner(self: Item) -> Inventory:
+        return self._owner
+
+    @owner.setter
+    def owner(self: Item, value: Inventory) -> None:
+        self._owner = value
+
+    @property
+    def suffix(self: Item) -> str:
+        return self._suffix
+
+    @suffix.setter
+    def suffix(self: Item, value: str) -> None:
+        self._suffix = value
 
     def lift(self: Item) -> None:
         """Remove this item from any of its containers."""
@@ -40,11 +70,18 @@ class Item(GameObject):
                 del self.location.area.items[self.location.xy]
             self.location = None
 
-    def place(self: Item, location: Location):
+    @classmethod
+    def place(
+            cls,
+            char: int,
+            color: Tuple[int, int, int],
+            bg: Tuple[int, int, int],
+            noun_text: str,
+            location: Location
+        ) -> None:
         """Place this item on the floor at the given location."""
-        assert not self.location, "This item already has a location."
+        self = cls(char, color, bg, noun_text, location)
         assert not self.owner, "Can't be placed because it is currently owned."
-        self.location = location
         items = location.area.items
         try:
             items[location.xy].append(self)
@@ -65,38 +102,3 @@ class Item(GameObject):
     def action_drink(self: Item, action: ActionWithItem) -> None:
         """Drink this."""
         raise Impossible(f"You can't drink the {self.noun_text}")
-
-    @classmethod
-    def spawn(
-            cls,
-            char: int,
-            color: Tuple[int, int, int],
-            bg: Tuple[int, int, int],
-            noun_text: str,
-            location: Location,
-            equippable: bool,
-        ) -> Item:
-        self = cls(char, color, bg, noun_text, location, equippable)
-        self.liftable = True
-        try:
-            location.area.items[location.xy].append(self)
-        except KeyError:
-            location.area.items[location.xy] = [self]
-        return self
-
-    @classmethod
-    def spawn_actor(
-            cls,
-            char: int,
-            color: Tuple[int, int, int],
-            bg: Tuple[int, int, int],
-            noun_text: str,
-            location: Location,
-            behavior: Optional[Type[Behavior]],
-            equippable: bool,
-        ) -> Actor:
-        self = cls(char, color, bg, noun_text, location, equippable)
-        self.liftable = False
-        actor = Actor(location, self, behavior)
-        self.location.area.actors.add(actor)
-        return actor

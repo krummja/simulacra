@@ -13,8 +13,8 @@ class Event(NamedTuple):
 class EventQueue:
 
     def __init__(self: EventQueue) -> None:
-        self.current_tick = 0
-        self.last_unique_id = 0
+        self.current_tick: int = 0
+        self.last_unique_id: int = 0
         self.queue: List[Event] = []
 
     def schedule(
