@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from engine.actions import Action
 
 if TYPE_CHECKING:
-    from engine.actor import Actor
+    from engine.components.actor import Actor
 
 
 class Behavior(Action):

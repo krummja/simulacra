@@ -14,7 +14,7 @@ from engine.hues import COLOR
 if TYPE_CHECKING:
     from numpy import ndarray
     from tcod.console import Console
-    from engine.actor import Actor
+    from engine.components.actor import Actor
     from engine.items import Item
     from engine.player import Player
 
@@ -34,9 +34,7 @@ class Area:
         dtype=tile_graphic
         )
 
-    location = Location()
-    location.xy = 0, 0
-    player: Player = None
+    _player: Player = None
 
     def __init__(self, model, width, height) -> None:
         self.model = model
@@ -54,6 +52,14 @@ class Area:
         self.camera_pos: Tuple[int, int] = (0, 0)
 
         self.fov_radius = 8
+
+    @property
+    def player(self: Area) -> Player:
+        return self._player
+
+    @player.setter
+    def player(self: Area, value: Player) -> None:
+        self._player = value
 
     def is_blocked(self, x: int, y: int) -> bool:
         """Return True if this position is impassable."""

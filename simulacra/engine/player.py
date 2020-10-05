@@ -1,7 +1,8 @@
 from __future__ import annotations
-from typing import Optional, Tuple, Type, TYPE_CHECKING
+from typing import Tuple, TYPE_CHECKING
 
-from engine.actor import Actor
+from engine.components.actor import Actor
+from engine.actions.behaviors.player_control import PlayerControl
 from engine.game_object import GameObject
 from engine.components.body_part import BodyPart
 from engine.components.attributes import Attributes
@@ -9,7 +10,6 @@ from engine.components.inventory import Inventory
 
 
 if TYPE_CHECKING:
-    from engine.actions.behaviors import Behavior
     from engine.location import Location
 
 
@@ -21,13 +21,16 @@ class Player(GameObject):
             color: Tuple[int, int, int],
             bg: Tuple[int, int, int],
             noun_text: str,
-            location: Location,
+            location: Location
         ) -> None:
-        super().__init__(char, color, bg, noun_text, location)
+        super().__init__(char, color, bg, noun_text)
+        self._location = location
 
-        self.components['attributes'] = Attributes(self)
-        self.components['inventory'] = Inventory(self)
-        self.components['equipment'] = Inventory(self)
+        self.components['ACTOR'] = Actor(self, PlayerControl)
+
+        self.components['ATTRIBUTES'] = Attributes(self)
+        self.components['INVENTORY'] = Inventory(self)
+        self.components['EQUIPMENT'] = Inventory(self)
 
         self.components['HEAD'] = BodyPart(self, 'HEAD', True),
         self.components['TORSO'] = BodyPart(self, 'TORSO', True),
@@ -38,6 +41,17 @@ class Player(GameObject):
         self.components['LEG_LEFT'] = BodyPart(self, 'LEG_LEFT', False),
         self.components['LEG_RIGHT'] = BodyPart(self, 'LEG_RIGHT', False)
 
+    @property
+    def location(self: Player) -> Location:
+        return self._location
+
+    @location.setter
+    def location(self: Player, value: Location) -> None:
+        self._location = value
+
+    def is_player(self: Actor) -> bool:
+        return self.location.area.player is self
+
     @classmethod
     def spawn(
             cls,
@@ -46,7 +60,6 @@ class Player(GameObject):
             bg: Tuple[int, int, int],
             noun_text: str,
             location: Location,
-            behavior: Optional[Type[Behavior]]
-        ) -> Actor:
+        ) -> Player:
         self = cls(char, color, bg, noun_text, location)
-        return Actor(location, self, behavior)
+        return self

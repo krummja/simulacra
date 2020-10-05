@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import Optional, Tuple, TYPE_CHECKING
 
-from engine.actions import Impossible
 from engine.items import Item
 from content.tiles import font_map
 
@@ -37,8 +36,7 @@ class Door(Item, OpenableState):
             color: Tuple[int, int, int],
             bg: Tuple[int, int, int],
             noun_text: str,
-            location: Location,
-            equippable: bool
+            location: Location
         ) -> None:
         Item.__init__(
             self,
@@ -46,14 +44,16 @@ class Door(Item, OpenableState):
             color,
             bg,
             noun_text,
-            location,
-            equippable
+            location
             )
         OpenableState.__init__(self)
+        self.equippable = False
+        self.liftable = False
+        self.owner = None
+        self.suffix = "(closed)"
 
         self.x = self.location.x
         self.y = self.location.y
-        self.suffix = "(closed)"
         self.location.area.tiles[self.x, self.y]["transparent"] = False
         self.location.area.tiles[self.x, self.y]["move_cost"] = 0
         self.open_sprite = font_map['door_01']
@@ -66,10 +66,6 @@ class Door(Item, OpenableState):
         self.location.area.tiles[self.x, self.y]["transparent"] = self.is_open
         self.location.area.tiles[self.x, self.y]["move_cost"] = int(self.is_open)
         self.location.area.update_fov()
-
-    def lift(self: Door) -> None:
-        if self.location:
-            raise Impossible("You can't take that!")
 
     def plan_activate(self: Door, action):
         return action

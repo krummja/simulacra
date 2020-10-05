@@ -2,11 +2,12 @@ from __future__ import annotations
 from typing import Tuple, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from engine.actor import Actor
+    from engine.components.actor import Actor
     from engine.area import Area
     from engine.location import Location
     from engine.model import Model
     from engine.items import Item
+
 
 class Impossible(Exception):
     """Exception raised when an action cannot be performed."""

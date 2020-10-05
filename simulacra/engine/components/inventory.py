@@ -14,7 +14,11 @@ class Inventory(Component):
 
     def __init__(self: Inventory, game_object: GameObject) -> None:
         super().__init__(game_object)
-        self.contents: List[Item] = []
+        self._contents: List[Item] = []
+
+    @property
+    def contents(self: Inventory) -> List[Item]:
+        return self._contents
 
     def take(self: Inventory, item: Item) -> None:
         """Take an item from its current location and put it in self."""
