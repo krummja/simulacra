@@ -1,9 +1,9 @@
 from __future__ import annotations
-from typing import Dict, Generic, Optional, TYPE_CHECKING
+from typing import Generic, Optional
 
 from config import *
 
-from states import SaveAndQuit, State, T, StateBreak
+from states import SaveAndQuit, State, T
 from engine.actions import Action, common
 from engine.model import Model
 from engine.rendering import draw_main_view, draw_log
@@ -14,6 +14,7 @@ from interface.frame_panel import FramePanel
 
 if TYPE_CHECKING:
     from tcod.console import Console
+    from engine.items import Item
 
 
 class AreaState(Generic[T], State[T]):
@@ -58,15 +59,19 @@ class PlayerReady(AreaState["Action"]):
         state = ExamineState(self.model)
         return state.loop()
 
+    def cmd_equipment(self) -> Optional[Action]:
+        state = BaseEquipmentMenu(self.model)
+        return state.loop()
+
     def cmd_inventory(self) -> Optional[Action]:
-        state = OverlayState(self.model)
+        state = UseInventory(self.model)
         return state.loop()
 
     def cmd_move(self, x: int, y: int) -> Action:
         return common.Move(self.model.player, (x, y))
 
     def cmd_pickup(self) -> Action:
-        pass
+        return common.Pickup(self.model.player)
 
     def cmd_use(self) -> Optional[Action]:
         pass
@@ -98,14 +103,14 @@ class OverlayState(AreaState["Action"]):
 
     def ev_keydown(
             self: OverlayState,
-            keycode: tcod.event.KeyDown
+            event: tcod.event.KeyDown
         ) -> Optional[Action]:
-        key = keycode.sym
+        key = event.sym
 
         if key == tcod.event.K_ESCAPE:
             return self.cmd_quit()
         else:
-            super().ev_keydown(keycode)
+            super().ev_keydown(event)
 
     def cmd_quit(self: OverlayState) -> Action:
         return common.Wait(self.model.player, self.model.player.location.xy)
@@ -131,12 +136,16 @@ class ExamineState(OverlayState):
     def on_draw(self: ExamineState, consoles: Dict[str, Console]) -> None:
         self.right_panel.on_draw(consoles)
         self.items = [item for sublist in self.items for item in sublist]
+
+        # TODO: Make this into an interface component
+        # TODO: Make it possible to feed direction info as well
         for i, item in enumerate(self.items):
             sym = self.symbols[i]
             x = self.right_panel.bounds.left + 2
             y = self.right_panel.bounds.top + 2
-            consoles['INTERFACE'].print(x, y + i, f"{sym}: {item.noun_text} ({item.state})")
+            consoles['INTERFACE'].print(x, y + i, f"{sym}: {item.noun_text} {item.suffix}")
 
+        # TODO: I feel like this could be more cleanly implemented.
         consoles['INTERFACE'].blit(
             dest=consoles['ROOT'],
             dest_x=self.right_panel.x,
@@ -149,9 +158,9 @@ class ExamineState(OverlayState):
 
     def ev_keydown(
             self: OverlayState,
-            keycode: tcod.event.KeyDown
+            event: tcod.event.KeyDown
         ) -> Optional[Action]:
-        key = keycode.sym
+        key = event.sym
         char = None
         try:
             char = chr(key)
@@ -163,7 +172,115 @@ class ExamineState(OverlayState):
             if index < len(self.items):
                 item = self.items[index]
                 return self.pick_item(item)
-        return super().ev_keydown(keycode)
+        return super().ev_keydown(event)
 
     def pick_item(self: ExamineState, item) -> Action:
         return common.ActivateNearby(self.model.player, item)
+
+
+class BaseEquipmentMenu(OverlayState):
+
+    def __init__(self: BaseEquipmentMenu, model: Model) -> None:
+        super().__init__(model)
+
+        self.equipment = self.model.player.game_object.components['equipment']
+        self.left_panel = FramePanel(
+            parent=self.wrapper_panel,
+            position=("center", "left"),
+            width=30,
+            height=len(self.equipment.contents) + 4,
+            bg=(50, 50, 50),
+            title="equipment"
+            )
+
+    def on_draw(self: BaseEquipmentMenu, consoles: Dict[str, Console]) -> None:
+        self.left_panel.on_draw(consoles)
+
+        for i, item in enumerate(self.equipment.contents):
+            sym = self.equipment.symbols[i]
+            x = self.left_panel.bounds.left + 2
+            y = self.left_panel.bounds.top + 2
+            consoles['INTERFACE'].print(x, y + i, f"{sym}: {item.noun_text}")
+
+        consoles['INTERFACE'].blit(
+            dest=consoles['ROOT'],
+            dest_x=self.left_panel.x,
+            dest_y=self.left_panel.y,
+            src_x=self.left_panel.x,
+            src_y=self.left_panel.y,
+            width=self.left_panel.width,
+            height=self.left_panel.height
+            )
+
+    def ev_keydown(self: BaseEquipmentMenu, event: tcod.event.KeyDown) -> Optional[Action]:
+        char: Optional[str] = None
+        try:
+            char = chr(event.sym)
+        except ValueError:
+            pass
+        if char and char in self.equipment.symbols:
+            index = self.equipment.symbols.index(char)
+            if index < len(self.equipment.contents):
+                item = self.equipment.contents[index]
+                return self.pick_item(item)
+        return super().ev_keydown(event)
+
+    def pick_item(self: BaseEquipmentMenu, item: Item) -> Optional[Action]:
+        raise NotImplementedError()
+
+
+class BaseInventoryMenu(OverlayState):
+
+    def __init__(self: BaseInventoryMenu, model: Model) -> None:
+        super().__init__(model)
+
+        self.inventory = self.model.player.game_object.components['inventory']
+        self.right_panel = FramePanel(
+            parent=self.wrapper_panel,
+            position=("center", "right"),
+            width=30,
+            height=len(self.inventory.contents) + 4,
+            bg=(50, 50, 50),
+            title="inventory"
+            )
+
+    def on_draw(self: BaseInventoryMenu, consoles: Dict[str, Console]) -> None:
+        self.right_panel.on_draw(consoles)
+
+        for i, item in enumerate(self.inventory.contents):
+            sym = self.inventory.symbols[i]
+            x = self.right_panel.bounds.left + 2
+            y = self.right_panel.bounds.top + 2
+            consoles['INTERFACE'].print(x, y + i, f"{sym}: {item.noun_text}")
+
+        consoles['INTERFACE'].blit(
+            dest=consoles['ROOT'],
+            dest_x=self.right_panel.x,
+            dest_y=self.right_panel.y,
+            src_x=self.right_panel.x,
+            src_y=self.right_panel.y,
+            width=self.right_panel.width,
+            height=self.right_panel.height
+            )
+
+    def ev_keydown(self: BaseInventoryMenu, event: tcod.event.KeyDown) -> Optional[Action]:
+        char: Optional[str] = None
+        try:
+            char = chr(event.sym)
+        except ValueError:
+            pass
+        if char and char in self.inventory.symbols:
+            index = self.inventory.symbols.index(char)
+            if index < len(self.inventory.contents):
+                item = self.inventory.contents[index]
+                return self.pick_item(item)
+        return super().ev_keydown(event)
+
+    def pick_item(self: BaseInventoryMenu, item: Item) -> Optional[Action]:
+        raise NotImplementedError()
+
+
+class UseInventory(BaseInventoryMenu):
+
+    def pick_item(self: UseInventory, item: Item) -> Action:
+        return common.ActivateItem(self.model.player, item)

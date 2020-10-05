@@ -21,19 +21,19 @@ def draw_main_view(model: Model, consoles: Dict[str, Console]) -> None:
 
 
 def draw_log(model: Model, consoles: Dict[str, Console]) -> None:
-    log_width = SIDE_PANEL_WIDTH
+    log_width = SIDE_PANEL_WIDTH - 2
     i = 0
 
     log_panel = FramePanel(
         position=("bottom", "right"),
-        width=log_width,
+        width=log_width + 2,
         height=13,
         margin=0,
         bg=(0, 0, 0),
         )
     log_panel.on_draw(consoles)
 
-    x, y = log_panel.bounds.left + 2, log_panel.bounds.bottom - 2
+    x, y = log_panel.bounds.left + 1, log_panel.bounds.bottom - 2
 
     for text in model.log[::-1]:
         i += tcod.console.get_height_rect(log_width, str(text))

@@ -7,6 +7,7 @@ import traceback
 from engine.game_object import GameObject
 from engine.actions import Impossible
 
+
 if TYPE_CHECKING:
     from engine.event_queue import Event, EventQueue
     from engine.location import Location

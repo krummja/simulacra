@@ -1,6 +1,7 @@
 from __future__ import annotations
-from typing import Tuple, TYPE_CHECKING
+from typing import Optional, Tuple, TYPE_CHECKING
 
+from engine.actions import Impossible
 from engine.items import Item
 from content.tiles import font_map
 
@@ -10,9 +11,11 @@ if TYPE_CHECKING:
 
 class OpenableState:
 
+    closed_sprite: Optional[int]
+    open_sprite: Optional[int]
+
     def __init__(self: OpenableState):
         self._is_open: bool = False
-        self.state: str = "closed"
 
     @property
     def is_open(self: OpenableState) -> bool:
@@ -22,11 +25,11 @@ class OpenableState:
     def is_open(self: OpenableState, value: bool) -> None:
         self._is_open = value
 
+    def mut_state(self: OpenableState) -> None:
+        pass
+
 
 class Door(Item, OpenableState):
-
-    closed_sprite: int = font_map['door_01']
-    open_sprite: int = font_map['door_02']
 
     def __init__(
             self: Door,
@@ -35,7 +38,6 @@ class Door(Item, OpenableState):
             bg: Tuple[int, int, int],
             noun_text: str,
             location: Location,
-            passable: bool,
             equippable: bool
         ) -> None:
         Item.__init__(
@@ -45,29 +47,29 @@ class Door(Item, OpenableState):
             bg,
             noun_text,
             location,
-            passable,
             equippable
             )
         OpenableState.__init__(self)
-        self.location.area.tiles[self.location.x, self.location.y]["transparent"] = False
+
+        self.x = self.location.x
+        self.y = self.location.y
+        self.suffix = "(closed)"
+        self.location.area.tiles[self.x, self.y]["transparent"] = False
+        self.location.area.tiles[self.x, self.y]["move_cost"] = 0
+        self.open_sprite = font_map['door_01']
+        self.closed_sprite = font_map['door_02']
 
     def mut_state(self: Door) -> None:
-        if self.is_open is True:
-            self.is_open = False
-            self.state = "closed"
-            self.passable = False
-            self.location.area.model.report(f"{self.noun_text} swings shut.")
-            self.location.area.tiles[self.location.x, self.location.y]["transparent"] = False
-            self.location.area.update_fov()
-            self.char = self.closed_sprite
-        elif self.is_open is False:
-            self.is_open = True
-            self.state = "open"
-            self.passable = True
-            self.location.area.model.report(f"{self.noun_text} creaks open.")
-            self.location.area.tiles[self.location.x, self.location.y]["transparent"] = True
-            self.location.area.update_fov()
-            self.char = self.open_sprite
+        self.char = self.open_sprite if self.is_open else self.closed_sprite
+        self.is_open = not self.is_open
+        self.suffix = "(closed)" if not self.is_open else "(open)"
+        self.location.area.tiles[self.x, self.y]["transparent"] = self.is_open
+        self.location.area.tiles[self.x, self.y]["move_cost"] = int(self.is_open)
+        self.location.area.update_fov()
+
+    def lift(self: Door) -> None:
+        if self.location:
+            raise Impossible("You can't take that!")
 
     def plan_activate(self: Door, action):
         return action

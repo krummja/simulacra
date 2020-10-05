@@ -80,13 +80,41 @@ class ExamineNearby(Action):
             self.model.report("There is nothing of note nearby.")
 
 
+class ActivateItem(ActionWithItem):
+
+    def plan(self: ActivateItem) -> ActionWithItem:
+        # TODO: Hmm... this is a bit of a messy situation
+        assert self.item in self.actor.game_object.components['inventory'].contents
+        return self.item.plan_activate(self)
+
+    def act(self: ActivateItem) -> None:
+        assert self.item in self.actor.game_object.components['inventory'].contents
+        self.item.action_activate(self)
+        self.actor.reschedule(100)
+
+
 class ActivateNearby(ActionWithItem):
 
-    def plan(self: ActivateNearby):
+    def plan(self: ActivateNearby) -> ActionWithItem:
         # TODO: Replace with a check against "item.interactive"
         assert isinstance(self.item, Door)
         return self.item.plan_activate(self)
 
-    def act(self: ActivateNearby):
+    def act(self: ActivateNearby) -> None:
         self.item.mut_state()
         self.actor.reschedule(100)
+
+
+class Pickup(Action):
+
+    # FIXME: Clean up the pickup logic, notably it reports item is picked up even when it cannot be
+    def plan(self: Pickup) -> Action:
+        if not self.area.items.get(self.location.xy):
+            raise Impossible("There is nothing to pick up.")
+        return self
+
+    def act(self: Pickup) -> None:
+        for item in self.area.items[self.location.xy]:
+            self.report(f"{self.actor.game_object.noun_text} picks up the {item.noun_text}")
+            self.actor.game_object.components['inventory'].take(item)
+            return self.actor.reschedule(100)
