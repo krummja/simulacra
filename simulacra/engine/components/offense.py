@@ -16,6 +16,3 @@ class Offense(Component):
 
     def plan_attack(self: Offense, action: Action) -> Action:
         return action
-
-    def attack(self: Offense, target: GameObject) -> None:
-        pass

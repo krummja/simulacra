@@ -7,6 +7,7 @@ from states import SaveAndQuit, State, StateBreak, T
 from engine.actions import Action, common
 from engine.rendering import draw_main_view, draw_log
 from engine.geometry import *
+from engine.items.weapon import Weapon
 
 from interface.panel import Panel
 from interface.frame_panel import FramePanel
@@ -129,7 +130,7 @@ class ExamineState(OverlayState):
             position=("center", "right"),
             width=30,
             height=len(self.items) + 4,
-            bg=(50, 50, 50),
+            bg=(0, 0, 0),
             title="nearby"
             )
 
@@ -145,7 +146,6 @@ class ExamineState(OverlayState):
             y = self.right_panel.bounds.top + 2
             consoles['INTERFACE'].print(x, y + i, f"{sym}: {item.noun_text} {item.suffix}")
 
-        # TODO: I feel like this could be more cleanly implemented.
         consoles['INTERFACE'].blit(
             dest=consoles['ROOT'],
             dest_x=self.right_panel.x,
@@ -189,12 +189,23 @@ class BaseEquipmentMenu(OverlayState):
             position=("center", "left"),
             width=30,
             height=len(self.equipment.contents) + 4,
-            bg=(50, 50, 50),
+            bg=(0, 0, 0),
             title="equipment"
+            )
+
+        self.inventory = self.model.player.components['INVENTORY']
+        self.right_panel = FramePanel(
+            parent=self.wrapper_panel,
+            position=("center", "right"),
+            width=30,
+            height=len(self.inventory.contents) + 4,
+            bg=(0, 0, 0),
+            title="inventory"
             )
 
     def on_draw(self: BaseEquipmentMenu, consoles: Dict[str, Console]) -> None:
         self.left_panel.on_draw(consoles)
+        self.right_panel.on_draw(consoles)
 
         for i, item in enumerate(self.equipment.contents):
             sym = self.equipment.symbols[i]
@@ -240,7 +251,7 @@ class BaseInventoryMenu(OverlayState):
             position=("center", "right"),
             width=30,
             height=len(self.inventory.contents) + 4,
-            bg=(50, 50, 50),
+            bg=(0, 0, 0),
             title="inventory"
             )
 
@@ -251,7 +262,7 @@ class BaseInventoryMenu(OverlayState):
             sym = self.inventory.symbols[i]
             x = self.right_panel.bounds.left + 2
             y = self.right_panel.bounds.top + 2
-            consoles['INTERFACE'].print(x, y + i, f"{sym}: {item.noun_text}")
+            consoles['INTERFACE'].print(x, y + i, f"{sym}: {chr(item.char)}   {item.noun_text}")
 
         consoles['INTERFACE'].blit(
             dest=consoles['ROOT'],
@@ -283,4 +294,5 @@ class BaseInventoryMenu(OverlayState):
 class UseInventory(BaseInventoryMenu):
 
     def pick_item(self: UseInventory, item: Item) -> Action:
-        return common.ActivateItem(self.model.player.components['ACTOR'], item)
+        if isinstance(item, Weapon):
+            return common.ActivateItem(self.model.player.components['ACTOR'], item)

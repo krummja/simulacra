@@ -90,10 +90,12 @@ class ActivateItem(ActionWithItem):
 
 class ActivateNearby(ActionWithItem):
 
+    # FIXME: Currently breaks if the item is not actually interactive
     def plan(self: ActivateNearby) -> ActionWithItem:
-        # TODO: Replace with a check against "item.interactive"
-        assert isinstance(self.item, Door)
-        return self.item.plan_activate(self)
+        if isinstance(self.item, Door):
+            return self.item.plan_activate(self)
+        else:
+            pass
 
     def act(self: ActivateNearby) -> None:
         assert isinstance(self.item, Door)
@@ -112,5 +114,5 @@ class Pickup(Action):
     def act(self: Pickup) -> None:
         for item in self.area.items[self.location.xy]:
             self.report(f"{self.actor.game_object.noun_text} picks up the {item.noun_text}")
-            self.actor.game_object.components['inventory'].take(item)
+            self.actor.game_object.components['INVENTORY'].take(item)
             return self.actor.reschedule(100)
