@@ -10,6 +10,8 @@ if TYPE_CHECKING:
 
 class FramePanel(Panel):
 
+    _focused: bool = False
+
     def __init__(
             self,
             position: Optional[Tuple[str, str]] = None,
@@ -20,7 +22,7 @@ class FramePanel(Panel):
             vertical_offset: int = 0,
             horizontal_offset: int = 0,
             fg: Tuple[int, int, int] = (255, 255, 255),
-            bg: Tuple[int, int, int] = (0, 0, 0),
+            bg: Tuple[int, int, int] = (50, 50, 50),
             title: str=""
             ) -> None:
         super().__init__(
@@ -32,9 +34,17 @@ class FramePanel(Panel):
             vertical_offset=vertical_offset,
             horizontal_offset=horizontal_offset,
             fg=fg,
-            bg=bg
+            bg=(100, 0, 0) if self.focused else (0, 0, 0)
             )
         self.title = title
+
+    @property
+    def focused(self: FramePanel) -> bool:
+        return self._focused
+
+    @focused.setter
+    def focused(self: FramePanel, value: bool) -> None:
+        self._focused = value
 
     def on_draw(self, consoles: Dict[str, Console]) -> None:
         consoles['INTERFACE'].draw_frame(
@@ -42,7 +52,9 @@ class FramePanel(Panel):
             y=self.y,
             width=self.width,
             height=self.height,
-            title=self.title
+            title=self.title,
+            fg=self.fg,
+            bg=self.bg
             )
 
         consoles['INTERFACE'].blit(
@@ -52,5 +64,5 @@ class FramePanel(Panel):
             src_x=self.x,
             src_y=self.y,
             width=self.width,
-            height=self.height
+            height=self.height,
             )

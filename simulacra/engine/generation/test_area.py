@@ -6,10 +6,13 @@ import numpy as np
 
 from content.tiles.floors import *
 from content.tiles.walls import *
+from content.tiles.forest import *
 from engine.area import Area
+from engine.generation import process_map, process_doors
 from engine.items.door import Door
 from engine.player import Player
-from engine.actions.behaviors.player_control import PlayerControl
+from engine.room import Room
+from engine.items.weapon import Sword
 
 if TYPE_CHECKING:
     from engine.tile import Tile
@@ -25,24 +28,52 @@ def roll_asset(area: Area, asset: Dict[str, Dict[str, Tile]], threshold: int):
     return area
 
 
-data_path = './simulacra/engine/generation/map_test.csv'
-BASE_MAP = np.genfromtxt(data_path, delimiter=',', dtype=str)
+data_path = './simulacra/engine/generation/'
+BASE_MAP = np.genfromtxt(f"{data_path}map_test.csv", delimiter=',', dtype=str)
+DOOR_MAP = np.genfromtxt(f"{data_path}map_test_doors.csv", delimiter=',', dtype=str)
+rules = [
+    ('.', floors['bare']['wood']),
+    ('W', walls['bare']['bricks_01']),
+    ('_', walls['bare']['window_01']),
+    ('|', walls['bare']['window_02']),
+    ('b', walls['bare']['beveled_01']),
+    ('B', walls['bare']['barrel']),
+    ('p', basic_forest['paving_stones_01']),
+    ('P', basic_forest['paving_stones_02']),
+    ('G', basic_forest['gravel_01']),
+    ]
 
 
 def test_area(model: Model) -> Area:
     area = Area(model, 256, 256)
 
-    area.tiles[...] = floors['bare']['wood']
+    test_room = Room(20, 20, 20, 20)
+    area.tiles[...] = basic_forest['ground_01']
+    roll_asset(area, basic_forest['tree_01'], 20)
+    roll_asset(area, basic_forest['clutter_01'], 10)
+    roll_asset(area, basic_forest['ground_02'], 10)
+    roll_asset(area, basic_forest['flowers_01'], 5)
+    roll_asset(area, basic_forest['flowers_02'], 5)
+    roll_asset(area, basic_forest['rock_01'], 2)
+    roll_asset(area, basic_forest['rock_02'], 2)
+    area = process_map(area, BASE_MAP, rules)
+    doors = process_doors(DOOR_MAP)
 
-    area.tiles[15, 0:15] = walls['bare']['bricks_01']
-    area.tiles[15, 16:30] = walls['bare']['bricks_01']
+    for door in doors:
+        Door.place(
+            char=font_map['door_01'],
+            color=COLOR['chocolate'],
+            bg=area.get_bg_color(door[1], door[0]),
+            noun_text="solid door",
+            location=area[door[1], door[0]]
+            )
 
-    Door.place(
-        char=font_map['door_01'],
-        color=COLOR['chocolate'],
-        bg=area.get_bg_color(15, 15),
-        noun_text="Test Door",
-        location=area[15, 15]
+    Sword.place(
+        char=ord("/"),
+        color=COLOR['light gray'],
+        bg=area.get_bg_color(25, 25),
+        noun_text="simple sword",
+        location=area[25, 25]
         )
 
     area.player = Player.spawn(
@@ -50,7 +81,7 @@ def test_area(model: Model) -> Area:
         (255, 0, 255),
         (0, 0, 0),
         "Player",
-        area[10, 10],
+        area[test_room.center],
         )
     area.update_fov()
 

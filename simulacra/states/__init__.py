@@ -38,7 +38,7 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
 
     def __init__(self: State) -> None:
         super().__init__()
-        self.COMMAND_KEYS: Dict[int, str] = {
+        self._COMMAND_KEYS: Dict[int, str] = {
             tcod.event.K_d: "drop",
             tcod.event.K_e: "equipment",
             tcod.event.K_i: "inventory",
@@ -49,7 +49,7 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
             tcod.event.K_l: "examine",
             }
 
-        self.MOVE_KEYS: Dict[int, Vec] = {
+        self._MOVE_KEYS: Dict[int, Vec] = {
             # Arrow keys.
             tcod.event.K_LEFT: (-1, 0),
             tcod.event.K_RIGHT: (1, 0),
@@ -82,6 +82,14 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
             tcod.event.K_n: (1, 1),
             }
 
+    @property
+    def COMMAND_KEYS(self: State) -> Dict[int, str]:
+        return self._COMMAND_KEYS
+
+    @property
+    def MOVE_KEYS(self: State) -> Dict[int, Vec]:
+        return self._MOVE_KEYS
+
     def loop(self: State[T]) -> Optional[T]:
         self.on_draw(config.CONSOLES)
         config.CONTEXT.present(config.CONSOLES['ROOT'])
@@ -94,6 +102,10 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
                     return None
                 if value is not None:
                     return value
+
+    def refresh(self: State[T]) -> None:
+        for console in config.CONSOLES.values():
+            console.clear()
 
     def on_draw(self: State[T], consoles: Dict[str, Console]) -> None:
         raise NotImplementedError()

@@ -3,7 +3,7 @@ from __future__ import annotations
 import tcod.context
 
 import config
-from states.test_state import TestState
+from states.main_menu import MainMenu
 
 
 def main() -> None:
@@ -16,7 +16,7 @@ def main() -> None:
         ) as config.CONTEXT:
 
         while True:
-            TestState().loop()
+            MainMenu().loop()
 
 
 if __name__ == '__main__':

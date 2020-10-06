@@ -54,8 +54,8 @@ class Door(Item, OpenableState):
 
         self.x = self.location.x
         self.y = self.location.y
-        self.location.area.tiles[self.x, self.y]["transparent"] = False
-        self.location.area.tiles[self.x, self.y]["move_cost"] = 0
+        self.location.area.tiles[self.y, self.x]["transparent"] = False
+        self.location.area.tiles[self.y, self.x]["move_cost"] = 0
         self.open_sprite = font_map['door_01']
         self.closed_sprite = font_map['door_02']
 
@@ -63,8 +63,8 @@ class Door(Item, OpenableState):
         self.char = self.open_sprite if self.is_open else self.closed_sprite
         self.is_open = not self.is_open
         self.suffix = "(closed)" if not self.is_open else "(open)"
-        self.location.area.tiles[self.x, self.y]["transparent"] = self.is_open
-        self.location.area.tiles[self.x, self.y]["move_cost"] = int(self.is_open)
+        self.location.area.tiles[self.y, self.x]["transparent"] = self.is_open
+        self.location.area.tiles[self.y, self.x]["move_cost"] = int(self.is_open)
         self.location.area.update_fov()
 
     def plan_activate(self: Door, action):
