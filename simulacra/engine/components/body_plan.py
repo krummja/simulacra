@@ -35,38 +35,14 @@ class BodyPlan(dict, Component):
         self.sides = ['LEFT', 'RIGHT']
         self.positions = ['TOP', 'BOTTOM', 'FRONT', 'BACK']
 
-        self.instance_legs()
-        self.instance_arms()
 
-    def instance_legs(self: BodyPlan) -> None:
-        pass
+class Body(dict, Component):
+    def __init__(self: Body, owner: GameObject) -> None:
+        dict.__init__(self)
+        Component.__init__(self, owner)
 
-    def instance_arms(self: BodyPlan) -> None:
-        if self.arms == 2:
-            if self.symmetric:
-                for side in self.sides:
-                    self['ARMS'] = BodyPart(
-                        self.game_object,
-                        f"ARM_{side}",
-                        False
-                        )
-                    self['HANDS'] = BodyPart(
-                        self.game_object,
-                        f"HAND_{side}",
-                        False
-                        )
+    def add_part(self: Body, part: BodyPart) -> None:
+        self[part['ident']] = part
 
-        if self.arms == 4:
-            if self.symmetric:
-                for position in self.positions:
-                    for side in self.sides:
-                        self['ARMS'] = BodyPart(
-                            self.game_object,
-                            f"ARM_{position}_{side}",
-                            False
-                            )
-                        self['HANDS'] = BodyPart(
-                            self.game_object,
-                            f"HAND_{position}_{side}",
-                            False
-                            )
+    def get_part(self: Body, part: str) -> BodyPart:
+        return self[part]

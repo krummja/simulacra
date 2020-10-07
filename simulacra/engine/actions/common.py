@@ -9,10 +9,9 @@ from engine.items.door import Door
 class Wait(Action):
 
     def act(self: Wait) -> None:
-        self.actor.location = self.actor.location
         if self.actor.is_player:
             self.area.update_fov()
-        self.actor.reschedule(100)
+        self.actor.reschedule(0)
 
 
 class MoveTo(ActionWithPosition):
@@ -20,17 +19,17 @@ class MoveTo(ActionWithPosition):
     def plan(self: MoveTo) -> Action:
         if self.actor.location.distance_to(*self.target_position) > 1:
             raise Impossible(
-                f"Can't move from {self.actor.location.xy} "
+                f"can't move from {self.actor.location.xy} "
                 f"to {self.target_position}."
                 )
         if self.actor.location.xy == self.target_position:
             return self
         if self.area.is_blocked(*self.target_position):
-            raise Impossible("The way is blocked.")
+            raise Impossible("the way is blocked.")
         return self
 
     def act(self: MoveTo) -> None:
-        self.actor.location = self.area[self.target_position]
+        self.actor.owner.location = self.area[self.target_position]
         if self.actor.is_player:
             self.area.update_fov()
         self.actor.reschedule(100)
@@ -60,7 +59,6 @@ class ExamineNearby(Action):
             try:
                 if self.area.items[position[0], position[1]]:
                     self.area.nearby_items.append(self.area.items[position])
-                    print(self.area.nearby_items)
             except KeyError:
                 continue
         return self
@@ -69,7 +67,9 @@ class ExamineNearby(Action):
         if len(self.area.nearby_items) > 0:
             for items in self.area.nearby_items:
                 for item in items:
-                    self.model.report(f"You see {item} nearby.")
+                    # TODO: Use the noun_text attribute
+                    # TODO: Set up a way to parse a/an prefixing
+                    self.model.report(f"{item} is nearby.")
             self.area.nearby_items.clear()
         else:
             self.model.report("There is nothing of note nearby.")
@@ -79,11 +79,11 @@ class ActivateItem(ActionWithItem):
 
     def plan(self: ActivateItem) -> ActionWithItem:
         # TODO: Hmm... this is a bit of a messy situation
-        assert self.item in self.actor.game_object.components['INVENTORY'].contents
+        assert self.item in self.actor.owner.components['INVENTORY'].contents
         return self.item.plan_activate(self)
 
     def act(self: ActivateItem) -> None:
-        assert self.item in self.actor.game_object.components['INVENTORY'].contents
+        assert self.item in self.actor.owner.components['INVENTORY'].contents
         self.item.action_activate(self)
         self.actor.reschedule(100)
 
@@ -92,10 +92,13 @@ class ActivateNearby(ActionWithItem):
 
     # FIXME: Currently breaks if the item is not actually interactive
     def plan(self: ActivateNearby) -> ActionWithItem:
-        if isinstance(self.item, Door):
-            return self.item.plan_activate(self)
+        if self.item.interactive:
+            try:
+                return self.item.plan_activate(self)
+            except Impossible("nothing happens..."):
+                raise
         else:
-            pass
+            raise Impossible("nothing happens...")
 
     def act(self: ActivateNearby) -> None:
         assert isinstance(self.item, Door)
@@ -105,14 +108,36 @@ class ActivateNearby(ActionWithItem):
 
 class Pickup(Action):
 
-    # FIXME: Clean up the pickup logic, notably it reports item is picked up even when it cannot be
     def plan(self: Pickup) -> Action:
         if not self.area.items.get(self.location.xy):
-            raise Impossible("There is nothing to pick up.")
+            raise Impossible("there is nothing to pick up.")
         return self
 
     def act(self: Pickup) -> None:
         for item in self.area.items[self.location.xy]:
-            self.report(f"{self.actor.game_object.noun_text} picks up the {item.noun_text}")
-            self.actor.game_object.components['INVENTORY'].take(item)
-            return self.actor.reschedule(100)
+            try:
+                if item.components['PHYSICS'].movable:
+                    self.report(f"{self.actor.owner.noun_text} picks up the {item.noun_text}.")
+                    self.actor.owner.components['INVENTORY'].take(item)
+                    return self.actor.reschedule(100)
+                else:
+                    raise Impossible(f"the {item.noun_text} doesn't budge...")
+            except Impossible:
+                self.report(f"{self.actor.owner.noun_text} cannot lift the {item.noun_text}!")
+
+
+"""
+Notes:
+Alright, I think I have it figured out now...
+The way to check an action is to do a `try... except` catch.
+If the `try...` fails, except `Impossible` and optionally provide flavor text.
+This can also be done with an `if... else` check that is distinct from the
+    `try... except` clause, so that there is a default "fallback" in case the 
+    `try...` portion fails for whatever reason.
+    
+Importantly, these checks ought to primarily be done against a component of the
+relevant target. The `try... except` with an embedded `if... else` means that
+I can consistently check against a set of components, where if the component
+simply doesn't exist, it's treated as a failure and is caught as a default 
+Impossible exception. Very nice.
+"""

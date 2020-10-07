@@ -1,8 +1,8 @@
 from __future__ import annotations
-from typing import Dict, Optional, Tuple, TYPE_CHECKING
+from typing import Dict, Optional, TYPE_CHECKING
 
 from engine.log import Noun
-from engine.sprite import Sprite
+from engine.graphic import Graphic
 
 if TYPE_CHECKING:
     from engine.area import Area
@@ -17,28 +17,14 @@ class ComponentSet(dict):
         super().__init__()
 
 
-class GameObject(Sprite, Noun):
-    """
-    The [GameObject] class is the primary representation of A Thing in the
-    game world. It extends the [Sprite] class which provides its graphical
-    data, and the [Noun] class which provides its descriptive data.
+class GameObject(Graphic, Noun):
+    render_order = 1
 
-    On top of these, the [GameObject] introduces properties for [Location]
-    and [ComponentSet], both of which are fundamental for defining the basic
-    characteristics of an object in the game.
-    """
-
-    def __init__(
-            self: GameObject,
-            char: int,
-            color: Tuple[int, int, int],
-            bg: Tuple[int, int, int],
-            noun_text: str,
-            ) -> None:
-        Sprite.__init__(self, char, color, bg)
-        Noun.__init__(self, noun_text)
+    def __init__(self: GameObject, location: Location) -> None:
+        Graphic.__init__(self)
+        Noun.__init__(self)
+        self._location = location
         self._components: ComponentSet = ComponentSet()
-        self._location: Optional[Location] = None
 
     @property
     def components(self: GameObject) -> ComponentSet:

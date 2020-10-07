@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import List, Type, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from engine.model import Model
@@ -7,6 +7,8 @@ if TYPE_CHECKING:
 
 
 class Component:
+    ident: str = "<unnamed>"
+    depends: List[str] = []
 
-    def __init__(self: Component, game_object: GameObject) -> None:
-        self.game_object = game_object
+    def __init__(self: Component, owner: GameObject) -> None:
+        self.owner = owner

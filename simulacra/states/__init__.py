@@ -71,15 +71,6 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
             tcod.event.K_KP_7: (-1, -1),
             tcod.event.K_KP_8: (0, -1),
             tcod.event.K_KP_9: (1, -1),
-            # Vi keys.
-            tcod.event.K_h: (-1, 0),
-            tcod.event.K_j: (0, 1),
-            tcod.event.K_k: (0, -1),
-            tcod.event.K_l: (1, 0),
-            tcod.event.K_y: (-1, -1),
-            tcod.event.K_u: (1, -1),
-            tcod.event.K_b: (-1, 1),
-            tcod.event.K_n: (1, 1),
             }
 
     @property

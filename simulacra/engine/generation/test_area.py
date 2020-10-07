@@ -12,7 +12,7 @@ from engine.generation import process_map, process_doors
 from engine.items.door import Door
 from engine.player import Player
 from engine.room import Room
-from engine.items.weapon import Sword
+from engine.items.test_item import TestItem
 
 if TYPE_CHECKING:
     from engine.tile import Tile
@@ -68,21 +68,10 @@ def test_area(model: Model) -> Area:
             location=area[door[1], door[0]]
             )
 
-    Sword.place(
-        char=ord("/"),
-        color=COLOR['light gray'],
-        bg=area.get_bg_color(25, 25),
-        noun_text="simple sword",
-        location=area[25, 25]
-        )
+    TestItem.place(ord("$"), (0, 255, 255), (0, 0, 0), "test item", area[32, 32])
 
-    area.player = Player.spawn(
-        ord("@"),
-        (255, 0, 255),
-        (0, 0, 0),
-        "Player",
-        area[test_room.center],
-        )
+    area.player = Player.spawn(area[test_room.center])
+    area.player.noun_text = "test player"
     area.update_fov()
 
     return area

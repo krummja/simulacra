@@ -148,12 +148,12 @@ class Area:
                 continue
             if not self.visible[obj.location.ij]:
                 continue
-            obj.game_object.bg = self.get_bg_color(
+            obj.owner.bg = self.get_bg_color(
                 obj.location.x,
                 obj.location.y
                 )
 
-            visible_objs[obj_y, obj_x].append(obj.game_object)
+            visible_objs[obj_y, obj_x].append(obj.owner)
 
         for (item_x, item_y), items in self.items.items():
             obj_x, obj_y = item_x - cam_x, item_y - cam_y

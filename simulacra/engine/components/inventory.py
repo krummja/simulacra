@@ -23,7 +23,7 @@ class Inventory(Component):
     def take(self: Inventory, item: Item) -> None:
         """Take an item from its current location and put it in self."""
         assert item.owner is not self
-        assert item.liftable, "You cannot take that!"
         item.lift()
         self.contents.append(item)
         item.owner = self
+

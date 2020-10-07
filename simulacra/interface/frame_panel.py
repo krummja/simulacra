@@ -22,7 +22,7 @@ class FramePanel(Panel):
             vertical_offset: int = 0,
             horizontal_offset: int = 0,
             fg: Tuple[int, int, int] = (255, 255, 255),
-            bg: Tuple[int, int, int] = (50, 50, 50),
+            bg: Tuple[int, int, int] = (0, 0, 0),
             title: str=""
             ) -> None:
         super().__init__(
@@ -34,7 +34,7 @@ class FramePanel(Panel):
             vertical_offset=vertical_offset,
             horizontal_offset=horizontal_offset,
             fg=fg,
-            bg=(100, 0, 0) if self.focused else (0, 0, 0)
+            bg=bg
             )
         self.title = title
 
@@ -52,9 +52,14 @@ class FramePanel(Panel):
             y=self.y,
             width=self.width,
             height=self.height,
-            title=self.title,
             fg=self.fg,
             bg=self.bg
+            )
+
+        consoles['INTERFACE'].print(
+            x=self.x+2,
+            y=self.y,
+            string=self.title
             )
 
         consoles['INTERFACE'].blit(

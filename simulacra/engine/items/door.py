@@ -1,8 +1,9 @@
 from __future__ import annotations
 from typing import Optional, Tuple, TYPE_CHECKING
 
-from engine.items import Item
 from content.tiles import font_map
+from engine.items import Item
+from engine.components.physics import Physics
 
 if TYPE_CHECKING:
     from engine.location import Location
@@ -30,26 +31,12 @@ class OpenableState:
 
 class Door(Item, OpenableState):
 
-    def __init__(
-            self: Door,
-            char: int,
-            color: Tuple[int, int, int],
-            bg: Tuple[int, int, int],
-            noun_text: str,
-            location: Location
-        ) -> None:
-        Item.__init__(
-            self,
-            char,
-            color,
-            bg,
-            noun_text,
-            location
-            )
+    def __init__(self: Door, location: Location) -> None:
+        Item.__init__(self, location)
         OpenableState.__init__(self)
-        self.equippable = False
-        self.liftable = False
-        self.owner = None
+        self.components['PHYSICS'] = Physics(self, -1)
+        # self.liftable = self.components['PHYSICS'].movable
+        self.interactive = True
         self.suffix = "(closed)"
 
         self.x = self.location.x

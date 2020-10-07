@@ -15,33 +15,24 @@ if TYPE_CHECKING:
 
 
 class Actor(Component):
-    """
-    The [Actor] is a semantic class that interfaces with the Action system,
-    capable of directly enqueueing new Action types.
-    """
 
     def __init__(
             self: Actor,
-            game_object: GameObject,
+            owner: GameObject,
             behavior: Type[Behavior]
         ) -> None:
-        super().__init__(game_object)
+        super().__init__(owner)
         self.behavior = behavior(self)
-        # self._location = self.game_object.location
-        self.game_object.location.area.actors.add(self)
+        self.owner.location.area.actors.add(self)
         self.event: Optional[Event] = self.scheduler.schedule(0, self.enqueue)
 
     @property
     def location(self: Actor) -> Location:
-        return self.game_object.location
-
-    @location.setter
-    def location(self: Actor, value: Location) -> None:
-        self.game_object.location = value
+        return self.owner.location
 
     @property
     def is_player(self: Actor) -> bool:
-        result = self.game_object.location.area.player is self.game_object
+        result = self.owner.location.area.player is self.owner
         return result
 
     def enqueue(self: Actor, scheduler: EventQueue, event: Event) -> None:

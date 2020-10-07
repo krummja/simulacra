@@ -7,7 +7,6 @@ from states import SaveAndQuit, State, StateBreak, T
 from engine.actions import Action, common
 from engine.rendering import draw_main_view, draw_log
 from engine.geometry import *
-from engine.items.weapon import Weapon
 
 from interface.panel import Panel
 from interface.frame_panel import FramePanel
@@ -28,7 +27,7 @@ class AreaState(Generic[T], State[T]):
             position=("top", "right"),
             width=SIDE_PANEL_WIDTH,
             height=SIDE_PANEL_HEIGHT,
-            bg=(50, 50, 50)
+            bg=(0, 0, 0)
             )
 
     def on_draw(self: AreaState, consoles: Dict[str, Console]) -> None:
@@ -123,12 +122,13 @@ class ExamineState(OverlayState):
         super().__init__(model)
 
         self.items = self.model.current_area.nearby_items
+        self.at_feet = self.model.current_area
         self.symbols = "abcdefghijklmnopqrstuvwxyz"
 
         self.right_panel = FramePanel(
             parent=self.wrapper_panel,
             position=("center", "right"),
-            width=30,
+            width=28,
             height=len(self.items) + 4,
             bg=(0, 0, 0),
             title="nearby"
@@ -138,8 +138,6 @@ class ExamineState(OverlayState):
         self.right_panel.on_draw(consoles)
         self.items = [item for sublist in self.items for item in sublist]
 
-        # TODO: Make this into an interface component
-        # TODO: Make it possible to feed direction info as well
         for i, item in enumerate(self.items):
             sym = self.symbols[i]
             x = self.right_panel.bounds.left + 2
@@ -186,42 +184,43 @@ class BaseEquipmentMenu(OverlayState):
         self.equipment = self.model.player.components['EQUIPMENT']
         self.left_panel = FramePanel(
             parent=self.wrapper_panel,
-            position=("center", "left"),
-            width=30,
-            height=len(self.equipment.contents) + 4,
+            position=("top", "left"),
+            width=(STAGE_PANEL_WIDTH // 2) - 2,
+            height=STAGE_PANEL_HEIGHT,
             bg=(0, 0, 0),
-            title="equipment"
+            title=" equipment "
             )
 
         self.inventory = self.model.player.components['INVENTORY']
         self.right_panel = FramePanel(
             parent=self.wrapper_panel,
-            position=("center", "right"),
-            width=30,
-            height=len(self.inventory.contents) + 4,
+            position=("top", "right"),
+            width=(STAGE_PANEL_WIDTH // 2) - 2,
+            height=STAGE_PANEL_HEIGHT,
             bg=(0, 0, 0),
-            title="inventory"
+            title=" inventory "
             )
 
     def on_draw(self: BaseEquipmentMenu, consoles: Dict[str, Console]) -> None:
         self.left_panel.on_draw(consoles)
         self.right_panel.on_draw(consoles)
 
-        for i, item in enumerate(self.equipment.contents):
-            sym = self.equipment.symbols[i]
-            x = self.left_panel.bounds.left + 2
-            y = self.left_panel.bounds.top + 2
-            consoles['INTERFACE'].print(x, y + i, f"{sym}: {item.noun_text}")
+        # for i, item in enumerate(self.equipment.contents):
+        #
+        #     sym = self.equipment.symbols[i]
+        #     x = self.left_panel.bounds.left + 2
+        #     y = self.left_panel.bounds.top + 2
+        #     consoles['INTERFACE'].print(x, y + i, f"{sym}: {item}")
 
-        consoles['INTERFACE'].blit(
-            dest=consoles['ROOT'],
-            dest_x=self.left_panel.x,
-            dest_y=self.left_panel.y,
-            src_x=self.left_panel.x,
-            src_y=self.left_panel.y,
-            width=self.left_panel.width,
-            height=self.left_panel.height
-            )
+        # Enumerate Inventory Contents
+        # FIXME: The inventory contents don't show up.
+        # TODO: Make it so that inventory only appears when an equipment slot
+        # TODO: ... is selected.
+        for i, item in enumerate(self.inventory.contents):
+            sym = self.inventory.symbols[i]
+            x = self.right_panel.bounds.left + 2
+            y = self.right_panel.bounds.top + 2
+            consoles['INTERFACE'].print(x, y + i, f"{sym}: {chr(item.char)}   {item.noun_text}")
 
     def ev_keydown(self: BaseEquipmentMenu, event: tcod.event.KeyDown) -> Optional[Action]:
         char: Optional[str] = None
@@ -229,11 +228,11 @@ class BaseEquipmentMenu(OverlayState):
             char = chr(event.sym)
         except ValueError:
             pass
-        if char and char in self.equipment.symbols:
-            index = self.equipment.symbols.index(char)
-            if index < len(self.equipment.contents):
-                item = self.equipment.contents[index]
-                return self.pick_item(item)
+        # if char and char in self.equipment.symbols:
+        #     index = self.equipment.symbols.index(char)
+        #     if index < len(self.equipment.contents):
+        #         item = self.equipment.contents[index]
+        #         return self.pick_item(item)
         return super().ev_keydown(event)
 
     def pick_item(self: BaseEquipmentMenu, item: Item) -> Optional[Action]:
@@ -248,11 +247,11 @@ class BaseInventoryMenu(OverlayState):
         self.inventory = self.model.player.components['INVENTORY']
         self.right_panel = FramePanel(
             parent=self.wrapper_panel,
-            position=("center", "right"),
-            width=30,
-            height=len(self.inventory.contents) + 4,
+            position=("top", "right"),
+            width=(STAGE_PANEL_WIDTH // 2) - 2,
+            height=STAGE_PANEL_HEIGHT,
             bg=(0, 0, 0),
-            title="inventory"
+            title=" inventory "
             )
 
     def on_draw(self: BaseInventoryMenu, consoles: Dict[str, Console]) -> None:
@@ -292,7 +291,5 @@ class BaseInventoryMenu(OverlayState):
 
 
 class UseInventory(BaseInventoryMenu):
-
     def pick_item(self: UseInventory, item: Item) -> Action:
-        if isinstance(item, Weapon):
-            return common.ActivateItem(self.model.player.components['ACTOR'], item)
+        return common.ActivateItem(self.model.player.components['ACTOR'], item)
