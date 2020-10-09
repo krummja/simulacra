@@ -3,7 +3,6 @@ from __future__ import annotations
 from engine.geometry import *
 from engine.actions import (Impossible, Action, ActionWithPosition,
                             ActionWithDirection, ActionWithItem)
-from engine.items.door import Door
 
 
 class Wait(Action):
@@ -14,9 +13,9 @@ class Wait(Action):
         self.actor.reschedule(0)
 
 
-class MoveTo(ActionWithPosition):
+class MoveStart(ActionWithPosition):
 
-    def plan(self: MoveTo) -> Action:
+    def plan(self: MoveStart) -> Action:
         if self.actor.location.distance_to(*self.target_position) > 1:
             raise Impossible(
                 f"can't move from {self.actor.location.xy} "
@@ -28,28 +27,28 @@ class MoveTo(ActionWithPosition):
             raise Impossible("the way is blocked.")
         return self
 
-    def act(self: MoveTo) -> None:
+    def act(self: MoveStart) -> None:
         self.actor.owner.location = self.area[self.target_position]
         if self.actor.is_player:
             self.area.update_fov()
         self.actor.reschedule(100)
 
 
-class MoveTowards(ActionWithPosition):
+class Move(ActionWithDirection):
 
-    def plan(self: MoveTowards) -> Action:
+    def plan(self: Move) -> Action:
+        return MoveStart(self.actor, self.target_position).plan()
+
+
+class MoveEnd(ActionWithPosition):
+
+    def plan(self: MoveEnd) -> Action:
         dx = self.target_position[0] - self.location.x
         dy = self.target_position[1] - self.location.y
         distance = max(abs(dx), abs(dy))
         dx = int(round(dx / distance))
         dy = int(round(dy / distance))
         return Move(self.actor, (dx, dy)).plan()
-
-
-class Move(ActionWithDirection):
-
-    def plan(self: Move) -> Action:
-        return MoveTo(self.actor, self.target_position).plan()
 
 
 class ExamineNearby(Action):
@@ -90,7 +89,6 @@ class ActivateItem(ActionWithItem):
 
 class ActivateNearby(ActionWithItem):
 
-    # FIXME: Currently breaks if the item is not actually interactive
     def plan(self: ActivateNearby) -> ActionWithItem:
         if self.item.interactive:
             try:
@@ -101,8 +99,7 @@ class ActivateNearby(ActionWithItem):
             raise Impossible("nothing happens...")
 
     def act(self: ActivateNearby) -> None:
-        assert isinstance(self.item, Door)
-        self.item.mut_state()
+        self.item.action_activate(self)
         self.actor.reschedule(100)
 
 
@@ -126,18 +123,18 @@ class Pickup(Action):
                 self.report(f"{self.actor.owner.noun_text} cannot lift the {item.noun_text}!")
 
 
-"""
-Notes:
-Alright, I think I have it figured out now...
-The way to check an action is to do a `try... except` catch.
-If the `try...` fails, except `Impossible` and optionally provide flavor text.
-This can also be done with an `if... else` check that is distinct from the
-    `try... except` clause, so that there is a default "fallback" in case the 
-    `try...` portion fails for whatever reason.
-    
-Importantly, these checks ought to primarily be done against a component of the
-relevant target. The `try... except` with an embedded `if... else` means that
-I can consistently check against a set of components, where if the component
-simply doesn't exist, it's treated as a failure and is caught as a default 
-Impossible exception. Very nice.
-"""
+class Attack(ActionWithPosition):
+    pass
+
+
+class AttackPlayer(Action):
+    pass
+
+
+class DropItem(ActionWithItem):
+    pass
+
+
+class DrinkItem(ActionWithItem):
+    pass
+

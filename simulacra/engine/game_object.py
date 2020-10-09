@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Dict, Optional, TYPE_CHECKING
+from typing import List, Dict, Optional, TYPE_CHECKING
 
 from engine.log import Noun
 from engine.graphic import Graphic
@@ -25,6 +25,7 @@ class GameObject(Graphic, Noun):
         Noun.__init__(self)
         self._location = location
         self._components: ComponentSet = ComponentSet()
+        self._option_list: List[str] = []
 
     @property
     def components(self: GameObject) -> ComponentSet:

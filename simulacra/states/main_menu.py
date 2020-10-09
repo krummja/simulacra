@@ -32,6 +32,8 @@ class MainMenu(State[None]):
             ])
 
     def on_draw(self, consoles: Dict[str, Console]) -> None:
+        consoles['INTERFACE'].clear()
+        consoles['ROOT'].clear()
         draw_logo(consoles)
         self.help_text.on_draw(consoles)
 
@@ -43,9 +45,6 @@ class MainMenu(State[None]):
 
         elif key == tcod.event.K_RETURN:
             self.new_game()
-
-        elif key == tcod.event.K_ESCAPE:
-            pass
 
         else:
             super().ev_keydown(event)
@@ -63,5 +62,7 @@ class MainMenu(State[None]):
         try:
             self.model.loop()
         except SystemExit:
+            raise
+        except Exception:
             raise
 

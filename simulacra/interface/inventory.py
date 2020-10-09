@@ -11,10 +11,10 @@ if TYPE_CHECKING:
     from states.in_game import AreaState
 
 
-class EquipmentPanel(Panel):
+class InventoryPanel(Panel):
 
     def __init__(
-            self: EquipmentPanel,
+            self: InventoryPanel,
             position: Optional[Tuple[str, str]] = None,
             parent: Panel = None,
             width: int = CONSOLE_WIDTH,
@@ -42,18 +42,14 @@ class EquipmentPanel(Panel):
         self.state = state
 
     @property
-    def model(self: EquipmentPanel) -> Model:
+    def model(self: InventoryPanel) -> Model:
         return self.state.model
 
     @property
-    def inventory(self: EquipmentPanel) -> Inventory:
+    def inventory(self: InventoryPanel) -> Inventory:
         return self.model.player.components['INVENTORY']
 
-    @property
-    def equipment(self: EquipmentPanel):
-        return self.model.player.components['EQUIPMENT']
-
-    def on_draw(self: EquipmentPanel, consoles: Dict[str, Console]) -> None:
+    def on_draw(self: InventoryPanel, consoles: Dict[str, Console]) -> None:
         consoles['INTERFACE'].draw_frame(
             x=self.x,
             y=self.y,
@@ -68,6 +64,12 @@ class EquipmentPanel(Panel):
             y=self.y,
             string=self.title
             )
+
+        for i, item in enumerate(self.inventory.contents):
+            sym = self.inventory.symbols[i]
+            x = self.bounds.left + 2
+            y = self.bounds.top + 2
+            consoles['INTERFACE'].print(x, y + i, f"{sym}: {chr(item.char)}   {item.noun_text}")
 
         consoles['INTERFACE'].blit(
             dest=consoles['ROOT'],

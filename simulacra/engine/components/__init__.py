@@ -8,7 +8,15 @@ if TYPE_CHECKING:
 
 class Component:
     ident: str = "<unnamed>"
-    depends: List[str] = []
+    _option: str = ""
 
     def __init__(self: Component, owner: GameObject) -> None:
         self.owner = owner
+
+    @property
+    def option(self: Component) -> str:
+        return self._option
+
+    @option.setter
+    def option(self: Component, value: str) -> None:
+        self._option = value

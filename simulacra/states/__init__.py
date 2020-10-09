@@ -82,10 +82,9 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
         return self._MOVE_KEYS
 
     def loop(self: State[T]) -> Optional[T]:
-        self.on_draw(config.CONSOLES)
-        config.CONTEXT.present(config.CONSOLES['ROOT'])
-
         while True:
+            self.on_draw(config.CONSOLES)
+            config.CONTEXT.present(config.CONSOLES['ROOT'])
             for input_event in tcod.event.wait():
                 try:
                     value = self.dispatch(input_event)
@@ -93,10 +92,6 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
                     return None
                 if value is not None:
                     return value
-
-    def refresh(self: State[T]) -> None:
-        for console in config.CONSOLES.values():
-            console.clear()
 
     def on_draw(self: State[T], consoles: Dict[str, Console]) -> None:
         raise NotImplementedError()

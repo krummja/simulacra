@@ -15,6 +15,7 @@ if TYPE_CHECKING:
 
 
 class Actor(Component):
+    _option: str = "consider"
 
     def __init__(
             self: Actor,

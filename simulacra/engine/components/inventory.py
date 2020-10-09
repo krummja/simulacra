@@ -11,6 +11,7 @@ if TYPE_CHECKING:
 class Inventory(Component):
     symbols: str = "abcdefghijklmnopqrstuvwxyz"
     capacity: int = len(symbols)
+    _option: str = "look inside"
 
     def __init__(self: Inventory, game_object: GameObject) -> None:
         super().__init__(game_object)

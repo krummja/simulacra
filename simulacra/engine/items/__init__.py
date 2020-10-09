@@ -14,19 +14,10 @@ class Item(GameObject):
     def __init__(self: Item, location: Location) -> None:
         super().__init__(location)
 
-        # self._liftable: bool = False
         self._interactive: bool = False
         self._owner: Optional[Inventory] = None
         self._suffix = ""
         self._location = location
-
-    # @property
-    # def liftable(self: Item) -> bool:
-    #     return self._liftable
-    #
-    # @liftable.setter
-    # def liftable(self: Item, value: bool) -> None:
-    #     self._liftable = value
 
     @property
     def interactive(self: Item) -> bool:
