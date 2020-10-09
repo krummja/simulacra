@@ -11,6 +11,7 @@ if TYPE_CHECKING:
 class Inventory(Component):
     symbols: str = "abcdefghijklmnopqrstuvwxyz"
     capacity: int = len(symbols)
+    _option: str = "look inside"
 
     def __init__(self: Inventory, game_object: GameObject) -> None:
         super().__init__(game_object)
@@ -23,7 +24,7 @@ class Inventory(Component):
     def take(self: Inventory, item: Item) -> None:
         """Take an item from its current location and put it in self."""
         assert item.owner is not self
-        assert item.liftable, "You cannot take that!"
         item.lift()
         self.contents.append(item)
         item.owner = self
+

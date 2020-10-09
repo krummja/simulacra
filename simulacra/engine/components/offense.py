@@ -11,8 +11,17 @@ if TYPE_CHECKING:
 
 class Offense(Component):
 
-    def __init__(self: Offense, game_object: GameObject) -> None:
-        super().__init__(game_object)
+    def __init__(self: Offense, owner: GameObject) -> None:
+        super().__init__(owner)
+
+    @property
+    def attack(self: Offense) -> int:
+        might = self.owner.components['ATTRIBUTES']['might']
+        finesse = self.owner.components['ATTRIBUTES']['finesse']
+        intellect = self.owner.components['ATTRIBUTES']['intellect']
+
+        attack = might
+        return attack
 
     def plan_attack(self: Offense, action: Action) -> Action:
         return action

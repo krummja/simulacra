@@ -1,19 +1,20 @@
 from __future__ import annotations
-from typing import Optional, TYPE_CHECKING, Tuple
+from typing import Optional, Tuple, TYPE_CHECKING
 
 from config import *
 from interface.panel import Panel
+from interface.frame_panel import FramePanel
 
 if TYPE_CHECKING:
-    import tcod.console as Console
+    from engine.model import Model
+    from engine.components.inventory import Inventory
+    from states.in_game import AreaState
 
 
-class FramePanel(Panel):
-
-    _focused: bool = False
+class InventoryPanel(Panel):
 
     def __init__(
-            self,
+            self: InventoryPanel,
             position: Optional[Tuple[str, str]] = None,
             parent: Panel = None,
             width: int = CONSOLE_WIDTH,
@@ -23,8 +24,9 @@ class FramePanel(Panel):
             horizontal_offset: int = 0,
             fg: Tuple[int, int, int] = (255, 255, 255),
             bg: Tuple[int, int, int] = (0, 0, 0),
-            title: str=""
-            ) -> None:
+            title: str="",
+            state: AreaState=None
+        ) -> None:
         super().__init__(
             position=position,
             parent=parent,
@@ -37,16 +39,17 @@ class FramePanel(Panel):
             bg=bg
             )
         self.title = title
+        self.state = state
 
     @property
-    def focused(self: FramePanel) -> bool:
-        return self._focused
+    def model(self: InventoryPanel) -> Model:
+        return self.state.model
 
-    @focused.setter
-    def focused(self: FramePanel, value: bool) -> None:
-        self._focused = value
+    @property
+    def inventory(self: InventoryPanel) -> Inventory:
+        return self.model.player.components['INVENTORY']
 
-    def on_draw(self, consoles: Dict[str, Console]) -> None:
+    def on_draw(self: InventoryPanel, consoles: Dict[str, Console]) -> None:
         consoles['INTERFACE'].draw_frame(
             x=self.x,
             y=self.y,
@@ -61,6 +64,12 @@ class FramePanel(Panel):
             y=self.y,
             string=self.title
             )
+
+        for i, item in enumerate(self.inventory.contents):
+            sym = self.inventory.symbols[i]
+            x = self.bounds.left + 2
+            y = self.bounds.top + 2
+            consoles['INTERFACE'].print(x, y + i, f"{sym}: {chr(item.char)}   {item.noun_text}")
 
         consoles['INTERFACE'].blit(
             dest=consoles['ROOT'],

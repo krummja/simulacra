@@ -14,6 +14,7 @@ class classproperty(object):
 
 
 class Direction(Enum):
+    here: Tuple[int, int] = (0, 0)
     up: Tuple[int, int] = (0, -1)
     up_right: Tuple[int, int] = (1, -1)
     right: Tuple[int, int] = (1, 0)

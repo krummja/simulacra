@@ -7,15 +7,16 @@ if TYPE_CHECKING:
     from engine.game_object import GameObject
 
 
-class BodyPart(dict, Component):
+class BodyPart(dict):
 
     def __init__(
             self: BodyPart,
-            game_object: GameObject,
+            owner: GameObject,
             ident: str,
             vital: bool=False,
         ) -> None:
-        Component.__init__(self, game_object)
+        super().__init__()
+        self.owner = owner
 
         self['ident'] = ident
         self['vital'] = vital

@@ -1,10 +1,12 @@
 from __future__ import annotations
 from typing import Optional, Tuple, TYPE_CHECKING
 
-from engine.items import Item
 from content.tiles import font_map
+from engine.items import Item
+from engine.components.physics import Physics
 
 if TYPE_CHECKING:
+    from engine.actions import ActionWithItem
     from engine.location import Location
 
 
@@ -24,32 +26,17 @@ class OpenableState:
     def is_open(self: OpenableState, value: bool) -> None:
         self._is_open = value
 
-    def mut_state(self: OpenableState) -> None:
+    def action_activate(self: OpenableState, action: ActionWithItem) -> None:
         pass
 
 
 class Door(Item, OpenableState):
 
-    def __init__(
-            self: Door,
-            char: int,
-            color: Tuple[int, int, int],
-            bg: Tuple[int, int, int],
-            noun_text: str,
-            location: Location
-        ) -> None:
-        Item.__init__(
-            self,
-            char,
-            color,
-            bg,
-            noun_text,
-            location
-            )
+    def __init__(self: Door, location: Location) -> None:
+        Item.__init__(self, location)
         OpenableState.__init__(self)
-        self.equippable = False
-        self.liftable = False
-        self.owner = None
+        self.components['PHYSICS'] = Physics(self, -1)
+        self.interactive = True
         self.suffix = "(closed)"
 
         self.x = self.location.x
@@ -59,13 +46,13 @@ class Door(Item, OpenableState):
         self.open_sprite = font_map['door_01']
         self.closed_sprite = font_map['door_02']
 
-    def mut_state(self: Door) -> None:
+    def plan_activate(self: Door, action):
+        return action
+
+    def action_activate(self: Door, action: ActionWithItem) -> None:
         self.char = self.open_sprite if self.is_open else self.closed_sprite
         self.is_open = not self.is_open
         self.suffix = "(closed)" if not self.is_open else "(open)"
         self.location.area.tiles[self.y, self.x]["transparent"] = self.is_open
         self.location.area.tiles[self.y, self.x]["move_cost"] = int(self.is_open)
         self.location.area.update_fov()
-
-    def plan_activate(self: Door, action):
-        return action

@@ -5,9 +5,6 @@ class Noun:
 
     _noun_text: str = ""
 
-    def __init__(self: Noun, noun_text: str) -> None:
-        self._noun_text = noun_text
-
     @property
     def noun_text(self: Noun) -> str:
         return self._noun_text
@@ -15,6 +12,9 @@ class Noun:
     @noun_text.setter
     def noun_text(self: Noun, value: str) -> None:
         self._noun_text = value
+
+    def __str__(self: Noun) -> str:
+        return self._noun_text
 
 
 class Pronoun:

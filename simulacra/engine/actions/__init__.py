@@ -16,7 +16,15 @@ class Impossible(Exception):
 class Action:
 
     def __init__(self: Action, actor: Actor) -> None:
-        self.actor = actor
+        self._actor = actor
+
+    @property
+    def actor(self: Action) -> Actor:
+        return self._actor
+
+    @actor.setter
+    def actor(self: Action, value: Actor) -> None:
+        self._actor = value
 
     def plan(self: Action) -> Action:
         return self

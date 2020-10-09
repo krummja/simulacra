@@ -5,7 +5,7 @@ from collections import defaultdict
 import numpy as np
 
 from config import *
-from engine.player import Player
+from engine.geometry import *
 from engine.location import Location
 from engine.graphic import Graphic
 from engine.tile import tile_dt, tile_graphic
@@ -148,12 +148,12 @@ class Area:
                 continue
             if not self.visible[obj.location.ij]:
                 continue
-            obj.game_object.bg = self.get_bg_color(
+            obj.owner.bg = self.get_bg_color(
                 obj.location.x,
                 obj.location.y
                 )
 
-            visible_objs[obj_y, obj_x].append(obj.game_object)
+            visible_objs[obj_y, obj_x].append(obj.owner)
 
         for (item_x, item_y), items in self.items.items():
             obj_x, obj_y = item_x - cam_x, item_y - cam_y
@@ -168,6 +168,15 @@ class Area:
             consoles['ROOT'].tiles_rgb[
                 ["ch", "fg", "bg"]
                 ][ij] = graphic.char, graphic.color, graphic.bg
+
+    def examine_nearby(self: Area):
+        self.nearby_items.clear()
+        for position in Point(*self.model.player.location.xy).neighbors:
+            try:
+                if self.items[position[0], position[1]]:
+                    self.nearby_items.append(self.items[position])
+            except KeyError:
+                continue
 
     def get_bg_color(self: Area, x: int, y: int) -> Tuple[int, int, int]:
         tile = self.tiles[y, x]

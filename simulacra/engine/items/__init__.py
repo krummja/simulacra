@@ -11,36 +11,21 @@ if TYPE_CHECKING:
 
 class Item(GameObject):
 
-    def __init__(
-            self: Item,
-            char: int,
-            color: Tuple[int, int, int],
-            bg: Tuple[int, int, int],
-            noun_text: str,
-            location: Location
-        ) -> None:
-        super().__init__(char, color, bg, noun_text)
-        self._equippable: bool = False
-        self._liftable: bool = False
+    def __init__(self: Item, location: Location) -> None:
+        super().__init__(location)
+
+        self._interactive: bool = False
         self._owner: Optional[Inventory] = None
         self._suffix = ""
         self._location = location
 
     @property
-    def equippable(self: Item) -> bool:
-        return self._equippable
+    def interactive(self: Item) -> bool:
+        return self._interactive
 
-    @equippable.setter
-    def equippable(self: Item, value: bool) -> None:
-        self._equippable = value
-
-    @property
-    def liftable(self: Item) -> bool:
-        return self._liftable
-
-    @liftable.setter
-    def liftable(self: Item, value: bool) -> None:
-        self._liftable = value
+    @interactive.setter
+    def interactive(self: Item, value: bool) -> None:
+        self._interactive = value
 
     @property
     def owner(self: Item) -> Inventory:
@@ -80,7 +65,11 @@ class Item(GameObject):
             location: Location
         ) -> None:
         """Place this item on the floor at the given location."""
-        self = cls(char, color, bg, noun_text, location)
+        self = cls(location)
+        self.char = char
+        self.color = color
+        self.bg = bg
+        self.noun_text = noun_text
         assert not self.owner, "Can't be placed because it is currently owned."
         items = location.area.items
         try:
