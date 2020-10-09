@@ -184,9 +184,16 @@ class ItemOptionsMenu(ExamineItemMenu):
 
     def __init__(self: ItemOptionsMenu, model: Model, item) -> None:
         super().__init__(model)
-        self.right_panel.title = f" {item.noun_text} "
+        self.right_panel = FramePanel(
+            parent=self.wrapper_panel, position=("center", "right"),
+            width=28, height=len(self.option_list) + 4,
+            bg=(0, 0, 0), title=f" {item.noun_text} "
+            )
 
     def on_draw(self: ItemOptionsMenu, consoles: Dict[str, Console]) -> None:
+        draw_main_view(self.model, consoles)
+        self.side_panel.on_draw(consoles)
+        draw_log(self.model, consoles)
         self.right_panel.on_draw(consoles)
 
         for i, option in enumerate(self.option_list):

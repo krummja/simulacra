@@ -22,8 +22,7 @@ class TestItem(Item, OpenableState):
         self.suffix = "(closed)"
 
     def plan_activate(self: TestItem, action: ActionWithItem) -> Action:
-        pass
+        return action
 
     def action_activate(self: Item, action: ActionWithItem) -> None:
-        self.is_open = not self.is_open
-        self.suffix = "(closed)" if not self.is_open else "(open)"
+        pass
