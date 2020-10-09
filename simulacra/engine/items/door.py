@@ -17,6 +17,7 @@ class OpenableState:
 
     def __init__(self: OpenableState):
         self._is_open: bool = False
+        self.is_locked: bool = False
 
     @property
     def is_open(self: OpenableState) -> bool:

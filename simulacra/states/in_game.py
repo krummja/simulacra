@@ -4,7 +4,7 @@ from typing import Generic, Optional, TYPE_CHECKING
 from config import *
 
 from states import SaveAndQuit, State, StateBreak, T
-from engine.actions import Action, common
+from engine.actions import Action, common, Impossible
 from engine.rendering import draw_main_view, draw_log
 from engine.geometry import *
 
@@ -53,7 +53,12 @@ class PlayerReady(AreaState["Action"]):
 
     def cmd_drop(self) -> Optional[Action]:
         """Drop an item from inventory."""
-        pass
+        state = PickLocation(
+            self.model,
+            "select a location, ENTER to confirm, ESC to cancel",
+            self.model.player.location.xy
+            )
+        state.loop()
 
     def cmd_pickup(self) -> Action:
         """Pick up an item at the player's position."""
@@ -316,3 +321,44 @@ class BaseInventoryMenu(BaseMenuOverlay):
 class UseInventory(BaseInventoryMenu):
     def pick_item(self: UseInventory, item: Item) -> Action:
         return common.ActivateItem(self.model.player.components['ACTOR'], item)
+
+
+class PickLocation(AreaState[Tuple[int, int]]):
+    """UI mode to prompt the user for an x,y location."""
+
+    def __init__(
+            self: PickLocation,
+            model: Model,
+            desc: str,
+            start_xy: Tuple[int, int]
+        ) -> None:
+        super().__init__(model)
+        self.desc = desc
+        self.cursor_xy = start_xy
+
+    def on_draw(self: PickLocation, consoles: Dict[str, Console]) -> None:
+        super().on_draw(consoles)
+        style = {"fg": (255, 255, 255), "bg": (0, 0, 0)}
+        consoles['ROOT'].print(0, 0, self.desc, **style)
+        cam_x, cam_y = self.model.current_area.get_camera_pos()
+        x = self.cursor_xy[0] - cam_x
+        y = self.cursor_xy[1] - cam_y
+        if 0 <= x < STAGE_PANEL_WIDTH and 0 <= y < STAGE_PANEL_HEIGHT:
+            consoles['ROOT'].tiles_rgb.T[["fg", "bg"]][x, y] = (255, 0, 0), (0, 0, 0)
+
+    def cmd_move(self: PickLocation, x: int, y: int) -> None:
+        x += self.cursor_xy[0]
+        y += self.cursor_xy[1]
+        x = min(max(0, x), self.model.current_area.width - 1)
+        y = min(max(0, y), self.model.current_area.height - 1)
+        if not self.model.current_area.visible[y, x]:
+            self.cursor_xy = self.cursor_xy
+        else:
+            self.cursor_xy = x, y
+            self.model.current_area.camera_pos = self.cursor_xy
+
+    def cmd_confirm(self: PickLocation) -> Tuple[int, int]:
+        return self.cursor_xy
+
+    def cmd_quit(self: PickLocation) -> None:
+        raise StateBreak()

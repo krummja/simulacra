@@ -68,7 +68,7 @@ def test_area(model: Model) -> Area:
             location=area[door[1], door[0]]
             )
 
-    TestItem.place(ord("$"), (0, 255, 255), (0, 0, 0), "test item", area[32, 32])
+    TestItem.place(ord("$"), (0, 255, 255), area.get_bg_color(32, 32), "test item", area[32, 32])
 
     area.player = Player.spawn(area[test_room.center])
     area.player.noun_text = "test player"

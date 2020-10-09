@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from engine.items.door import Door
 from engine.geometry import *
 from engine.actions import (Impossible, Action, ActionWithPosition,
                             ActionWithDirection, ActionWithItem)
@@ -24,7 +25,13 @@ class MoveStart(ActionWithPosition):
         if self.actor.location.xy == self.target_position:
             return self
         if self.area.is_blocked(*self.target_position):
-            raise Impossible("the way is blocked.")
+            try:
+                if self.area.items[self.target_position]:
+                    for item in self.area.items[self.target_position]:
+                        if isinstance(item, Door) and item.is_locked is False:
+                            ActivateNearby(self.actor, item).plan().act()
+            except KeyError:
+                raise Impossible("the way is blocked.")
         return self
 
     def act(self: MoveStart) -> None:
@@ -77,7 +84,6 @@ class ExamineNearby(Action):
 class ActivateItem(ActionWithItem):
 
     def plan(self: ActivateItem) -> ActionWithItem:
-        # TODO: Hmm... this is a bit of a messy situation
         assert self.item in self.actor.owner.components['INVENTORY'].contents
         return self.item.plan_activate(self)
 
