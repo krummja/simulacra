@@ -12,7 +12,6 @@ from interface.panel import Panel
 from interface.frame_panel import FramePanel
 from interface.inventory import InventoryPanel
 from interface.equipment import EquipmentPanel
-from interface.container_mgr import ContainerManager
 
 
 if TYPE_CHECKING:
