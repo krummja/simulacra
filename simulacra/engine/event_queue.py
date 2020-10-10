@@ -31,8 +31,10 @@ class EventQueue:
             self: EventQueue,
             event: Event,
             interval: int,
-            func: Optional[Callable[[EventQueue, Event], None]]
+            func: Optional[Callable[[EventQueue, Event], None]]=None
         ) -> Event:
+        # print(event.func)
+        # print(self.queue[0].func)
         assert event is not None
         assert self.queue[0] is event
         event = Event(

@@ -11,6 +11,7 @@ from engine.area import Area
 from engine.generation import process_map, process_doors
 from engine.items.door import Door
 from engine.player import Player
+from engine.npc import NPC
 from engine.room import Room
 from engine.items.test_item import TestItem
 
@@ -68,10 +69,13 @@ def test_area(model: Model) -> Area:
             location=area[door[1], door[0]]
             )
 
-    TestItem.place(ord("$"), (0, 255, 255), area.get_bg_color(32, 32), "test item", area[32, 32])
-
     area.player = Player.spawn(area[test_room.center])
     area.player.noun_text = "test player"
+
+    TestItem.place(ord("$"), (0, 255, 255), area.get_bg_color(32, 32), "test item", area[32, 32])
+
+    NPC.spawn(area[test_room.center[0]+2, test_room.center[1]])
+
     area.update_fov()
 
     return area

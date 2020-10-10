@@ -16,6 +16,7 @@ if TYPE_CHECKING:
 
 class Actor(Component):
     _option: str = "consider"
+    debug: bool = False
 
     def __init__(
             self: Actor,
@@ -41,6 +42,8 @@ class Actor(Component):
             return scheduler.unschedule(event)
         try:
             action = self.behavior.plan()
+            if self.debug:
+                print(f"Actor: {action}")
         except Impossible:
             print(f"Unresolved action with {self}", file=sys.stderr)
             traceback.print_exc(file=sys.stderr)
@@ -53,7 +56,9 @@ class Actor(Component):
         return self.location.area.model.scheduler
 
     def reschedule(self: Actor, interval: int) -> None:
-        pass
+        if self.event is None:
+            return
+        self.event = self.scheduler.reschedule(self.event, interval)
 
     def __repr__(self: Actor) -> str:
         return f"{self.__class__.__name__}({self.location!r})"

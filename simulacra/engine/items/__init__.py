@@ -55,6 +55,17 @@ class Item(GameObject):
                 del self.location.area.items[self.location.xy]
             self.location = None
 
+    def put(self: Item, location: Location) -> None:
+        assert not self.location, "This item already has a location."
+        assert not self.owner, "Can't be placed because this item is currently owned."
+        self.location = location
+        items = location.area.items
+        try:
+            self.bg = self.area.get_bg_color(*location.xy)
+            items[location.xy].append(self)
+        except KeyError:
+            items[location.xy] = [self]
+
     @classmethod
     def place(
             cls,
@@ -70,7 +81,6 @@ class Item(GameObject):
         self.color = color
         self.bg = bg
         self.noun_text = noun_text
-        assert not self.owner, "Can't be placed because it is currently owned."
         items = location.area.items
         try:
             items[location.xy].append(self)
@@ -81,7 +91,7 @@ class Item(GameObject):
         return action
 
     def action_activate(self: Item, action: ActionWithItem) -> None:
-        raise Impossible(f"You can do nothing with the {self.noun_text}")
+        raise Impossible(f"you can do nothing with the {self.noun_text}")
 
     def consume(self: Item, action: ActionWithItem) -> None:
         """Remove this item from the actor's inventory."""
@@ -90,4 +100,4 @@ class Item(GameObject):
 
     def action_drink(self: Item, action: ActionWithItem) -> None:
         """Drink this."""
-        raise Impossible(f"You can't drink the {self.noun_text}")
+        raise Impossible(f"you can't drink the {self.noun_text}")

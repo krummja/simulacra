@@ -35,11 +35,11 @@ class Direction(Enum):
 
     def adjacent_to(self, other):
         return (
-                (self.value[0] == other.value[0] and
-                 abs(self.value[1] - other.value[1]) <= 1) or
-                (self.value[1] == other.value[1] and
-                 abs(self.value[0] - other.value[0]) <= 1)
-        )
+            (self.value[0] == other.value[0] and
+             abs(self.value[1] - other.value[1]) <= 1) or
+            (self.value[1] == other.value[1] and
+             abs(self.value[0] - other.value[0]) <= 1)
+            )
 
     @property
     def opposite(self):

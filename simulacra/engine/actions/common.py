@@ -6,14 +6,6 @@ from engine.actions import (Impossible, Action, ActionWithPosition,
                             ActionWithDirection, ActionWithItem)
 
 
-class Wait(Action):
-
-    def act(self: Wait) -> None:
-        if self.actor.is_player:
-            self.area.update_fov()
-        self.actor.reschedule(0)
-
-
 class MoveStart(ActionWithPosition):
 
     def plan(self: MoveStart) -> Action:
@@ -29,7 +21,8 @@ class MoveStart(ActionWithPosition):
                 if self.area.items[self.target_position]:
                     for item in self.area.items[self.target_position]:
                         if isinstance(item, Door) and item.is_locked is False:
-                            ActivateNearby(self.actor, item).plan().act()
+                            event = ActivateNearby(self.actor, item).plan()
+                            event.act()
             except KeyError:
                 raise Impossible("the way is blocked.")
         return self
@@ -73,12 +66,11 @@ class ExamineNearby(Action):
         if len(self.area.nearby_items) > 0:
             for items in self.area.nearby_items:
                 for item in items:
-                    # TODO: Use the noun_text attribute
-                    # TODO: Set up a way to parse a/an prefixing
                     self.model.report(f"{item} is nearby.")
             self.area.nearby_items.clear()
         else:
-            self.model.report("There is nothing of note nearby.")
+            self.model.report("there is nothing of note nearby.")
+        self.actor.reschedule(100)
 
 
 class ActivateItem(ActionWithItem):
@@ -106,7 +98,6 @@ class ActivateNearby(ActionWithItem):
 
     def act(self: ActivateNearby) -> None:
         self.item.action_activate(self)
-        self.actor.reschedule(100)
 
 
 class Pickup(Action):
@@ -138,7 +129,12 @@ class AttackPlayer(Action):
 
 
 class DropItem(ActionWithItem):
-    pass
+    def act(self: DropItem) -> None:
+        assert self.item in self.model.player.components['INVENTORY'].contents
+        self.item.lift()
+        self.item.put(self.model.player.location)
+        self.report(f"you drop the {self.item.noun_text}")
+        self.actor.reschedule(100)
 
 
 class DrinkItem(ActionWithItem):

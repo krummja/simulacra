@@ -53,12 +53,8 @@ class PlayerReady(AreaState["Action"]):
 
     def cmd_drop(self) -> Optional[Action]:
         """Drop an item from inventory."""
-        state = PickLocation(
-            self.model,
-            "select a location, ENTER to confirm, ESC to cancel",
-            self.model.player.location.xy
-            )
-        state.loop()
+        state = DropInventory(self.model)
+        return state.loop()
 
     def cmd_pickup(self) -> Action:
         """Pick up an item at the player's position."""
@@ -328,6 +324,11 @@ class BaseInventoryMenu(BaseMenuOverlay):
 class UseInventory(BaseInventoryMenu):
     def pick_item(self: UseInventory, item: Item) -> Action:
         return common.ActivateItem(self.model.player.components['ACTOR'], item)
+
+
+class DropInventory(BaseInventoryMenu):
+    def pick_item(self: DropInventory, item: Item) -> Action:
+        return common.DropItem(self.model.player.components['ACTOR'], item)
 
 
 class PickLocation(AreaState[Tuple[int, int]]):

@@ -9,6 +9,8 @@ from engine.components.attributes import Attributes
 from engine.components.inventory import Inventory
 from engine.components.equipment import Equipment
 from engine.components.body_plan import Body
+from engine.components.background import Background
+from engine.components.level import Level
 
 
 if TYPE_CHECKING:
@@ -25,20 +27,26 @@ class Player(GameObject):
 
         self.components['BODY'] = Body(self)
         self.components['BODY'].add_part(BodyPart(self, 'HEAD', True))
-        # self.components['HEAD'] = BodyPart(self, 'HEAD', True)
-        self.components['TORSO'] = BodyPart(self, 'TORSO', True)
-        self.components['ARM_LEFT'] = BodyPart(self, 'ARM_LEFT', False)
-        self.components['HAND_LEFT'] = BodyPart(self, 'HAND_LEFT', False)
-        self.components['ARM_RIGHT'] = BodyPart(self, 'ARM_RIGHT', False)
-        self.components['HAND_RIGHT'] = BodyPart(self, 'HAND_RIGHT', False)
-        self.components['LEG_LEFT'] = BodyPart(self, 'LEG_LEFT', False)
-        self.components['LEG_RIGHT'] = BodyPart(self, 'LEG_RIGHT', False)
+        self.components['BODY'].add_part(BodyPart(self, 'TORSO', True))
+        self.components['BODY'].add_part(BodyPart(self, 'ARM_LEFT', False))
+        self.components['BODY'].add_part(BodyPart(self, 'HAND_LEFT', False))
+        self.components['BODY'].add_part(BodyPart(self, 'ARM_RIGHT', False))
+        self.components['BODY'].add_part(BodyPart(self, 'HAND_RIGHT', False))
+        self.components['BODY'].add_part(BodyPart(self, 'LEG_LEFT', False))
+        self.components['BODY'].add_part(BodyPart(self, 'LEG_RIGHT', False))
 
         self.components['ACTOR'] = Actor(self, PlayerControl)
 
         self.components['ATTRIBUTES'] = Attributes(self)
         self.components['INVENTORY'] = Inventory(self)
         self.components['EQUIPMENT'] = Equipment(self)
+
+        self.components['LEVEL'] = Level(self)
+        self.components['BACKGROUND'] = Background(self)
+
+        self.background_name = self.components['BACKGROUND'].name
+        self.level = self.components['LEVEL'].current_level
+        self.level_as_str = str(self.level)
 
     @property
     def location(self: Player) -> Location:
