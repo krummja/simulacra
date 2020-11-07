@@ -1,27 +1,21 @@
 from __future__ import annotations
 from typing import Dict, Optional, TYPE_CHECKING
 
+from enum import Enum
 import sys
-import os.path
-import json
 import datetime
 import traceback
-
 import lzma
 import pickle
 import pickletools
 
-import tcod
-import numpy as np
-
 if TYPE_CHECKING:
-    from engine.player import Player
-    from engine.model import Model
+    from model import Model
 
 
 class Storage:
 
-    def __init__(self: Storage) -> None:
+    def __init__(self) -> None:
         self.save_slots: Dict[int, Optional[Model]] = {
             0: None,
             1: None,
@@ -30,7 +24,6 @@ class Storage:
             4: None,
             5: None,
             }
-
         self.save_file = "simulacra.sav.xz"
         self.save_time = datetime.datetime.now()
 
@@ -63,10 +56,3 @@ class Storage:
         except Exception:
             traceback.print_exc(file=sys.stderr)
             print("No save data found.")
-
-    def get_character_name(self: Storage, index: int) -> str:
-        if self.save_slots[index] is not None:
-            player: Player = self.save_slots[index].player
-            return player.character.name
-        else:
-            pass
