@@ -3,7 +3,10 @@ from typing import TYPE_CHECKING
 
 
 class Noun:
-    pass
+    noun_text: str = "<unset>"
+
+    def __str__(self) -> str:
+        return self.noun_text
 
 
 class Message:

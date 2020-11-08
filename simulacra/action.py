@@ -1,11 +1,12 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import Tuple, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from actor import Actor
     from area import Area
     from location import Location
     from model import Model
+    from item import Item
 
 
 class Impossible(Exception):
@@ -37,3 +38,26 @@ class Action:
 
     def report(self, msg: str) -> None:
         return self.model.report(msg)
+
+
+class ActionWithPosition(Action):
+
+    def __init__(self, actor: Actor, position: Tuple[int, int]) -> None:
+        super().__init__(actor)
+        self.target_position = position
+
+
+class ActionWithDirection(ActionWithPosition):
+
+    def __init__(self, actor: Actor, direction: Tuple[int, int]) -> None:
+        position = actor.location.x + direction[0], \
+                   actor.location.y + direction[1]
+        super().__init__(actor, position)
+        self.direction = direction
+
+
+class ActionWithItem(Action):
+
+    def __init__(self, actor: Actor, target: Item) -> None:
+        super().__init__(actor)
+        self.item = target

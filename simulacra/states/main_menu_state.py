@@ -16,6 +16,7 @@ class MainMenuState(State[None]):
         self._model: Optional[Model] = None
         self._storage: Storage = Storage()
         self._view = MainMenuView()
+        # self._view.attach(self)
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[T]:
         index = 0
