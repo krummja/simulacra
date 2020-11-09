@@ -14,20 +14,21 @@ class ElemHelpText(Panel):
         super().__init__(**{
             'position': ('bottom', 'center'),
             'size': {'width': CONSOLE_WIDTH, 'height': 3},
-            'style': {'fg': (255, 255, 255), 'framed': True}
             })
         self.content = content
 
-    def on_draw(self, consoles: Dict[str, Console]) -> None:
+    def draw(self, consoles: Dict[str, Console]) -> None:
+        self.on_draw(consoles)
+
         help_text = ""
         for item in self.content:
             help_text += item
 
         text_width = len(help_text)
         consoles['ROOT'].print(
-            (self.width - text_width) // 2,
-            self.y - 2,
+            (self.size_width - text_width) // 2,
+            self.y + 1,
             help_text,
-            fg=self.fg,
-            bg=self.bg
+            fg=self.style_fg,
+            bg=self.style_bg
             )

@@ -15,27 +15,26 @@ class MainMenuState(State[None]):
         super().__init__()
         self._model: Optional[Model] = None
         self._storage: Storage = Storage()
-        self._view = MainMenuView()
-        # self._view.attach(self)
+        self._view = MainMenuView(self)
+
+    @property
+    def storage(self):
+        return self._storage
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[T]:
         index = 0
 
         if event.sym == tcod.event.K_RETURN:
             menu_data = self.storage.save_slots[index]
-
             if menu_data is not None:
                 self._model = self.storage.save_slots[index]
                 self.start()
-
             else:
                 self.new_game()
 
         elif event.sym == tcod.event.K_d:
-
             if self.storage.save_slots[index] is not None:
                 self.storage.save_slots[index] = None
-
             self.storage.write_to_file()
 
         elif event.sym == tcod.event.K_q:
@@ -43,6 +42,8 @@ class MainMenuState(State[None]):
 
         elif event.sym in self.MOVE_KEYS:
             pass
+        # for changing the View, I'll need some way of telling it to respond to
+        # inputs - e.g. an update method to change view state.
 
         return super().ev_keydown(event)
 

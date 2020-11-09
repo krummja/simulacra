@@ -7,9 +7,11 @@ from config import *
 from view import View
 from panel import Panel
 from views.elements.elem_help_text import ElemHelpText
+from views.elements.elem_character_select import ElemCharacterSelect
 
 if TYPE_CHECKING:
     from tcod import Console
+    from state import State
 
 
 def draw_logo(consoles: Dict[str, Console]) -> None:
@@ -92,14 +94,17 @@ def draw_logo(consoles: Dict[str, Console]) -> None:
 
 class MainMenuView(View):
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, state: State) -> None:
+        super().__init__(state)
         self.help_text = ElemHelpText(content=[
             "[⬆/⬇/⬅/➡] change selection, ",
             "[d] delete, ",
             "[q] quit"
             ])
 
+        self.character_select = ElemCharacterSelect()
+
     def draw(self, consoles: Dict[str, Console]) -> None:
         draw_logo(consoles)
-        self.help_text.on_draw(consoles)
+        self.help_text.draw(consoles)
+        self.character_select.draw(consoles)
