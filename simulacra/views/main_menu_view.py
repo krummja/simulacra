@@ -94,15 +94,24 @@ def draw_logo(consoles: Dict[str, Console]) -> None:
 
 class MainMenuView(View):
 
+    index = 0
+
     def __init__(self, state: State) -> None:
         super().__init__(state)
+
+        self.character_select = ElemCharacterSelect()
+        self.character_select.data_source = state.storage
+
+        load = "[enter] continue, "
+        new = "[enter] create new, "
         self.help_text = ElemHelpText(content=[
+            load if state.storage.save_slots[
+                        self.character_select.index_as_int
+                    ] is not None else new,
             "[⬆/⬇/⬅/➡] change selection, ",
             "[d] delete, ",
             "[q] quit"
             ])
-
-        self.character_select = ElemCharacterSelect()
 
     def draw(self, consoles: Dict[str, Console]) -> None:
         draw_logo(consoles)

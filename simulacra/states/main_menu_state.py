@@ -22,7 +22,8 @@ class MainMenuState(State[None]):
         return self._storage
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[T]:
-        index = 0
+
+        index = self._view.character_select.index_as_int
 
         if event.sym == tcod.event.K_RETURN:
             menu_data = self.storage.save_slots[index]
@@ -41,9 +42,10 @@ class MainMenuState(State[None]):
             self.cmd_quit()
 
         elif event.sym in self.MOVE_KEYS:
-            pass
-        # for changing the View, I'll need some way of telling it to respond to
-        # inputs - e.g. an update method to change view state.
+            self._view.character_select.current_index = (
+                self.MOVE_KEYS[event.sym][1],
+                self.MOVE_KEYS[event.sym][0]
+            )
 
         return super().ev_keydown(event)
 

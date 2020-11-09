@@ -17,12 +17,8 @@ class Storage:
 
     def __init__(self) -> None:
         self.save_slots: Dict[int, Optional[Model]] = {
-            0: None,
-            1: None,
-            2: None,
-            3: None,
-            4: None,
-            5: None,
+            0: None, 1: None, 2: None,
+            3: None, 4: None, 5: None,
             }
         self.save_file = "simulacra.sav.xz"
         self.save_time = datetime.datetime.now()
