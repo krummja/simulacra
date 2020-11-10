@@ -4,9 +4,10 @@ from typing import Dict, Optional, TYPE_CHECKING
 import tcod
 
 from model import Model
-from state import State, T
+from state import State, T, SaveAndQuit, GameOverQuit
 from storage import Storage
 from views import MainMenuView
+from generators.debug_map import debug_area
 
 
 class MainMenuState(State[None]):
@@ -15,6 +16,7 @@ class MainMenuState(State[None]):
         super().__init__()
         self._model: Optional[Model] = None
         self._storage: Storage = Storage()
+        self._storage.load_from_file()
         self._view = MainMenuView(self)
 
     @property
@@ -28,9 +30,11 @@ class MainMenuState(State[None]):
         if event.sym == tcod.event.K_RETURN:
             menu_data = self.storage.save_slots[index]
             if menu_data is not None:
+                print("Storage: Save data found")
                 self._model = self.storage.save_slots[index]
                 self.start()
             else:
+                print("Storage: No data for this slot.")
                 self.new_game()
 
         elif event.sym == tcod.event.K_d:
@@ -45,13 +49,16 @@ class MainMenuState(State[None]):
             self._view.character_select.current_index = (
                 self.MOVE_KEYS[event.sym][1],
                 self.MOVE_KEYS[event.sym][0]
-            )
+                )
 
         return super().ev_keydown(event)
 
     def new_game(self) -> None:
         try:
             self._model = Model()
+            self._model.area_data.current_area = debug_area(self._model)
+            self.storage.add_save(self._view.character_select.index_as_int, self.model)
+            self.start()
         except SystemExit:
             raise
 
@@ -59,5 +66,7 @@ class MainMenuState(State[None]):
         assert self.model
         try:
             self.model.loop()
+        except SaveAndQuit:
+            self.storage.write_to_file()
         except SystemExit:
-            pass
+            self.storage.write_to_file()

@@ -10,7 +10,6 @@ if TYPE_CHECKING:
     from control import Control
     from entity import Entity
     from event_queue import Event, EventQueue
-    from location import Location
 
 
 class Actor:
@@ -20,14 +19,6 @@ class Actor:
         self.control = control
         self.owner.location.area.actor_model.actors.add(self)
         self.event: Optional[Event] = self.scheduler.schedule(0, self.act)
-
-    @property
-    def location(self) -> Location:
-        return self.owner.location
-
-    @location.setter
-    def location(self, value: Location) -> None:
-        self.owner.location = value
 
     @property
     def is_player(self) -> bool:

@@ -1,19 +1,20 @@
 from __future__ import annotations
 
-from config import *
+import tcod
+import config
 from states.main_menu_state import MainMenuState
 
 
 def main() -> None:
     with tcod.context.new_terminal(
-            columns=CONSOLE_WIDTH,
-            rows=CONSOLE_HEIGHT,
-            tileset=TILESET,
+            columns=config.CONSOLE_WIDTH,
+            rows=config.CONSOLE_HEIGHT,
+            tileset=config.TILESET,
             title="Simulacra",
             vsync=True
-        ) as context:
+        ) as config.CONTEXT:
         while True:
-            MainMenuState().loop(context)
+            MainMenuState().loop()
 
 
 if __name__ == '__main__':

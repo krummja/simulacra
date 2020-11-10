@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import Tuple, Dict, TYPE_CHECKING
 
 
 Color = Tuple[int, int, int]

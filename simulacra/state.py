@@ -8,7 +8,7 @@ from typing import (Dict,
                     TYPE_CHECKING)
 import tcod
 
-from config import *
+import config
 
 if TYPE_CHECKING:
     from tcod.console import Console
@@ -103,10 +103,10 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
     def view(self) -> Optional[View]:
         return self._view
 
-    def loop(self, context: tcod.context) -> Optional[T]:
+    def loop(self) -> Optional[T]:
         while True:
-            self.on_draw(CONSOLES)
-            context.present(CONSOLES['ROOT'])
+            self.on_draw(config.CONSOLES)
+            config.CONTEXT.present(config.CONSOLES['ROOT'])
             for input_event in tcod.event.wait():
                 try:
                     value: T = self.dispatch(input_event)

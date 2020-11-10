@@ -64,7 +64,7 @@ class ElemCharacterSelect(Panel):
 
     rows: int = 3
     cols: int = 2
-    menu_cells = np.arange(rows * cols).reshape(cols, rows)
+    menu_cells = np.arange(rows * cols).reshape(rows, cols)
 
     x_index: int = 0
     y_index: int = 0
@@ -84,10 +84,9 @@ class ElemCharacterSelect(Panel):
         self.slot_3 = ElemCharacterSlot(self, ('bottom', 'left'))
 
         self.slot_1 = ElemCharacterSlot(self, ('top', 'center'))
+        self.slot_4 = ElemCharacterSlot(self, ('bottom', 'center'))
 
         self.slot_2 = ElemCharacterSlot(self, ('top', 'right'))
-
-        self.slot_4 = ElemCharacterSlot(self, ('bottom', 'center'))
         self.slot_5 = ElemCharacterSlot(self, ('bottom', 'right'))
 
     @property
@@ -100,7 +99,7 @@ class ElemCharacterSelect(Panel):
 
     @property
     def current_index(self) -> Tuple[int, int]:
-        return self.x_index, self.y_index
+        return self.y_index, self.x_index
 
     @current_index.setter
     def current_index(self, value: Tuple[int, int]) -> None:
@@ -122,8 +121,36 @@ class ElemCharacterSelect(Panel):
 
     def draw(self, consoles: Dict[str, Console]) -> None:
         self.on_draw(consoles)
-        for i in range(0, 6):
-            slot = getattr(self, f"slot_{i}")
-            slot.slot_data = self.data_source.data_hook(i)
-            slot.draw(consoles)
-            slot.style_fg = self.focused if self.index_as_int == i else self.unfocused
+
+        self.slot_0.slot_data = self.data_source.data_hook(0)
+        self.slot_1.slot_data = self.data_source.data_hook(1)
+        self.slot_2.slot_data = self.data_source.data_hook(2)
+        self.slot_3.slot_data = self.data_source.data_hook(3)
+        self.slot_4.slot_data = self.data_source.data_hook(4)
+        self.slot_5.slot_data = self.data_source.data_hook(5)
+
+        self.slot_0.style_fg = self.focused if self.current_index == (0, 0) else self.unfocused
+        self.slot_3.style_fg = self.focused if self.current_index == (0, 1) else self.unfocused
+
+        self.slot_1.style_fg = self.focused if self.current_index == (1, 0) else self.unfocused
+        self.slot_4.style_fg = self.focused if self.current_index == (1, 1) else self.unfocused
+
+        self.slot_2.style_fg = self.focused if self.current_index == (2, 0) else self.unfocused
+        self.slot_5.style_fg = self.focused if self.current_index == (2, 1) else self.unfocused
+
+        self.slot_0.draw(consoles)
+        self.slot_1.draw(consoles)
+        self.slot_2.draw(consoles)
+        self.slot_3.draw(consoles)
+        self.slot_4.draw(consoles)
+        self.slot_5.draw(consoles)
+
+        # for i in range(0, 6):
+        #     slot = getattr(self, f"slot_{i}")
+        #     slot.slot_data = self.data_source.data_hook(i)
+        #     slot.draw(consoles)
+        #     slot.style_fg = self.focused if self.index_as_int == i else self.unfocused
+
+        # TODO: Huh, this feels really sluggish for some reason...
+        # TODO: That's not right. Gotta figure out why that is.
+        # TODO: I bet it's the looping, actually!

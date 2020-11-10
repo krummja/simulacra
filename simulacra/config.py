@@ -6,6 +6,8 @@ if TYPE_CHECKING:
     from tcod.console import Console
     from tcod.tileset import Tileset
 
+CONTEXT: tcod.context.Context
+
 CONSOLE_WIDTH: int = 110
 CONSOLE_HEIGHT: int = 55
 
