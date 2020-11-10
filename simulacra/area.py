@@ -24,7 +24,9 @@ class AreaModel:
         self.visible = np.zeros(self.shape, dtype=bool)
 
     def get_bg_color(self, x: int, y: int) -> List[int]:
-        target_tile = self.tiles[y, x]
+        cam_x, cam_y = self.area.camera.get_camera_pos()
+        target_x, target_y = x + cam_x, y + cam_y
+        target_tile = self.tiles[target_y, target_x]
         return list(target_tile[2][1][0:3])
 
 
