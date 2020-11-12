@@ -5,6 +5,9 @@ from actor import Actor
 from control import PlayerControl
 from entity import Entity
 
+from components.attributes import Attributes
+from components.physics import Physics
+
 if TYPE_CHECKING:
     from location import Location
 
@@ -21,3 +24,6 @@ class Player(Entity, Actor):
 
         self.control = PlayerControl(self)
         Actor.__init__(self, self, self.control)
+
+        self.components['PHYSICS'] = Physics(self)
+        self.components['ATTRIBUTES'] = Attributes(self)
