@@ -16,6 +16,8 @@ if TYPE_CHECKING:
 
 class AreaModel:
 
+    ident: str = '<unset>'
+
     def __init__(self, area: Area) -> None:
         self.area = area
         self.shape = self.area.shape

@@ -25,5 +25,5 @@ class Player(Entity, Actor):
         self.control = PlayerControl(self)
         Actor.__init__(self, self, self.control)
 
-        self.components['PHYSICS'] = Physics(self)
-        self.components['ATTRIBUTES'] = Attributes(self)
+        self.components.add(Physics(self))
+        self.components.add(Attributes(self))

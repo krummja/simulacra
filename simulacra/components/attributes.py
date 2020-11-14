@@ -10,14 +10,11 @@ if TYPE_CHECKING:
 
 class Attributes(Component):
 
-    # TODO: Complete this component.
+    ident = 'ATTRIBUTES'
+
     def __init__(self, owner: Entity) -> None:
         super().__init__(owner)
 
         self['HEALTH'] = Attribute(owner, 'health', 10)
         self['ENERGY'] = Attribute(owner, 'energy', 10)
         self['HUNGER'] = Attribute(owner, 'hunger', 10)
-        # self['EXPERIENCE'] = Attribute(owner, 'experience', 1)
-
-    def configure(self) -> None:
-        pass

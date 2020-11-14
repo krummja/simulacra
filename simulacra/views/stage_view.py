@@ -44,9 +44,9 @@ class StageView(View):
             'text_fg': (255, 255, 255)
             }
 
-        player_hp = self.model.player.components['ATTRIBUTES']['HEALTH']
-        player_ep = self.model.player.components['ATTRIBUTES']['ENERGY']
-        player_fp = self.model.player.components['ATTRIBUTES']['HUNGER']
+        player_hp = self.model.entity_data['PLAYER']['ATTRIBUTES']['HEALTH']
+        player_ep = self.model.entity_data['PLAYER']['ATTRIBUTES']['ENERGY']
+        player_fp = self.model.entity_data['PLAYER']['ATTRIBUTES']['HUNGER']
 
         self.hp_gauge = ElemGauge(
             **bar_config,

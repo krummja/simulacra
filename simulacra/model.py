@@ -1,8 +1,12 @@
 from __future__ import annotations
-from typing import List, TYPE_CHECKING
+from typing import Any, Dict, List, TYPE_CHECKING
 from event_queue import EventQueue
 from player import Player
 from message import Message
+
+if TYPE_CHECKING:
+    from entity import Entity
+    from area import Area
 
 
 class AreaData(dict):
@@ -13,12 +17,12 @@ class AreaData(dict):
         super().__init__()
         self.model = model
 
-    def register(self, area):
+    def register(self, area: Area) -> None:
         self.current_area = area
-        self[f'{area.ident}'] = area
+        self[area.area_model.ident] = area
 
     def get_items(self):
-        return self[f'{self.current_area.ident}'].items
+        return self[self.current_area.area_model.ident].items
 
 
 class EntityData(dict):
@@ -27,10 +31,9 @@ class EntityData(dict):
         super().__init__()
         self.model = model
 
-    def register(self, entity) -> None:
-        self[f'{entity.ident}'] = entity
-        for component in entity.components:
-            self[f'{entity.ident}'][f'{component.ident}'] = component.data
+    def register(self, entity: Entity) -> None:
+        for key, value in entity.components.items():
+            self[entity.ident] = {key: value}
 
 
 class Model:

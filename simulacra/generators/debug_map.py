@@ -27,13 +27,18 @@ def roll_asset(area: Area, asset: Dict[str, Dict[str, Tile]], threshold: int):
 
 def debug_area(model: Model) -> Area:
     area = Area(model, 120, 120)
+    area.ident = 'test area'
 
     debug_room = Room(20, 20, 20, 20)
     area.area_model.tiles[...] = walls['bare']['bricks_01']
     area.area_model.tiles[debug_room.inner] = floors['bare']['wood']
 
-    area.player = Player(area[debug_room.center])
-    area.player.noun_text = "test player"
+    model.area_data.register(area)
+
+    player = Player(area[debug_room.center])
+    player.noun_text = "test player"
+    model.area_data.current_area.player = player
+    model.entity_data.register(player)
 
     update_fov(area)
 

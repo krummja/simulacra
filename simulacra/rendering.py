@@ -56,8 +56,6 @@ def render_visible_entities(area: Area, consoles: Dict[str, Console]) -> None:
 
         # Adjust the object background color
         obj.owner.bg = area.area_model.get_bg_color(obj_x, obj_y)
-        print(obj.owner.location.xy)
-        print(obj_x, obj_y)
 
         # Add the object to the list of visible entities
         visible_entities[obj_y, obj_x].append(obj.owner)

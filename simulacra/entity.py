@@ -11,15 +11,18 @@ if TYPE_CHECKING:
 
 class ComponentSet(dict):
 
-    def __init__(self, entity: Entity) -> None:
+    def __init__(self, owner: Entity) -> None:
         super().__init__()
-        self.entity = entity
+        self.owner = owner
 
     def add(self, component: Component) -> None:
-        self[f"{component.ident}"] = component
+        """Add a component by component identifier to the `Entity`."""
+        self[component.ident] = component
 
 
 class Entity(Graphic, Noun):
+
+    ident: str = "<unset>"
 
     def __init__(self, location: Location) -> None:
         Graphic.__init__(self)
@@ -29,4 +32,7 @@ class Entity(Graphic, Noun):
         self.components = ComponentSet(self)
 
     def __getitem__(self, key):
-        return self.components[key].data
+        return self.components[key]
+
+    def __setitem__(self, key, value):
+        self.components[key] = value

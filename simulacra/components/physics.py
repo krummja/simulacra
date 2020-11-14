@@ -16,9 +16,9 @@ class Physics(Component):
         self['WEIGHT'] = 0
         self['MOVABLE'] = True
 
-    def configure(self, weight: int) -> None:
-        self['WEIGHT'] = weight
-        if self['WEIGHT'] == -1:
-            self['MOVABLE'] = False
-        else:
-            self['MOVABLE'] = True
+    # def configure(self, weight: int) -> None:
+    #     self['WEIGHT'] = weight
+    #     if self['WEIGHT'] == -1:
+    #         self['MOVABLE'] = False
+    #     else:
+    #         self['MOVABLE'] = True
