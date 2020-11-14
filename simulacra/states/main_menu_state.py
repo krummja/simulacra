@@ -47,9 +47,11 @@ class MainMenuState(State[None]):
 
         elif event.sym in self.MOVE_KEYS:
             self._view.character_select.current_index = (
-                self.MOVE_KEYS[event.sym][1],
-                self.MOVE_KEYS[event.sym][0]
+                self.MOVE_KEYS[event.sym][0],
+                self.MOVE_KEYS[event.sym][1]
                 )
+            print(f"As Int: {self._view.character_select.index_as_int}")
+            print(f"Index:  {self._view.character_select.current_index}")
 
         return super().ev_keydown(event)
 

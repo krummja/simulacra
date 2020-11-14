@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Any, Dict, List, TYPE_CHECKING
+from typing import List, TYPE_CHECKING
 from event_queue import EventQueue
 from player import Player
 from message import Message

@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import Dict, TYPE_CHECKING
 
+import tcod
 import random
 import numpy as np
 
@@ -30,8 +31,15 @@ def debug_area(model: Model) -> Area:
     area.ident = 'test area'
 
     debug_room = Room(20, 20, 20, 20)
+    side_room = Room(60, 60, 20, 20)
     area.area_model.tiles[...] = walls['bare']['bricks_01']
     area.area_model.tiles[debug_room.inner] = floors['bare']['wood']
+    area.area_model.tiles[side_room.inner] = floors['bare']['wood']
+
+    t_start = debug_room.center
+    t_end = debug_room.center
+
+    area.area_model.tiles[tcod.line_where(*t_start, *t_end)] = floors['bare']['wood']
 
     model.area_data.register(area)
 

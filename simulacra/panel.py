@@ -1,8 +1,8 @@
 from __future__ import annotations
-from typing import Dict, Optional, Tuple, TYPE_CHECKING
+from typing import Dict, Tuple, TYPE_CHECKING
 
-from config import *
-from geometry import *
+from config import CONSOLE_HEIGHT, CONSOLE_WIDTH
+from geometry import Rect
 from util import flatten
 
 if TYPE_CHECKING:
@@ -24,7 +24,7 @@ class Panel:
     style_framed: bool = False
     style_title: str = ''
 
-    def __init__(self, parent: Panel=None, **config):
+    def __init__(self, parent: Panel = None, **config):
         self.parent: Panel = parent
 
         opts = flatten(config)
@@ -50,15 +50,17 @@ class Panel:
             if self.position[0] == 'top':
                 self.y = self.parent.bounds.top + self.margin
             elif self.position[0] == 'bottom':
-                self.y = self.parent.bounds.bottom - self.size_height - self.margin
+                self.y = self.parent.bounds.bottom \
+                    - self.size_height - self.margin
             elif self.position[0] == 'center':
                 self.y = (self.parent.bounds.bottom - (
-                        self.parent.size_height // 2)) - (self.size_height // 2)
+                    self.parent.size_height // 2)) - (self.size_height // 2)
 
             if self.position[1] == 'left':
                 self.x = self.parent.bounds.left + self.margin
             elif self.position[1] == 'right':
-                self.x = self.parent.bounds.right - self.size_width - self.margin
+                self.x = self.parent.bounds.right \
+                    - self.size_width - self.margin
             elif self.position[1] == 'center':
                 self.x = (self.parent.bounds.right - (
                         self.parent.size_width // 2)) - (self.size_width // 2)
@@ -75,8 +77,10 @@ class Panel:
 
     def on_draw(self, consoles: Dict[str, Console]) -> None:
         consoles['INTERFACE'].tiles_rgb[self.bounds.indices]["ch"] = 127
-        consoles['INTERFACE'].tiles_rgb[self.bounds.indices]["fg"] = self.style_bg
-        consoles['INTERFACE'].tiles_rgb[self.bounds.indices]["bg"] = self.style_bg
+        consoles['INTERFACE'].tiles_rgb[self.bounds
+                                            .indices]["fg"] = self.style_bg
+        consoles['INTERFACE'].tiles_rgb[self.bounds
+                                            .indices]["bg"] = self.style_bg
 
         if self.style_framed:
             consoles['INTERFACE'].draw_frame(
