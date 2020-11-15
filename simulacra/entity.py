@@ -31,6 +31,11 @@ class Entity(Graphic, Noun):
         self.location = location
         self.components = ComponentSet(self)
 
+    def copy_to(self, new_entity: Entity):
+        for component in self.components.values():
+            pass
+            # new_entity.components.add(component)
+
     def __getitem__(self, key):
         return self.components[key]
 
