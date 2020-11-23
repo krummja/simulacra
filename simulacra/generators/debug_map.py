@@ -3,7 +3,6 @@ from typing import Dict, TYPE_CHECKING
 
 import tcod
 import random
-import numpy as np
 
 from tiles.floors import *
 from tiles.walls import *
@@ -12,10 +11,8 @@ from rendering import update_fov
 from player import Player
 from room import Room
 from components.attributes import initialize_character_attributes
-from components.attributes import Attributes
 from managers.game_context import GameContext
 from factories.factory_service import FactoryService
-from factories.character_factory import CharacterFactory
 
 if TYPE_CHECKING:
     from tile import Tile
@@ -35,27 +32,35 @@ def debug_area(model: Model) -> Area:
     area = Area(model, 120, 120)
     area.ident = 'test area'
 
+    # TODO: Make a RoomFactory
     debug_room = Room(20, 20, 20, 20)
     side_room = Room(60, 60, 20, 20)
+
+    # TODO: It would be nice to have a methods for this - these are really clunky
     area.area_model.tiles[...] = walls['bare']['bricks_01']
     area.area_model.tiles[debug_room.inner] = floors['bare']['wood']
     area.area_model.tiles[side_room.inner] = floors['bare']['wood']
 
+    # TODO: Make a TunnelFactory
     t_start = debug_room.center
-    t_end = debug_room.center
+    t_end = side_room.center
+    t_middle = t_start[0], t_end[1]
+    area.area_model.tiles[tcod.line_where(*t_start, *t_middle)] = floors['bare']['wood']
+    area.area_model.tiles[tcod.line_where(*t_middle, *t_end)] = floors['bare']['wood']
 
-    area.area_model.tiles[tcod.line_where(*t_start, *t_end)] = floors['bare']['wood']
-    model.area_data.register(area)
-
+    # TODO: PlayerFactory will make this easier, of course
     player = Player(area[debug_room.center])
     player.register_component(initialize_character_attributes())
     player.noun_text = "test player"
+
+    model.area_data.register(area)
     model.area_data.current_area.player = player
     model.entity_data.register(player)
 
-    context = GameContext()
-    context.factory_service = FactoryService()
-    character_factory = CharacterFactory(model, context.factory_service)
+    context = GameContext(model)
+    context.factory_service = FactoryService(model)
+    character_factory = context.factory_service.character_factory
+
     character_factory.build(
         uid='test_character',
         location=area[debug_room.center[0] + 2, debug_room.center[1] + 2]

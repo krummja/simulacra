@@ -5,6 +5,7 @@ from character import Character
 from data.characters import character_templates
 
 if TYPE_CHECKING:
+    from location import Location
     from model import Model
     from factories.factory_service import FactoryService
 
@@ -18,36 +19,37 @@ class CharacterFactory:
         ) -> None:
         self.model = model
         self.factory_service = factory_service
-        self.template_instance_count = {}
+        self.instance_count = {}
 
-    def build(self, uid, location):
+    def build(self, uid: str, location: Location):
         """Builds a character instance from a template using this uid.
 
         :param uid: uid of the template to instantiate.
         :param location: map position to spawn the instance.
         :return: Built instance from specified template.
         """
-        character_template = character_templates[uid]
-        if character_template:
-            return self._create_template_instance(character_template, location)
+        template = character_templates[uid]
+        if template:
+            return self._assemble_template(template, location)
         else:
             raise Exception(f"Could not find template for UID {uid}")
 
-    def _create_template_instance(self, character_template, location) -> Character:
+    def _assemble_template(self, template, location) -> Character:
         instance_id = 0
-        if character_template['uid'] in self.template_instance_count:
-            instance_id = self.template_instance_count[character_template['uid']]
-            self.template_instance_count[character_template['uid']] += 1
-        else:
-            self.template_instance_count[character_template['uid']] = 1
 
-        instance_uid = character_template['uid'] + "_" + str(instance_id)
+        if template['uid'] in self.instance_count:
+            instance_id = self.instance_count[template['uid']]
+            self.instance_count[template['uid']] += 1
+        else:
+            self.instance_count[template['uid']] = 1
+
+        instance_uid = template['uid'] + "_" + str(instance_id)
         new_instance = Character(
             uid=instance_uid,
-            name=character_template['name'],
+            name=template['name'],
             location=location,
-            display=character_template['display'],
-            control=character_template['control']
+            display=template['display'],
+            control=template['control']
             )
         self.model.entity_data.register(new_instance)
         return new_instance

@@ -65,10 +65,9 @@ class ElemCharacterSelect(Panel):
     rows: int = 3
     cols: int = 2
     menu_cells = np.arange(rows * cols).reshape(cols, rows)
-    print(menu_cells)
 
-    x_index: int = 0
     y_index: int = 0
+    x_index: int = 0
 
     focused = (255, 0, 255)
     unfocused = (255, 255, 255)
@@ -91,29 +90,35 @@ class ElemCharacterSelect(Panel):
 
     @property
     def data_source(self) -> Storage:
+        """Return reference to the Storage object"""
         return self._data_source
 
     @data_source.setter
     def data_source(self, value: Storage) -> None:
+        """Assign reference to Storage object"""
         self._data_source = value
 
     @property
     def current_index(self) -> Tuple[int, int]:
-        return self.x_index, self.y_index
+        """Return (y, x) data slot index"""
+        return self.y_index, self.x_index
 
     @current_index.setter
     def current_index(self, value: Tuple[int, int]) -> None:
-        self.x_index += value[1]
-        self.x_index = max(0, min(self.x_index, self.cols-1))
-        self.y_index += value[0]
-        self.y_index = max(0, min(self.y_index, self.rows-1))
+        """Set data slot indices to provided value"""
+        self.y_index += value[1]
+        self.y_index = max(0, min(self.y_index, self.cols-1))
+        self.x_index += value[0]
+        self.x_index = max(0, min(self.x_index, self.rows-1))
 
     @property
     def index_as_int(self) -> int:
+        """Return the integer index for the current data slot"""
         return self.menu_cells[self.current_index]
 
     @property
     def data_at_index(self) -> Optional[Model]:
+        """Return reference to the data at the selected data slot"""
         if self.data_source:
             return self._data_source.data_hook(self.index_as_int)
         else:

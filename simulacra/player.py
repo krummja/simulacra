@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from actor import Actor
-from control import PlayerControl
+from player_control import PlayerControl
 from entity import Entity
 
 from components.attributes import Attributes

@@ -24,7 +24,6 @@ class MainMenuState(State[None]):
         return self._storage
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[T]:
-
         index = self._view.character_select.index_as_int
 
         if event.sym == tcod.event.K_RETURN:
@@ -50,8 +49,6 @@ class MainMenuState(State[None]):
                 self.MOVE_KEYS[event.sym][0],
                 self.MOVE_KEYS[event.sym][1]
                 )
-            print(f"As Int: {self._view.character_select.index_as_int}")
-            print(f"Index:  {self._view.character_select.current_index}")
 
         return super().ev_keydown(event)
 
@@ -59,7 +56,8 @@ class MainMenuState(State[None]):
         try:
             self._model = Model()
             self._model.area_data.current_area = debug_area(self._model)
-            self.storage.add_save(self._view.character_select.index_as_int, self.model)
+            self.storage.add_save(self._view.character_select.index_as_int,
+                                  self.model)
             self.start()
         except SystemExit:
             raise

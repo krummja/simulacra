@@ -8,6 +8,7 @@ if TYPE_CHECKING:
 
 
 class Behavior(Control):
+    """Base class for NPC behaviors"""
 
     def __init__(self, actor: Actor) -> None:
         super().__init__(actor)

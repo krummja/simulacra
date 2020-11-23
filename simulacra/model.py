@@ -3,6 +3,7 @@ from typing import List, TYPE_CHECKING
 from event_queue import EventQueue
 from player import Player
 from message import Message
+from factories.factory_service import FactoryService
 
 if TYPE_CHECKING:
     from entity import Entity
@@ -42,6 +43,7 @@ class Model:
         self.area_data = AreaData(self)
         self.entity_data = EntityData(self)
         self.scheduler = EventQueue()
+        self.factory_service = FactoryService(self)
         self.log: List[Message] = []
 
     @property
@@ -52,6 +54,7 @@ class Model:
         while True:
             self.scheduler.invoke_next()
 
+    # TODO: This would be best as a separate UI element
     def report(self, msg: str) -> None:
         print(msg)
         if self.log and self.log[-1].msg == msg:

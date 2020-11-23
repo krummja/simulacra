@@ -36,8 +36,10 @@ class ElemGauge(Panel):
             'parent': parent,
             'position': position,
             'margin': margin,
-            'offset': {'x': offset_x, 'y': offset_y},
-            'size': {'width': width, 'height': 1}
+            'offset': {'x': offset_x,
+                       'y': offset_y},
+            'size': {'width': width,
+                     'height': 1}
             })
         self.name = name
         self.text = text

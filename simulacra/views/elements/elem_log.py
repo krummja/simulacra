@@ -16,7 +16,8 @@ class ElemLog(Panel):
         self.log_width = STAGE_PANEL_WIDTH
         super().__init__(**{
             'position': ('bottom', 'left'),
-            'size': {'width': self.log_width, 'height': (CONSOLE_HEIGHT // 4)},
+            'size': {'width': self.log_width,
+                     'height': (CONSOLE_HEIGHT // 4)},
             'style': {'framed': True}
             })
         self.model = model

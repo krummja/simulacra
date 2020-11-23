@@ -13,7 +13,8 @@ class ElemHelpText(Panel):
     def __init__(self, content: List[str]) -> None:
         super().__init__(**{
             'position': ('bottom', 'center'),
-            'size': {'width': CONSOLE_WIDTH, 'height': 3},
+            'size': {'width': CONSOLE_WIDTH,
+                     'height': 3},
             })
         self.content = content
 
