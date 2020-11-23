@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Dict, TYPE_CHECKING
+from typing import Dict, Type, TYPE_CHECKING
 
 from tcod import Console
 
@@ -9,6 +9,9 @@ from panel import Panel
 from view import View
 from views.elements.elem_log import ElemLog
 from views.elements.elem_gauge import ElemGauge
+from stats import StatsEnum
+from components.attributes import Attributes
+from component import Component
 
 if TYPE_CHECKING:
     from state import State
@@ -44,28 +47,36 @@ class StageView(View):
             'text_fg': (255, 255, 255)
             }
 
-        player_hp = self.model.entity_data['PLAYER']['ATTRIBUTES']['HEALTH']
-        player_ep = self.model.entity_data['PLAYER']['ATTRIBUTES']['ENERGY']
-        player_fp = self.model.entity_data['PLAYER']['ATTRIBUTES']['HUNGER']
+        # player_hp = self.model.entity_data['PLAYER']['ATTRIBUTES']['HEALTH']
+        # player_ep = self.model.entity_data['PLAYER']['ATTRIBUTES']['ENERGY']
+        # player_fp = self.model.entity_data['PLAYER']['ATTRIBUTES']['HUNGER']
+
+        # TODO: I need to use a manager for this, using a typevar probably...
+        # player_attributes: Attributes = self.model.player.get_component('ATTRIBUTES')
+        # player_hp = player_attributes.get_current_value(StatsEnum.Health)
+
+        player_hp = 10
+        player_ep = 10
+        player_fp = 10
 
         self.hp_gauge = ElemGauge(
             **bar_config,
             offset_y=7, name="vit", text=f"{player_hp}",
-            fullness=player_hp.current_value / player_hp.mod_value,
+            fullness=player_hp / player_hp,
             fg=(0x40, 0x80, 0), bg=(0x80, 0, 0)
             )
 
         self.ep_gauge = ElemGauge(
             **bar_config,
             offset_y=9, name="enr", text=f"{player_ep}",
-            fullness=player_ep.current_value / player_ep.mod_value,
+            fullness=player_ep / player_ep,
             fg=(0x17, 0x57, 0xc2), bg=(0x05, 0x1e, 0x50)
             )
 
         self.fp_gauge = ElemGauge(
             **bar_config,
             offset_y=11, name="hgr", text=f"{player_fp}",
-            fullness=player_fp.current_value / player_fp.mod_value,
+            fullness=player_fp / player_fp,
             fg=(0xfb, 0x60, 0), bg=(0x60, 0x25, 0)
             )
 

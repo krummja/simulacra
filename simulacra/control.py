@@ -16,9 +16,6 @@ class Control(Action):
     def plan(self) -> Action:
         return self
 
-    def act(self) -> None:
-        raise NotImplementedError(f"{self.__class__.__name__} has no act method!")
-
 
 class PlayerControl(Control):
 

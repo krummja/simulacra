@@ -11,14 +11,11 @@ class Physics(Component):
 
     ident = "PHYSICS"
 
-    def __init__(self, owner: Entity) -> None:
-        super().__init__(owner)
-        self['WEIGHT'] = 0
-        self['MOVABLE'] = True
+    def __init__(
+            self,
+            weight: float = 0.0,
+            sharpness: float = 0.0,
+            hardness: float = 0.0,
+        ) -> None:
+        super().__init__()
 
-    # def configure(self, weight: int) -> None:
-    #     self['WEIGHT'] = weight
-    #     if self['WEIGHT'] == -1:
-    #         self['MOVABLE'] = False
-    #     else:
-    #         self['MOVABLE'] = True

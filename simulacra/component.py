@@ -5,10 +5,22 @@ if TYPE_CHECKING:
     from entity import Entity
 
 
-class Component(dict):
+class Component:
 
     ident = '<unset>'
 
-    def __init__(self, owner: Entity):
+    def __init__(self):
         super().__init__()
+        self.owner = None
+
+    def on_register(self, owner: Entity) -> None:
         self.owner = owner
+
+    def on_unregister(self) -> None:
+        self.owner = None
+
+    def update(self) -> None:
+        pass
+
+    def handle_message(self, message):
+        pass

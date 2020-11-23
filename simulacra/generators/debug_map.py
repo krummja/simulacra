@@ -11,6 +11,11 @@ from area import Area
 from rendering import update_fov
 from player import Player
 from room import Room
+from components.attributes import initialize_character_attributes
+from components.attributes import Attributes
+from managers.game_context import GameContext
+from factories.factory_service import FactoryService
+from factories.character_factory import CharacterFactory
 
 if TYPE_CHECKING:
     from tile import Tile
@@ -40,13 +45,21 @@ def debug_area(model: Model) -> Area:
     t_end = debug_room.center
 
     area.area_model.tiles[tcod.line_where(*t_start, *t_end)] = floors['bare']['wood']
-
     model.area_data.register(area)
 
     player = Player(area[debug_room.center])
+    player.register_component(initialize_character_attributes())
     player.noun_text = "test player"
     model.area_data.current_area.player = player
     model.entity_data.register(player)
+
+    context = GameContext()
+    context.factory_service = FactoryService()
+    character_factory = CharacterFactory(model, context.factory_service)
+    character_factory.build(
+        uid='test_character',
+        location=area[debug_room.center[0] + 2, debug_room.center[1] + 2]
+        )
 
     update_fov(area)
 

@@ -61,7 +61,7 @@ def draw_logo(consoles: Dict[str, Console]) -> None:
                         consoles['ROOT'].print(
                             ((CONSOLE_WIDTH - width) // 2) + col_index,
                             vertical_offset + row_index,
-                            chr(130),
+                            chr(42),
                             fg=(200, 100, 155)
                             )
 

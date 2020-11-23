@@ -9,17 +9,6 @@ if TYPE_CHECKING:
     from component import Component
 
 
-class ComponentSet(dict):
-
-    def __init__(self, owner: Entity) -> None:
-        super().__init__()
-        self.owner = owner
-
-    def add(self, component: Component) -> None:
-        """Add a component by component identifier to the `Entity`."""
-        self[component.ident] = component
-
-
 class Entity(Graphic, Noun):
 
     ident: str = "<unset>"
@@ -29,12 +18,32 @@ class Entity(Graphic, Noun):
         Noun.__init__(self)
 
         self.location = location
-        self.components = ComponentSet(self)
+        self.components = {}
+        self.observers = {}
+        self.responders = {}
 
-    def copy_to(self, new_entity: Entity):
+    def copy_to(self, new_entity: Entity) -> Entity:
         for component in self.components.values():
-            pass
-            # new_entity.components.add(component)
+            new_entity.register_component(component)
+        return new_entity
+
+    def get_component(self, component_ident: str) -> Component:
+        return self.components.get(component_ident, None)
+
+    def update(self) -> None:
+        for component in self.components.values():
+            component.update()
+
+    def register_component(self, component: Component) -> None:
+        if component.ident in self.components:
+            self.unregister_component(component)
+        self.components[component.ident] = component
+        component.on_register(self)
+
+    def unregister_component(self, component: Component) -> None:
+        if component.ident in self.components:
+            component.on_unregister()
+            del self.components[component.ident]
 
     def __getitem__(self, key):
         return self.components[key]

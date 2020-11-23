@@ -1,9 +1,13 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+
+from factories.body_factory import BodyFactory
+from factories.character_factory import CharacterFactory
+from factories.item_factory import ItemFactory
 
 
 class FactoryService:
 
-    def __init__(self, body_fac, char_fac):
-        self.body_factory = body_fac
-        self.character_factory = char_fac
+    def __init__(self) -> None:
+        self.body_factory = None
+        self.character_factory = None
+        self.item_factory = None
