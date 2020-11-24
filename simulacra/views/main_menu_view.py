@@ -182,13 +182,13 @@ class MainMenuView(View):
         # TODO: The main menu's rendering is pinned to input - can't do this until I fix that...
         # self.background.on_draw(consoles)
 
-        consoles['INTERFACE'].blit(
-            dest=consoles['ROOT'],
-            dest_x=0,
-            dest_y=0,
-            width=CONSOLE_WIDTH,
-            height=CONSOLE_HEIGHT
-            )
+        # consoles['INTERFACE'].blit(
+        #     dest=consoles['ROOT'],
+        #     dest_x=0,
+        #     dest_y=0,
+        #     width=CONSOLE_WIDTH,
+        #     height=CONSOLE_HEIGHT
+        #     )
 
         self.character_select.draw(consoles)
 

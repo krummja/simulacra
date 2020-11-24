@@ -22,13 +22,19 @@ class Item(Entity):
 
     def __init__(
             self,
+            uid: str = "",
             name: str = "",
             description: str = "",
-            location: Location = None
+            location: Location = None,
+            display: Dict[str, Any] = None
         ) -> None:
         super().__init__(location)
+        self.uid = uid
         self._name = name
         self._description = description
+        self.char = display['char']
+        self.color = display['color']
+        self.bg = display['bg']
 
     @property
     def name(self) -> str:
@@ -39,8 +45,33 @@ class Item(Entity):
         return self._description
 
     def copy(self):
-        new_item = Item(self._name, self._description, self.location)
+        new_item = Item(
+            self.uid,
+            self._name,
+            self._description,
+            self.location
+            )
         return super().copy_to(new_item)
+
+    def __eq__(self, other):
+        return (
+            self.uid == other.uid,
+            self.name == other.name,
+            self.description == other.description,
+            self.material == other.material,
+            self.stats == other.stats
+            )
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash((self.uid,
+                     self.name,
+                     self.description,
+                     self.material,
+                     self.stats
+                     ))
 
 # class Item(Entity):
 #

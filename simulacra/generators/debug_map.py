@@ -13,6 +13,7 @@ from room import Room
 from components.attributes import initialize_character_attributes
 from managers.game_context import GameContext
 from factories.factory_service import FactoryService
+from factories.item_factory import ItemFactory
 
 if TYPE_CHECKING:
     from tile import Tile
@@ -60,6 +61,7 @@ def debug_area(model: Model) -> Area:
     context = GameContext(model)
     context.factory_service = FactoryService(model)
     character_factory = context.factory_service.character_factory
+    item_factory = context.factory_service.item_factory
 
     character_factory.build(
         uid='test_character',
@@ -69,6 +71,11 @@ def debug_area(model: Model) -> Area:
     character_factory.build(
         uid='test_character_2',
         location=area[debug_room.center[0] - 2, debug_room.center[1] - 2]
+        )
+
+    item_factory.build(
+        uid='test_item',
+        location=area[debug_room.center[0], debug_room.center[1] + 4]
         )
 
     update_fov(area)

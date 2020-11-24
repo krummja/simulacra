@@ -18,7 +18,6 @@ class Character(Entity, Actor):
             name: str,
             location: Location = None,
             display: Dict[str, Any] = None,
-            control: Control = None
         ) -> None:
         Entity.__init__(self, location)
         self.ident = uid
@@ -26,5 +25,6 @@ class Character(Entity, Actor):
         self.char = display['char']
         self.color = display['color']
         self.bg = display['bg']
+        # TODO: Will want to make this configurable at instantiation
         self.control = BasicNPC(self)
         Actor.__init__(self, self, self.control)

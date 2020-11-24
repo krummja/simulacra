@@ -49,7 +49,6 @@ class CharacterFactory:
             name=template['name'],
             location=location,
             display=template['display'],
-            control=template['control']
             )
         self.model.entity_data.register(new_instance)
         return new_instance

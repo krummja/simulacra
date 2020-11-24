@@ -63,6 +63,8 @@ def render_visible_entities(area: Area, consoles: Dict[str, Console]) -> None:
     # Items
     for (item_x, item_y), items in area.item_model.items.items():
         obj_x, obj_y = item_x - cam_x, item_y - cam_y
+        for item in items:
+            item.bg = area.area_model.get_bg_color(obj_x, obj_y)
         if not (0 <= obj_x < STAGE_PANEL_WIDTH and
                 0 <= obj_y < STAGE_PANEL_HEIGHT):
             continue
