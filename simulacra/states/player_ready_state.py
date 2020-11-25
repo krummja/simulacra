@@ -6,6 +6,9 @@ from action import Action
 from state import SaveAndQuit, StateBreak
 from states.area_state import AreaState
 
+if TYPE_CHECKING:
+    from model import Model
+
 
 class PlayerReadyState(AreaState["Action"]):
 

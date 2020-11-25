@@ -4,6 +4,7 @@ from typing import Dict, TYPE_CHECKING
 import tcod
 import random
 
+from animation import Animation
 from tiles.floors import *
 from tiles.walls import *
 from area import Area
@@ -18,6 +19,8 @@ from factories.item_factory import ItemFactory
 if TYPE_CHECKING:
     from tile import Tile
     from model import Model
+    from managers.manager_service import ManagerService
+    from factories.factory_service import FactoryService
 
 
 def roll_asset(area: Area, asset: Dict[str, Dict[str, Tile]], threshold: int):
@@ -29,7 +32,11 @@ def roll_asset(area: Area, asset: Dict[str, Dict[str, Tile]], threshold: int):
     return area
 
 
-def debug_area(model: Model) -> Area:
+def debug_area(
+        model: Model,
+        manager_service: ManagerService,
+        factory_service: FactoryService        
+    ) -> Area:
     area = Area(model, 120, 120)
     area.ident = 'test area'
 
@@ -58,10 +65,8 @@ def debug_area(model: Model) -> Area:
     model.area_data.current_area.player = player
     model.entity_data.register(player)
 
-    context = GameContext(model)
-    context.factory_service = FactoryService(model)
-    character_factory = context.factory_service.character_factory
-    item_factory = context.factory_service.item_factory
+    character_factory = factory_service.character_factory
+    item_factory = factory_service.item_factory
 
     character_factory.build(
         uid='test_character',
@@ -77,6 +82,8 @@ def debug_area(model: Model) -> Area:
         uid='test_item',
         location=area[debug_room.center[0], debug_room.center[1] + 4]
         )
+
+    manager_service.animation_manager.add_animation(Animation(looping=False))
 
     update_fov(area)
 

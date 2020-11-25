@@ -14,13 +14,20 @@ class CharacterFactory:
 
     def __init__(
             self,
-            model: Model,
             factory_service: FactoryService
         ) -> None:
-        self.model = model
+        self._model = None
         self.factory_service = factory_service
         self.instance_count = {}
 
+    @property
+    def model(self) -> Model:
+        return self._model
+    
+    @model.setter
+    def model(self, value: Model) -> None:
+        self._model = value
+        
     def build(self, uid: str, location: Location):
         """Builds a character instance from a template using this uid.
 

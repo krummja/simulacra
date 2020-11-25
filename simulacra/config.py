@@ -26,5 +26,6 @@ TILESET: Tileset = tcod.tileset.load_truetype_font(
 
 CONSOLES: Dict[str, Console] = {
     'INTERFACE': tcod.Console(CONSOLE_WIDTH, CONSOLE_HEIGHT),
+    'EFFECT': tcod.Console(CONSOLE_WIDTH, CONSOLE_HEIGHT),
     'ROOT': tcod.Console(width=CONSOLE_WIDTH, height=CONSOLE_HEIGHT)
     }

@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import Dict, Tuple, TYPE_CHECKING
 
+import tcod
+
 from config import CONSOLE_HEIGHT, CONSOLE_WIDTH
 from geometry import Rect
 from util import flatten
@@ -89,7 +91,8 @@ class Panel:
                 width=self.size_width,
                 height=self.size_height,
                 fg=self.style_fg,
-                bg=self.style_bg
+                bg=self.style_bg,
+                # bg_blend=tcod.BKGND_MULTIPLY
                 )
 
         if self.style_title:

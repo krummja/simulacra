@@ -9,15 +9,24 @@ from storage import Storage
 from views import MainMenuView
 from generators.debug_map import debug_area
 
+if TYPE_CHECKING:
+    from managers.manager_service import ManagerService
+    from factories.factory_service import FactoryService
+    from managers.game_context import GameContext
+
 
 class MainMenuState(State[None]):
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(
+            self,
+            manager_service: ManagerService,
+            factory_service: FactoryService
+        ) -> None:
+        super().__init__(manager_service, factory_service)
         self._model: Optional[Model] = None
+        self._view = MainMenuView(self)
         self._storage: Storage = Storage()
         self._storage.load_from_file()
-        self._view = MainMenuView(self)
 
     @property
     def storage(self):
@@ -55,7 +64,12 @@ class MainMenuState(State[None]):
     def new_game(self) -> None:
         try:
             self._model = Model()
-            self._model.area_data.current_area = debug_area(self._model)
+            self._context.start_service(self._model)
+            self._model.area_data.current_area = debug_area(
+                self._model,
+                self.manager_service,
+                self.factory_service
+                )
             self.storage.add_save(self._view.character_select.index_as_int,
                                   self.model)
             self.start()

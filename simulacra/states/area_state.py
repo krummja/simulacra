@@ -5,6 +5,7 @@ from state import State, T
 from views.stage_view import StageView
 
 if TYPE_CHECKING:
+    from managers.game_context import GameContext
     from tcod.console import Console
     from model import Model
 

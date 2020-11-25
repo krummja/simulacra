@@ -1,0 +1,50 @@
+from __future__ import annotations
+from typing import Dict, TYPE_CHECKING
+
+import tcod
+from config import *
+
+if TYPE_CHECKING:
+    from tcod.console import Console
+
+
+class InterfaceElement:
+    
+    def __init__(
+            self,
+            uid: str,
+            x: int = 0,
+            y: int = 0,
+            width: int = CONSOLE_WIDTH,
+            height: int = CONSOLE_HEIGHT,
+            title: str = "",
+            string: str = "",
+        ) -> None:
+        self.uid = uid
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.title = title
+        self.string = string
+    
+    def draw(self, consoles: Dict[str, Console]) -> None:
+        consoles['ROOT'].draw_rect(
+            self.x, self.y, 
+            self.width, self.height,
+            ch=0, fg=tcod.white, bg=tcod.gray,
+            bg_blend=tcod.BKGND_MULTIPLY
+            )
+        
+        consoles['ROOT'].draw_frame(
+            self.x, self.y,
+            self.width, self.height,
+            title="test frame"
+            )
+        
+        consoles['ROOT'].print_box(
+            self.x+2, self.y+2,
+            self.width-4, self.height-4,
+            string=self.string
+        )
+        

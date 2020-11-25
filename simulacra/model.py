@@ -6,6 +6,7 @@ from message import Message
 from factories.factory_service import FactoryService
 
 if TYPE_CHECKING:
+    from managers.game_context import GameContext
     from entity import Entity
     from area import Area
 
@@ -40,6 +41,7 @@ class EntityData(dict):
 class Model:
 
     def __init__(self) -> None:
+        self.context = None
         self.area_data = AreaData(self)
         self.entity_data = EntityData(self)
         self.scheduler = EventQueue()

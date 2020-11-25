@@ -49,13 +49,13 @@ class ElemCharacterSlot(Panel):
     def draw(self, consoles: Dict[str, Console]) -> None:
         self.on_draw(consoles)
         consoles['ROOT'].print(x=self.x + 2, y=self.y + 1,
-                               string=self.slot_data['name'])
+                               string=self.slot_data['name'], bg_blend=tcod.BKGND_MULTIPLY)
         consoles['ROOT'].print(x=self.x + self.size_width - 3, y=self.y + 3,
-                               string=self.slot_data['level'])
+                               string=self.slot_data['level'], bg_blend=tcod.BKGND_MULTIPLY)
         consoles['ROOT'].print(x=self.x + 2, y=self.y + 3,
-                               string=self.slot_data['background'])
+                               string=self.slot_data['background'], bg_blend=tcod.BKGND_MULTIPLY)
         consoles['ROOT'].print(x=self.x + 2, y=self.y + 5,
-                               string=self.slot_data['location'])
+                               string=self.slot_data['location'], bg_blend=tcod.BKGND_MULTIPLY)
 
 
 class ElemCharacterSelect(Panel):
