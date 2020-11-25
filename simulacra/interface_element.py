@@ -29,22 +29,29 @@ class InterfaceElement:
         self.string = string
     
     def draw(self, consoles: Dict[str, Console]) -> None:
-        consoles['ROOT'].draw_rect(
+        consoles['INTERFACE'].draw_rect(
             self.x, self.y, 
             self.width, self.height,
             ch=0, fg=tcod.white, bg=tcod.gray,
             bg_blend=tcod.BKGND_MULTIPLY
             )
         
-        consoles['ROOT'].draw_frame(
+        consoles['INTERFACE'].draw_frame(
             self.x, self.y,
             self.width, self.height,
-            title="test frame"
+            title="test frame",
             )
-        
-        consoles['ROOT'].print_box(
-            self.x+2, self.y+2,
-            self.width-4, self.height-4,
-            string=self.string
+       
+        consoles['INTERFACE'].blit(
+            consoles['ROOT'], 
+            self.x, self.y, self.x, self.y,
+            self.width, self.height,
+            fg_alpha=1.0, bg_alpha=0.3
         )
+        
+        # consoles['ROOT'].print_box(
+        #     self.x+2, self.y+2,
+        #     self.width-4, self.height-4,
+        #     string=self.string
+        #     )
         
