@@ -44,14 +44,8 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
     It is the central representation of all of the game content.
     """
 
-    def __init__(
-            self,
-            manager_service: ManagerService,
-            factory_service: FactoryService
-        ) -> None:
+    def __init__(self) -> None:
         super().__init__()
-        self.manager_service = manager_service
-        self.factory_service = factory_service
         self._mode: int = 1
         self._context: Optional[GameContext] = None
         self._model: Optional[Model] = None

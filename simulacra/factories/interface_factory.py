@@ -10,9 +10,7 @@ if TYPE_CHECKING:
 
 class InterfaceFactory:
     
-    def __init__(
-            self,
-        ) -> None:
+    def __init__(self) -> None:
         self.instance_count = {}
         
     def build(self, uid: str):

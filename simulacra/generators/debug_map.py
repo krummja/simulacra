@@ -32,11 +32,7 @@ def roll_asset(area: Area, asset: Dict[str, Dict[str, Tile]], threshold: int):
     return area
 
 
-def debug_area(
-        model: Model,
-        manager_service: ManagerService,
-        factory_service: FactoryService        
-    ) -> Area:
+def debug_area(model: Model) -> Area:
     area = Area(model, 120, 120)
     area.ident = 'test area'
 
@@ -65,8 +61,8 @@ def debug_area(
     model.area_data.current_area.player = player
     model.entity_data.register(player)
 
-    character_factory = factory_service.character_factory
-    item_factory = factory_service.item_factory
+    character_factory = model.factory_service.character_factory
+    item_factory = model.factory_service.item_factory
 
     character_factory.build(
         uid='test_character',
@@ -83,7 +79,7 @@ def debug_area(
         location=area[debug_room.center[0], debug_room.center[1] + 4]
         )
 
-    manager_service.animation_manager.add_animation(Animation(looping=False))
+    model.manager_service.animation_manager.add_animation(Animation(looping=False))
 
     update_fov(area)
 

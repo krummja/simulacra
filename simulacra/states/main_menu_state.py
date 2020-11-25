@@ -22,7 +22,9 @@ class MainMenuState(State[None]):
             manager_service: ManagerService,
             factory_service: FactoryService
         ) -> None:
-        super().__init__(manager_service, factory_service)
+        super().__init__()
+        self.manager_service = manager_service
+        self.factory_service = factory_service
         self._model: Optional[Model] = None
         self._view = MainMenuView(self)
         self._storage: Storage = Storage()
@@ -63,13 +65,11 @@ class MainMenuState(State[None]):
 
     def new_game(self) -> None:
         try:
-            self._model = Model()
-            self._context.start_service(self._model)
-            self._model.area_data.current_area = debug_area(
-                self._model,
+            self._model = Model(
                 self.manager_service,
                 self.factory_service
-                )
+            )
+            self._model.area_data.current_area = debug_area(self._model)
             self.storage.add_save(self._view.character_select.index_as_int,
                                   self.model)
             self.start()

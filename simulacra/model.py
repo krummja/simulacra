@@ -3,10 +3,10 @@ from typing import List, TYPE_CHECKING
 from event_queue import EventQueue
 from player import Player
 from message import Message
-from factories.factory_service import FactoryService
 
 if TYPE_CHECKING:
-    from managers.game_context import GameContext
+    from factories.factory_service import FactoryService
+    from managers.manager_service import ManagerService
     from entity import Entity
     from area import Area
 
@@ -40,12 +40,17 @@ class EntityData(dict):
 
 class Model:
 
-    def __init__(self) -> None:
-        self.context = None
+    def __init__(
+            self,
+            manager_service: ManagerService,
+            factory_service: FactoryService
+        ) -> None:
+        self.manager_service = manager_service
+        self.factory_service = factory_service
+        self.factory_service.model = self
         self.area_data = AreaData(self)
         self.entity_data = EntityData(self)
         self.scheduler = EventQueue()
-        self.factory_service = FactoryService(self)
         self.log: List[Message] = []
 
     @property

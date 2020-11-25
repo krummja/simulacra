@@ -8,12 +8,8 @@ if TYPE_CHECKING:
 
 class BodyFactory:
 
-    def __init__(
-            self,
-            factory_service: FactoryService
-        ) -> None:
+    def __init__(self) -> None:
         self._model = None
-        self.factory_service = factory_service
 
     @property
     def model(self) -> Model:

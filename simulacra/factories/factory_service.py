@@ -13,7 +13,19 @@ if TYPE_CHECKING:
 class FactoryService:
 
     def __init__(self) -> None:
+        self._model: Model = None
         self.interface_factory = InterfaceFactory() 
-        self.body_factory = None
-        self.character_factory = None
-        self.item_factory = None
+        self.body_factory = BodyFactory()
+        self.character_factory = CharacterFactory()
+        self.item_factory = ItemFactory()
+    
+    @property
+    def model(self) -> Model:
+        return self._model
+    
+    @model.setter
+    def model(self, value: Model) -> None:
+        self._model = value
+        self.body_factory.model = value
+        self.character_factory.model = value
+        self.item_factory.model = value

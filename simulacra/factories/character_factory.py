@@ -12,12 +12,8 @@ if TYPE_CHECKING:
 
 class CharacterFactory:
 
-    def __init__(
-            self,
-            factory_service: FactoryService
-        ) -> None:
+    def __init__(self) -> None:
         self._model = None
-        self.factory_service = factory_service
         self.instance_count = {}
 
     @property
