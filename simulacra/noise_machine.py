@@ -8,11 +8,19 @@ from config import *
 class NoiseMachine:
 
     NOISE_OPTIONS = [
-        ["perlin noise", tcod.NOISE_PERLIN, tcod.noise.SIMPLE]
+        ["perlin noise", tcod.NOISE_PERLIN, tcod.noise.SIMPLE],             # 0
+        ["simplex noise", tcod.NOISE_SIMPLEX, tcod.noise.SIMPLE],           # 1
+        ["wavelet noise", tcod.NOISE_WAVELET, tcod.noise.SIMPLE],           # 2
+        ["perlin fbm", tcod.NOISE_PERLIN, tcod.noise.FBM],                  # 3
+        ["perlin turbulence", tcod.NOISE_PERLIN, tcod.noise.TURBULENCE],    # 4
+        ["simplex fbm", tcod.NOISE_SIMPLEX, tcod.noise.FBM],                # 5
+        ["simplex turbulence", tcod.NOISE_SIMPLEX, tcod.noise.TURBULENCE],  # 6
+        ["wavelet fbm", tcod.NOISE_WAVELET, tcod.noise.FBM],                # 7
+        ["wavelet turbulence", tcod.NOISE_WAVELET, tcod.noise.TURBULENCE],  # 8
         ]
 
     def __init__(self):
-        self.func = 0
+        self.func = 3
         self.dx = 0.0
         self.dy = 0.0
         self.octaves = 2.0

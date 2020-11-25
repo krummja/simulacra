@@ -30,6 +30,8 @@ class InterfaceFactory:
             self.instance_count[template['uid']] = 1
         
         instance_uid = template['uid'] + "_" + str(instance_id)
+        
+        # TODO: Instead of passing in content from the template, I could have different assemblers for interface content, then pass that content in. That would work fine for string content.
         new_instance = InterfaceElement(
             uid=instance_uid,
             x=template['position']['x'],

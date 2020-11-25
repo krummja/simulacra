@@ -15,6 +15,7 @@ class AreaState(Generic[T], State[T]):
     def __init__(self, model: Model) -> None:
         super().__init__()
         self._model = model
+        self.factory_service = self._model.factory_service
         self._view = StageView(self, self._model)
 
     def draw(self, consoles: Dict[str, Console]) -> None:

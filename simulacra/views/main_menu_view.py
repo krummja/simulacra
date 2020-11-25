@@ -11,7 +11,6 @@ from view import View
 from panel import Panel
 from views.elements.elem_help_text import ElemHelpText
 from views.elements.elem_character_select import ElemCharacterSelect
-from modal import Modal
 from noise_machine import NoiseMachine
 
 from interface_element import InterfaceElement

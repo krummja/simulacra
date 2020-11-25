@@ -25,7 +25,6 @@ def render_area_tiles(area: Area, consoles: Dict[str, Console]) -> None:
 
     screen_view, world_view = area.camera.get_camera_view()
 
-    # noinspection PyTypeChecker
     consoles['ROOT'].tiles_rgb[screen_view] = np.select(
         (area.area_model.visible[world_view],
          area.area_model.explored[world_view]),
