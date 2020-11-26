@@ -6,11 +6,13 @@ from factories.character_factory import CharacterFactory
 from factories.item_factory import ItemFactory
 from factories.interface_factory import InterfaceFactory
 
+from util import Singleton
+
 if TYPE_CHECKING:
     from model import Model
 
 
-class FactoryService:
+class FactoryService(metaclass=Singleton):
 
     def __init__(self) -> None:
         self._model: Model = None

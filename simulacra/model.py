@@ -4,9 +4,10 @@ from event_queue import EventQueue
 from player import Player
 from message import Message
 
+from factories.factory_service import FactoryService
+from managers.manager_service import ManagerService
+
 if TYPE_CHECKING:
-    from factories.factory_service import FactoryService
-    from managers.manager_service import ManagerService
     from entity import Entity
     from area import Area
 
@@ -40,14 +41,7 @@ class EntityData(dict):
 
 class Model:
 
-    def __init__(
-            self,
-            manager_service: ManagerService,
-            factory_service: FactoryService
-        ) -> None:
-        self.manager_service = manager_service
-        self.factory_service = factory_service
-        self.factory_service.model = self
+    def __init__(self) -> None:
         self.area_data = AreaData(self)
         self.entity_data = EntityData(self)
         self.scheduler = EventQueue()

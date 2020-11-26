@@ -7,19 +7,20 @@ if TYPE_CHECKING:
 
 class StateManager:
 
-    def __init__(self, console_manager) -> None:
-        self.console_manager = console_manager
+    def __init__(self) -> None:
         self.current_state = None
-        self.states = {}
-        self.views = {}
+        self.states = {
+            "MainMenu": MainMenuState
+        }
+        self.views = {
+            "MainMenu": MainMenuView
+        }
 
-    def add_state(self, state) -> None:
-        self.states[state.__name__] = state
-
-    def remove_state(self, state_name) -> None:
-        if self.states[state_name]:
-            del self.states[state_name]
-        raise KeyError(f"No such state {state_name}!")
+    def handle_input(self):
+        pass
 
     def render_current_state(self, **kwargs) -> None:
         self.current_state.render(**kwargs)
+
+    def transition_to(self, state_name) -> None:
+        self.current_state = self.states[state_name]()

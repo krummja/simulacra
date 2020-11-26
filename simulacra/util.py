@@ -12,3 +12,13 @@ def flatten(d, parent_key='', sep='_'):
         else:
             items.append((new_key, v))
     return dict(items)
+
+
+# https://stackoverflow.com/questions/6760685/creating-a-singleton-in-python?noredirect=1&lq=1
+class Singleton(type):
+    _instances = {}
+    def __cls__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, 
+                                                                 **kwargs)
+            return cls._instances[cls]

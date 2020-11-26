@@ -12,15 +12,14 @@ from rendering import update_fov
 from player import Player
 from room import Room
 from components.attributes import initialize_character_attributes
-from managers.game_context import GameContext
 from factories.factory_service import FactoryService
 from factories.item_factory import ItemFactory
+from managers.manager_service import ManagerService
+from factories.factory_service import FactoryService
 
 if TYPE_CHECKING:
     from tile import Tile
     from model import Model
-    from managers.manager_service import ManagerService
-    from factories.factory_service import FactoryService
 
 
 def roll_asset(area: Area, asset: Dict[str, Dict[str, Tile]], threshold: int):
@@ -61,8 +60,11 @@ def debug_area(model: Model) -> Area:
     model.area_data.current_area.player = player
     model.entity_data.register(player)
 
-    character_factory = model.factory_service.character_factory
-    item_factory = model.factory_service.item_factory
+    factory_service = FactoryService()
+    manager_service = ManagerService()
+    factory_service.model = model
+    character_factory = factory_service.character_factory
+    item_factory = factory_service.item_factory
 
     character_factory.build(
         uid='test_character',
@@ -79,7 +81,7 @@ def debug_area(model: Model) -> Area:
         location=area[debug_room.center[0], debug_room.center[1] + 4]
         )
 
-    model.manager_service.animation_manager.add_animation(Animation(looping=False))
+    manager_service.animation_manager.add_animation(Animation(looping=False))
 
     update_fov(area)
 

@@ -12,8 +12,6 @@ import config
 
 if TYPE_CHECKING:
     from tcod.console import Console
-    from managers.manager_service import ManagerService
-    from factories.factory_service import FactoryService
     from model import Model
     from storage import Storage
     from view import View
@@ -47,7 +45,6 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
     def __init__(self) -> None:
         super().__init__()
         self._mode: int = 1
-        self._context: Optional[GameContext] = None
         self._model: Optional[Model] = None
         self._storage: Optional[Storage] = None
         self._view: Optional[View] = None
@@ -96,14 +93,6 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
         return self._MOVE_KEYS
 
     @property
-    def game_context(self) -> GameContext:
-        return self._context
-    
-    @game_context.setter
-    def game_context(self, value: GameContext) -> None:
-        self._context = value
-
-    @property
     def model(self) -> Optional[Model]:
         return self._model
 
@@ -120,9 +109,6 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
             self.on_draw(config.CONSOLES)
             config.CONTEXT.present(config.CONSOLES['ROOT'])
             if self._mode == 1:
-                
-                # if self._context.animation_manager.running:
-                #     self._context.animation_manager.start()
                     
                 for input_event in tcod.event.get():
                     try:
@@ -131,9 +117,6 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
                         return None
                     if value is not None:
                         return value
-
-                # if self._context.animation_manager.running:
-                #     self._context.animation_manager.stop()
                     
     def on_draw(self, consoles: Dict[str, Console]) -> None:
         self._view.draw(consoles)

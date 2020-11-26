@@ -14,6 +14,8 @@ from views.elements.elem_character_select import ElemCharacterSelect
 from noise_machine import NoiseMachine
 
 from interface_element import InterfaceElement
+from managers.manager_service import ManagerService
+from factories.factory_service import FactoryService
 
 if TYPE_CHECKING:
     from tcod import Console
@@ -108,7 +110,7 @@ class MainMenuView(View):
         self.character_select = ElemCharacterSelect()
         self.character_select.data_source = state.storage
         self.background = NoiseMachine()
-        self.factory = self.state.factory_service.interface_factory
+        self.factory_service = FactoryService()
 
     def draw(self, consoles: Dict[str, Console]) -> None:
         self.background.on_draw(consoles)
@@ -126,4 +128,4 @@ class MainMenuView(View):
             ])
         # help_text.draw(consoles)
         # InterfaceElement(10, 10, 50, 20, "Text").draw(consoles)
-        self.factory.build('test_element').draw(consoles)
+        self.factory_service.interface_factory.build('test_element').draw(consoles)

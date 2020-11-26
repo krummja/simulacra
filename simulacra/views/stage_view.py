@@ -12,6 +12,7 @@ from views.elements.elem_gauge import ElemGauge
 from stats import StatsEnum
 from components.attributes import Attributes
 from component import Component
+from factories.factory_service import FactoryService
 
 if TYPE_CHECKING:
     from state import State
@@ -24,7 +25,7 @@ class StageView(View):
         super().__init__(state)
         self.model = model
         self.state = state
-        self.factory = self.state.factory_service.interface_factory
+        self.factory_service = FactoryService()
 
         self.character_panel = Panel(**{
             'position': ('top', 'right'),
