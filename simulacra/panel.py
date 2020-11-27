@@ -99,7 +99,8 @@ class Panel:
             consoles['INTERFACE'].print(
                 x=self.x + 2,
                 y=self.y,
-                string=self.style_title
+                string=self.style_title,
+                fg=(255, 255, 255)
                 )
 
         consoles['INTERFACE'].blit(

@@ -12,6 +12,8 @@ from rendering import update_fov
 from player import Player
 from room import Room
 from components.attributes import initialize_character_attributes
+from components.physics import Physics
+from components.inventory import Inventory
 from factories.factory_service import FactoryService
 from factories.item_factory import ItemFactory
 from managers.manager_service import ManagerService
@@ -41,19 +43,21 @@ def debug_area(model: Model) -> Area:
 
     # TODO: It would be nice to have a methods for this - these are really clunky
     area.area_model.tiles[...] = walls['bare']['bricks_01']
-    area.area_model.tiles[debug_room.inner] = floors['bare']['wood']
-    area.area_model.tiles[side_room.inner] = floors['bare']['wood']
+    area.area_model.tiles[debug_room.inner] = floors['bare']['blank']
+    area.area_model.tiles[side_room.inner] = floors['bare']['blank']
 
     # TODO: Make a TunnelFactory
     t_start = debug_room.center
     t_end = side_room.center
     t_middle = t_start[0], t_end[1]
-    area.area_model.tiles[tcod.line_where(*t_start, *t_middle)] = floors['bare']['wood']
-    area.area_model.tiles[tcod.line_where(*t_middle, *t_end)] = floors['bare']['wood']
+    area.area_model.tiles[tcod.line_where(*t_start, *t_middle)] = floors['bare']['blank']
+    area.area_model.tiles[tcod.line_where(*t_middle, *t_end)] = floors['bare']['blank']
 
     # TODO: PlayerFactory will make this easier, of course
     player = Player(area[debug_room.center])
     player.register_component(initialize_character_attributes())
+    player.register_component(Inventory())
+    player.register_component(Physics(weight=10.0))
     player.noun_text = "test player"
 
     model.area_data.register(area)

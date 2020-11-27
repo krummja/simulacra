@@ -32,6 +32,8 @@ class Item(Entity):
         self.uid = uid
         self._name = name
         self._description = description
+        self._owner = None
+        self._location = location
         self.char = display['char']
         self.color = display['color']
         self.bg = display['bg']
@@ -43,6 +45,22 @@ class Item(Entity):
     @property
     def description(self) -> str:
         return self._description
+
+    @property
+    def owner(self):
+        return self._owner
+    
+    @owner.setter
+    def owner(self, value) -> None:
+        self._owner = value
+
+    @property
+    def location(self):
+        return self._location
+    
+    @location.setter
+    def location(self, value) -> None:
+        self._location = value
 
     def copy(self):
         new_item = Item(
@@ -72,6 +90,17 @@ class Item(Entity):
                      self.material,
                      self.stats
                      ))
+    
+    def lift(self) -> None:
+        if self.owner:
+            self.owner.contents.remove(self)
+            self.owner = None
+        if self.location:
+            item_list = self.location.area.items[self.location.xy]
+            item_list.remove(self)
+            if not item_list:
+                del self.location.area.items[self.location.xy]
+            self.location = None
 
 # class Item(Entity):
 #

@@ -8,6 +8,7 @@ import traceback
 import lzma
 import pickle
 import pickletools
+from config import DEBUG
 
 if TYPE_CHECKING:
     from model import Model
@@ -22,6 +23,7 @@ class Storage:
             }
         self.save_file = "simulacra.sav.xz"
         self.save_time = datetime.datetime.now()
+        self.debug = DEBUG
 
     def data_hook(self: Storage, index: int) -> Optional[Model]:
         return self.save_slots[index]
@@ -39,16 +41,19 @@ class Storage:
         debug += f"Optimized: {len(data)} bytes ({round(len(data)/1024, 2)}kb) \n"
         data = lzma.compress(data)
         debug += f"Compressed: {len(data)} bytes ({round(len(data)/1024, 2)}kb)."
-        print(debug)
-        print(f"Game saved on {self.save_time}")
         with open(self.save_file, "wb") as f:
             f.write(data)
+        if self.debug:
+            print(debug)
+            print(f"Game saved on {self.save_time}")
 
     def load_from_file(self: Storage) -> None:
         try:
             with open(self.save_file, "rb") as f:
                 self.save_slots = pickle.loads(lzma.decompress(f.read()))
-            print(f"Loaded data from {self.save_file}.")
+            if self.debug:
+                print(f"Loaded data from {self.save_file}.")
         except Exception:
             traceback.print_exc(file=sys.stderr)
-            print("No save data found.")
+            if self.debug:
+                print("No save data found.")

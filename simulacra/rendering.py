@@ -7,11 +7,16 @@ import numpy as np
 from config import *
 from hues import COLOR
 from tile import tile_graphic
+from managers.manager_service import ManagerService
+
 
 if TYPE_CHECKING:
     from tcod.console import Console
     from graphic import Graphic
     from area import Area
+
+
+manager_service = ManagerService()
 
 
 def render_area_tiles(area: Area, consoles: Dict[str, Console]) -> None:
@@ -90,3 +95,9 @@ def update_fov(area: Area) -> None:
         )
 
     area.area_model.explored |= area.area_model.visible
+
+
+def render_animations(area: Area) -> None:
+    animation_manager = manager_service.animation_manager
+    animation = animation_manager.loop()
+    frames = animation.play()

@@ -45,8 +45,10 @@ class ItemFactory:
             uid=instance_uid,
             name=template['name'],
             description=template['description'],
-            display=template['display']
+            display=template['display'],
+            location=location
             )
+        new_instance.noun_text = template['name']
         try:
             self.model.area_data.current_area.item_model.items[location.xy].append(new_instance)
             new_instance.bg = self.model.area_data.current_area.area_model.get_bg_color(*location.xy)

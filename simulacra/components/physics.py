@@ -18,4 +18,6 @@ class Physics(Component):
             hardness: float = 0.0,
         ) -> None:
         super().__init__()
-
+        self.weight = weight
+        self.sharpness = sharpness
+        self.hardness = hardness

@@ -56,9 +56,28 @@ nearby_panel = {
 
 inventory_panel = {
     'position': ('bottom', 'right'),
+    'offset': {'x': -(SIDE_PANEL_WIDTH // 2)},
     'size': {
-        'width': SIDE_PANEL_WIDTH,
+        'width': SIDE_PANEL_WIDTH // 2,
         'height': (SIDE_PANEL_HEIGHT // 2) + 2
         },
-    'style': {'framed': True}
+    'style': {'title': " inventory ", 'framed': True}
     }
+
+equipment_panel = {
+    'position': ('bottom', 'right'),
+    'size': {
+        'width': SIDE_PANEL_WIDTH // 2,
+        'height': (SIDE_PANEL_HEIGHT // 2) + 2
+    },
+    'style': {'title': " equipment ", 'framed': True}
+}
+
+delete = {
+    'position': ('center', 'center'),
+    'size': {
+        'width': 20,
+        'height': 5,
+    },
+    'style': {'framed': True}
+}

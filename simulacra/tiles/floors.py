@@ -8,7 +8,7 @@ from tiles.font_map import font_map
 
 styles = {
     'bare': {
-        'foreground': COLOR['dark chocolate'],
+        'foreground': COLOR['nero'],
         'background': COLOR['nero'],
         }
     }

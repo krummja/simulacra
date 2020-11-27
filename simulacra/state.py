@@ -9,6 +9,9 @@ from typing import (Dict,
 import tcod
 import config
 import time
+from autologging import logged
+
+from util import log
 
 if TYPE_CHECKING:
     from tcod.console import Console
@@ -41,6 +44,8 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
     The Model property contains all of a particular session's game data.
     It is the central representation of all of the game content.
     """
+
+    NAME = "<base state>"
 
     def __init__(self) -> None:
         super().__init__()

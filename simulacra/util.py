@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 import collections
 import time
+import functools
 
 
 def flatten(d, parent_key='', sep='_'):
@@ -24,3 +25,15 @@ class Singleton(type):
                 Singleton, cls
                 ).__call__(*args, **kwargs)
             return cls._instances[cls]
+        
+
+def log(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            # Execute the called function
+            return func(*args, **kwargs)
+        except Exception as e:
+            error_msg = 'An error has occurred at /' + func.__name__ + '\n'
+            return e
+    return wrapper

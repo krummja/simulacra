@@ -29,3 +29,5 @@ CONSOLES: Dict[str, Console] = {
     'EFFECT': tcod.Console(CONSOLE_WIDTH, CONSOLE_HEIGHT),
     'ROOT': tcod.Console(width=CONSOLE_WIDTH, height=CONSOLE_HEIGHT)
     }
+
+DEBUG = False

@@ -1,24 +1,25 @@
 from __future__ import annotations
-from typing import Dict, Type, TYPE_CHECKING
 
-from tcod import Console
+from typing import TYPE_CHECKING, Dict, Type
+
 import tdl
-
+from component import Component
+from components.attributes import Attributes
 from config import *
 from data.interface_elements import *
-from rendering import *
-from panel import Panel
-from view import View
-from views.elements.elem_log import ElemLog
-from views.elements.elem_gauge import ElemGauge
-from stats import StatsEnum
-from components.attributes import Attributes
-from component import Component
 from factories.factory_service import FactoryService
+from panel import Panel
+from rendering import *
+from stats import StatsEnum
+from tcod import Console
+from view import View
+
+from views.elements.elem_gauge import ElemGauge
+from views.elements.elem_log import ElemLog
 
 if TYPE_CHECKING:
-    from state import State
     from model import Model
+    from state import State
 
 
 class StageView(View):
@@ -36,7 +37,10 @@ class StageView(View):
         player_hp = 10
         player_ep = 10
         player_fp = 10
-
+        mock_cur_xp = 226
+        mock_needed_xp = 1000
+        mock_xp = mock_cur_xp / mock_needed_xp
+        
         self.hp_gauge = ElemGauge(
             **bar_config,
             parent=self.character_panel,
@@ -61,9 +65,6 @@ class StageView(View):
             fg=(0xfb, 0x60, 0), bg=(0x60, 0x25, 0)
             )
 
-        mock_cur_xp = 226
-        mock_needed_xp = 1000
-        mock_xp = mock_cur_xp / mock_needed_xp
         self.xp_gauge = ElemGauge(
             **xp_config,
             parent=self.character_panel,
@@ -75,6 +76,7 @@ class StageView(View):
 
         self.nearby_panel = Panel(**nearby_panel)
         self.inventory_panel = Panel(**inventory_panel)
+        self.equipment_panel = Panel(**equipment_panel)
         self.log_panel = ElemLog(self.model)
 
     def draw(self, consoles: Dict[str, Console]) -> None:
@@ -89,6 +91,7 @@ class StageView(View):
 
         self.character_panel.on_draw(consoles)
         self.player_info_panel.on_draw(consoles)
+
         consoles['ROOT'].print(
             x=self.player_info_panel.x,
             y=self.player_info_panel.y,
@@ -110,34 +113,56 @@ class StageView(View):
             fg=(255, 255, 255)
             )
 
-        actors = self.model.area_data.current_area.actor_model.actors
+        actors = area.actor_model.actors
         nearby_entities = [ent for ent in actors if ent.location.distance_to(*player.location.xy) <= 10]
 
+        # GAUGES
         self.hp_gauge.draw(consoles)
         self.ep_gauge.draw(consoles)
         self.fp_gauge.draw(consoles)
         self.xp_gauge.draw(consoles)
 
+        # PANEL FRAMES
         self.nearby_panel.on_draw(consoles)
         self.inventory_panel.on_draw(consoles)
+        self.equipment_panel.on_draw(consoles)
         self.log_panel.draw(consoles)
 
-        _y = 0
+        # INVENTORY PANEL
+        inventory = self.model.player.components['INVENTORY'].contents
+        item_y = 0
+        for item in inventory:
+            consoles['ROOT'].print(
+                self.inventory_panel.x + 2,
+                self.inventory_panel.y + 2 + item_y,
+                string=item.noun_text,
+                fg=(255, 255, 255)
+                )
+            item_y += 1 if item_y < self.inventory_panel.size_height - 3 else 0
+
+        # TODO: Make this into a ui element.
+        # TODO: Display aggro state and combat info when in combat
+        # e.g.:
+        #*  *Test Character*   100/100          notices you
+        #! **Test Character**   20/100          actively attacking
+        # NEARBY ENTITY PANEL
+        entity_y = 0
         nearby = self.get_nearby_list()
         for entity in nearby:        
             consoles['ROOT'].print(
                 self.nearby_panel.x + 2,
-                self.nearby_panel.y + 2 + _y,
+                self.nearby_panel.y + 2 + entity_y,
                 string=entity.noun_text,
                 fg=(255, 255, 255)
                 )
-            _y += 1 if _y < 4 else 0
+            entity_y += 1 if entity_y < 3 else 0
 
     def get_nearby_list(self):
         nearby = []
         actors = self.model.area_data.current_area.actor_model.actors
         player = self.model.player
         for actor in actors:
+            
             if 1 <= actor.location.distance_to(*player.location.xy) <= 8:
                 nearby.append(actor)
             elif actor.location.distance_to(*player.location.xy) > 8:

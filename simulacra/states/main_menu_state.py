@@ -3,8 +3,10 @@ from typing import Dict, Optional, TYPE_CHECKING
 
 import tcod
 
+from config import DEBUG
 from model import Model
 from state import State, T, SaveAndQuit, GameOverQuit
+from states.modal_state import ModalState
 from storage import Storage
 from views import MainMenuView
 from generators.debug_map import debug_area
@@ -22,6 +24,7 @@ class MainMenuState(State[None]):
         self._storage: Storage = Storage()
         self._storage.load_from_file()
         self._view = MainMenuView(self)
+        self.delete = False
 
     @property
     def storage(self):
@@ -33,16 +36,23 @@ class MainMenuState(State[None]):
         if event.sym == tcod.event.K_RETURN:
             menu_data = self.storage.save_slots[index]
             if menu_data is not None:
-                print("Storage: Save data found")
+                if DEBUG:
+                    print("Storage: Save data found")
                 self._model = self.storage.save_slots[index]
                 self.start()
             else:
-                print("Storage: No data for this slot.")
+                if DEBUG:
+                    print("Storage: No data for this slot.")
                 self.new_game()
 
         elif event.sym == tcod.event.K_d:
             if self.storage.save_slots[index] is not None:
-                self.storage.save_slots[index] = None
+                confirm_modal = ModalState(self.model, 'Test')
+                confirm_modal.loop()
+                if confirm_modal.result:
+                    self.storage.save_slots[index] = None
+                else:
+                    pass
             self.storage.write_to_file()
 
         elif event.sym == tcod.event.K_q:

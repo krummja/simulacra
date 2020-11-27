@@ -1,10 +1,16 @@
 from __future__ import annotations
 
 from rendering import update_fov
+from geometry import *
 from action import Action, Impossible
 from action import (ActionWithPosition,
                     ActionWithItem,
                     ActionWithDirection)
+
+from data.animations import animations
+from managers.manager_service import ManagerService
+
+animation_manager = ManagerService().animation_manager
 
 
 class Move(Action):
@@ -38,7 +44,6 @@ class Move(Action):
             if self.actor.owner.location.xy == self.target_position:
                 return self
             if self.area.is_blocked(*self.target_position):
-                # TODO: Make this more transparently hooked into the log
                 raise Impossible("the way is blocked.")
             return self
 
@@ -61,10 +66,39 @@ class Activate(Action):
 class Nearby(Action):
 
     class Examine(Action):
-        pass
+        def plan(self) -> Action:
+            for position in Point(*self.location.xy).neighbors:
+                try:
+                    if self.area.items[position[0], position[1]]:
+                        self.area.nearby_items.append(self.area.items[position])
+                except KeyError:
+                    continue
+            return self
+                
+        def act(self) -> None:
+            if len(self.area.nearby_items) > 0:
+                for items in self.area.nearby_items:
+                    for item in items:
+                        self.model.report(f"{item} is nearby.")
+                self.area.nearby_items.clear()
+            else:
+                self.model.report("there is nothing of note nearby")
+            self.actor.reschedule(100)
 
     class Pickup(Action):
-        pass
+        def plan(self) -> Action:
+            if not self.area.items.get(self.location.xy):
+                raise Impossible("there is nothing to pick up.")
+            return self
+        
+        def act(self) -> None:
+            for item in self.area.items[self.location.xy]:
+                try:
+                    self.report(f"{self.actor.owner.noun_text} picks up the {item.noun_text}.")
+                    self.actor.owner.components['INVENTORY'].take(item)
+                    return self.actor.reschedule(100)
+                except Impossible:
+                    self.report(f"{self.actor.owner.noun_text} cannot lift the {item.noun_text}!")
 
 
 class Attack(Action):

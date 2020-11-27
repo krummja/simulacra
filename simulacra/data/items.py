@@ -3,7 +3,7 @@ from __future__ import annotations
 
 test_item = {
     'uid': 'test_item',
-    'name': 'Test Item',
+    'name': 'test item',
     'description': 'A simple whatchamacallit. Nothing special.',
     'display': {
         'char': ord("!"),

@@ -23,15 +23,21 @@ class ElemLog(Panel):
         self.model = model
 
     def draw(self, consoles: Dict[str, Console]) -> None:
+        # TODO: Figure out some way to color parts of strings...?
         self.on_draw(consoles)
 
         i = 0
         x, y = self.bounds.left + 1, self.bounds.bottom - 2
-        for text in self.model.log[::-1]:
+        for text in self.model.log[-2::-1]:
             i += tcod.console.get_height_rect(self.log_width, str(text))
             if i >= 10:
                 break
             consoles['ROOT'].print_box(
                 x, y - i, self.log_width, 0, str(text),
+                fg=(100, 100, 100), bg=(0, 0, 0)
+                )
+        for text in self.model.log[::1]:
+            consoles['ROOT'].print_box(
+                x, y, self.log_width, 0, str(text) + " " * (self.log_width - len(str(text)) - 2),
                 fg=(255, 255, 255), bg=(0, 0, 0)
                 )

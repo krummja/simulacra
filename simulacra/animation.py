@@ -14,20 +14,20 @@ class Animation:
     
     def __init__(
             self,
-            action: Action = None,
             duration: float = 0.0,
             looping: bool = False
         ) -> None:
-        self.action = action
         self.looping = looping
         self.duration = duration
         self.playing: bool = False
+        self.frames = []
     
     def play(self) -> None:
-        framecount: int = self.lerp(self.duration)
+        # framecount: int = self.lerp(self.duration)
         self.playing = True
         while self.playing:
-            self.on_draw(framecount)
+            for frame in self.frames:
+                return frame
             self.stop()
 
     def stop(self) -> None:
@@ -36,5 +36,21 @@ class Animation:
     def lerp(self, value: int):
         pass
     
-    def on_draw(self, frames: int) -> None:
-        pass
+
+"""
+from Hauberk:
+
+    case EventType.die:
+        for (var i = 0; i < 10; i++) {
+            effects.add(ParticleEffect(event.actor.x, event.actor.y, red));
+        }
+        break;
+        
+    
+    GameResult makeResult(bool madeProgress) {
+        var result = GameResult(madeProgress);
+        result.events.addAll(_events);
+        _events.clear();
+        return result;
+    }
+"""

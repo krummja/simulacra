@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from animation import Animation
@@ -11,13 +11,14 @@ class AnimationManager:
         self.running: bool = False
         self.queue: List[Animation] = []
     
-    def loop(self) -> None:
+    def loop(self) -> Optional[Animation]:
         while self.running:
             if len(self.queue) == 0:
                 self.stop()
             else:
-                next = self.queue.pop()
-                next.play()
+                next: Animation = self.queue.pop()
+                next = next()
+                return next
                 if next.looping:
                     self.queue.insert(0, next)
     

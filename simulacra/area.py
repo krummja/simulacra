@@ -57,6 +57,7 @@ class ItemModel:
     def __init__(self, area: Area) -> None:
         self.area = area
         self.items: Dict[Tuple[int, int], List[Item]] = {}
+        self.nearby_items: List[List[Item]] = []
 
     def __getitem__(self, key: Tuple[int, int]) -> List[Item]:
         """Return a list of items at a given x,y position."""
@@ -93,6 +94,14 @@ class Area:
     @player.setter
     def player(self, value: Player) -> None:
         self._player = value
+
+    @property
+    def items(self) -> Dict[Tuple[int, int], List[Item]]:
+        return self.item_model.items
+    
+    @property
+    def nearby_items(self) -> List[List[Item]]:
+        return self.item_model.nearby_items
 
     def is_blocked(self, x: int, y: int) -> bool:
         if not (0 <= x < self.width and 0 <= y < self.height):

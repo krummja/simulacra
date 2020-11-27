@@ -26,3 +26,9 @@ class PlayerReadyState(AreaState["Action"]):
     def cmd_inventory(self):
         state = InventoryState(self.model, InventoryView)
         return state.loop()
+    
+    def cmd_examine(self):
+        return common.Nearby.Examine(self.model.player)
+    
+    def cmd_pickup(self):
+        return common.Nearby.Pickup(self.model.player)
