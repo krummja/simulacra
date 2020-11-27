@@ -34,11 +34,11 @@ class Storage:
 
     def write_to_file(self: Storage) -> None:
         data = pickle.dumps(self.save_slots, protocol=4)
-        debug = f"Raw: {len(data)} bytes, "
+        debug = f"Raw: {len(data)} bytes ({round(len(data)/1024, 2)}kb) \n"
         data = pickletools.optimize(data)
-        debug += f"Optimized: {len(data)} bytes, "
+        debug += f"Optimized: {len(data)} bytes ({round(len(data)/1024, 2)}kb) \n"
         data = lzma.compress(data)
-        debug += f"Compressed: {len(data)} bytes."
+        debug += f"Compressed: {len(data)} bytes ({round(len(data)/1024, 2)}kb)."
         print(debug)
         print(f"Game saved on {self.save_time}")
         with open(self.save_file, "wb") as f:

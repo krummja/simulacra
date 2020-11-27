@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 class AreaModel:
 
-    ident: str = '<unset>'
+    ident = '<unset>'
 
     def __init__(self, area: Area) -> None:
         self.area = area
@@ -33,6 +33,12 @@ class AreaModel:
 
 
 class ActorModel:
+    """Model class that holds references to all of the area's actors.
+    
+    Actors are stored in a set; there shouldn't be a reason to directly access
+    an actor in the game. Accessing the owning entity via the Model is usually
+    sufficient.
+    """
 
     def __init__(self, area: Area) -> None:
         self.area = area
@@ -40,7 +46,13 @@ class ActorModel:
 
 
 class ItemModel:
-    """Model class that holds references to all of an area's items."""
+    """Model class that holds references to all of an area's items.
+    
+    Items are stored in arrays representing a tile in the area, keyed to a 
+    tuple that encodes the area location of that tile.
+    
+    items = { (10, 10): [<Item1>, <Item2>, <Item3>] }
+    """
 
     def __init__(self, area: Area) -> None:
         self.area = area

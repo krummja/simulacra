@@ -5,6 +5,8 @@ from actions import common
 from action import Action
 from state import SaveAndQuit, StateBreak
 from states.area_state import AreaState
+from states.inventory_state import InventoryState
+from views.inventory_view import InventoryView
 
 if TYPE_CHECKING:
     from model import Model
@@ -20,3 +22,7 @@ class PlayerReadyState(AreaState["Action"]):
 
     def cmd_quit(self) -> None:
         raise StateBreak()
+
+    def cmd_inventory(self):
+        state = InventoryState(self.model, InventoryView)
+        return state.loop()

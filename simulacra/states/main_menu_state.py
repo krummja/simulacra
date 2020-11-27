@@ -12,7 +12,6 @@ from generators.debug_map import debug_area
 if TYPE_CHECKING:
     from managers.manager_service import ManagerService
     from factories.factory_service import FactoryService
-    from managers.game_context import GameContext
 
 
 class MainMenuState(State[None]):
@@ -20,9 +19,9 @@ class MainMenuState(State[None]):
     def __init__(self) -> None:
         super().__init__()
         self._model: Optional[Model] = None
-        self._view = MainMenuView(self)
         self._storage: Storage = Storage()
         self._storage.load_from_file()
+        self._view = MainMenuView(self)
 
     @property
     def storage(self):

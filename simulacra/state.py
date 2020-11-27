@@ -7,8 +7,8 @@ from typing import (Dict,
                     TypeVar,
                     TYPE_CHECKING)
 import tcod
-
 import config
+import time
 
 if TYPE_CHECKING:
     from tcod.console import Console
@@ -48,6 +48,7 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
         self._model: Optional[Model] = None
         self._storage: Optional[Storage] = None
         self._view: Optional[View] = None
+        self._FPS = 0
 
         self._COMMAND_KEYS: Dict[int, str] = {
             tcod.event.K_d: "drop",
@@ -106,10 +107,11 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
 
     def loop(self) -> Optional[T]:
         while True:
+            start_time = time.time()
             self.on_draw(config.CONSOLES)
             config.CONTEXT.present(config.CONSOLES['ROOT'])
+            self._FPS = 1.0 / (time.time() - start_time)
             if self._mode == 1:
-                    
                 for input_event in tcod.event.get():
                     try:
                         value: T = self.dispatch(input_event)
@@ -120,6 +122,7 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
                     
     def on_draw(self, consoles: Dict[str, Console]) -> None:
         self._view.draw(consoles)
+        # consoles['ROOT'].print(1, 1, str(int(self._FPS)), fg=(255, 255, 255))
 
     def ev_quit(self, event: tcod.event.Quit) -> Optional[T]:
         return self.cmd_quit()

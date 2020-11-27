@@ -55,7 +55,6 @@ class Model:
         while True:
             self.scheduler.invoke_next()
 
-    # TODO: This would be best as a separate UI element
     def report(self, msg: str) -> None:
         print(msg)
         if self.log and self.log[-1].msg == msg:

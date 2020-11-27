@@ -2,8 +2,10 @@ from __future__ import annotations
 from typing import Dict, Type, TYPE_CHECKING
 
 from tcod import Console
+import tdl
 
 from config import *
+from data.interface_elements import *
 from rendering import *
 from panel import Panel
 from view import View
@@ -27,35 +29,9 @@ class StageView(View):
         self.state = state
         self.factory_service = FactoryService()
 
-        self.character_panel = Panel(**{
-            'position': ('top', 'right'),
-            'size': {
-                'width': SIDE_PANEL_WIDTH,
-                'height': (SIDE_PANEL_HEIGHT // 3)
-                },
-            'style': {'framed': True}
-            })
-
-        self.player_info_panel = Panel(**{
-            'parent': self.character_panel,
-            'position': ('top', 'left'),
-            'offset': {'x': 2, 'y': 2},
-            'size': {'width': SIDE_PANEL_WIDTH-3, 'height': 4},
-            })
-
-        bar_config = {
-            'parent': self.character_panel,
-            'position': ('top', 'center'),
-            'offset_x': 1, 'margin': 0, 'width': 24,
-            'text_fg': (255, 255, 255)
-            }
-
-        # player_hp = self.model.entity_data['PLAYER']['ATTRIBUTES']['HEALTH']
-        # player_ep = self.model.entity_data['PLAYER']['ATTRIBUTES']['ENERGY']
-        # player_fp = self.model.entity_data['PLAYER']['ATTRIBUTES']['HUNGER']
-
-        # player_attributes: Attributes = self.model.player.get_component('ATTRIBUTES')
-        # player_hp = player_attributes.get_current_value(StatsEnum.Health)
+        self.character_panel = Panel(**character_panel)
+        self.player_info_panel = Panel(**player_info_panel, 
+                                       parent=self.character_panel)
 
         player_hp = 10
         player_ep = 10
@@ -63,6 +39,7 @@ class StageView(View):
 
         self.hp_gauge = ElemGauge(
             **bar_config,
+            parent=self.character_panel,
             offset_y=7, name="vit", text=f"{player_hp}",
             fullness=player_hp / player_hp,
             fg=(0x40, 0x80, 0), bg=(0x80, 0, 0)
@@ -70,6 +47,7 @@ class StageView(View):
 
         self.ep_gauge = ElemGauge(
             **bar_config,
+            parent=self.character_panel,
             offset_y=9, name="enr", text=f"{player_ep}",
             fullness=player_ep / player_ep,
             fg=(0x17, 0x57, 0xc2), bg=(0x05, 0x1e, 0x50)
@@ -77,6 +55,7 @@ class StageView(View):
 
         self.fp_gauge = ElemGauge(
             **bar_config,
+            parent=self.character_panel,
             offset_y=11, name="hgr", text=f"{player_fp}",
             fullness=player_fp / player_fp,
             fg=(0xfb, 0x60, 0), bg=(0x60, 0x25, 0)
@@ -86,28 +65,16 @@ class StageView(View):
         mock_needed_xp = 1000
         mock_xp = mock_cur_xp / mock_needed_xp
         self.xp_gauge = ElemGauge(
-            **bar_config,
-            offset_y=15, name="exp", text=f"{mock_cur_xp} / {mock_needed_xp}",
+            **xp_config,
+            parent=self.character_panel,
+            offset_y=15, name="exp", 
+            text=f"{mock_cur_xp} / {mock_needed_xp}",
             fullness=mock_xp,
             fg=(0x80, 0xe6, 0xea), bg=(0x10, 0x83, 0x95)
             )
 
-        self.nearby_panel = Panel(**{
-            'position': ('top', 'right'),
-            'offset': {'y': (SIDE_PANEL_HEIGHT // 3)},
-            'size': {'width': SIDE_PANEL_WIDTH, 'height': 8},
-            'style': {'framed': True}
-            })
-
-        self.inventory_panel = Panel(**{
-            'position': ('bottom', 'right'),
-            'size': {
-                'width': SIDE_PANEL_WIDTH,
-                'height': (SIDE_PANEL_HEIGHT // 2) + 2
-                },
-            'style': {'framed': True}
-            })
-
+        self.nearby_panel = Panel(**nearby_panel)
+        self.inventory_panel = Panel(**inventory_panel)
         self.log_panel = ElemLog(self.model)
 
     def draw(self, consoles: Dict[str, Console]) -> None:
@@ -143,6 +110,9 @@ class StageView(View):
             fg=(255, 255, 255)
             )
 
+        actors = self.model.area_data.current_area.actor_model.actors
+        nearby_entities = [ent for ent in actors if ent.location.distance_to(*player.location.xy) <= 10]
+
         self.hp_gauge.draw(consoles)
         self.ep_gauge.draw(consoles)
         self.fp_gauge.draw(consoles)
@@ -150,5 +120,29 @@ class StageView(View):
 
         self.nearby_panel.on_draw(consoles)
         self.inventory_panel.on_draw(consoles)
-
         self.log_panel.draw(consoles)
+
+        _y = 0
+        nearby = self.get_nearby_list()
+        for entity in nearby:        
+            consoles['ROOT'].print(
+                self.nearby_panel.x + 2,
+                self.nearby_panel.y + 2 + _y,
+                string=entity.noun_text,
+                fg=(255, 255, 255)
+                )
+            _y += 1 if _y < 4 else 0
+
+    def get_nearby_list(self):
+        nearby = []
+        actors = self.model.area_data.current_area.actor_model.actors
+        player = self.model.player
+        for actor in actors:
+            if 1 <= actor.location.distance_to(*player.location.xy) <= 8:
+                nearby.append(actor)
+            elif actor.location.distance_to(*player.location.xy) > 8:
+                try:
+                    nearby.remove(actor)
+                except ValueError:
+                    pass
+        return nearby

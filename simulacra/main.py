@@ -8,7 +8,9 @@ from states.main_menu_state import MainMenuState
 manager_service = ManagerService()
 factory_service = FactoryService()
 
+
 def main() -> None:
+    
     with tcod.context.new_terminal(
             columns=config.CONSOLE_WIDTH,
             rows=config.CONSOLE_HEIGHT,
@@ -18,6 +20,7 @@ def main() -> None:
         ) as config.CONTEXT:
         while True:
             MainMenuState().loop()
+
 
 if __name__ == '__main__':
     main()

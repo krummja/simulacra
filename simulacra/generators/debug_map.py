@@ -76,12 +76,27 @@ def debug_area(model: Model) -> Area:
         location=area[debug_room.center[0] - 2, debug_room.center[1] - 2]
         )
 
+    character_factory.build(
+        uid='test_character_2',
+        location=area[debug_room.center[0] + 2, debug_room.center[1] - 2]
+        )
+    
+    character_factory.build(
+        uid='test_character_2',
+        location=area[debug_room.center[0] - 2, debug_room.center[1] + 2]
+        )
+    
+    character_factory.build(
+        uid='test_character_2',
+        location=area[debug_room.center[0] - 2, debug_room.center[1] - 4]
+        )
+    
     item_factory.build(
         uid='test_item',
         location=area[debug_room.center[0], debug_room.center[1] + 4]
         )
 
-    manager_service.animation_manager.add_animation(Animation(looping=False))
+    # manager_service.animation_manager.add_animation(Animation(looping=False))
 
     update_fov(area)
 

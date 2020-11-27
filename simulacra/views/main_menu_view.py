@@ -109,13 +109,13 @@ class MainMenuView(View):
         self.state = state
         self.character_select = ElemCharacterSelect()
         self.character_select.data_source = state.storage
-        self.background = NoiseMachine()
-        self.factory_service = FactoryService()
+        # self.background = NoiseMachine()
+        # self.factory_service = FactoryService()
 
     def draw(self, consoles: Dict[str, Console]) -> None:
-        self.background.on_draw(consoles)
-        # draw_logo(consoles)
-        # self.character_select.draw(consoles)
+        # self.background.on_draw(consoles)
+        draw_logo(consoles)
+        self.character_select.draw(consoles)
         load = "[enter] continue, "
         new = "[enter] create new, "
         help_text = ElemHelpText(content=[
@@ -126,6 +126,6 @@ class MainMenuView(View):
             "[d] delete, ",
             "[q] quit"
             ])
-        # help_text.draw(consoles)
+        help_text.draw(consoles)
         # InterfaceElement(10, 10, 50, 20, "Text").draw(consoles)
-        self.factory_service.interface_factory.build('test_element').draw(consoles)
+        # self.factory_service.interface_factory.build('test_element').draw(consoles)
