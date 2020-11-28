@@ -4,6 +4,7 @@ import math
 from stats import StatsEnum
 
 
+# FIXME: I'm going to have to fix the wonky naming conventions in here soon.
 class Attribute:
 
     def __init__(self, stat: StatsEnum, current: int, maximum: int) -> None:

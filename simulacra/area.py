@@ -17,8 +17,9 @@ if TYPE_CHECKING:
 
 
 class AreaModel:
+    """Model class that holds the actual data structures for a given area."""
 
-    ident = '<unset>'
+    NAME = '<unset>'
 
     def __init__(self, area: Area) -> None:
         self.area = area
@@ -65,10 +66,11 @@ class ItemModel:
         self.nearby_items: List[List[Item]] = []
 
     def __getitem__(self, key: Tuple[int, int]) -> List[Item]:
-        """Return a list of items at a given x,y position."""
+        """Return a list of items at a given y,x position."""
         return self.items[key]
     
     def get_nearby(self) -> None:
+        """Return a list of items in all neighboring tiles around the player."""
         self.nearby_items.clear()
         for position in Point(*self.area.model.player.location.xy).neighbors:
             try:
@@ -78,6 +80,7 @@ class ItemModel:
                 continue
 
 
+# FIXME: How much is this class actually used? Is it important?
 class AreaLocation(Location):
 
     def __init__(self, area: Area, x: int, y: int):
@@ -88,9 +91,8 @@ class AreaLocation(Location):
 
 class Area:
 
-    _player: Player = None
-
     def __init__(self, model: Model, width: int, height: int) -> None:
+        self._player: Player = None
         self.model = model
         self.width = width
         self.height = height

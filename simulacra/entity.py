@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class Entity(Graphic, Noun):
 
-    ident: str = "<unset>"
+    NAME: str = "<unset>"
 
     def __init__(self, location: Location) -> None:
         Graphic.__init__(self)
@@ -27,26 +27,27 @@ class Entity(Graphic, Noun):
             new_entity.register_component(component)
         return new_entity
 
-    def get_component(self, component_ident: str) -> Component:
-        return self.components.get(component_ident, None)
+    def get_component(self, component_name: str) -> Component:
+        return self.components.get(component_name, None)
 
     def update(self) -> None:
         for component in self.components.values():
             component.update()
 
     def register_component(self, component: Component) -> None:
-        if component.ident in self.components:
+        if component.NAME in self.components:
             self.unregister_component(component)
-        self.components[component.ident] = component
+        self.components[component.NAME] = component
         component.on_register(self)
 
     def unregister_component(self, component: Component) -> None:
-        if component.ident in self.components:
+        if component.NAME in self.components:
             component.on_unregister()
-            del self.components[component.ident]
+            del self.components[component.NAME]
 
-    def __getitem__(self, key):
-        return self.components[key]
+    # FIXME: Checking if losing these breaks anything.
+    # def __getitem__(self, key):
+    #     return self.components[key]
 
-    def __setitem__(self, key, value):
-        self.components[key] = value
+    # def __setitem__(self, key, value):
+    #     self.components[key] = value

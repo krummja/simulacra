@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from model import Model
 
 
+# TODO: Do I need this class, as opposed to relying on my Model data structures?
 class InterfaceManager:
     
     def __init__(self) -> None:

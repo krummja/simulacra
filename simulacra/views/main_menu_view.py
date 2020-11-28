@@ -114,7 +114,6 @@ class MainMenuView(View):
         self.character_select = ElemCharacterSelect()
         self.character_select.data_source = state.storage
         # self.background = NoiseMachine()
-        self.factory_service = FactoryService()
 
     def draw(self, consoles: Dict[str, Console]) -> None:
         # self.background.on_draw(consoles)

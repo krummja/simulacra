@@ -8,8 +8,15 @@ if TYPE_CHECKING:
     
 
 class Inventory(Component):
+    """A list of items that can be displayed and selected from.
+    
+    Attributes:
+        _contents       A list of items contained in this Inventory.
+        contents        Getter attribute for `_contents`.
+        take            Method responsible for mutating `_contents`.
+    """
    
-    ident = "INVENTORY"
+    NAME = "INVENTORY"
     
     def __init__(self) -> None:
         super().__init__()
@@ -20,6 +27,7 @@ class Inventory(Component):
         return self._contents
 
     def take(self, item: Item) -> None:
+        assert item.owner is not self
         item.lift()
         self._contents.append(item)
         item.owner = self

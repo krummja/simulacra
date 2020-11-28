@@ -12,6 +12,8 @@ import time
 from autologging import logged
 
 from util import log
+from factories.factory_service import FactoryService
+from managers.manager_service import ManagerService
 
 if TYPE_CHECKING:
     from tcod.console import Console
@@ -54,6 +56,9 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
         self._storage: Optional[Storage] = None
         self._view: Optional[View] = None
         self._FPS = 0
+        
+        self.factory_service = FactoryService()
+        self.manager_service = ManagerService()
 
         self._COMMAND_KEYS: Dict[int, str] = {
             tcod.event.K_d: "drop",

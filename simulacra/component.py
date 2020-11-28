@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 
 class Component:
 
-    ident = '<unset>'
+    NAME = '<unset>'
 
     def __init__(self):
         super().__init__()

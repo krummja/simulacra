@@ -15,12 +15,15 @@ if TYPE_CHECKING:
     from view import View
 
 
+# FIXME: By god this is messy :/
 class ModalState(State[None]):
     
-    def __init__(self, model: Model, sort: str) -> None:
+    NAME = "Modal"
+    
+    def __init__(self, model: Model, case: str) -> None:
         super().__init__()
         self._model = model
-        self._sort = sort
+        self._case = case
         self._view = ModalView(self)
         self.result = False
         self.list_index = 0
@@ -30,7 +33,7 @@ class ModalState(State[None]):
     
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[T]:
     
-        if self._sort == 'delete':
+        if self._case == 'delete':
             if event.sym == tcod.event.K_y:
                 self.result = True
                 raise StateBreak()
@@ -38,12 +41,10 @@ class ModalState(State[None]):
                 self.result = False
                 raise StateBreak()
         
-        elif self._sort == 'examine':
+        elif self._case == 'examine':
             area = self.model.area_data.current_area
             nearby_items = area.nearby_items
             nearby_items = [item for sublist in nearby_items for item in sublist]
-            print(self.managers.interface_manager.container_items(*self.model.player.location.xy))
-            
             
         return super().ev_keydown(event)
     

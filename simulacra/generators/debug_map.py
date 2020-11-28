@@ -35,7 +35,7 @@ def roll_asset(area: Area, asset: Dict[str, Dict[str, Tile]], threshold: int):
 
 def debug_area(model: Model) -> Area:
     area = Area(model, 120, 120)
-    area.ident = 'test area'
+    area.NAME = 'test area'
 
     # TODO: Make a RoomFactory
     debug_room = Room(20, 20, 20, 20)

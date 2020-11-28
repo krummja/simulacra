@@ -11,6 +11,8 @@ if TYPE_CHECKING:
 
 class AreaState(Generic[T], State[T]):
 
+    NAME = "Area"
+
     def __init__(self, model: Model) -> None:
         super().__init__()
         self._model = model

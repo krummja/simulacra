@@ -13,6 +13,8 @@ if TYPE_CHECKING:
 
 class MenuBaseState(State[None]):
     
+    name = "Menu Base"
+    
     def __init__(self, model: Model, view: View) -> None:
         super().__init__()
         self._model = model

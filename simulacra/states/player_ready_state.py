@@ -15,6 +15,8 @@ if TYPE_CHECKING:
 
 class PlayerReadyState(AreaState["Action"]):
 
+    NAME = "Player Ready"
+
     def cmd_move(self, x: int, y: int) -> Action:
         return common.Move.Start(self.model.player, (x, y))
 

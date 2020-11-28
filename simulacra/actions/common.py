@@ -26,21 +26,22 @@ class Move(Action):
             dy = int(round(dy / distance))
             return Move.Start(self.actor, (dx, dy)).plan()
 
+
     class Start(ActionWithDirection):
         """Move an entity in a direction, interacting with obstacles."""
 
-        def plan(self) -> Action:
+        def plan(self) -> ActionWithPosition:
             return Move.End(self.actor, self.target_position).plan()
+
 
     class End(ActionWithPosition):
         """Move an entity to a destination, interacting with obstacles."""
 
-        def plan(self) -> Action:
+        def plan(self) -> ActionWithPosition:
             if self.actor.owner.location.distance_to(*self.target_position) > 1:
-                raise Impossible(
-                    f"Cannot move from {self.actor.owner.location.xy} "
-                    f"to {self.target_position}!"
-                    )
+                raise Impossible(f"Cannot move "
+                                 f"from {self.actor.owner.location.xy} "
+                                 f"to {self.target_position}!")
             if self.actor.owner.location.xy == self.target_position:
                 return self
             if self.area.is_blocked(*self.target_position):
@@ -57,9 +58,13 @@ class Move(Action):
 class Activate(Action):
 
     class FromInventory(ActionWithItem):
+        """Try to activate an item selected from an inventory."""
         pass
 
+
     class Nearby(ActionWithItem):
+        """Try to activate a nearby object."""
+        
         def plan(self) -> ActionWithItem:
             try:
                 return self.item.plan_activate(self)
@@ -73,6 +78,10 @@ class Activate(Action):
 class Nearby(Action):
 
     class Examine(Action):
+        """See what is in the tiles adjacent to the player.
+        Returns a list of items from the adjacent tiles.
+        """
+        
         def plan(self) -> Action:
             for position in Point(*self.location.xy).neighbors:
                 try:
@@ -92,7 +101,12 @@ class Nearby(Action):
                 self.model.report("there is nothing of note nearby")
             self.actor.reschedule(100)
 
+
     class Pickup(Action):
+        """Remove an item from a nearby tile and place it in the player's
+        inventory component.
+        """
+        
         def plan(self) -> Action:
             if not self.area.items.get(self.location.xy):
                 raise Impossible("there is nothing to pick up.")
@@ -101,11 +115,16 @@ class Nearby(Action):
         def act(self) -> None:
             for item in self.area.items[self.location.xy]:
                 try:
-                    self.report(f"{self.actor.owner.noun_text} picks up the {item.noun_text}.")
+                    self.report(f"{self.actor.owner.noun_text} "
+                                "picks up "
+                                f"the {item.noun_text}.")
                     self.actor.owner.components['INVENTORY'].take(item)
                     return self.actor.reschedule(100)
+                
                 except Impossible:
-                    self.report(f"{self.actor.owner.noun_text} cannot lift the {item.noun_text}!")
+                    self.report(f"{self.actor.owner.noun_text} "
+                                "cannot lift "
+                                f"the {item.noun_text}!")
 
 
 class Attack(Action):
@@ -113,17 +132,22 @@ class Attack(Action):
     class Player(Action):
         pass
 
+
     class Hostile(Action):
         pass
+
 
     class Friendly(Action):
         pass
 
+
     class WithAbility(Action):
         pass
 
+
     class WithItem(Action):
         pass
+
 
     class WithMagic(Action):
         pass

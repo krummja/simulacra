@@ -22,7 +22,8 @@ class Action:
         return self
 
     def act(self) -> None:
-        raise RuntimeError(f"{self.__class__.__name__} has no act implementation.")
+        raise RuntimeError(f"{self.__class__.__name__} "
+                            "has no act implementation.")
 
     @property
     def area(self) -> Area:
@@ -50,8 +51,8 @@ class ActionWithPosition(Action):
 class ActionWithDirection(ActionWithPosition):
 
     def __init__(self, actor: Actor, direction: Tuple[int, int]) -> None:
-        position = actor.location.x + direction[0], \
-                   actor.location.y + direction[1]
+        position = (actor.location.x + direction[0], 
+                    actor.location.y + direction[1])
         super().__init__(actor, position)
         self.direction = direction
 

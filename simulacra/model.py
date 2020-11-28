@@ -22,10 +22,10 @@ class AreaData(dict):
 
     def register(self, area: Area) -> None:
         self.current_area = area
-        self[area.area_model.ident] = area
+        self[area.area_model.NAME] = area
 
     def get_items(self):
-        return self[self.current_area.area_model.ident].items
+        return self[self.current_area.area_model.NAME].items
 
 
 class EntityData(dict):
@@ -36,7 +36,7 @@ class EntityData(dict):
 
     def register(self, entity: Entity) -> None:
         for key, value in entity.components.items():
-            self[entity.ident] = {key: value}
+            self[entity.NAME] = {key: value}
 
 
 class Model:

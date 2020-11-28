@@ -6,5 +6,4 @@ from component import Component
 
 class Level(Component):
 
-    def configure(self, **kwargs):
-        pass
+    NAME = "LEVEL"

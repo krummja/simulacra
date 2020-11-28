@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 class Attributes(Component):
 
-    ident = 'ATTRIBUTES'
+    NAME = 'ATTRIBUTES'
 
     def __init__(self) -> None:
         super().__init__()
@@ -25,21 +25,39 @@ class Attributes(Component):
             maximum_value: int
         ) -> None:
         if stat in StatsEnum:
-            self._core_stats[stat] = Attribute(stat, current_value, maximum_value)
+            self._core_stats[stat] = Attribute(stat, 
+                                               current_value, 
+                                               maximum_value)
 
-    def modify_core_current_value(self, stat: StatsEnum, modifier: int) -> None:
+    def modify_core_current_value(
+            self, 
+            stat: StatsEnum, 
+            modifier: int
+        ) -> None:
         if stat in self._core_stats:
             self._core_stats[stat].current += modifier
 
-    def set_core_current_value(self, stat: StatsEnum, current_value: int) -> None:
+    def set_core_current_value(
+            self, 
+            stat: StatsEnum, 
+            current_value: int
+        ) -> None:
         if stat in self._core_stats:
             self._core_stats[stat].current = current_value
 
-    def set_core_maximum_value(self, stat: StatsEnum, maximum_value: int) -> None:
+    def set_core_maximum_value(
+            self, 
+            stat: StatsEnum, 
+            maximum_value: int
+        ) -> None:
         if stat in self._core_stats:
             self._core_stats[stat].maximum = maximum_value
 
-    def set_total_core_value(self, stat: StatsEnum, value: int) -> None:
+    def set_total_core_value(
+            self, 
+            stat: StatsEnum, 
+            value: int
+        ) -> None:
         self.set_core_current_value(stat, value)
         self.set_core_maximum_value(stat, value)
 

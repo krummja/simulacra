@@ -29,15 +29,24 @@ class Actor:
         return self.owner.location.area.model.scheduler
 
     def act(self, scheduler: EventQueue, event: Event) -> None:
+        # Check that we have the correct event.
         if event is not self.event:
             return scheduler.unschedule(event)
+        
+        # Try to resolve the plan step of the action.
         try:
             action = self.control.plan()
+            
+        # If that fails, dump an error and reschedule.
         except Impossible:
             print(f"Unresolved action with {self}", file=sys.stderr)
             traceback.print_exc(file=sys.stderr)
             return self.reschedule(100)
+        
+        # Seriously make sure the action resolved successfully.
         assert action is action.plan(), f"{action} not fully resolved, {self}."
+        
+        # Finally, execute the action once all checks pass.
         action.act()
 
     def reschedule(self, interval: int) -> None:

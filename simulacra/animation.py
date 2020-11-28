@@ -10,6 +10,7 @@ if TYPE_CHECKING:
     from action import Action
 
 
+# FIXME: This entire class is fucked lol
 class Animation:
     
     def __init__(

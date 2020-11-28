@@ -13,6 +13,8 @@ if TYPE_CHECKING:
 
 class InventoryState(MenuBaseState):
     
+    NAME = "Inventory"
+    
     def __init__(self, model: Model, view: View) -> None:
         super().__init__(model, view)
         

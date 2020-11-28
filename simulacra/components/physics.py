@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 class Physics(Component):
 
-    ident = "PHYSICS"
+    NAME = "PHYSICS"
 
     def __init__(
             self,
@@ -23,6 +23,3 @@ class Physics(Component):
         self.size = size
         self.sharpness = sharpness
         self.hardness = hardness
-        
-    def __repr__(self):
-        return str(vars(self))
