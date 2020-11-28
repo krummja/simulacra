@@ -9,7 +9,9 @@ test_item = {
         'char': ord("!"),
         'color': (255, 0, 0),
         'bg': (0, 0, 0)
-        }
+        },
+    'components': [('physics', {'size': 'large'}),
+                   ('inventory')]
     }
 
 item_templates = {

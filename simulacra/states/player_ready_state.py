@@ -6,6 +6,7 @@ from action import Action
 from state import SaveAndQuit, StateBreak
 from states.area_state import AreaState
 from states.inventory_state import InventoryState
+from states.modal_state import ModalState
 from views.inventory_view import InventoryView
 
 if TYPE_CHECKING:
@@ -24,11 +25,15 @@ class PlayerReadyState(AreaState["Action"]):
         raise StateBreak()
 
     def cmd_inventory(self):
+        #! This could be really useful... pass in different inventory view objects
+        #! depending on what I'm accessing?
         state = InventoryState(self.model, InventoryView)
         return state.loop()
     
     def cmd_examine(self):
-        return common.Nearby.Examine(self.model.player)
+        state = ModalState(self.model, 'examine')
+        return state.loop()
+        # return common.Nearby.Examine(self.model.player)
     
     def cmd_pickup(self):
         return common.Nearby.Pickup(self.model.player)

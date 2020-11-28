@@ -23,15 +23,27 @@ class ModalState(State[None]):
         self._sort = sort
         self._view = ModalView(self)
         self.result = False
+        self.list_index = 0
+        
+        self.managers = ManagerService()
+        self.managers.interface_manager.model = model
     
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[T]:
     
-        if self._sort == 'Test':
+        if self._sort == 'delete':
             if event.sym == tcod.event.K_y:
                 self.result = True
                 raise StateBreak()
             elif event.sym == tcod.event.K_n:
                 self.result = False
                 raise StateBreak()
+        
+        elif self._sort == 'examine':
+            area = self.model.area_data.current_area
+            nearby_items = area.nearby_items
+            nearby_items = [item for sublist in nearby_items for item in sublist]
+            print(self.managers.interface_manager.container_items(*self.model.player.location.xy))
+            
+            
         return super().ev_keydown(event)
     

@@ -16,7 +16,7 @@ test_char = {
 
 test_char_2 = {
     'uid': 'test_character_2',
-    'name': 'test character',
+    'name': 'aksdjsakdjskdajkd',
     'display': {
         'char': ord("U"),
         'color': (255, 0, 255),

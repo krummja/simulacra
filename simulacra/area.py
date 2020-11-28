@@ -3,6 +3,7 @@ from typing import Dict, Tuple, List, Set, TYPE_CHECKING
 
 import numpy as np
 
+from geometry import *
 from camera import Camera
 from location import Location
 from tile import tile_dt
@@ -12,6 +13,7 @@ if TYPE_CHECKING:
     from item import Item
     from model import Model
     from player import Player
+    from entity import Entity
 
 
 class AreaModel:
@@ -43,6 +45,9 @@ class ActorModel:
     def __init__(self, area: Area) -> None:
         self.area = area
         self.actors: Set[Actor] = set()
+    
+    def register_actor(self, actor: Actor) -> None:
+        self.actors.add(actor)
 
 
 class ItemModel:
@@ -62,6 +67,15 @@ class ItemModel:
     def __getitem__(self, key: Tuple[int, int]) -> List[Item]:
         """Return a list of items at a given x,y position."""
         return self.items[key]
+    
+    def get_nearby(self) -> None:
+        self.nearby_items.clear()
+        for position in Point(*self.area.model.player.location.xy).neighbors:
+            try:
+                if self.items[position[0], position[1]]:
+                    self.nearby_items.append(self.items[position])
+            except KeyError:
+                continue
 
 
 class AreaLocation(Location):

@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Dict, Type
 
 import tdl
+from geometry import *
 from component import Component
 from components.attributes import Attributes
 from config import *
@@ -16,6 +17,7 @@ from view import View
 
 from views.elements.elem_gauge import ElemGauge
 from views.elements.elem_log import ElemLog
+from views.elements.elem_nearby import ElemExamineNearby
 
 if TYPE_CHECKING:
     from model import Model
@@ -147,8 +149,8 @@ class StageView(View):
         #! **Test Character**   20/100          actively attacking
         # NEARBY ENTITY PANEL
         entity_y = 0
-        nearby = self.get_nearby_list()
-        for entity in nearby:        
+        nearby_actors = self.get_nearby_actors()
+        for entity in nearby_actors:
             consoles['ROOT'].print(
                 self.nearby_panel.x + 2,
                 self.nearby_panel.y + 2 + entity_y,
@@ -157,17 +159,18 @@ class StageView(View):
                 )
             entity_y += 1 if entity_y < 3 else 0
 
-    def get_nearby_list(self):
+    def get_nearby_actors(self):
         nearby = []
+        area = self.model.area_data.current_area
         actors = self.model.area_data.current_area.actor_model.actors
         player = self.model.player
         for actor in actors:
-            
-            if 1 <= actor.location.distance_to(*player.location.xy) <= 8:
-                nearby.append(actor)
-            elif actor.location.distance_to(*player.location.xy) > 8:
-                try:
-                    nearby.remove(actor)
-                except ValueError:
-                    pass
+            if len(nearby) < 4:
+                if 1 <= actor.location.distance_to(*player.location.xy) <= 8:
+                    nearby.append(actor)
+                elif actor.location.distance_to(*player.location.xy) > 8:
+                    try:
+                        nearby.remove(actor)
+                    except ValueError:
+                        pass
         return nearby

@@ -60,7 +60,14 @@ class Activate(Action):
         pass
 
     class Nearby(ActionWithItem):
-        pass
+        def plan(self) -> ActionWithItem:
+            try:
+                return self.item.plan_activate(self)
+            except Impossible("nothing happens..."):
+                raise
+            
+        def act(self) -> None:
+            self.item.act_activate(self)
 
 
 class Nearby(Action):
