@@ -58,7 +58,7 @@ def debug_area(model: Model) -> Area:
     player.register_component(initialize_character_attributes())
     player.register_component(Inventory())
     player.register_component(Physics(weight=10.0))
-    player.noun_text = "test player"
+    player.noun_text = "aulia inuicta"
 
     model.area_data.register(area)
     model.area_data.current_area.player = player
@@ -78,21 +78,6 @@ def debug_area(model: Model) -> Area:
     character_factory.build(
         uid='test_character_2',
         location=area[debug_room.center[0] - 2, debug_room.center[1] - 2]
-        )
-
-    character_factory.build(
-        uid='test_character_2',
-        location=area[debug_room.center[0] + 2, debug_room.center[1] - 2]
-        )
-    
-    character_factory.build(
-        uid='test_character_2',
-        location=area[debug_room.center[0] - 2, debug_room.center[1] + 2]
-        )
-    
-    character_factory.build(
-        uid='test_character_2',
-        location=area[debug_room.center[0] - 2, debug_room.center[1] - 4]
         )
     
     item_factory.build(

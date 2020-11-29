@@ -20,10 +20,10 @@ class Physics(Component):
             hardness: float = 0.0,
         ) -> None:
         super().__init__()
-        self.weight = weight
-        self.size = size
-        self.sharpness = sharpness
-        self.hardness = hardness
+        self._data['weight'] = weight
+        self._data['size'] = size
+        self._data['sharpness'] = sharpness
+        self._data['hardness'] = hardness
         
         self.is_visible = True
         self.is_moveable = True

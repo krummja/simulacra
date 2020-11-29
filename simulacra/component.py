@@ -1,11 +1,13 @@
 from __future__ import annotations
 from typing import Callable, List, TYPE_CHECKING
 
+from util import Data
+
 if TYPE_CHECKING:
     from entity import Entity
 
 
-class Component:
+class Component(Data):
     """Components represent the interactive attributes of an entity.
     
     Every component should provide at least one option to present to any UI
@@ -16,19 +18,12 @@ class Component:
 
     NAME: str = '<unset>'
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(self.NAME)
         self.owner = None
-        self.options = {}
 
     def on_register(self, owner: Entity) -> None:
         self.owner = owner
 
     def on_unregister(self) -> None:
         self.owner = None
-
-    def update(self) -> None:
-        pass
-
-    def on_interact(self):
-        pass

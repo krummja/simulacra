@@ -4,7 +4,7 @@ from behaviors import base_ai
 
 test_char = {
     'uid': 'test_character',
-    'name': 'test character',
+    'name': 'john smith',
     'display': {
         'char': ord("T"),
         'color': (0, 255, 0),
@@ -16,7 +16,7 @@ test_char = {
 
 test_char_2 = {
     'uid': 'test_character_2',
-    'name': 'aksdjsakdjskdajkd',
+    'name': 'jane doe',
     'display': {
         'char': ord("U"),
         'color': (255, 0, 255),

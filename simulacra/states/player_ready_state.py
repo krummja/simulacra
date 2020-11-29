@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import Tuple, TYPE_CHECKING
 
 from actions import common
 from action import Action
@@ -35,9 +35,13 @@ class PlayerReadyState(AreaState["Action"]):
     
     def cmd_examine(self):
         state = PickLocationState(self.model, "", self.model.player.location.xy)
-        cursor_xy = state.loop()
+        # NOTE: Ahhh, I get it now. I can assign state loops to a variable,
+        # and have that state extend AreaState[<return type>].
+        # On StateBreak, the loop returns the specified return type. Sick!
+        # e.g.     return type       PickLocationState(AreaState[Tuple[int, int]])
+        cursor_xy: Tuple[int, int] = state.loop()
         print(cursor_xy)  # TODO: Feed this into an action! :3
-        # return common.Nearby.Examine(self.model.player)
+        # return common.Nearby.Examine(cursor_xy)
     
     def cmd_pickup(self):
         return common.Nearby.Pickup(self.model.player)

@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 class ElemLog(Panel):
 
-    def __init__(self, model: Model) -> None:
+    def __init__(self, name: str, model: Model) -> None:
         self.log_width = STAGE_PANEL_WIDTH
         super().__init__(**{
             'position': ('bottom', 'left'),
@@ -20,6 +20,7 @@ class ElemLog(Panel):
                      'height': (CONSOLE_HEIGHT // 4)},
             'style': {'framed': True}
             })
+        self.NAME = name
         self.model = model
 
     def draw(self, consoles: Dict[str, Console]) -> None:

@@ -119,6 +119,20 @@ class Area:
     def nearby_items(self) -> List[List[Item]]:
         return self.item_model.nearby_items
 
+    def nearby_actor_entities(
+            self, 
+            x: int, 
+            y: int
+        ) -> Entity:
+        entity_dict = {}
+        for ent in self.actor_model.actors:
+            owner: Entity = ent.owner
+            entity_dict[owner.location.x, owner.location.y] = owner
+        try:
+            return entity_dict[y, x]
+        except KeyError:
+            pass
+
     def is_blocked(self, x: int, y: int) -> bool:
         if not (0 <= x < self.width and 0 <= y < self.height):
             return True

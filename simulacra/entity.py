@@ -45,9 +45,5 @@ class Entity(Graphic, Noun):
             component.on_unregister()
             del self.components[component.NAME]
 
-    # FIXME: Checking if losing these breaks anything.
-    # def __getitem__(self, key):
-    #     return self.components[key]
-
-    # def __setitem__(self, key, value):
-    #     self.components[key] = value
+    def attach_observer(self, observer) -> None:
+        self.observers[observer.name] = observer

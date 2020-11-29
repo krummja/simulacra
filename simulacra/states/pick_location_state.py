@@ -21,8 +21,9 @@ class PickLocationState(AreaState[Tuple[int, int]]):
         ) -> None:
         self._model = model
         self._view = PickLocationView(self)
-        self.desc = desc
         self.cursor_xy = start_xy
+        self.desc = str(self.cursor_xy)
+        self.info = str(self.model.area.nearby_actor_entities(*start_xy))
         
     def cmd_move(self, x: int, y: int) -> None:
         x += self.cursor_xy[0]
@@ -34,7 +35,14 @@ class PickLocationState(AreaState[Tuple[int, int]]):
         else:
             self.cursor_xy = x, y
             self.model.area.camera.camera_pos = self.cursor_xy
-        
+        self.desc = str(self.cursor_xy)
+
+        try:
+            # NOTE: This will only return from entities actually in the nearby list
+            self.info = str(self.model.area.nearby_actor_entities(*self.cursor_xy))
+        except KeyError:
+            self.info = "---"
+
     def cmd_confirm(self) -> Tuple[int, int]:
         return self.cursor_xy
     

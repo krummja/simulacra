@@ -10,7 +10,6 @@ if TYPE_CHECKING:
 
 class ElemGauge(Panel):
 
-    name: str
     text: str
     fullness: float
     fg: Tuple[int, int, int]
@@ -19,13 +18,14 @@ class ElemGauge(Panel):
 
     def __init__(
             self,
+            name: str,
             parent: Panel,
             position: Tuple[str, str],
             margin: int,
             offset_x: int,
             offset_y: int,
             width: int,
-            name: str,
+            title: str,
             text: str,
             fullness: float,
             fg: Tuple[int, int, int],
@@ -41,7 +41,8 @@ class ElemGauge(Panel):
             'size': {'width': width,
                      'height': 1}
             })
-        self.name = name
+        self.NAME = name
+        self.title = title
         self.text = text
         self.fullness = fullness
         self.fg = fg
@@ -52,7 +53,7 @@ class ElemGauge(Panel):
         self.on_draw(consoles)
         consoles['ROOT'].print(
             self.x - 6, self.y,
-            self.name + ": ",
+            self.title + ": ",
             fg=(255, 255, 255)
             )
 

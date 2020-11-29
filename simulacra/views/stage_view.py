@@ -44,43 +44,56 @@ class StageView(View):
         mock_xp = mock_cur_xp / mock_needed_xp
         
         self.hp_gauge = ElemGauge(
+            "HP GAUGE",
             **bar_config,
             parent=self.character_panel,
-            offset_y=7, name="vit", text=f"{player_hp}",
+            offset_y=7, title="vit", text=f"{player_hp}",
             fullness=player_hp / player_hp,
             fg=(0x40, 0x80, 0), bg=(0x80, 0, 0)
             )
 
         self.ep_gauge = ElemGauge(
+            "EP GAUGE",
             **bar_config,
             parent=self.character_panel,
-            offset_y=9, name="enr", text=f"{player_ep}",
+            offset_y=9, title="enr", text=f"{player_ep}",
             fullness=player_ep / player_ep,
             fg=(0x17, 0x57, 0xc2), bg=(0x05, 0x1e, 0x50)
             )
 
         self.fp_gauge = ElemGauge(
+            "FP GAUGE",
             **bar_config,
             parent=self.character_panel,
-            offset_y=11, name="hgr", text=f"{player_fp}",
+            offset_y=11, title="hgr", text=f"{player_fp}",
             fullness=player_fp / player_fp,
             fg=(0xfb, 0x60, 0), bg=(0x60, 0x25, 0)
             )
 
         self.xp_gauge = ElemGauge(
+            "XP GAUGE",
             **xp_config,
             parent=self.character_panel,
-            offset_y=15, name="exp", 
+            offset_y=15, title="exp", 
             text=f"{mock_cur_xp} / {mock_needed_xp}",
             fullness=mock_xp,
             fg=(0x80, 0xe6, 0xea), bg=(0x10, 0x83, 0x95)
             )
 
-        self.nearby_panel = Panel(**nearby_panel)
-        self.inventory_panel = Panel(**inventory_panel)
-        self.equipment_panel = Panel(**equipment_panel)
-        self.log_panel = ElemLog(self.model)
+        self.nearby_panel = Panel(name="NEARBY PANEL", **nearby_panel)
+        self.inventory_panel = Panel(name="INVENTORY PANEL", **inventory_panel)
+        self.equipment_panel = Panel(name="EQUIPMENT PANEL", **equipment_panel)
+        self.log_panel = ElemLog(name="LOG PANEL", model=self.model)
 
+        self.manager_service.interface_manager.register_element(self.hp_gauge)
+        self.manager_service.interface_manager.register_element(self.ep_gauge)
+        self.manager_service.interface_manager.register_element(self.fp_gauge)
+        self.manager_service.interface_manager.register_element(self.xp_gauge)
+        self.manager_service.interface_manager.register_element(self.nearby_panel)
+        self.manager_service.interface_manager.register_element(self.inventory_panel)
+        self.manager_service.interface_manager.register_element(self.equipment_panel)
+        self.manager_service.interface_manager.register_element(self.log_panel)
+        
     def draw(self, consoles: Dict[str, Console]) -> None:
         area = self.model.area_data.current_area
         player = self.model.player
@@ -123,6 +136,7 @@ class StageView(View):
         self.ep_gauge.draw(consoles)
         self.fp_gauge.draw(consoles)
         self.xp_gauge.draw(consoles)
+
 
         # PANEL FRAMES
         self.nearby_panel.on_draw(consoles)
