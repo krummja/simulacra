@@ -7,11 +7,6 @@ if TYPE_CHECKING:
     from state import State
 
 
-class ViewObserver(Protocol):
-    def update(self, subject: View) -> None:
-        pass
-
-
 class View(ABC):
     
     def __init__(self, state: State) -> None:

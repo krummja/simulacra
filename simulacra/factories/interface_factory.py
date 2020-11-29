@@ -2,6 +2,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from interface_element import InterfaceElement
+from ui_primitives.element_base import ElementBase
+from ui_primitives.module_base import ModuleBase, ModuleRenderable
 from data.interface_elements import interface_templates
 
 if TYPE_CHECKING:

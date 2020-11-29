@@ -51,6 +51,7 @@ class Move(Action):
         def act(self) -> None:
             self.actor.owner.location = self.area[self.target_position]
             if self.actor.is_player:
+                self.model.player.components['PHYSICS'].set_data('weight', self.target_position[0])
                 update_fov(self.area)
             self.actor.reschedule(100)
 

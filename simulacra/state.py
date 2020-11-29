@@ -51,6 +51,7 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
     
     factory_service = FactoryService()
     manager_service = ManagerService()
+    
     _COMMAND_KEYS: Dict[int, str] = {
         tcod.event.K_d: "drop",
         tcod.event.K_e: "equipment",
@@ -92,8 +93,6 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
         self._storage: Optional[Storage] = None
         self._view: Optional[View] = None
         self._FPS = 0
-        
-
 
     @property
     def COMMAND_KEYS(self: State) -> Dict[int, str]:
@@ -131,7 +130,6 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
                     
     def on_draw(self, consoles: Dict[str, Console]) -> None:
         self._view.draw(consoles)
-        # consoles['ROOT'].print(1, 1, str(int(self._FPS)), fg=(255, 255, 255))
 
     def ev_quit(self, event: tcod.event.Quit) -> Optional[T]:
         return self.cmd_quit()

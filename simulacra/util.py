@@ -54,7 +54,7 @@ class Subject:
             del self._observers[observer_name]
     
     def notify(self, modifier: Optional[Observer] = None) -> None:
-        for observer in self._observers:
+        for observer in self._observers.values():
             if modifier != observer:
                 observer.update(self)
 
@@ -75,10 +75,10 @@ class Data(Subject):
         self._data = {}
         self._options = {}
     
-    def data(self):
+    def get_data(self):
         return self._data
     
-    def data(self, key, value) -> None:
+    def set_data(self, key, value) -> None:
         self._data[key] = value
         self.notify()
     
