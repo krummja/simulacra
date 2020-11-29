@@ -25,7 +25,6 @@ class MainMenuState(State[None]):
         self._storage: Storage = Storage()
         self._storage.load_from_file()
         self._view = MainMenuView(self)
-        self.delete = False
 
     @property
     def storage(self):

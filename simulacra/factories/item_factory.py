@@ -50,10 +50,10 @@ class ItemFactory:
             location=location
             )
         new_instance.noun_text = template['name']
-        for component in component_templates['test_container'].items():
-            new_instance.register_component(component_templates[component[0]](**component[1]))
-        print(new_instance.components['PHYSICS'])
-        print(new_instance.components['INVENTORY'])
+        for definition in template['components']:
+            name = definition[0]
+            config = definition[1]
+            new_instance.register_component(component_templates[name](**config))
         try:
             self.model.area_data.current_area.item_model.items[location.xy].append(new_instance)
             new_instance.bg = self.model.area_data.current_area.area_model.get_bg_color(*location.xy)

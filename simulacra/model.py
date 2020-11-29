@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, TYPE_CHECKING
+from typing import Dict, Tuple, List, Set, TYPE_CHECKING
 from event_queue import EventQueue
 from player import Player
 from message import Message
@@ -8,8 +8,11 @@ from factories.factory_service import FactoryService
 from managers.manager_service import ManagerService
 
 if TYPE_CHECKING:
+    from component import Component
+    from item import Item
     from entity import Entity
     from area import Area
+    from actor import Actor
 
 
 class AreaData(dict):
@@ -50,6 +53,44 @@ class Model:
     @property
     def player(self) -> Player:
         return self.area_data.current_area.player
+
+    @property
+    def area(self) -> Area:
+        return self.area_data.current_area
+    
+    @property
+    def actors(self) -> Set[Actor]:
+        return self.area_data.current_area.actor_model.actors
+    
+    @property
+    def nearby_items(self) -> List[List[Item]]:
+        return self.area.nearby_items
+    
+    @property
+    def container_items(self) -> List[Item]:
+        pass
+    
+    def get_components_on_entity(self, entity: Entity) -> Dict[str, Component]:
+        return entity.components
+    
+    def get_component_by_name(self, entity: Entity, name: str) -> Component:
+        entity_components =  self.get_components_on_entity(entity)
+        return entity_components[name.upper()]
+    
+    def get_all_components_by_name(self, name: str) -> Dict[str, Component]:
+        pass
+
+    def get_opts_from_components(
+            self, 
+            entity: Entity
+        ) -> Tuple[List[Component], List[Dict]]:
+        
+        components = self.get_components_on_entity(entity)
+        options = []
+        for component in components.items():  # ('PHYSICS', Physics)
+            for option in component[1].options.items():
+                options.append(option)
+        return options
 
     def loop(self) -> None:
         while True:

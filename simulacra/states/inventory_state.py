@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from view import View
     from model import Model
 
+
 class InventoryState(MenuBaseState):
     
     NAME = "Inventory"

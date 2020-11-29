@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from component import Component
+from actions import common
 
 if TYPE_CHECKING:
     from entity import Entity
@@ -23,3 +24,6 @@ class Physics(Component):
         self.size = size
         self.sharpness = sharpness
         self.hardness = hardness
+        
+        self.is_visible = True
+        self.is_moveable = True

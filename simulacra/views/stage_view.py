@@ -131,7 +131,7 @@ class StageView(View):
         self.log_panel.draw(consoles)
 
         # INVENTORY PANEL
-        inventory = self.model.player.components['INVENTORY'].contents
+        inventory = self.model.player.components['INVENTORY'].contents()
         item_y = 0
         for item in inventory:
             consoles['ROOT'].print(
@@ -145,7 +145,7 @@ class StageView(View):
         # TODO: Make this into a ui element.
         # TODO: Display aggro state and combat info when in combat
         # e.g.:
-        #*  *Test Character*   100/100          notices you
+        #*  *Test Character*   100/100          notices you (uwu)
         #! **Test Character**   20/100          actively attacking
         # NEARBY ENTITY PANEL
         entity_y = 0

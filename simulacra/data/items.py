@@ -10,8 +10,8 @@ test_item = {
         'color': (255, 0, 0),
         'bg': (0, 0, 0)
         },
-    'components': [('physics', {'size': 'large'}),
-                   ('inventory')]
+    'components': [('Physics', {'size': 'large'}),
+                   ('Inventory', {'slots': 3})]
     }
 
 item_templates = {

@@ -12,8 +12,9 @@ if TYPE_CHECKING:
 
 
 class MenuBaseState(State[None]):
+    """Menu state that completely obscures the main game view."""
     
-    name = "Menu Base"
+    NAME = "Menu Base"
     
     def __init__(self, model: Model, view: View) -> None:
         super().__init__()

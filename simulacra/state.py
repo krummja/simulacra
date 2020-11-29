@@ -48,52 +48,52 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
     """
 
     NAME = "<base state>"
+    
+    factory_service = FactoryService()
+    manager_service = ManagerService()
+    _COMMAND_KEYS: Dict[int, str] = {
+        tcod.event.K_d: "drop",
+        tcod.event.K_e: "equipment",
+        tcod.event.K_i: "inventory",
+        tcod.event.K_g: "pickup",
+        tcod.event.K_ESCAPE: "escape",
+        tcod.event.K_RETURN: "confirm",
+        tcod.event.K_KP_ENTER: "confirm",
+        tcod.event.K_l: "examine",
+        }
+
+    _MOVE_KEYS: Dict[int, Tuple[int, int]] = {
+        # Arrow keys.
+        tcod.event.K_LEFT: (-1, 0),
+        tcod.event.K_RIGHT: (1, 0),
+        tcod.event.K_UP: (0, -1),
+        tcod.event.K_DOWN: (0, 1),
+        tcod.event.K_HOME: (-1, -1),
+        tcod.event.K_END: (-1, 1),
+        tcod.event.K_PAGEUP: (1, -1),
+        tcod.event.K_PAGEDOWN: (1, 1),
+        tcod.event.K_PERIOD: (0, 0),
+        # Numpad keys.
+        tcod.event.K_KP_1: (-1, 1),
+        tcod.event.K_KP_2: (0, 1),
+        tcod.event.K_KP_3: (1, 1),
+        tcod.event.K_KP_4: (-1, 0),
+        tcod.event.K_KP_5: (0, 0),
+        tcod.event.K_CLEAR: (0, 0),
+        tcod.event.K_KP_6: (1, 0),
+        tcod.event.K_KP_7: (-1, -1),
+        tcod.event.K_KP_8: (0, -1),
+        tcod.event.K_KP_9: (1, -1),
+        }
 
     def __init__(self) -> None:
         super().__init__()
-        self._mode: int = 1
         self._model: Optional[Model] = None
         self._storage: Optional[Storage] = None
         self._view: Optional[View] = None
         self._FPS = 0
         
-        self.factory_service = FactoryService()
-        self.manager_service = ManagerService()
 
-        self._COMMAND_KEYS: Dict[int, str] = {
-            tcod.event.K_d: "drop",
-            tcod.event.K_e: "equipment",
-            tcod.event.K_i: "inventory",
-            tcod.event.K_g: "pickup",
-            tcod.event.K_ESCAPE: "escape",
-            tcod.event.K_RETURN: "confirm",
-            tcod.event.K_KP_ENTER: "confirm",
-            tcod.event.K_l: "examine",
-            }
-
-        self._MOVE_KEYS: Dict[int, Tuple[int, int]] = {
-            # Arrow keys.
-            tcod.event.K_LEFT: (-1, 0),
-            tcod.event.K_RIGHT: (1, 0),
-            tcod.event.K_UP: (0, -1),
-            tcod.event.K_DOWN: (0, 1),
-            tcod.event.K_HOME: (-1, -1),
-            tcod.event.K_END: (-1, 1),
-            tcod.event.K_PAGEUP: (1, -1),
-            tcod.event.K_PAGEDOWN: (1, 1),
-            tcod.event.K_PERIOD: (0, 0),
-            # Numpad keys.
-            tcod.event.K_KP_1: (-1, 1),
-            tcod.event.K_KP_2: (0, 1),
-            tcod.event.K_KP_3: (1, 1),
-            tcod.event.K_KP_4: (-1, 0),
-            tcod.event.K_KP_5: (0, 0),
-            tcod.event.K_CLEAR: (0, 0),
-            tcod.event.K_KP_6: (1, 0),
-            tcod.event.K_KP_7: (-1, -1),
-            tcod.event.K_KP_8: (0, -1),
-            tcod.event.K_KP_9: (1, -1),
-            }
 
     @property
     def COMMAND_KEYS(self: State) -> Dict[int, str]:
@@ -121,14 +121,13 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
             self.on_draw(config.CONSOLES)
             config.CONTEXT.present(config.CONSOLES['ROOT'])
             self._FPS = 1.0 / (time.time() - start_time)
-            if self._mode == 1:
-                for input_event in tcod.event.get():
-                    try:
-                        value: T = self.dispatch(input_event)
-                    except StateBreak:
-                        return None
-                    if value is not None:
-                        return value
+            for input_event in tcod.event.get():
+                try:
+                    value: T = self.dispatch(input_event)
+                except StateBreak:
+                    return None
+                if value is not None:
+                    return value
                     
     def on_draw(self, consoles: Dict[str, Console]) -> None:
         self._view.draw(consoles)

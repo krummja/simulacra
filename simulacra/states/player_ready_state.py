@@ -7,6 +7,7 @@ from state import SaveAndQuit, StateBreak
 from states.area_state import AreaState
 from states.inventory_state import InventoryState
 from states.modal_state import ModalState
+from states.pick_location_state import PickLocationState
 from views.inventory_view import InventoryView
 
 if TYPE_CHECKING:
@@ -33,8 +34,9 @@ class PlayerReadyState(AreaState["Action"]):
         return state.loop()
     
     def cmd_examine(self):
-        state = ModalState(self.model, 'examine')
-        return state.loop()
+        state = PickLocationState(self.model, "", self.model.player.location.xy)
+        cursor_xy = state.loop()
+        print(cursor_xy)  # TODO: Feed this into an action! :3
         # return common.Nearby.Examine(self.model.player)
     
     def cmd_pickup(self):

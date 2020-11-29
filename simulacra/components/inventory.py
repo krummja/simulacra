@@ -18,22 +18,19 @@ class Inventory(Component):
    
     NAME = "INVENTORY"
     
-    def __init__(self) -> None:
+    def __init__(self, slots: int = 10) -> None:
         super().__init__()
+        self._slots = slots
         self._contents: List[Item] = []
+        
+        self.is_locked = False
 
-    @property
     def contents(self) -> List[Item]:
         return self._contents
 
     def take(self, item: Item) -> None:
+        # TODO: Offload this to a manager class
         assert item.owner is not self
         item.lift()
         self._contents.append(item)
         item.owner = self
-    
-    def __repr__(self):
-        if len(self._contents) > 0:
-            return [item.noun_text for item in self._contents]
-        else:
-            return "Empty"
