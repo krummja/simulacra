@@ -8,7 +8,7 @@ from model import Model
 from state import State, T, SaveAndQuit, GameOverQuit
 from states.modal_state import ModalState
 from storage import Storage
-from views import MainMenuView
+from views.main_menu_view import MainMenuView
 from generators.debug_map import debug_area
 
 if TYPE_CHECKING:

@@ -2,20 +2,27 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from config import *
+from views.elements.base_element import BaseRenderable
+from views.elements.gauge_element import GaugeElement
 
 
 test_element = {
-    'uid': 'test_element',
-    'name': 'test element',
-    'position': { 'x': 2, 'y': 2 },
-    'size': { 'width': 20, 'height': 10 },
-    'style': {'framed': True},
-    'content': "<empty>"
+    'x': 2, 'y': 2,
+    'width': 20, 'height': 10,
+    'framed': True, 'title': "test", 'fg': (255, 0, 255), 'bg': (0, 0, 0),
+    'renderable': BaseRenderable
 }
 
+test_gauge = {
+    'x': STAGE_PANEL_WIDTH + 2, 'y': 2,
+    'width': 20, 'height': 4,
+    'framed': True, 'title': "", 'fg': (255, 0, 255), 'bg': (0, 0, 0),
+    'renderable': GaugeElement
+}
 
 interface_templates = {
-    test_element['uid']: test_element
+    'test_element': test_element,
+    'test_gauge': test_gauge
 }
 
 # Non-Template Configs (Legacy UI)

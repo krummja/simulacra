@@ -40,20 +40,6 @@ class StageView(View):
         update_fov(area)
         render_area_tiles(area, consoles)
         render_visible_entities(area, consoles)
-        self.manager_service.interface_manager.get_element('TEST ELEMENT').draw(consoles)
-
-    # def get_nearby_actors(self):
-    #     nearby = []
-    #     area = self.model.area_data.current_area
-    #     actors = self.model.area_data.current_area.actor_model.actors
-    #     player = self.model.player
-    #     for actor in actors:
-    #         if len(nearby) < 4:
-    #             if 1 <= actor.location.distance_to(*player.location.xy) <= 8:
-    #                 nearby.append(actor)
-    #             elif actor.location.distance_to(*player.location.xy) > 8:
-    #                 try:
-    #                     nearby.remove(actor)
-    #                 except ValueError:
-    #                     pass
-    #     return nearby
+        
+        self.factory_service.interface_factory.build('test_element').draw(consoles)
+        self.factory_service.interface_factory.build('test_gauge').draw(consoles)

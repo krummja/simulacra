@@ -5,13 +5,13 @@ import tcod
 
 from config import CONSOLE_HEIGHT, CONSOLE_WIDTH
 from geometry import Rect
-from util import flatten, Observer
+from util import flatten
 
 if TYPE_CHECKING:
     from tcod.console import Console
 
 
-class Panel(Observer):
+class Panel:
 
     x: int = 0
     y: int = 0
@@ -27,7 +27,6 @@ class Panel(Observer):
     style_title: str = ''
 
     def __init__(self, name: str = "<unset>", parent: Panel = None, **config):
-        super().__init__(name)
         self.NAME = name
         self.parent: Panel = parent
 

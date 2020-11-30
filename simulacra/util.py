@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Dict, Optional, Protocol, TYPE_CHECKING
+from typing import Any, Tuple, Dict, Optional, Protocol, TYPE_CHECKING
 from contextlib import suppress
 import collections
 import time
@@ -39,49 +39,3 @@ def log(func):
             return e
     return wrapper
 
-
-class Subject:
-
-    def __init__(self) -> None:
-        self._observers: Dict[str, Observer] = {}
-
-    def attach(self, observer: Observer) -> None:
-        if observer not in self._observers.values():
-            self._observers[observer.NAME] = observer
-            
-    def detach(self, observer_name: str) -> None:
-        with suppress(ValueError):
-            del self._observers[observer_name]
-    
-    def notify(self, modifier: Optional[Observer] = None) -> None:
-        for observer in self._observers.values():
-            if modifier != observer:
-                observer.update(self)
-
-
-class Observer(Protocol):
-
-    NAME = "<unset>"
-
-    def update(self, subject) -> None:
-        pass
-
-
-class Data(Subject):
-    
-    def __init__(self, name: str = "") -> None:
-        super().__init__()
-        self.NAME = name
-        self._data = {}
-        self._options = {}
-    
-    def get_data(self):
-        return self._data
-    
-    def set_data(self, key, value) -> None:
-        self._data[key] = value
-        self.notify()
-    
-    @property
-    def options(self):
-        return self._options
