@@ -51,6 +51,7 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
     
     factory_service = FactoryService()
     manager_service = ManagerService()
+    
     _COMMAND_KEYS: Dict[int, str] = {
         tcod.event.K_d: "drop",
         tcod.event.K_e: "equipment",

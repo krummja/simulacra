@@ -40,6 +40,7 @@ class MainMenuState(State[None]):
                 if DEBUG:
                     print("Storage: Save data found")
                 self._model = self.storage.save_slots[index]
+                self.manager_service.initialize_managers(self._model)
                 self.start()
             else:
                 if DEBUG:
@@ -73,6 +74,7 @@ class MainMenuState(State[None]):
     def new_game(self) -> None:
         try:
             self._model = Model()
+            self.manager_service.initialize_managers(self._model)
             self._model.area_data.current_area = debug_area(self._model)
             self.storage.add_save(self._view.character_select.index_as_int,
                                   self.model)

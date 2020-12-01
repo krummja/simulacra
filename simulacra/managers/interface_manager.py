@@ -1,3 +1,8 @@
+"""
+The Interface Manager allows for the abstraction of certain functions important
+to GUI setup, teardown, rendering, data management, and state transfer.
+"""
+
 from __future__ import annotations
 from typing import Dict, Set, List, TYPE_CHECKING
 
@@ -12,7 +17,6 @@ if TYPE_CHECKING:
     from model import Model
 
 
-# TODO: Do I need this class, as opposed to relying on my Model data structures?
 class InterfaceManager:
     
     def __init__(self) -> None:

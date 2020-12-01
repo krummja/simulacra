@@ -8,9 +8,6 @@ from action import (ActionWithPosition,
                     ActionWithDirection)
 
 from data.animations import animations
-from managers.manager_service import ManagerService
-
-animation_manager = ManagerService().animation_manager
 
 
 class Move(Action):
