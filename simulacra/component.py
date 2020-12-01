@@ -1,13 +1,13 @@
 from __future__ import annotations
 from typing import Callable, List, TYPE_CHECKING
 
-from util import Data
+from collections import defaultdict
 
 if TYPE_CHECKING:
     from entity import Entity
 
 
-class Component(Data):
+class Component(defaultdict):
     """Components represent the interactive attributes of an entity.
     
     Every component should provide at least one option to present to any UI
@@ -17,13 +17,13 @@ class Component(Data):
     """
 
     NAME: str = '<unset>'
+    OWNER: Entity = None
 
-    def __init__(self, **kwargs):
-        super().__init__(self.NAME)
-        self.owner = None
+    def __init__(self, name: str):
+        self.NAME = name
 
     def on_register(self, owner: Entity) -> None:
-        self.owner = owner
+        self.OWNER = owner
 
     def on_unregister(self) -> None:
-        self.owner = None
+        self.OWNER = None

@@ -38,7 +38,6 @@ class PickLocationState(AreaState[Tuple[int, int]]):
         self.desc = str(self.cursor_xy)
 
         try:
-            # NOTE: This will only return from entities actually in the nearby list
             self.info = str(self.model.area.nearby_actor_entities(*self.cursor_xy))
         except KeyError:
             self.info = "---"

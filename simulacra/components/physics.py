@@ -10,8 +10,6 @@ if TYPE_CHECKING:
 
 class Physics(Component):
 
-    NAME = "PHYSICS"
-
     def __init__(
             self,
             weight: float = 0.0,
@@ -19,11 +17,11 @@ class Physics(Component):
             sharpness: float = 0.0,
             hardness: float = 0.0,
         ) -> None:
-        super().__init__()
-        self._data['weight'] = weight
-        self._data['size'] = size
-        self._data['sharpness'] = sharpness
-        self._data['hardness'] = hardness
+        super().__init__("PHYSICS")
+        self['weight'] = weight
+        self['size'] = size
+        self['sharpness'] = sharpness
+        self['hardness'] = hardness
         
         self.is_visible = True
         self.is_moveable = True

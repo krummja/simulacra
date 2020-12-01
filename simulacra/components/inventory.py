@@ -16,10 +16,8 @@ class Inventory(Component):
         take            Method responsible for mutating `_contents`.
     """
    
-    NAME = "INVENTORY"
-    
     def __init__(self, slots: int = 10) -> None:
-        super().__init__()
+        super().__init__("INVENTORY")
         self._slots = slots
         self._contents: List[Item] = []
         

@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class Entity(Graphic, Noun):
 
-    NAME: str = "<unset>"
+    NAME = "<unset>"
 
     def __init__(self, location: Location) -> None:
         Graphic.__init__(self)

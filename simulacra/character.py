@@ -20,8 +20,8 @@ class Character(Entity, Actor):
             display: Dict[str, Any] = None,
         ) -> None:
         Entity.__init__(self, location)
+        self.NAME = uid
         self.noun_text = name
-        self.name = name
         self.char = display['char']
         self.color = display['color']
         self.bg = display['bg']

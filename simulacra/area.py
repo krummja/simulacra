@@ -127,7 +127,7 @@ class Area:
         entity_dict = {}
         for ent in self.actor_model.actors:
             owner: Entity = ent.owner
-            entity_dict[owner.location.x, owner.location.y] = owner
+            entity_dict[owner.location.y, owner.location.x] = owner
         try:
             return entity_dict[y, x]
         except KeyError:

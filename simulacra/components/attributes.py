@@ -12,10 +12,8 @@ if TYPE_CHECKING:
 
 class Attributes(Component):
 
-    NAME = 'ATTRIBUTES'
-
     def __init__(self) -> None:
-        super().__init__()
+        super().__init__("ATTRIBUTES")
         self._core_stats: Dict[StatsEnum, Attribute] = {}
 
     def add_core_stat(
