@@ -8,6 +8,7 @@ if TYPE_CHECKING:
     from tcod.console import Console
 
 
+# REFACTOR
 class ElemGauge(Panel):
 
     text: str

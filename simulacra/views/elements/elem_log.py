@@ -10,6 +10,7 @@ if TYPE_CHECKING:
     from tcod.console import Console
 
 
+# REFACTOR
 class ElemLog(Panel):
 
     def __init__(self, name: str, model: Model) -> None:

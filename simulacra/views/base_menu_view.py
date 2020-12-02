@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from state import State
 
 
+# REFACTOR
 class BaseMenuView(View):
     
     def __init__(self, state: State) -> None:

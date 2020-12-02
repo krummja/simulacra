@@ -16,11 +16,7 @@ if TYPE_CHECKING:
     from state import State
 
 
-# TODO: What I need is a listing of all possible UI-renderable data sources.
-# The idea being that the GUI either has 'passive' informational elements, or
-# modal objects and menus that raise based on input choices or state changes.
-    
-
+# REFACTOR: DEPRECATE
 class ModalView(View):
     
     def __init__(self, state: State) -> None:

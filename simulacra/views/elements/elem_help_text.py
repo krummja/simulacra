@@ -8,6 +8,7 @@ if TYPE_CHECKING:
     from tcod.console import Console
 
 
+# REFACTOR
 class ElemHelpText(Panel):
 
     def __init__(self, content: List[str]) -> None:

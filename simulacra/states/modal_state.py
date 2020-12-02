@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from view import View
 
 
-# FIXME: By god this is messy :/
+# REFACTOR: DEPRECATE
 class ModalState(State[None]):
     
     NAME = "Modal"

@@ -13,7 +13,8 @@ if TYPE_CHECKING:
     from tcod.console import Console
 
 
-class InventoryView(BaseMenuView):
+# REFACTOR
+class InventoryMenuView(BaseMenuView):
     
     def __init__(self, state: State) -> None:
         super().__init__(state)

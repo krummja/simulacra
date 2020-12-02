@@ -8,7 +8,7 @@ from states.area_state import AreaState
 from states.inventory_state import InventoryState
 from states.modal_state import ModalState
 from states.pick_location_state import PickLocationState
-from views.inventory_view import InventoryView
+from views.menu_views.inventory_menu_view import InventoryMenuView
 from states.modal_states.inventory_modal_state import InventoryModalState
 
 if TYPE_CHECKING:

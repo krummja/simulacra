@@ -4,7 +4,7 @@ from typing import Optional, TYPE_CHECKING
 import tcod
 
 from state import State, StateBreak, T
-from views.inventory_view import InventoryView
+from views.menu_views.inventory_menu_view import InventoryMenuView
 from states.base_menu_state import BaseMenuState
 from states.area_state import AreaState
 

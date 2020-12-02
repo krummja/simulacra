@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from storage import Storage
 
 
+# REFACTOR
 class ElemCharacterSlot(Panel):
 
     _slot_data: Model

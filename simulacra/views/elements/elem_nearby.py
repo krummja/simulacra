@@ -10,6 +10,7 @@ if TYPE_CHECKING:
     from tcod.console import Console
 
 
+# REFACTOR
 class ElemExamineNearby(Panel):
     
     def __init__(self, items: List[Item]) -> None:
