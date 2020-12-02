@@ -9,6 +9,7 @@ from states.inventory_state import InventoryState
 from states.modal_state import ModalState
 from states.pick_location_state import PickLocationState
 from views.inventory_view import InventoryView
+from states.modal_states.inventory_modal_state import InventoryModalState
 
 if TYPE_CHECKING:
     from model import Model
@@ -30,7 +31,8 @@ class PlayerReadyState(AreaState["Action"]):
     def cmd_inventory(self):
         #! This could be really useful... pass in different inventory view objects
         #! depending on what I'm accessing?
-        state = InventoryState(self.model, InventoryView)
+        # state = InventoryState(self.model, InventoryView)
+        state = InventoryModalState(self.model)
         return state.loop()
     
     def cmd_examine(self):
@@ -45,3 +47,6 @@ class PlayerReadyState(AreaState["Action"]):
     
     def cmd_pickup(self):
         return common.Nearby.Pickup(self.model.player)
+    
+
+

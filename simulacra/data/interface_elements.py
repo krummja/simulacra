@@ -4,6 +4,17 @@ from typing import TYPE_CHECKING
 from config import *
 
 
+base_template = {
+    'uid': 'base_template',
+    'title': 'BASE TEMPLATE',
+    'x': 2,
+    'y': 2,
+    'width': 30,
+    'height': 10,
+    'framed': True,
+}
+
+
 test_element = {
     'uid': 'test_element',
     'name': 'test element',
@@ -15,7 +26,7 @@ test_element = {
 
 
 interface_templates = {
-    test_element['uid']: test_element
+    base_template['uid']: base_template
 }
 
 # Non-Template Configs (Legacy UI)

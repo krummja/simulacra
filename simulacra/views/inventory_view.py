@@ -6,14 +6,14 @@ import tcod
 from config import *
 from tiles.font_map import font_map
 
-from views.menu_base_view import MenuBaseView
+from views.base_menu_view import BaseMenuView
 
 if TYPE_CHECKING:
     from state import State
     from tcod.console import Console
 
 
-class InventoryView(MenuBaseView):
+class InventoryView(BaseMenuView):
     
     def __init__(self, state: State) -> None:
         super().__init__(state)

@@ -18,7 +18,3 @@ class View(ABC):
         self._state = state
         self.factory_service = state.factory_service
         self.manager_service = state.manager_service
-
-    @abstractmethod
-    def draw(self, consoles: Dict[str, Console]) -> None:
-        raise NotImplementedError()

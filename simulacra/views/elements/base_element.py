@@ -14,6 +14,7 @@ class ElementConfig(defaultdict):
     
     def __init__(
             self,
+            uid: str = "<unset>",
             x: int = 0, 
             y: int = 0,
             width: int = 0,
@@ -23,6 +24,7 @@ class ElementConfig(defaultdict):
             title: Optional[str] = None,
             framed: bool = False
         ) -> None:
+        self.UID = uid
         self['x'] = x
         self['y'] = y
         self['width'] = width
@@ -35,12 +37,15 @@ class ElementConfig(defaultdict):
 
 class BaseElement:
     
-    def __init__(self, config: ElementConfig, data) -> None:
+    def __init__(self, config: ElementConfig) -> None:
         for k, v in config.items():
             self.__setattr__(k, v)
-        self.data = data
     
     def on_draw(self, consoles: Dict[str, Console]) -> None:
+        self.draw(consoles)
+        self.draw_content(consoles)
+
+    def draw(self, consoles: Dict[str, Console]) -> None:
         if self.framed:
             consoles['ROOT'].draw_frame(
                 x=self.x, y=self.y, 
@@ -52,9 +57,7 @@ class BaseElement:
             consoles['ROOT'].print(
                 x=self.x+2, y=self.y,
                 string=f" {self.title} "
-            )
-            
-        self.draw(consoles)
-    
-    def draw(self, consoles: Dict[str, Console]) -> None:
-        consoles['ROOT'].print(self.x+2, self.y+3, string=str(self.data))
+                )
+
+    def draw_content(self, consoles: Dict[str, Console]) -> None:
+        pass

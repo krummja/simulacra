@@ -103,6 +103,17 @@ class Item(Entity):
                 del self.location.area.items[self.location.xy]
             self.location = None
             
+    def place(self, location: Location) -> None:
+        assert not self.location, "This item already has a location."
+        assert not self.owner, "Can't be placed because this item is currently owned."
+        self.location = location
+        items = location.area.items
+        try:
+            self.bg = location.area.area_model.get_bg_color(*location.xy)
+            items[location.xy].append(self)
+        except KeyError:
+            items[location.xy] = [self]
+            
     def plan_activate(self, action: ActionWithItem) -> ActionWithItem:
         return action
     

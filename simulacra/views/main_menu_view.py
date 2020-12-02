@@ -16,8 +16,8 @@ from views.elements.elem_character_select import ElemCharacterSelect
 from noise_machine import NoiseMachine
 
 from interface_element import InterfaceElement
-from managers.manager_service import ManagerService
-from factories.factory_service import FactoryService
+# from managers.manager_service import ManagerService
+# from factories.factory_service import FactoryService
 
 from panel import Panel
 from rendering import draw_logo

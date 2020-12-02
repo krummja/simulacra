@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from state import State
 
 
-class MenuBaseView(View):
+class BaseMenuView(View):
     
     def __init__(self, state: State) -> None:
         super().__init__(state)

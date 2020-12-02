@@ -115,13 +115,22 @@ class Nearby(Action):
                     self.report(f"{self.actor.owner.noun_text} "
                                 "picks up "
                                 f"the {item.noun_text}.")
-                    self.actor.owner.components['INVENTORY'].take(item)
+                    self.actor.owner.components['INVENTORY'].add_to(item)
                     return self.actor.reschedule(100)
                 
                 except Impossible:
                     self.report(f"{self.actor.owner.noun_text} "
                                 "cannot lift "
                                 f"the {item.noun_text}!")
+    
+    
+    class Drop(ActionWithItem):
+        def act(self) -> None:
+            assert self.item in self.model.player.components['INVENTORY']['contents']
+            self.item.lift()
+            self.item.place(self.model.player.location)
+            self.report(f"you drop the {self.item.noun_text}")
+            self.actor.reschedule(100)
 
 
 class Attack(Action):
