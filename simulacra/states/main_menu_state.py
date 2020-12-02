@@ -51,6 +51,9 @@ class MainMenuState(State[None]):
         elif event.sym == tcod.event.K_d:
             if self.storage.save_slots[index] is not None:
                 confirm_modal = ModalState(self.model, 'delete')
+                #! Instead of having 'result' on the modal state, make the modal return bool
+                #       result = confirm_modal.loop()
+                #       if result: ...
                 confirm_modal.loop()
                 if confirm_modal.result:
                     self.storage.save_slots[index] = None

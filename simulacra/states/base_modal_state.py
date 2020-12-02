@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional, TYPE_CHECKING
+from typing import Generic, Optional, TYPE_CHECKING
 
 import tcod
 
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from view import View
 
 
-class BaseModalState(AreaState["Action"]):
+class BaseModalState(Generic[T], State[T]):
     """Menu state that partially obscures the main game view."""
     
     NAME = "Modal Base"
