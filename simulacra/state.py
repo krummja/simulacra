@@ -94,8 +94,6 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
         self._view: Optional[View] = None
         self._FPS = 0
         
-
-
     @property
     def COMMAND_KEYS(self: State) -> Dict[int, str]:
         return self._COMMAND_KEYS

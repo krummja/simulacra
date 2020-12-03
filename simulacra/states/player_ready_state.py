@@ -9,6 +9,8 @@ from states.inventory_state import InventoryState
 from states.pick_location_state import PickLocationState
 from views.menu_views.inventory_menu_view import InventoryMenuView
 from states.modal_states.inventory_modal_state import InventoryModalState
+from states.menu_states.test_menu_state import TestMenuState
+from views.menu_views.test_menu_view import TestMenuView
 
 if TYPE_CHECKING:
     from model import Model
@@ -31,7 +33,15 @@ class PlayerReadyState(AreaState["Action"]):
         #! This could be really useful... pass in different inventory view objects
         #! depending on what I'm accessing?
         # state = InventoryState(self.model, InventoryView)
-        state = InventoryModalState(self.model)
+        # state = InventoryModalState(self.model)
+
+        #! Alright so this works really well!
+        state = TestMenuState(
+            self.manager_service.data_manager.query(
+                entity="PLAYER", 
+                component="INVENTORY", 
+                key="contents"
+                ))
         return state.loop()
     
     def cmd_examine(self):

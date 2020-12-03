@@ -14,6 +14,9 @@ from rendering import *
 from stats import StatsEnum
 from tcod import Console
 from view import View
+from states.menu_states.test_menu_state import TestMenuState
+from views.menu_views.test_menu_view import TestMenuView
+from views.elements.list_element import ListElement
 
 from views.elements.base_element import BaseElement, ElementConfig
 from views.elements.elem_gauge import ElemGauge
@@ -82,18 +85,23 @@ class StageView(View):
             )
 
         self.nearby_panel = Panel(name="NEARBY PANEL", **nearby_panel)
-        self.inventory_panel = Panel(name="INVENTORY PANEL", **inventory_panel)
+        # TODO: Find a way to have inventory item stacking similar to how the message class works.
+        self.inventory_panel = ListElement(
+            ElementConfig(
+                position=("bottom", "right"),
+                offset_x=-(SIDE_PANEL_WIDTH // 2),
+                width=SIDE_PANEL_WIDTH // 2,
+                height=(SIDE_PANEL_HEIGHT // 2) + 2,
+                title="inventory",
+                framed=True
+                ),
+            self.manager_service.data_manager.query(
+                entity="PLAYER",
+                component="INVENTORY",
+                key="contents"))
+        
         self.equipment_panel = Panel(name="EQUIPMENT PANEL", **equipment_panel)
         self.log_panel = ElemLog(name="LOG PANEL", model=self.model)
-
-        self.manager_service.interface_manager.register_element(self.hp_gauge)
-        self.manager_service.interface_manager.register_element(self.ep_gauge)
-        self.manager_service.interface_manager.register_element(self.fp_gauge)
-        self.manager_service.interface_manager.register_element(self.xp_gauge)
-        self.manager_service.interface_manager.register_element(self.nearby_panel)
-        self.manager_service.interface_manager.register_element(self.inventory_panel)
-        self.manager_service.interface_manager.register_element(self.equipment_panel)
-        self.manager_service.interface_manager.register_element(self.log_panel)
 
     def draw(self, consoles: Dict[str, Console]) -> None:
         area = self.model.area_data.current_area
@@ -136,26 +144,11 @@ class StageView(View):
         self.fp_gauge.draw(consoles)
         self.xp_gauge.draw(consoles)
 
-
         # PANEL FRAMES
         self.nearby_panel.on_draw(consoles)
-        self.inventory_panel.on_draw(consoles)
+        self.inventory_panel.draw(consoles)
         self.equipment_panel.on_draw(consoles)
         self.log_panel.draw(consoles)
-
-        # INVENTORY PANEL
-        # REFACTOR
-        # TODO: Generalize the logic for generating lists that are selectable by index
-        inventory = self.manager.query(entity="PLAYER", component="INVENTORY", key="contents")
-        item_y = 0
-        for item in inventory:
-            consoles['ROOT'].print(
-                self.inventory_panel.x + 2,
-                self.inventory_panel.y + 2 + item_y,
-                string=item.noun_text,
-                fg=(255, 255, 255)
-                )
-            item_y += 1 if item_y < self.inventory_panel.size_height - 3 else 0
 
         # TODO: Make this into a ui element.
         # TODO: Display aggro state and combat info when in combat
@@ -173,7 +166,6 @@ class StageView(View):
                 fg=(255, 255, 255)
                 )
             entity_y += 1 if entity_y < 3 else 0
-
 
     def refresh(self, area: Area, consoles: Dict[str, Console]) -> None:
         # TODO: Change this so that it doesn't have to take in 'area'

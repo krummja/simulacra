@@ -26,7 +26,7 @@ class HelpTextElement(BaseElement):
         self.help_options = []
         for item in help_options:
             item = item.split(":")
-            cmd = ColorFormatter().format(item[0], hue)
+            cmd = ColorFormatter(hue).format(item[0])
             self.help_options.append(cmd + " " + item[1])
         
     def draw_content(self, consoles: Dict[str, Console]) -> None:

@@ -92,6 +92,87 @@ def update_fov(area: Area) -> None:
 
     area.area_model.explored |= area.area_model.visible
 
+def draw_frame(consoles: Dict[str, Console]) -> None:
+    outer_frame_color = (200, 155, 155)
+    inner_frame_color = (100, 0, 0)
+    
+    consoles['ROOT'].print_box(
+        x=1, y=1, 
+        width=4, height=4, 
+        string="****************",
+        fg=inner_frame_color)
+    
+    consoles['ROOT'].print_box(
+        x=CONSOLE_WIDTH-5, y=1, 
+        width=4, height=4, 
+        string="****************",
+        fg=inner_frame_color)
+    
+    consoles['ROOT'].print_box(
+        x=1, y=CONSOLE_HEIGHT-5, 
+        width=4, height=4, 
+        string="****************",
+        fg=inner_frame_color)
+    
+    consoles['ROOT'].print_box(
+        x=CONSOLE_WIDTH-5, y=CONSOLE_HEIGHT-5, 
+        width=4, height=4, 
+        string="****************",
+        fg=inner_frame_color)
+    
+    outer_vertical = "#" * CONSOLE_HEIGHT
+    outer_horizontal = "#" * CONSOLE_WIDTH
+    
+    consoles['ROOT'].print_box(
+        x=0, y=0,
+        width=CONSOLE_WIDTH-1, height=1,
+        string=outer_horizontal,
+        fg=outer_frame_color)
+    
+    consoles['ROOT'].print_box(
+        x=0, y=CONSOLE_HEIGHT-1,
+        width=CONSOLE_WIDTH-1, height=1,
+        string=outer_horizontal,
+        fg=outer_frame_color)
+
+    consoles['ROOT'].print_box(
+        x=0, y=0,
+        width=1, height=CONSOLE_HEIGHT,
+        string=outer_vertical,
+        fg=outer_frame_color)    
+    
+    consoles['ROOT'].print_box(
+        x=CONSOLE_WIDTH-1, y=0,
+        width=1, height=CONSOLE_HEIGHT,
+        string=outer_vertical,
+        fg=outer_frame_color) 
+    
+    inner_vertical = "*" * (CONSOLE_HEIGHT-8)
+    inner_horizontal = "*" * (CONSOLE_WIDTH-8)
+    consoles['ROOT'].print_box(
+        x=1, y=5,
+        width=1, height=CONSOLE_HEIGHT-8,
+        string=inner_vertical,
+        fg=inner_frame_color)
+    
+    consoles['ROOT'].print_box(
+        x=CONSOLE_WIDTH-2, y=5,
+        width=1, height=CONSOLE_HEIGHT-8,
+        string=inner_vertical,
+        fg=inner_frame_color)
+    
+    consoles['ROOT'].print_box(
+        x=5, y=1,
+        width=CONSOLE_WIDTH-8, height=1,
+        string=inner_horizontal,
+        fg=inner_frame_color)
+    
+    consoles['ROOT'].print_box(
+        x=5, y=CONSOLE_HEIGHT-2,
+        width=CONSOLE_WIDTH-8, height=1,
+        string=inner_horizontal,
+        fg=inner_frame_color)
+
 
 def draw_logo(consoles: Dict[str, Console]) -> None:
     logo = np.array([
@@ -123,7 +204,6 @@ def draw_logo(consoles: Dict[str, Console]) -> None:
         "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
         ])
 
-    consoles['ROOT'].clear()
     logo = np.array([list(line) for line in logo])
     height = logo.shape[0]
 

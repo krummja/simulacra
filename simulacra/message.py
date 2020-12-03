@@ -26,7 +26,11 @@ class Message:
 
 class ColorFormatter:
 
-    def format(self, string: str, fg: Tuple[int, int, int]) -> ConsoleText:
+    def __init__(self, color: Tuple[int, int, int]) -> None:
+        self.color = color
+    
+    def format(self, string: str) -> ConsoleText:
+        fg = self.color
         length = len(string)
         string = f"{tcod.COLCTRL_FORE_RGB:c}{fg[0]:c}{fg[1]:c}{fg[2]:c}" + string + f"{RESET}"
         return ConsoleText(string, length)

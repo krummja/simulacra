@@ -3,8 +3,9 @@ from typing import Optional, Type, TYPE_CHECKING
 
 import sys
 import traceback
+from config import DEBUG
 
-from action import Impossible
+from action import Action, Impossible
 
 if TYPE_CHECKING:
     from control import Control
@@ -29,25 +30,25 @@ class Actor:
         return self.owner.location.area.model.scheduler
 
     def act(self, scheduler: EventQueue, event: Event) -> None:
-        # Check that we have the correct event.
+        """Execute a successfully planned control action."""
         if event is not self.event:
             return scheduler.unschedule(event)
+        action = self.try_plan()
+        if DEBUG:
+            print(repr(self))
+            print("          Action was > " + repr(action))
+        action.act()
         
-        # Try to resolve the plan step of the action.
+    def try_plan(self) -> Action:
+        """Attempt to resolve a control's action plan."""
         try:
             action = self.control.plan()
-            
-        # If that fails, dump an error and reschedule.
         except Impossible:
             print(f"Unresolved action with {self}", file=sys.stderr)
             traceback.print_exc(file=sys.stderr)
-            return self.reschedule(100)
-        
-        # Seriously make sure the action resolved successfully.
+            return self.reschedule(100)        
         assert action is action.plan(), f"{action} not fully resolved, {self}."
-        
-        # Finally, execute the action once all checks pass.
-        action.act()
+        return action
 
     def reschedule(self, interval: int) -> None:
         if self.event is None:
@@ -55,4 +56,5 @@ class Actor:
         self.event = self.scheduler.reschedule(self.event, interval)
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self.owner.location!r})"
+        return f"Executing action for > " \
+               f"{self.__class__.__name__}({self.owner.location!r})"

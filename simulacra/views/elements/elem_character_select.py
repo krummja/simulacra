@@ -5,6 +5,7 @@ import numpy as np
 
 from config import *
 from panel import Panel
+from message import ColorFormatter
 
 if TYPE_CHECKING:
     from tcod.console import Console
@@ -49,28 +50,33 @@ class ElemCharacterSlot(Panel):
 
     def draw(self, consoles: Dict[str, Console]) -> None:
         self.on_draw(consoles)
+        
         consoles['ROOT'].print(
             x=self.x + 2, y=self.y + 1,
             string=self.slot_data['name'], 
-            bg_blend=tcod.BKGND_MULTIPLY
+            bg_blend=tcod.BKGND_MULTIPLY,
+            fg=(255, 255, 255)
             )
         
         consoles['ROOT'].print(
             x=self.x + self.size_width - 3, y=self.y + 3,
             string=self.slot_data['level'], 
-            bg_blend=tcod.BKGND_MULTIPLY
+            bg_blend=tcod.BKGND_MULTIPLY,
+            fg=(255, 255, 255)
             )
         
         consoles['ROOT'].print(
             x=self.x + 2, y=self.y + 3,
             string=self.slot_data['background'], 
-            bg_blend=tcod.BKGND_MULTIPLY
+            bg_blend=tcod.BKGND_MULTIPLY,
+            fg=(255, 255, 255)
             )
         
         consoles['ROOT'].print(
             x=self.x + 2, y=self.y + 5,
             string=self.slot_data['location'], 
-            bg_blend=tcod.BKGND_MULTIPLY
+            bg_blend=tcod.BKGND_MULTIPLY,
+            fg=(255, 255, 255)
             )
 
 

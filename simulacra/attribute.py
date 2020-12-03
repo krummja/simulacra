@@ -15,17 +15,19 @@ class Attribute:
         self.current = current
         self.maximum = maximum
 
+    def modify_current(self, value: int) -> None:
+        """Adjust the current value of the attribute."""
+        self.current += value
+
+    def modify_max(self, value: int) -> None:
+        """Adjust the maximum possible value of the attribute."""
+        self.maximum += value
+        
     def __str__(self) -> str:
         return str(self.current)
 
     def __int__(self) -> int:
         return int(self.current)
-
-    def modify_current(self, value: int) -> None:
-        self.current += value
-
-    def modify_max(self, value: int) -> None:
-        self.maximum += value
 
 
 class StatModifier:
@@ -35,6 +37,7 @@ class StatModifier:
         self.level_progression = level_progression
 
     def __int__(self):
+        # TODO: Implementation
         return
 
     def get_leveled_value(self, level, initial_level) -> int:
