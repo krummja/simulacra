@@ -18,7 +18,7 @@ class BaseModalState(Generic[T], State[T]):
     NAME = "Modal Base"
     
     def __init__(self, model: Model, view: View) -> None:
-        super().__init__(model)
+        super().__init__()
         self._model = model
         self._view = view(self)
         

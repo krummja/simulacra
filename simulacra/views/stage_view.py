@@ -144,6 +144,8 @@ class StageView(View):
         self.log_panel.draw(consoles)
 
         # INVENTORY PANEL
+        # REFACTOR
+        # TODO: Generalize the logic for generating lists that are selectable by index
         inventory = self.manager.query(entity="PLAYER", component="INVENTORY", key="contents")
         item_y = 0
         for item in inventory:
@@ -172,8 +174,6 @@ class StageView(View):
                 )
             entity_y += 1 if entity_y < 3 else 0
 
-        self.test_parent.on_draw(consoles)            
-        self.test_element.on_draw(consoles)
 
     def refresh(self, area: Area, consoles: Dict[str, Console]) -> None:
         # TODO: Change this so that it doesn't have to take in 'area'

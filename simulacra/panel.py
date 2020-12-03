@@ -50,9 +50,6 @@ class Panel(Observer):
             elif self.position[1] == 'center':
                 self.x = (CONSOLE_WIDTH - self.size_width) // 2
 
-        # self.y = (CONSOLE_HEIGHT - self.height) // 2
-        # self.y = (self.parent.bounds.bottom - (self.parent.height // 2)) - (self.height // 2)
-
         else:
             if self.position[0] == 'top':
                 self.y = self.parent.bounds.top + self.margin
@@ -60,13 +57,6 @@ class Panel(Observer):
                 self.y = self.parent.bounds.bottom \
                     - self.size_height - self.margin
             elif self.position[0] == 'center':
-                # assume parent.x = 2, parent.y = 0
-                # parent.height = 10
-                # parent.bounds.bottom = 12
-                # self.height = 4
-                # self.y = (12 - (10 // 2)) - (4 // 2)
-                # self.y = parent.center.y - (self.height // 2)
-                # self.y = (12 - 5) - 2 = (7 - 2) = 5
                 self.y = (self.parent.bounds.bottom - (
                     self.parent.size_height // 2)) - (self.size_height // 2)
 

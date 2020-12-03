@@ -17,8 +17,8 @@ class ElementConfig(defaultdict):
     def __init__(
             self,
             uid: str = "<unset>",
-            parent: BaseElement = None,
-            position: Tuple[str, str] = (None, None),
+            parent = None,
+            position: Tuple[str, str] = ("center", "center"),
             x: int = 0, 
             y: int = 0,
             width: int = 0,
@@ -60,6 +60,9 @@ class Position:
         _position = self._set_position()
         self.__setattr__('x', _position[1])
         self.__setattr__('y', _position[0])
+        
+        self.x += self.offset_x
+        self.y += self.offset_y
         
     def _set_position(self):
         switch = self.parent is not self
@@ -103,8 +106,8 @@ class Position:
             ('bottom', 'left'): (bottom, left),
             ('bottom', 'right'): (bottom, right),
             ('bottom', 'center'): (bottom, h_center),
-            ('center', 'left'): (v_center, 0),
-            ('center', 'right'): (v_center, 0),
+            ('center', 'left'): (v_center, left),
+            ('center', 'right'): (v_center, right),
             ('center', 'center'): (v_center, h_center)
             }.get(self.position)
         
@@ -120,12 +123,19 @@ class BaseElement(Position):
                                bottom=self.y + self.height,
                                left=self.x,
                                right=self.x + self.width)
+        
+    @property
+    def content(self) -> Rect:
+        return Rect.from_edges(top=self.bounds.top + 1,
+                               bottom=self.bounds.bottom - 1,
+                               left=self.bounds.left + 1,
+                               right=self.bounds.right - 1)
     
-    def on_draw(self, consoles: Dict[str, Console]) -> None:
-        self.draw(consoles)
+    def draw(self, consoles: Dict[str, Console]) -> None:
+        self.draw_frame(consoles)
         self.draw_content(consoles)
 
-    def draw(self, consoles: Dict[str, Console]) -> None:
+    def draw_frame(self, consoles: Dict[str, Console]) -> None:
         if self.framed:
             consoles['ROOT'].draw_frame(
                 x=self.x, y=self.y, 

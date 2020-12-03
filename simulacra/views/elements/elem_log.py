@@ -25,7 +25,6 @@ class ElemLog(Panel):
         self.model = model
 
     def draw(self, consoles: Dict[str, Console]) -> None:
-        # TODO: Figure out some way to color parts of strings...?
         self.on_draw(consoles)
 
         i = 0

@@ -132,7 +132,6 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
                     
     def on_draw(self, consoles: Dict[str, Console]) -> None:
         self._view.draw(consoles)
-        # consoles['ROOT'].print(1, 1, str(int(self._FPS)), fg=(255, 255, 255))
 
     def ev_quit(self, event: tcod.event.Quit) -> Optional[T]:
         return self.cmd_quit()

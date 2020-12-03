@@ -6,7 +6,7 @@ import tcod
 from config import DEBUG
 from model import Model
 from state import State, T, SaveAndQuit, GameOverQuit
-from states.modal_state import ModalState
+from states.modal_states.confirm_modal_state import ConfirmModalState
 from storage import Storage
 from views import MainMenuView
 from generators.debug_map import debug_area
@@ -50,10 +50,7 @@ class MainMenuState(State[None]):
         #! DELETE
         elif event.sym == tcod.event.K_d:
             if self.storage.save_slots[index] is not None:
-                confirm_modal = ModalState(self.model, 'delete')
-                #! Instead of having 'result' on the modal state, make the modal return bool
-                #       result = confirm_modal.loop()
-                #       if result: ...
+                confirm_modal = ConfirmModalState(self.model)
                 confirm_modal.loop()
                 if confirm_modal.result:
                     self.storage.save_slots[index] = None

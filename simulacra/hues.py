@@ -1,7 +1,7 @@
 from __future__ import annotations
-from typing import Tuple, Dict, TYPE_CHECKING
+from typing import Tuple, Dict, TYPE_CHECKING, Optional
 
-
+import tcod
 Color = Tuple[int, int, int]
 
 
@@ -154,3 +154,21 @@ COLOR: Dict[str, Color] = {
     'white smoke': (245, 245, 245),
     'white': (255, 255, 255),
     }
+
+
+# Alright so it turns out that if an individual color channel's value is non-zero,
+# it gets parsed as a string of length one. That means that I can easily manage the
+# addition of extra characters for length parsing.
+def set_color(
+        fg: Optional[Tuple[int, int, int]] = None,
+        bg: Optional[Tuple[int, int, int]] = None
+    ) -> str:
+    """Return the control codes used to change the text color."""
+    string = ""
+    if fg:
+        string += f"{tcod.COLCTRL_FORE_RGB:c}{fg[0]:c}{fg[1]:c}{fg[2]:c}"
+    if bg:
+        string += f"{tcod.COLCTRL_BACK_RGB:c}{bg[0]:c}{bg[1]:c}{bg[2]:c}"
+    return string
+
+RESET = f"{tcod.COLCTRL_STOP:c}"
