@@ -6,8 +6,8 @@ import random
 
 from states.base_menu_state import ListData
 from animation import Animation
-from tiles.floors import *
-from tiles.walls import *
+from data.tiles.floors import *
+from data.tiles.walls import *
 from area import Area
 from rendering import update_fov
 from player import Player
@@ -91,9 +91,6 @@ def debug_area(model: Model) -> Area:
         location=area[debug_room.center[0] - 2, debug_room.center[1] + 4]
         )
     # manager_service.animation_manager.add_animation(Animation(looping=False))
-    
-    test = ListData([model.player, model.player])
-    print(test[0])
 
     update_fov(area)
 

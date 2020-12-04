@@ -5,7 +5,7 @@ from collections import UserList
 import tcod
 
 from state import State, StateBreak, T
-from views.menu_views.test_menu_view import TestMenuView
+from views.menu_views.inventory_menu_view import InventoryMenuView
 from states.base_menu_state import BaseMenuState, ListData
 
 if TYPE_CHECKING:
@@ -14,8 +14,8 @@ if TYPE_CHECKING:
     from view import View
 
 
-class TestMenuState(BaseMenuState["Action"]):
+class InventoryMenuState(BaseMenuState["Action"]):
     
     def __init__(self, data: List[Entity]) -> None:
-        super().__init__(TestMenuView, data)
+        super().__init__(InventoryMenuView, data)
         

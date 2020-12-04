@@ -56,7 +56,6 @@ player_info_panel = {
     'size': {'width': SIDE_PANEL_WIDTH-3, 'height': 4},
     }
 
-
 nearby_panel = {
     'position': ('top', 'right'),
     'offset': {'y': (SIDE_PANEL_HEIGHT // 3)},

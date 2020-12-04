@@ -33,7 +33,6 @@ class MainMenuState(State[None]):
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[T]:
         index = self._view.character_select.index_as_int
 
-        #! START / NEW
         if event.sym == tcod.event.K_RETURN:
             menu_data = self.storage.save_slots[index]
             if menu_data is not None:
@@ -47,7 +46,6 @@ class MainMenuState(State[None]):
                     print("Storage: No data for this slot.")
                 self.new_game()
 
-        #! DELETE
         elif event.sym == tcod.event.K_d:
             if self.storage.save_slots[index] is not None:
                 confirm_modal = ConfirmModalState(self.model)
@@ -58,11 +56,9 @@ class MainMenuState(State[None]):
                     pass
             self.storage.write_to_file()
 
-        #! QUIT
         elif event.sym == tcod.event.K_q:
             self.cmd_quit()
 
-        #! NAVIGATE
         elif event.sym in self.MOVE_KEYS:
             self._view.character_select.current_index = (
                 self.MOVE_KEYS[event.sym][0],

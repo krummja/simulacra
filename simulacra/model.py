@@ -87,7 +87,7 @@ class Model:
         
         components = self.get_components_on_entity(entity)
         options = []
-        for component in components.items():  # ('PHYSICS', Physics)
+        for component in components.items():
             for option in component[1].options.items():
                 options.append(option)
         return options

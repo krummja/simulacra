@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 from tile import Tile
 from hues import COLOR
-from tiles.font_map import font_map
+from data.tiles.font_map import font_map
 
 
 styles = {

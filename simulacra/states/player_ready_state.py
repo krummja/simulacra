@@ -5,11 +5,8 @@ from actions import common
 from action import Action
 from state import SaveAndQuit, StateBreak
 from states.area_state import AreaState
-from states.inventory_state import InventoryState
 from states.pick_location_state import PickLocationState
-from states.modal_states.inventory_modal_state import InventoryModalState
-from states.menu_states.test_menu_state import TestMenuState
-from views.menu_views.test_menu_view import TestMenuView
+from states.menu_states.inventory_menu_state import InventoryMenuState
 
 if TYPE_CHECKING:
     from model import Model
@@ -29,13 +26,7 @@ class PlayerReadyState(AreaState["Action"]):
         raise StateBreak()
 
     def cmd_inventory(self):
-        #! This could be really useful... pass in different inventory view objects
-        #! depending on what I'm accessing?
-        # state = InventoryState(self.model, InventoryView)
-        # state = InventoryModalState(self.model)
-
-        #! Alright so this works really well!
-        state = TestMenuState(
+        state = InventoryMenuState(
             self.manager_service.data_manager.query(
                 entity="PLAYER", 
                 component="INVENTORY", 
@@ -45,13 +36,7 @@ class PlayerReadyState(AreaState["Action"]):
     
     def cmd_examine(self):
         state = PickLocationState(self.model, "", self.model.player.location.xy)
-        # NOTE: Ahhh, I get it now. I can assign state loops to a variable,
-        # and have that state extend AreaState[<return type>].
-        # On StateBreak, the loop returns the specified return type. Sick!
-        # e.g.     return type       PickLocationState(AreaState[Tuple[int, int]])
         cursor_xy: Tuple[int, int] = state.loop()
-        print(cursor_xy)  # TODO: Feed this into an action! :3
-        # return common.Nearby.Examine(cursor_xy)
     
     def cmd_pickup(self):
         return common.Nearby.Pickup(self.model.player)

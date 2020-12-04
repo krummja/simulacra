@@ -2,24 +2,17 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Dict, Type
 
-import tdl
-from component import Component
-from components.attributes import Attributes
 from config import *
 from data.interface_elements import *
-from factories.factory_service import FactoryService
 from geometry import *
-from panel import Panel
 from rendering import *
-from stats import StatsEnum
 from tcod import Console
 from view import View
-from states.menu_states.test_menu_state import TestMenuState
-from views.menu_views.test_menu_view import TestMenuView
-from views.elements.list_element import ListElement
-from views.elements.gauge_element import GaugeElement
+
 from views.elements.base_element import BaseElement, ElementConfig
 from views.elements.elem_log import ElemLog
+from views.elements.gauge_element import GaugeElement
+from views.elements.list_element import ListElement
 
 if TYPE_CHECKING:
     from model import Model
@@ -41,7 +34,7 @@ class StageView(View):
                 width=SIDE_PANEL_WIDTH,
                 height=(SIDE_PANEL_HEIGHT // 3),
                 framed=True
-            ))
+                ))
 
         self.player_info_panel = BaseElement(
             ElementConfig(
@@ -49,7 +42,7 @@ class StageView(View):
                 position=('top', 'left'),
                 offset_x=2, offset_y=2,
                 width=SIDE_PANEL_WIDTH-3, height=4
-            ))
+                ))
         
         self.hp_gauge = GaugeElement(
             config = ElementConfig(
@@ -97,7 +90,7 @@ class StageView(View):
                 offset_y=(SIDE_PANEL_HEIGHT // 3),
                 width=SIDE_PANEL_WIDTH, height=8,
                 title="NEARBY", framed=True
-            ))
+                ))
 
         self.inventory_panel = ListElement(
             config = ElementConfig(**inventory_panel),
@@ -164,6 +157,7 @@ class StageView(View):
         render_visible_entities(area, consoles)
 
     def get_nearby_actors(self):
+        # TODO: Move this to the DataManager
         nearby = []
         area = self.model.area_data.current_area
         actors = self.model.area_data.current_area.actor_model.actors

@@ -14,12 +14,16 @@ if TYPE_CHECKING:
     from state import State
 
 
-class TestMenuView(BaseMenuView):
+class InventoryMenuView(BaseMenuView):
     
     def __init__(self, state: State) -> None:
-        super().__init__(state, ElementConfig(
-            position=("top", "left"),
-            width=30, height=20,
-            fg=(255, 255, 255),
-            framed=True
-            ))
+        super().__init__(
+            state=state, 
+            config=ElementConfig(
+                position=("bottom", "right"),
+                width=SIDE_PANEL_WIDTH, 
+                height=(SIDE_PANEL_HEIGHT // 2) + 2,
+                fg=(255, 255, 255),
+                title="INVENTORY",
+                framed=True
+                ))

@@ -32,7 +32,7 @@ class BaseMenuView(View, BaseElement):
         unselected = (255, 255, 255)
         for i in range(len(data)):
             consoles['ROOT'].print(
-                x=2, y=y_index+2,
+                x=self.x + 2, y=self.y + y_index + 2,
                 string=data[y_index],
                 fg=selected if self._state.selection == y_index else unselected)
             y_index += 1

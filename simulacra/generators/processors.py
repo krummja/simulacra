@@ -4,7 +4,7 @@ from typing import List, TYPE_CHECKING, Tuple
 from numpy import ndarray
 # from engine.items.door import Door
 from hues import COLOR
-from tiles.font_map import font_map
+from data.tiles.font_map import font_map
 
 if TYPE_CHECKING:
     from area import Area
