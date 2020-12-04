@@ -7,7 +7,6 @@ from state import SaveAndQuit, StateBreak
 from states.area_state import AreaState
 from states.inventory_state import InventoryState
 from states.pick_location_state import PickLocationState
-from views.menu_views.inventory_menu_view import InventoryMenuView
 from states.modal_states.inventory_modal_state import InventoryModalState
 from states.menu_states.test_menu_state import TestMenuState
 from views.menu_views.test_menu_view import TestMenuView

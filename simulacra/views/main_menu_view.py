@@ -15,7 +15,7 @@ from config import *
 from view import View
 from panel import Panel
 from views.elements.help_text_element import HelpTextElement
-from views.elements.elem_character_select import ElemCharacterSelect
+from views.elements.character_select_element import CharacterSelectElement
 from noise_machine import NoiseMachine
 
 from panel import Panel
@@ -33,7 +33,7 @@ class MainMenuView(View):
     def __init__(self, state: State) -> None:
         super().__init__(state)
         self.state = state
-        self.character_select = ElemCharacterSelect()
+        self.character_select = CharacterSelectElement()
         self.character_select.data_source = state.storage
 
     def draw(self, consoles: Dict[str, Console]) -> None:

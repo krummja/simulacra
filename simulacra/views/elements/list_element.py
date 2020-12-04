@@ -23,16 +23,18 @@ class ListElement(BaseElement):
     classes instead.
     """
     
-    def __init__(self, config: ElementConfig, data: List[Entity]) -> None:
+    def __init__(self, config: ElementConfig, data: List[Entity]=[]) -> None:
         super().__init__(config)
         self._data = data
         
     @property
     def data(self) -> ListData:
         return ListData(self._data)
+    
+    def update(self, data: List[Entity]) -> None:
+        self._data = data
         
-    def draw(self, consoles: Dict[str, Console]) -> None:
-        super().draw(consoles)
+    def draw_content(self, consoles: Dict[str, Console]) -> None:
         y_index = 0
         for i in range(len(self.data)):
             consoles['ROOT'].print(

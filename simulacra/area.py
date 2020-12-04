@@ -80,7 +80,6 @@ class ItemModel:
                 continue
 
 
-# FIXME: How much is this class actually used? Is it important?
 class AreaLocation(Location):
 
     def __init__(self, area: Area, x: int, y: int):

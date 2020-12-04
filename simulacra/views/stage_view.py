@@ -17,11 +17,9 @@ from view import View
 from states.menu_states.test_menu_state import TestMenuState
 from views.menu_views.test_menu_view import TestMenuView
 from views.elements.list_element import ListElement
-
+from views.elements.gauge_element import GaugeElement
 from views.elements.base_element import BaseElement, ElementConfig
-from views.elements.elem_gauge import ElemGauge
 from views.elements.elem_log import ElemLog
-from views.elements.elem_nearby import ElemExamineNearby
 
 if TYPE_CHECKING:
     from model import Model
@@ -36,71 +34,82 @@ class StageView(View):
         self.state = state
         self.factory = self.state.factory_service.interface_factory
         self.manager = self.state.manager_service.data_manager
-        self.character_panel = Panel(**character_panel)
-        self.player_info_panel = Panel(**player_info_panel, 
-                                       parent=self.character_panel)
 
-        player_hp = 10
-        player_ep = 10
-        player_fp = 10
-        mock_cur_xp = 226
-        mock_needed_xp = 1000
-        mock_xp = mock_cur_xp / mock_needed_xp
-        
-        self.hp_gauge = ElemGauge(
-            "HP GAUGE",
-            **bar_config,
-            parent=self.character_panel,
-            offset_y=7, title="vit", text=f"{player_hp}",
-            fullness=player_hp / player_hp,
-            fg=(0x40, 0x80, 0), bg=(0x80, 0, 0)
-            )
-
-        self.ep_gauge = ElemGauge(
-            "EP GAUGE",
-            **bar_config,
-            parent=self.character_panel,
-            offset_y=9, title="enr", text=f"{player_ep}",
-            fullness=player_ep / player_ep,
-            fg=(0x17, 0x57, 0xc2), bg=(0x05, 0x1e, 0x50)
-            )
-
-        self.fp_gauge = ElemGauge(
-            "FP GAUGE",
-            **bar_config,
-            parent=self.character_panel,
-            offset_y=11, title="hgr", text=f"{player_fp}",
-            fullness=player_fp / player_fp,
-            fg=(0xfb, 0x60, 0), bg=(0x60, 0x25, 0)
-            )
-
-        self.xp_gauge = ElemGauge(
-            "XP GAUGE",
-            **xp_config,
-            parent=self.character_panel,
-            offset_y=15, title="exp", 
-            text=f"{mock_cur_xp} / {mock_needed_xp}",
-            fullness=mock_xp,
-            fg=(0x80, 0xe6, 0xea), bg=(0x10, 0x83, 0x95)
-            )
-
-        self.nearby_panel = Panel(name="NEARBY PANEL", **nearby_panel)
-        # TODO: Find a way to have inventory item stacking similar to how the message class works.
-        self.inventory_panel = ListElement(
+        self.character_panel = BaseElement(
             ElementConfig(
-                position=("bottom", "right"),
-                offset_x=-(SIDE_PANEL_WIDTH // 2),
-                width=SIDE_PANEL_WIDTH // 2,
-                height=(SIDE_PANEL_HEIGHT // 2) + 2,
-                title="inventory",
+                position=('top', 'right'),
+                width=SIDE_PANEL_WIDTH,
+                height=(SIDE_PANEL_HEIGHT // 3),
                 framed=True
+            ))
+
+        self.player_info_panel = BaseElement(
+            ElementConfig(
+                parent=self.character_panel,
+                position=('top', 'left'),
+                offset_x=2, offset_y=2,
+                width=SIDE_PANEL_WIDTH-3, height=4
+            ))
+        
+        self.hp_gauge = GaugeElement(
+            config = ElementConfig(
+                parent=self.character_panel,
+                position=('top', 'left'),
+                width=18, height=1,
+                offset_y=8, title="VIT"
+                ), 
+            hue=(255, 0, 0),
+            data = (5.5, 10.0))
+
+        self.ep_gauge = GaugeElement(
+            config = ElementConfig(
+                parent=self.character_panel,
+                position=('top', 'left'),
+                width=18, height=1,
+                offset_y=10, title="ENG"
+                ), 
+            hue = (25, 85, 195),
+            data = (10.0, 10.0))
+        
+        self.fp_gauge = GaugeElement(
+            config = ElementConfig(
+                parent=self.character_panel,
+                position=('top', 'left'),
+                width=18, height=1,
+                offset_y=12, title="HGR"
+                ), 
+            hue = (250, 96, 0),
+            data = (8.0, 10.0))
+
+        self.xp_gauge = GaugeElement(
+            config = ElementConfig(
+                parent=self.character_panel,
+                position=('top', 'left'),
+                width=24, height=1,
+                offset_y=15, title="EXP"
                 ),
-            self.manager_service.data_manager.query(
+            hue = (130, 230, 230),
+            data = (243, 1000))
+
+        self.nearby_panel = ListElement(
+            config = ElementConfig(
+                position=('top', 'right'),
+                offset_y=(SIDE_PANEL_HEIGHT // 3),
+                width=SIDE_PANEL_WIDTH, height=8,
+                title="NEARBY", framed=True
+            ))
+
+        self.inventory_panel = ListElement(
+            config = ElementConfig(**inventory_panel),
+            data = self.manager_service.data_manager.query(
                 entity="PLAYER",
                 component="INVENTORY",
                 key="contents"))
+
+        self.equipment_panel = ListElement(
+            config = ElementConfig(**equipment_panel),
+            data = [])
         
-        self.equipment_panel = Panel(name="EQUIPMENT PANEL", **equipment_panel)
         self.log_panel = ElemLog(name="LOG PANEL", model=self.model)
 
     def draw(self, consoles: Dict[str, Console]) -> None:
@@ -111,13 +120,13 @@ class StageView(View):
 
         self.refresh(area, consoles)
         
-        self.character_panel.on_draw(consoles)
-        self.player_info_panel.on_draw(consoles)
+        self.character_panel.draw(consoles)
+        self.player_info_panel.draw(consoles)
 
         consoles['ROOT'].print(
             x=self.player_info_panel.x,
             y=self.player_info_panel.y,
-            string=self.model.player.noun_text,
+            string=self.model.player.noun_text.upper(),
             fg=(255, 255, 255)
             )
 
@@ -131,12 +140,9 @@ class StageView(View):
         consoles['ROOT'].print(
             x=self.player_info_panel.x+8,
             y=self.player_info_panel.y+2,
-            string="test background",
+            string="WANDERER",
             fg=(255, 255, 255)
             )
-
-        actors = area.actor_model.actors
-        nearby_entities = [ent for ent in actors if ent.location.distance_to(*player.location.xy) <= 10]
 
         # GAUGES
         self.hp_gauge.draw(consoles)
@@ -145,27 +151,11 @@ class StageView(View):
         self.xp_gauge.draw(consoles)
 
         # PANEL FRAMES
-        self.nearby_panel.on_draw(consoles)
+        self.nearby_panel.update(self.get_nearby_actors())
+        self.nearby_panel.draw(consoles)
         self.inventory_panel.draw(consoles)
-        self.equipment_panel.on_draw(consoles)
+        self.equipment_panel.draw(consoles)
         self.log_panel.draw(consoles)
-
-        # TODO: Make this into a ui element.
-        # TODO: Display aggro state and combat info when in combat
-        # e.g.:
-        #*  *Test Character*   100/100          notices you (uwu)
-        #! **Test Character**   20/100          actively attacking
-        # NEARBY ENTITY PANEL
-        entity_y = 0
-        nearby_actors = self.get_nearby_actors()
-        for entity in nearby_actors:
-            consoles['ROOT'].print(
-                self.nearby_panel.x + 2,
-                self.nearby_panel.y + 2 + entity_y,
-                string=entity.noun_text,
-                fg=(255, 255, 255)
-                )
-            entity_y += 1 if entity_y < 3 else 0
 
     def refresh(self, area: Area, consoles: Dict[str, Console]) -> None:
         # TODO: Change this so that it doesn't have to take in 'area'

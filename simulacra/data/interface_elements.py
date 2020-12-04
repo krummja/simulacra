@@ -32,9 +32,7 @@ interface_templates = {
 # Non-Template Configs (Legacy UI)
 
 bar_config = {
-    'position': ('top', 'left'),
-    'offset_x': 8, 'margin': 0, 'width': 12,
-    'text_fg': (255, 255, 255)
+        'position': ('top', 'left')
     }
 
 xp_config = {
@@ -68,22 +66,20 @@ nearby_panel = {
 
 inventory_panel = {
     'position': ('bottom', 'right'),
-    'offset': {'x': -(SIDE_PANEL_WIDTH // 2)},
-    'size': {
-        'width': SIDE_PANEL_WIDTH // 2,
-        'height': (SIDE_PANEL_HEIGHT // 2) + 2
-        },
-    'style': {'title': " inventory ", 'framed': True}
+    'offset_x': -(SIDE_PANEL_WIDTH // 2),
+    'width': SIDE_PANEL_WIDTH // 2,
+    'height': (SIDE_PANEL_HEIGHT // 2) + 2,
+    'title': "INVENTORY", 
+    'framed': True
     }
 
 equipment_panel = {
     'position': ('bottom', 'right'),
-    'size': {
-        'width': SIDE_PANEL_WIDTH // 2,
-        'height': (SIDE_PANEL_HEIGHT // 2) + 2
-    },
-    'style': {'title': " equipment ", 'framed': True}
-}
+    'width': SIDE_PANEL_WIDTH // 2,
+    'height': (SIDE_PANEL_HEIGHT // 2) + 2,
+    'framed': True,
+    'title': "EQUIPMENT"
+    }
 
 delete = {
     'position': ('center', 'center'),

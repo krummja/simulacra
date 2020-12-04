@@ -68,9 +68,7 @@ class Attributes(Component):
             stat_value = 0
             if stat in self._core_stats:
                 stat_value += self._core_stats[stat].current
-
             # Responses
-
             return stat_value
 
     def copy(self) -> Attributes:
@@ -80,10 +78,10 @@ class Attributes(Component):
 
 
 def initialize_character_attributes(
-        health=0,
-        might=0,
-        finesse=0,
-        intellect=0,
+        health=10,
+        might=10,
+        finesse=10,
+        intellect=10,
         size=5,
         **kwargs
     ) -> Attributes:

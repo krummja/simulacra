@@ -25,8 +25,7 @@ class BaseMenuView(View, BaseElement):
         View.__init__(self, state)
         BaseElement.__init__(self, config)
 
-    def draw(self, consoles: Dict[str, Console]) -> None:
-        super().draw(consoles)
+    def draw_content(self, consoles: Dict[str, Console]) -> None:
         data = self._state.data
         y_index = 0
         selected = (255, 0, 255)

@@ -13,14 +13,14 @@ if TYPE_CHECKING:
     from storage import Storage
 
 
-# REFACTOR
-class ElemCharacterSlot(Panel):
+# REFACTOR ElemCharacterSlot (low)
+class CharacterSlotElement(Panel):
 
     _slot_data: Model
 
     def __init__(
             self,
-            parent: ElemCharacterSelect,
+            parent: CharacterSelectElement,
             position: Tuple[str, str],
         ) -> None:
         super().__init__(**{
@@ -80,7 +80,7 @@ class ElemCharacterSlot(Panel):
             )
 
 
-class ElemCharacterSelect(Panel):
+class CharacterSelectElement(Panel):
 
     _data_source: Storage = None
 
@@ -102,13 +102,13 @@ class ElemCharacterSelect(Panel):
             'style': {'fg': (255, 255, 255)}
             })
 
-        self.slot_0 = ElemCharacterSlot(self, ('top', 'left'))
-        self.slot_1 = ElemCharacterSlot(self, ('top', 'center'))
-        self.slot_2 = ElemCharacterSlot(self, ('top', 'right'))
+        self.slot_0 = CharacterSlotElement(self, ('top', 'left'))
+        self.slot_1 = CharacterSlotElement(self, ('top', 'center'))
+        self.slot_2 = CharacterSlotElement(self, ('top', 'right'))
 
-        self.slot_3 = ElemCharacterSlot(self, ('bottom', 'left'))
-        self.slot_4 = ElemCharacterSlot(self, ('bottom', 'center'))
-        self.slot_5 = ElemCharacterSlot(self, ('bottom', 'right'))
+        self.slot_3 = CharacterSlotElement(self, ('bottom', 'left'))
+        self.slot_4 = CharacterSlotElement(self, ('bottom', 'center'))
+        self.slot_5 = CharacterSlotElement(self, ('bottom', 'right'))
 
     @property
     def data_source(self) -> Storage:
