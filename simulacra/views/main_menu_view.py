@@ -41,6 +41,15 @@ class MainMenuView(View):
         # draw_frame(consoles)
         draw_logo(consoles)
         
+        credit = "powered by PYTHON TCOD"
+        width = len(credit)
+        consoles['ROOT'].print(
+            x=(CONSOLE_WIDTH - width) // 2,
+            y=1,
+            string=credit,
+            fg=(255, 0, 0)
+            )
+        
         self.character_select.draw(consoles)
 
         load = f"[ENTER]:continue, ".upper()

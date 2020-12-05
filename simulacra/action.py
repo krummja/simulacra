@@ -51,10 +51,14 @@ class ActionWithPosition(Action):
 class ActionWithDirection(ActionWithPosition):
 
     def __init__(self, actor: Actor, direction: Tuple[int, int]) -> None:
+        print(f"ActionWithDirection  > position:  {actor.location.x, actor.location.y}")
+        print(f"ActionWithDirection  > direction: {direction}")
         position = (actor.location.x + direction[0], 
                     actor.location.y + direction[1])
         super().__init__(actor, position)
+        print(f"ActionWithPosition   > position:  {position}")
         self.direction = direction
+        print("----------------------------------------------------")
 
 
 class ActionWithItem(Action):

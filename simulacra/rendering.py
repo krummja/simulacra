@@ -7,6 +7,7 @@ import numpy as np
 from config import *
 from hues import COLOR
 from tile import tile_graphic
+from noise_machine import NoiseMachine
 
 
 if TYPE_CHECKING:
@@ -73,6 +74,7 @@ def render_visible_entities(area: Area, consoles: Dict[str, Console]) -> None:
 
         visible_entities[obj_y, obj_x].extend(items)
 
+    #       Character
     for ij, graphics in visible_entities.items():
         graphic = min(graphics)
         consoles['ROOT'].tiles_rgb[
@@ -174,6 +176,8 @@ def draw_frame(consoles: Dict[str, Console]) -> None:
         fg=inner_frame_color)
 
 
+noise_machine = NoiseMachine()
+
 def draw_logo(consoles: Dict[str, Console]) -> None:
     logo = np.array([
         "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
@@ -206,8 +210,9 @@ def draw_logo(consoles: Dict[str, Console]) -> None:
 
     logo = np.array([list(line) for line in logo])
     height = logo.shape[0]
-
     vertical_offset: int = 4
+
+    # x, y, c = noise_machine.get_noise_at_point()
 
     row_index = 0
     for line in logo:
@@ -216,29 +221,39 @@ def draw_logo(consoles: Dict[str, Console]) -> None:
         if row_index <= height:
             for char in line:
                 if col_index <= width:
-                    if char == "#":
+                    if char == "#":  # SIMULACRA
                         consoles['ROOT'].print(
                             ((CONSOLE_WIDTH - width) // 2) + col_index,
                             vertical_offset + row_index,
                             chr(42),
-                            fg=(200, 100, 155)
-                            )
+                            fg=(noise_machine.get_noise_at_point(col_index, row_index), 
+                                noise_machine.get_noise_at_point(col_index, row_index) // 3, 
+                                255))
 
-                    elif char == "@":
+                    elif char == "@":  # BACKGROUND
                         consoles['ROOT'].print(
                             ((CONSOLE_WIDTH - width) // 2) + col_index,
                             vertical_offset + row_index,
                             chr(42),
-                            fg=(100, 0, 0)
-                            )
+                            fg=(20,
+                                noise_machine.get_noise_at_point(col_index, row_index) // 4, 
+                                20))
 
-                    elif char == "!":
+                    elif char == "!":  # BORDER
                         consoles['ROOT'].print(
                             ((CONSOLE_WIDTH - width) // 2) + col_index,
                             vertical_offset + row_index,
                             chr(35),
-                            fg=(200, 155, 155)
-                            )
+                            fg=(noise_machine.get_noise_at_point(col_index, row_index), 
+                                noise_machine.get_noise_at_point(col_index, row_index) // 3, 
+                                255))
+                        
+                    # elif char == " ":
+                    #     consoles['ROOT'].print(
+                    #         ((CONSOLE_WIDTH - width) // 2) + col_index,
+                    #         vertical_offset + row_index,
+                    #         chr(35),
+                    #         fg=(200, 0, 200))
 
                     else:
                         consoles['ROOT'].print(

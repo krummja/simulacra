@@ -23,13 +23,11 @@ class Move(Action):
             dy = int(round(dy / distance))
             return Move.Start(self.actor, (dx, dy)).plan()
 
-
     class Start(ActionWithDirection):
         """Move an entity in a direction, interacting with obstacles."""
 
         def plan(self) -> ActionWithPosition:
             return Move.End(self.actor, self.target_position).plan()
-
 
     class End(ActionWithPosition):
         """Move an entity to a destination, interacting with obstacles."""
@@ -58,16 +56,15 @@ class Activate(Action):
         """Try to activate an item selected from an inventory."""
         pass
 
-
     class Nearby(ActionWithItem):
         """Try to activate a nearby object."""
-        
+
         def plan(self) -> ActionWithItem:
             try:
                 return self.item.plan_activate(self)
             except Impossible("nothing happens..."):
                 raise
-            
+
         def act(self) -> None:
             self.item.act_activate(self)
 
@@ -78,7 +75,7 @@ class Nearby(Action):
         """See what is in the tiles adjacent to the player.
         Returns a list of items from the adjacent tiles.
         """
-        
+
         def plan(self) -> Action:
             for position in Point(*self.location.xy).neighbors:
                 try:
@@ -87,7 +84,7 @@ class Nearby(Action):
                 except KeyError:
                     continue
             return self
-                
+
         def act(self) -> None:
             if len(self.area.nearby_items) > 0:
                 for items in self.area.nearby_items:
@@ -103,12 +100,12 @@ class Nearby(Action):
         """Remove an item from a nearby tile and place it in the player's
         inventory component.
         """
-        
+
         def plan(self) -> Action:
             if not self.area.items.get(self.location.xy):
                 raise Impossible("there is nothing to pick up.")
             return self
-        
+
         def act(self) -> None:
             for item in self.area.items[self.location.xy]:
                 try:
@@ -117,13 +114,11 @@ class Nearby(Action):
                                 f"the {item.noun_text}.")
                     self.actor.owner.components['INVENTORY'].add_to(item)
                     return self.actor.reschedule(100)
-                
+
                 except Impossible:
                     self.report(f"{self.actor.owner.noun_text} "
                                 "cannot lift "
                                 f"the {item.noun_text}!")
-    
-    
     class Drop(ActionWithItem):
         def act(self) -> None:
             assert self.item in self.model.player.components['INVENTORY']['contents']
@@ -138,22 +133,17 @@ class Attack(Action):
     class Player(Action):
         pass
 
-
     class Hostile(Action):
         pass
-
 
     class Friendly(Action):
         pass
 
-
     class WithAbility(Action):
         pass
 
-
     class WithItem(Action):
         pass
-
 
     class WithMagic(Action):
         pass

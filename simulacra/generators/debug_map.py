@@ -42,7 +42,7 @@ def debug_area(model: Model) -> Area:
     debug_room = Room(20, 20, 20, 20)
     side_room = Room(60, 60, 20, 20)
 
-    # TODO: It would be nice to have a methods for this - these are really clunky
+    # TODO: It would be nice to have functions for this - these are really clunky
     area.area_model.tiles[...] = walls['bare']['bricks_01']
     area.area_model.tiles[debug_room.inner] = floors['bare']['blank']
     area.area_model.tiles[side_room.inner] = floors['bare']['blank']

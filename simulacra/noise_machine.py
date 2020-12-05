@@ -52,6 +52,18 @@ class NoiseMachine:
     def on_enter(self):
         tcod.sys_set_fps(0)
 
+    def get_noise_at_point(self, x, y):
+        self.dx = time.perf_counter() * 0.25
+        self.dy = time.perf_counter() * 0.25
+        # for y in range(2 * CONSOLE_HEIGHT):
+        #     for x in range(2 * CONSOLE_WIDTH):
+        f = [self.zoom * x + self.dx,
+             self.zoom * y + self.dy]
+        value = self.noise.get_point(*f)
+        c = int((value + 1.0) / 2.0 * 255)
+        c = max(0, min(c, 255))
+        return c
+
     def on_draw(self, consoles: Dict[str, Console]):
         self.dx = time.perf_counter() * 0.25
         self.dy = time.perf_counter() * 0.25

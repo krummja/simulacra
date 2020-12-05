@@ -1,16 +1,25 @@
 from __future__ import annotations
-from typing import Dict, TYPE_CHECKING
+from typing import Dict, Tuple, TYPE_CHECKING
 import time
 import datetime
+import numpy as np
+
+from geometry import *
 
 from config import CONSOLES
+from tile import tile_graphic
 
 if TYPE_CHECKING:
     from tcod.console import Console
     from action import Action
 
 
-# FIXME: This entire class is fucked lol
+class AnimationFrame:
+    
+    def __init__(self, shape: Tuple[int, int], index: int) -> None:
+        self.array = np.array(shape=shape, dtype=tile_graphic)
+
+
 class Animation:
     
     def __init__(
@@ -38,20 +47,8 @@ class Animation:
         pass
     
 
-"""
-from Hauberk:
-
-    case EventType.die:
-        for (var i = 0; i < 10; i++) {
-            effects.add(ParticleEffect(event.actor.x, event.actor.y, red));
-        }
-        break;
-        
+class TestAnimation(Animation):
     
-    GameResult makeResult(bool madeProgress) {
-        var result = GameResult(madeProgress);
-        result.events.addAll(_events);
-        _events.clear();
-        return result;
-    }
-"""
+    def __init__(self, duration):
+        super().__(duration, False)
+        self.frames = []

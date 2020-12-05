@@ -40,6 +40,3 @@ class PlayerReadyState(AreaState["Action"]):
     
     def cmd_pickup(self):
         return common.Nearby.Pickup(self.model.player)
-    
-
-

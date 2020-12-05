@@ -17,6 +17,3 @@ class AreaState(Generic[T], State[T]):
         super().__init__()
         self._model = model
         self._view = StageView(self, self._model)
-
-    def draw(self, consoles: Dict[str, Console]) -> None:
-        self.on_draw(consoles)

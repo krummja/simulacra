@@ -55,6 +55,3 @@ class Actor:
             return
         self.event = self.scheduler.reschedule(self.event, interval)
 
-    def __repr__(self) -> str:
-        return f"Executing action for > " \
-               f"{self.__class__.__name__}({self.owner.location!r})"

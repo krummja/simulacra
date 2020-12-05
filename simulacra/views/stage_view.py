@@ -1,7 +1,11 @@
 from __future__ import annotations
-
 from typing import TYPE_CHECKING, Dict, Type
 
+from collections import defaultdict
+
+import time
+
+from graphic import Graphic
 from config import *
 from data.interface_elements import *
 from geometry import *
@@ -149,7 +153,10 @@ class StageView(View):
         self.inventory_panel.draw(consoles)
         self.equipment_panel.draw(consoles)
         self.log_panel.draw(consoles)
-
+        
+        x = self.model.player.location.x
+        y = self.model.player.location.y
+        
     def refresh(self, area: Area, consoles: Dict[str, Console]) -> None:
         # TODO: Change this so that it doesn't have to take in 'area'
         update_fov(area)
@@ -172,3 +179,4 @@ class StageView(View):
                     except ValueError:
                         pass
         return nearby
+
