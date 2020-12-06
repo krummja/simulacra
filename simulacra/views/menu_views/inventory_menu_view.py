@@ -25,5 +25,6 @@ class InventoryMenuView(BaseMenuView):
                 height=(SIDE_PANEL_HEIGHT // 2) + 2,
                 fg=(255, 255, 255),
                 title="INVENTORY",
-                framed=True
+                framed=True,
+                frame_fg=(255, 0, 255)
                 ))

@@ -7,6 +7,7 @@ import tcod
 from state import State, StateBreak, T
 from views.base_menu_view import BaseMenuView
 from entity import Entity
+
 if TYPE_CHECKING:
     from model import Model
     from view import View

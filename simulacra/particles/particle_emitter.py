@@ -53,4 +53,41 @@ class ParticleEmitter:
         for particle in self.particles:
             last = particle.last()
             if last is not None:
-                pass
+                char, x, y, fg = last
+                console_data = self._console[y, x]
+                self._console.print(x, y, " ", fg)
+            
+            if particle.time < particle.lifetime:
+                char, x, y, fg = particle.next()
+                console_data = self._console[y, x]
+                self._console.print(x, y, char, fg)
+            
+            else:
+                self.particles.remove(particle)
+                
+
+class EmitterTest(ParticleEmitter):
+    
+    def __init__(self, consoles, x, y, lifetime, on_destroy=None):
+        super().__init__(consoles, x, y, 1, self._next_particle, 1, lifetime)
+        self._end_y = y
+        self._acceleration = (self._end_y - self._y) // lifetime
+        self._on_destroy = on_destroy
+    
+    def _next_particle(chars="*",
+                       x=self._x,
+                       y=self._y,
+                       dx=0,
+                       dy=self._acceleration,
+                       colors=((255, 0, 255), (0, 0, 0)),
+                       lifetime=self._lifetime,
+                       move=self._move,
+                       on_destroy=self._on_destroy)
+    
+    def _move(self, particle):
+        particle.x += particle.dx
+        particle.y += particle.dy
+        if particle.y <= self._end_y:
+            particle.y = self._end_y
+            particle.time = self._lifetime - 1
+        return int(particle.x), int(particle.y)

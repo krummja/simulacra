@@ -17,6 +17,7 @@ from views.elements.base_element import BaseElement, ElementConfig
 from views.elements.elem_log import ElemLog
 from views.elements.gauge_element import GaugeElement
 from views.elements.list_element import ListElement
+from views.elements.test_animation_element import AnimationElement, AnimationFrame
 
 if TYPE_CHECKING:
     from model import Model
@@ -109,6 +110,14 @@ class StageView(View):
         
         self.log_panel = ElemLog(name="LOG PANEL", model=self.model)
 
+        self.animation = AnimationElement(
+            ElementConfig(
+                x=0, y=0,
+                width=30, height=30
+            ))
+
+        self._time = 0
+
     def draw(self, consoles: Dict[str, Console]) -> None:
         area = self.model.area_data.current_area
         player = self.model.player
@@ -153,10 +162,17 @@ class StageView(View):
         self.inventory_panel.draw(consoles)
         self.equipment_panel.draw(consoles)
         self.log_panel.draw(consoles)
-        
-        x = self.model.player.location.x
-        y = self.model.player.location.y
-        
+
+        interval = int(time.perf_counter() * 10)
+        #! This runs without interrupting the player.
+        #! If input pauses (i.e. whenever not holding down an input)
+        #! ... a tick fires.
+        # if self._time < 10:
+        #     self._time += 1
+        # else:
+        #     self._time = 0
+        #     print("Tick!")
+            
     def refresh(self, area: Area, consoles: Dict[str, Console]) -> None:
         # TODO: Change this so that it doesn't have to take in 'area'
         update_fov(area)

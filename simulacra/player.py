@@ -21,6 +21,5 @@ class Player(Entity, Actor):
 
     def __init__(self, location: Location):
         Entity.__init__(self, location)
-
         self.control = PlayerControl(self)
         Actor.__init__(self, self, self.control)

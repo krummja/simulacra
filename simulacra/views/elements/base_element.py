@@ -29,7 +29,8 @@ class ElementConfig(defaultdict):
             fg: Tuple[int, int, int] = (255, 255, 255),
             bg: Tuple[int, int, int] = (0, 0, 0),
             title: Optional[str] = None,
-            framed: bool = False
+            framed: bool = False,
+            frame_fg: Optional[Tuple[int, int, int]] = None
         ) -> None:
         self.UID = uid
         self['parent'] = parent
@@ -45,6 +46,7 @@ class ElementConfig(defaultdict):
         self['bg'] = bg
         self['title'] = title
         self['framed'] = framed
+        self['frame_fg'] = frame_fg
 
 
 class Position:
@@ -53,6 +55,9 @@ class Position:
     def __init__(self, config: ElementConfig) -> None:
         for k, v in config.items():
             self.__setattr__(k, v)
+
+        if config['frame_fg'] is None:
+            self.frame_fg = self.fg
 
         if config['parent'] is None:
             self.parent = self
@@ -140,7 +145,7 @@ class BaseElement(Position):
             consoles['ROOT'].draw_frame(
                 x=self.x, y=self.y, 
                 width=self.width, height=self.height, 
-                fg=self.fg, bg=self.bg
+                fg=self.frame_fg, bg=self.bg
                 )
             
         if self.title:

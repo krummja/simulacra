@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import Tuple, TYPE_CHECKING
 
+from config import DEBUG
+
 if TYPE_CHECKING:
     from actor import Actor
     from area import Area
@@ -51,15 +53,20 @@ class ActionWithPosition(Action):
 class ActionWithDirection(ActionWithPosition):
 
     def __init__(self, actor: Actor, direction: Tuple[int, int]) -> None:
-        print(f"ActionWithDirection  > position:  {actor.location.x, actor.location.y}")
-        print(f"ActionWithDirection  > direction: {direction}")
         position = (actor.location.x + direction[0], 
                     actor.location.y + direction[1])
         super().__init__(actor, position)
-        print(f"ActionWithPosition   > position:  {position}")
         self.direction = direction
-        print("----------------------------------------------------")
-
+        
+        #! DEBUG ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        #! Prints the start position, move direction, and end position of every ActionWithDirection instance.
+        if DEBUG:
+            print(f"ActionWithDirection  > position:  {actor.location.x, actor.location.y}")
+            print(f"ActionWithDirection  > direction: {direction}")
+            print(f"ActionWithPosition   > position:  {position}")
+            print("----------------------------------------------------")
+        #! /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
 
 class ActionWithItem(Action):
 

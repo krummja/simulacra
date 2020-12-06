@@ -35,6 +35,7 @@ class ParticleSimulator:
                 particle.x += dx
                 particle.y += dy
                 
+                
 def visualize(simulator: ParticleSimulator):
     X = [particle.x for particle in simulator.particles]
     Y = [particle.y for particle in simulator.particles]

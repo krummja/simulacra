@@ -22,7 +22,7 @@ testing_tile = Tile(1, False, ord("#"), (255, 0, 0), COLOR['nero'])
 
 
 def testing_area(model: Model) -> Area:
-    area = Area(model, 120, 120)
+    area = Area(model, 256, 256)
     area.NAME = 'test area'
     
     test_room = Room(1, 1, 100, 100)

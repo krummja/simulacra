@@ -33,7 +33,6 @@ class Animation:
         self.frames = []
     
     def play(self) -> None:
-        # framecount: int = self.lerp(self.duration)
         self.playing = True
         while self.playing:
             for frame in self.frames:

@@ -7,6 +7,7 @@ from state import SaveAndQuit, StateBreak
 from states.area_state import AreaState
 from states.pick_location_state import PickLocationState
 from states.menu_states.inventory_menu_state import InventoryMenuState
+from states.effects_state import EffectsState
 
 if TYPE_CHECKING:
     from model import Model
@@ -17,7 +18,8 @@ class PlayerReadyState(AreaState["Action"]):
     NAME = "Player Ready"
 
     def cmd_move(self, x: int, y: int) -> Action:
-        return common.Move.Start(self.model.player, (x, y))
+        action = common.Move.Start(self.model.player, (x, y))
+        return action
 
     def cmd_escape(self) -> None:
         raise SaveAndQuit()
@@ -37,6 +39,10 @@ class PlayerReadyState(AreaState["Action"]):
     def cmd_examine(self):
         state = PickLocationState(self.model, "", self.model.player.location.xy)
         cursor_xy: Tuple[int, int] = state.loop()
+    
+    def cmd_equipment(self):
+        state = EffectsState(self.model)
+        state.loop()
     
     def cmd_pickup(self):
         return common.Nearby.Pickup(self.model.player)

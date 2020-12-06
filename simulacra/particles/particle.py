@@ -76,7 +76,7 @@ class Particle:
         x, y = self._move(self)
         color = self._next_color(self)
         char = self._next_char(self)
-        self._last = char, x, y, color[0], color[1], color[2]
+        self._last = char, x, y, (color[0], color[1], color[2])
         self.time += 1
         
         # Trigger any configured events.
