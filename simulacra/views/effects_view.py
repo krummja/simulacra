@@ -25,6 +25,7 @@ if TYPE_CHECKING:
     from model import Model
     from state import State
 
+particles_per_update = 1
 
 class EffectsView(StageView):
     
@@ -40,14 +41,6 @@ class EffectsView(StageView):
         width = len(state_text)
         consoles['ROOT'].print((STAGE_PANEL_WIDTH - width) // 2, 1, state_text, (255, 0, 0))
         
-        render_visible_particles(area, consoles)
-        
-        if self.state.manager.running:
-            consoles['ROOT'].print(2, 2, "Running animation loop.", (255, 255, 255))
-            
-            if self._runtime < 100:
-                self._runtime += 1
-            else:
-                self._runtime = 0
-                self.state.manager.running = False
-                self.state.cmd_quit()
+        self.state.p_system.draw(consoles)
+        self.state.p_system.update()
+        time.sleep(0.05)
