@@ -151,7 +151,8 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
             func = getattr(self, f"cmd_{self.COMMAND_KEYS[event.sym]}")
             return func()
         if event.sym in self.MOVE_KEYS:
-            return self.cmd_move(*self.MOVE_KEYS[event.sym])
+            result = self.cmd_move(*self.MOVE_KEYS[event.sym])
+            return result
         if config.ADMIN:
             if event.sym in self.ADMIN_KEYS:
                 func = getattr(self, f"cmd_{self.ADMIN_KEYS[event.sym]}")

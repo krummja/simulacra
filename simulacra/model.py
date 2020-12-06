@@ -94,8 +94,9 @@ class Model:
 
     def loop(self) -> None:
         while True:
-            self.scheduler.invoke_next()
-
+            # NOTE: This is potentially a place to do some post-Action work
+            result = self.scheduler.invoke_next()
+            
     def report(self, msg: str) -> None:
         print(msg)
         if self.log and self.log[-1].msg == msg:

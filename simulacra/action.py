@@ -15,15 +15,28 @@ class Impossible(Exception):
     """Exception raised when an action cannot be performed."""
 
 
+class Result:
+    
+    def __init__(self, event) -> None:
+        self.event_results = event.results
+        
+    def __lt__(self, other: Result) -> bool:
+        return self.uid < other.uid
+    
+    def __str__(self) -> str:
+        return f"{self.uid}"
+
+
 class Action:
 
     def __init__(self, actor: Actor) -> None:
         self.actor = actor
+        self.results = []
 
     def plan(self) -> Action:
         return self
 
-    def act(self) -> None:
+    def act(self) -> Optional[Result]:
         raise RuntimeError(f"{self.__class__.__name__} "
                             "has no act implementation.")
 

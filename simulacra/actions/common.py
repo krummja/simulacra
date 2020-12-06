@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from rendering import update_fov
 from geometry import *
-from action import Action, Impossible
+from action import Action, Impossible, Result
 from action import (ActionWithPosition,
                     ActionWithItem,
                     ActionWithDirection)
@@ -43,11 +43,12 @@ class Move(Action):
                 raise Impossible("the way is blocked.")
             return self
 
-        def act(self) -> None:
+        def act(self) -> bool:
             self.actor.owner.location = self.area[self.target_position]
             if self.actor.is_player:
                 update_fov(self.area)
             self.actor.reschedule(100)
+            return Result(self)
 
 
 class Activate(Action):

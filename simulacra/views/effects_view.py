@@ -31,16 +31,18 @@ class EffectsView(StageView):
     
     def __init__(self, state: EffectsState, model: Model) -> None:
         super().__init__(state, model)
-        self._runtime = 0
+        self.p_system = self.state.p_system
 
     def draw(self, consoles: Dict[str, Console]) -> None:
         super().draw(consoles)
         area = self.model.area_data.current_area
         
-        state_text = "EFFECTS STATE"
-        width = len(state_text)
-        consoles['ROOT'].print((STAGE_PANEL_WIDTH - width) // 2, 1, state_text, (255, 0, 0))
+        if DEBUG:
+            state_text = "EFFECTS STATE"
+            width = len(state_text)
+            consoles['ROOT'].print(
+                (STAGE_PANEL_WIDTH - width) // 2, 1, state_text, (255, 0, 0))
         
-        self.state.p_system.draw(consoles)
-        self.state.p_system.update()
+        self.p_system.draw(consoles)
+        self.p_system.update()
         time.sleep(0.05)

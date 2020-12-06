@@ -20,13 +20,13 @@ class NoiseMachine:
         ]
 
     def __init__(self):
-        self.func = 3
+        self.func = 6
         self.dx = 0.0
         self.dy = 0.0
-        self.octaves = 2.0
-        self.zoom = 4.0
-        self.hurst = tcod.NOISE_DEFAULT_HURST
-        self.lacunarity = tcod.NOISE_DEFAULT_LACUNARITY
+        self.octaves = 5.0
+        self.zoom = 10.0
+        self.hurst = 0.5
+        self.lacunarity = 12.0
         self.noise = self.get_noise()
         self.img = tcod.image_new(CONSOLE_WIDTH * 2, CONSOLE_HEIGHT * 2)
 
@@ -53,7 +53,7 @@ class NoiseMachine:
         tcod.sys_set_fps(0)
 
     def get_noise_at_point(self, x, y):
-        self.dx = time.perf_counter() * 0.25
+        self.dx = time.perf_counter() * 0.5
         self.dy = time.perf_counter() * 0.25
         # for y in range(2 * CONSOLE_HEIGHT):
         #     for x in range(2 * CONSOLE_WIDTH):
@@ -65,8 +65,8 @@ class NoiseMachine:
         return c
 
     def on_draw(self, consoles: Dict[str, Console]):
-        self.dx = time.perf_counter() * 0.25
-        self.dy = time.perf_counter() * 0.25
+        self.dx = time.perf_counter() * 1.0
+        self.dy = time.perf_counter() * 1.0
         for y in range(2 * CONSOLE_HEIGHT):
             for x in range(2 * CONSOLE_WIDTH):
                 f = [

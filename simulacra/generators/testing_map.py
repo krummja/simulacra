@@ -30,6 +30,7 @@ def testing_area(model: Model) -> Area:
     area.area_model.tiles[10, 10] = testing_tile
     
     player = create_character(area, test_room)
+    player.noun_text = "administrator"
     
     model.area_data.register(area)
     model.area_data.current_area.player = player
