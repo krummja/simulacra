@@ -4,6 +4,7 @@ from typing import Optional, Type, TYPE_CHECKING
 import sys
 import traceback
 from config import DEBUG
+from result import Result
 
 from action import Action, Impossible
 
@@ -34,10 +35,8 @@ class Actor:
         if event is not self.event:
             return scheduler.unschedule(event)
         action = self.try_plan()
-        if DEBUG:
-            print(repr(self))
-            print("          Action was > " + repr(action))
-        action.act()
+        return action.act()
+    
         
     def try_plan(self) -> Action:
         """Attempt to resolve a control's action plan."""
@@ -55,3 +54,4 @@ class Actor:
             return
         self.event = self.scheduler.reschedule(self.event, interval)
 
+    

@@ -28,6 +28,8 @@ class Attribute:
 
     def __int__(self) -> int:
         return int(self.current)
+    
+    # TODO: Implement other operators
 
 
 class StatModifier:

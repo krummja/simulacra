@@ -3,6 +3,7 @@ from typing import Tuple, TYPE_CHECKING
 
 from actions import common
 from action import Action
+from result import Result
 from state import SaveAndQuit, StateBreak
 from states.area_state import AreaState
 from states.pick_location_state import PickLocationState
@@ -19,6 +20,8 @@ class PlayerReadyState(AreaState["Action"]):
 
     def cmd_move(self, x: int, y: int) -> Action:
         action = common.Move.Start(self.model.player, (x, y))
+        action.success = True
+        action.make_result(action)
         return action
 
     def cmd_escape(self) -> None:

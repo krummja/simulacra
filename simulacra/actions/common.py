@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from rendering import update_fov
 from geometry import *
-from action import Action, Impossible, Result
+from action import Action, Impossible
+from result import Result
 from action import (ActionWithPosition,
                     ActionWithItem,
                     ActionWithDirection)
@@ -14,7 +15,6 @@ class Move(Action):
 
     class Toward(ActionWithPosition):
         """Move toward and possibly interact with a destination."""
-
         def plan(self) -> Action:
             dx = self.target_position[0] - self.location.x
             dy = self.target_position[1] - self.location.y
@@ -25,30 +25,34 @@ class Move(Action):
 
     class Start(ActionWithDirection):
         """Move an entity in a direction, interacting with obstacles."""
-
         def plan(self) -> ActionWithPosition:
+            self.success = True
             return Move.End(self.actor, self.target_position).plan()
-
+            
     class End(ActionWithPosition):
         """Move an entity to a destination, interacting with obstacles."""
-
         def plan(self) -> ActionWithPosition:
             if self.actor.owner.location.distance_to(*self.target_position) > 1:
-                raise Impossible(f"Cannot move "
-                                 f"from {self.actor.owner.location.xy} "
-                                 f"to {self.target_position}!")
+                self.success = False
+                self.message = "it is too far."
+                raise Impossible(self)
             if self.actor.owner.location.xy == self.target_position:
+                self.success = True
                 return self
             if self.area.is_blocked(*self.target_position):
-                raise Impossible("the way is blocked.")
+                self.success = False
+                self.effect = "Effect Test"
+                self.message = "the way is blocked."
+                raise Impossible(self)
             return self
 
-        def act(self) -> bool:
+        def act(self) -> Action:
             self.actor.owner.location = self.area[self.target_position]
             if self.actor.is_player:
                 update_fov(self.area)
             self.actor.reschedule(100)
-            return Result(self)
+            self.success = True
+            return self
 
 
 class Activate(Action):
@@ -59,12 +63,13 @@ class Activate(Action):
 
     class Nearby(ActionWithItem):
         """Try to activate a nearby object."""
-
         def plan(self) -> ActionWithItem:
             try:
                 return self.item.plan_activate(self)
-            except Impossible("nothing happens..."):
-                raise
+            except:
+                self.success = False
+                self.message = "nothing happens..."
+                raise Impossible(self)
 
         def act(self) -> None:
             self.item.act_activate(self)
@@ -76,7 +81,6 @@ class Nearby(Action):
         """See what is in the tiles adjacent to the player.
         Returns a list of items from the adjacent tiles.
         """
-
         def plan(self) -> Action:
             for position in Point(*self.location.xy).neighbors:
                 try:
@@ -86,7 +90,7 @@ class Nearby(Action):
                     continue
             return self
 
-        def act(self) -> None:
+        def act(self) -> Action:
             if len(self.area.nearby_items) > 0:
                 for items in self.area.nearby_items:
                     for item in items:
@@ -101,32 +105,35 @@ class Nearby(Action):
         """Remove an item from a nearby tile and place it in the player's
         inventory component.
         """
-
         def plan(self) -> Action:
             if not self.area.items.get(self.location.xy):
-                raise Impossible("there is nothing to pick up.")
+                self.success = False
+                self.message = "there is nothing to pick up."
+                raise Impossible(self)
             return self
 
-        def act(self) -> None:
+        def act(self) -> Action:
             for item in self.area.items[self.location.xy]:
                 try:
-                    self.report(f"{self.actor.owner.noun_text} "
-                                "picks up "
-                                f"the {item.noun_text}.")
+                    self.success = True
+                    self.message = f"{self.actor.owner.noun_text} picks up the {item.noun_text}" 
                     self.actor.owner.components['INVENTORY'].add_to(item)
-                    return self.actor.reschedule(100)
-
-                except Impossible:
-                    self.report(f"{self.actor.owner.noun_text} "
-                                "cannot lift "
-                                f"the {item.noun_text}!")
+                    self.actor.reschedule(100)
+                    return self
+                except:
+                    self.success = False
+                    self.message = f"cannot lift the {item.noun_text}!"
+                    raise Impossible(self)
+    
     class Drop(ActionWithItem):
-        def act(self) -> None:
+        def act(self) -> Action:
             assert self.item in self.model.player.components['INVENTORY']['contents']
             self.item.lift()
             self.item.place(self.model.player.location)
-            self.report(f"you drop the {self.item.noun_text}")
+            self.success = True
+            self.message = f"you drop the {self.item.noun_text}"
             self.actor.reschedule(100)
+            return self
 
 
 class Attack(Action):

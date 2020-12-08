@@ -130,7 +130,7 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
             self._FPS = 1.0 / (time.time() - start_time)
             for input_event in tcod.event.get():
                 try:
-                    value: T = self.dispatch(input_event)
+                    value: Optional[T] = self.dispatch(input_event)
                 except StateBreak:
                     return None
                 if value is not None:

@@ -1,12 +1,7 @@
 import tcod
 
 import config
-from managers.manager_service import ManagerService
-from factories.factory_service import FactoryService
 from states.main_menu_state import MainMenuState
-
-manager_service = ManagerService()
-factory_service = FactoryService()
 
 
 def main() -> None:

@@ -114,7 +114,7 @@ class StageView(View):
             ElementConfig(
                 x=0, y=0,
                 width=30, height=30
-            ))
+                ))
 
         self._time = 0
 

@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import Tuple, TYPE_CHECKING
 
 from config import DEBUG
+from result import Result
 
 if TYPE_CHECKING:
     from actor import Actor
@@ -15,23 +16,14 @@ class Impossible(Exception):
     """Exception raised when an action cannot be performed."""
 
 
-class Result:
-    
-    def __init__(self, event) -> None:
-        self.event_results = event.results
-        
-    def __lt__(self, other: Result) -> bool:
-        return self.uid < other.uid
-    
-    def __str__(self) -> str:
-        return f"{self.uid}"
-
-
 class Action:
 
     def __init__(self, actor: Actor) -> None:
         self.actor = actor
-        self.results = []
+        self.done = False
+        self.success = False
+        self.effect = None
+        self.message = ""
 
     def plan(self) -> Action:
         return self
@@ -52,8 +44,19 @@ class Action:
     def model(self) -> Model:
         return self.actor.location.area.model
 
+    def make_result(self, action):
+        result = Result(
+            actor=action.actor, 
+            event=action,
+            success=action.success,
+            effect=action.effect,
+            message=action.message
+            )
+        self.model.result_manager.add_result(result)
+
     def report(self, msg: str) -> None:
-        return self.model.report(msg)
+        message = self.model.report(msg)
+        return message
 
 
 class ActionWithPosition(Action):
@@ -70,15 +73,6 @@ class ActionWithDirection(ActionWithPosition):
                     actor.location.y + direction[1])
         super().__init__(actor, position)
         self.direction = direction
-        
-        #! DEBUG ///////////////////////////////////////////////////////////////////////////////////////////////////////
-        #! Prints the start position, move direction, and end position of every ActionWithDirection instance.
-        if DEBUG:
-            print(f"ActionWithDirection  > position:  {actor.location.x, actor.location.y}")
-            print(f"ActionWithDirection  > direction: {direction}")
-            print(f"ActionWithPosition   > position:  {position}")
-            print("----------------------------------------------------")
-        #! /////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
 
 class ActionWithItem(Action):

@@ -4,8 +4,11 @@ from event_queue import EventQueue
 from player import Player
 from message import Message
 
+from action import Impossible
 from factories.factory_service import FactoryService
 from managers.manager_service import ManagerService
+from managers.result_manager import ResultManager
+from result import Result
 
 if TYPE_CHECKING:
     from component import Component
@@ -48,7 +51,19 @@ class Model:
         self.area_data = AreaData(self)
         self.entity_data = EntityData(self)
         self.scheduler = EventQueue()
+        self.result_manager = ResultManager(self)
         self.log: List[Message] = []
+
+        self._effect_flag = False
+        
+    @property
+    def effect_flag(self) -> bool:
+        return self._effect_flag
+    
+    @effect_flag.setter
+    def effect_flag(self, value: bool) -> None:
+        if self._effect_flag != value:
+            self._effect_flag = value            
 
     @property
     def player(self) -> Player:
@@ -94,8 +109,7 @@ class Model:
 
     def loop(self) -> None:
         while True:
-            # NOTE: This is potentially a place to do some post-Action work
-            result = self.scheduler.invoke_next()
+            self.scheduler.invoke_next()
             
     def report(self, msg: str) -> None:
         print(msg)
