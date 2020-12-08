@@ -12,6 +12,7 @@ class ResultManager:
     
     def __init__(self, model: Model) -> None:
         self.model = model
+        self.state = None
         self.results = []
         self.failures = []
         self.last_uid = 0

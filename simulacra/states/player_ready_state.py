@@ -1,22 +1,30 @@
 from __future__ import annotations
-from typing import Tuple, TYPE_CHECKING
+from typing import Generic, Tuple, TYPE_CHECKING
 
 from actions import common
 from action import Action
 from result import Result
-from state import SaveAndQuit, StateBreak
+from state import SaveAndQuit, StateBreak, T
 from states.area_state import AreaState
 from states.pick_location_state import PickLocationState
 from states.menu_states.inventory_menu_state import InventoryMenuState
-from states.effects_state import EffectsState
+# from states.effects_state import EffectsState
 
 if TYPE_CHECKING:
     from model import Model
 
 
-class PlayerReadyState(AreaState["Action"]):
+class PlayerReadyState(Generic[T], AreaState[T]):
 
     NAME = "Player Ready"
+    
+    def __init__(self, model: Model) -> None:
+        super().__init__(model)
+        self.model.result_manager.state = self
+
+    # def play_effect(self):
+    #     state = EffectsState(self.model)
+    #     state.loop()
 
     def cmd_move(self, x: int, y: int) -> Action:
         action = common.Move.Start(self.model.player, (x, y))

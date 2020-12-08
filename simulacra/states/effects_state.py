@@ -9,7 +9,7 @@ from config import *
 
 from graphic import Graphic
 from state import State, T, StateBreak
-from states.area_state import AreaState
+from states.player_ready_state import PlayerReadyState
 from views.effects_view import EffectsView
 from particles.particle_system import ParticleSystem
 
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from view import View
 
 
-class EffectsState(AreaState[None]):
+class EffectsState(PlayerReadyState[None]):
     
     NAME = "Effects"
     
@@ -37,21 +37,11 @@ class EffectsState(AreaState[None]):
             self.model.player.location.x,
             self.model.player.location.y)
         self._view = EffectsView(self, model)
-    
-    def ev_keydown(self, event: tcod.event.KeyDown) -> None:
-        """We want to disable input for the duration of an effect animation."""
         
-        if event.sym == tcod.event.K_ESCAPE:
-            self.cmd_quit()
-        if event.sym == tcod.event.K_F1:
-            self.cmd_admin1()
-            
-        if DEBUG:
-            if event.sym in self.MOVE_KEYS:
-                vx = self.MOVE_KEYS[event.sym][0]
-                vy = self.MOVE_KEYS[event.sym][1]
-                self.p_system.add_particles(1, vx, vy)
-
+    def loop(self):
+        time.sleep(5)
+        raise StateBreak()
+        
     def cmd_admin1(self):
         print("ADMIN >> Starting Animation Loop")
         self.manager.running = True
