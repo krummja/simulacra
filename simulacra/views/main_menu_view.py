@@ -13,12 +13,10 @@ from data.interface_elements import delete
 from hues import set_color, RESET
 from config import *
 from view import View
-from panel import Panel
 from views.elements.help_text_element import HelpTextElement
 from views.elements.character_select_element import CharacterSelectElement
 from noise_machine import NoiseMachine
 
-from panel import Panel
 from rendering import draw_logo, draw_frame
 
 if TYPE_CHECKING:

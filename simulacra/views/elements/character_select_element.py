@@ -4,7 +4,7 @@ from typing import Any, Dict, Optional, Tuple, TYPE_CHECKING
 import numpy as np
 
 from config import *
-from panel import Panel
+from views.elements.base_element import BaseElement, ElementConfig
 from message import ColorFormatter
 
 if TYPE_CHECKING:
@@ -13,22 +13,15 @@ if TYPE_CHECKING:
     from storage import Storage
 
 
-# REFACTOR ElemCharacterSlot (low)
-class CharacterSlotElement(Panel):
+class CharacterSlotElement(BaseElement):
 
     _slot_data: Model
 
     def __init__(
             self,
-            parent: CharacterSelectElement,
-            position: Tuple[str, str],
+            config: ElementConfig,
         ) -> None:
-        super().__init__(**{
-            'parent': parent,
-            'position': position,
-            'size': {'width': 20, 'height': 7},
-            'style': {'framed': True}
-            })
+        super().__init__(config)
 
     @property
     def slot_data(self) -> Dict[str, Any]:
@@ -48,39 +41,33 @@ class CharacterSlotElement(Panel):
     def slot_data(self, value: Model) -> None:
         self._slot_data = value
 
-    def draw(self, consoles: Dict[str, Console]) -> None:
-        self.on_draw(consoles)
-        
+    def draw_content(self, consoles: Dict[str, Console]) -> None:        
         consoles['ROOT'].print(
             x=self.x + 2, y=self.y + 1,
-            string=self.slot_data['name'], 
-            bg_blend=tcod.BKGND_MULTIPLY,
+            string=self.slot_data['name'],
             fg=(255, 255, 255)
             )
         
         consoles['ROOT'].print(
-            x=self.x + self.size_width - 3, y=self.y + 3,
+            x=self.x + self.width - 3, y=self.y + 3,
             string=self.slot_data['level'], 
-            bg_blend=tcod.BKGND_MULTIPLY,
             fg=(255, 255, 255)
             )
         
         consoles['ROOT'].print(
             x=self.x + 2, y=self.y + 3,
             string=self.slot_data['background'], 
-            bg_blend=tcod.BKGND_MULTIPLY,
             fg=(255, 255, 255)
             )
         
         consoles['ROOT'].print(
             x=self.x + 2, y=self.y + 5,
             string=self.slot_data['location'], 
-            bg_blend=tcod.BKGND_MULTIPLY,
             fg=(255, 255, 255)
             )
 
 
-class CharacterSelectElement(Panel):
+class CharacterSelectElement(BaseElement):
 
     _data_source: Storage = None
 
@@ -95,20 +82,32 @@ class CharacterSelectElement(Panel):
     unfocused = (255, 255, 255)
 
     def __init__(self) -> None:
-        super().__init__(**{
-            'position': ('center', 'center'),
-            'offset': {'y': 14},
-            'size': {'width': 64, 'height': 16},
-            'style': {'fg': (255, 255, 255)}
-            })
+        super().__init__(ElementConfig(
+            position=('center', 'center'),
+            offset_y=14,
+            width=64, height=16,
+            fg=(255, 255, 255)
+            ))
 
-        self.slot_0 = CharacterSlotElement(self, ('top', 'left'))
-        self.slot_1 = CharacterSlotElement(self, ('top', 'center'))
-        self.slot_2 = CharacterSlotElement(self, ('top', 'right'))
-
-        self.slot_3 = CharacterSlotElement(self, ('bottom', 'left'))
-        self.slot_4 = CharacterSlotElement(self, ('bottom', 'center'))
-        self.slot_5 = CharacterSlotElement(self, ('bottom', 'right'))
+        style = {
+            'parent': self,
+            'width': 20,
+            'height': 7,
+            'framed': True, 
+            'fg': (255, 255, 255)
+            }
+        self.slot_0 = CharacterSlotElement(
+            ElementConfig(position=('top', 'left'), **style))
+        self.slot_1 = CharacterSlotElement( 
+            ElementConfig(position=('top', 'center'), **style))
+        self.slot_2 = CharacterSlotElement( 
+            ElementConfig(position=('top', 'right'), **style))
+        self.slot_3 = CharacterSlotElement( 
+            ElementConfig(position=('bottom', 'left'), **style))
+        self.slot_4 = CharacterSlotElement( 
+            ElementConfig(position=('bottom', 'center'), **style))
+        self.slot_5 = CharacterSlotElement( 
+            ElementConfig(position=('bottom', 'right'), **style))
 
     @property
     def data_source(self) -> Storage:
@@ -146,9 +145,7 @@ class CharacterSelectElement(Panel):
         else:
             raise Exception("No data source assigned to this menu!")
 
-    def draw(self, consoles: Dict[str, Console]) -> None:
-        self.on_draw(consoles)
-
+    def draw_content(self, consoles: Dict[str, Console]) -> None:
         self.slot_0.slot_data = self.data_source.data_hook(0)
         self.slot_1.slot_data = self.data_source.data_hook(1)
         self.slot_2.slot_data = self.data_source.data_hook(2)
@@ -156,12 +153,12 @@ class CharacterSelectElement(Panel):
         self.slot_4.slot_data = self.data_source.data_hook(4)
         self.slot_5.slot_data = self.data_source.data_hook(5)
 
-        self.slot_0.style_fg = self.focused if self.index_as_int == 0 else self.unfocused
-        self.slot_1.style_fg = self.focused if self.index_as_int == 1 else self.unfocused
-        self.slot_2.style_fg = self.focused if self.index_as_int == 2 else self.unfocused
-        self.slot_3.style_fg = self.focused if self.index_as_int == 3 else self.unfocused
-        self.slot_4.style_fg = self.focused if self.index_as_int == 4 else self.unfocused
-        self.slot_5.style_fg = self.focused if self.index_as_int == 5 else self.unfocused
+        self.slot_0.frame_fg = self.focused if self.index_as_int == 0 else self.unfocused
+        self.slot_1.frame_fg = self.focused if self.index_as_int == 1 else self.unfocused
+        self.slot_2.frame_fg = self.focused if self.index_as_int == 2 else self.unfocused
+        self.slot_3.frame_fg = self.focused if self.index_as_int == 3 else self.unfocused
+        self.slot_4.frame_fg = self.focused if self.index_as_int == 4 else self.unfocused
+        self.slot_5.frame_fg = self.focused if self.index_as_int == 5 else self.unfocused
 
         self.slot_0.draw(consoles)
         self.slot_1.draw(consoles)

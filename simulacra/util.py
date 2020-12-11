@@ -58,31 +58,3 @@ class Subject:
         for observer in self._observers:
             if modifier != observer:
                 observer.update(self)
-
-
-class Observer(Protocol):
-
-    NAME = "<unset>"
-
-    def update(self, subject) -> None:
-        pass
-
-
-class Data(Subject):
-    
-    def __init__(self, name: str = "") -> None:
-        super().__init__()
-        self.NAME = name
-        self._data = {}
-        self._options = {}
-    
-    def data(self):
-        return self._data
-    
-    def data(self, key, value) -> None:
-        self._data[key] = value
-        self.notify()
-    
-    @property
-    def options(self):
-        return self._options

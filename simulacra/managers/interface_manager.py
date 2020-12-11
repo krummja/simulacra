@@ -7,7 +7,6 @@ from __future__ import annotations
 from typing import Dict, Set, List, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from panel import Panel
     from actor import Actor
     from area import Area
     from component import Component
@@ -31,7 +30,7 @@ class InterfaceManager:
     def model(self, value: Model) -> None:
         self._model = value
 
-    def register_element(self, element: Panel) -> None:
+    def register_element(self, element) -> None:
         self._elements[element.NAME] = element
     
     def deregister_element(self, element_name: str) -> None:

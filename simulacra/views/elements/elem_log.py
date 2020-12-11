@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Dict, Tuple, TYPE_CHECKING
 
 from config import *
-from panel import Panel
+from views.elements.base_element import BaseElement, ElementConfig
 
 if TYPE_CHECKING:
     from model import Model
@@ -10,22 +10,19 @@ if TYPE_CHECKING:
     from tcod.console import Console
 
 
-# REFACTOR ElemLogPanel (high)
-class ElemLog(Panel):
+class ElemLog(BaseElement):
 
     def __init__(self, name: str, model: Model) -> None:
         self.log_width = STAGE_PANEL_WIDTH
-        super().__init__(**{
-            'position': ('bottom', 'left'),
-            'size': {'width': self.log_width,
-                     'height': (CONSOLE_HEIGHT // 4)},
-            'style': {'framed': True}
-            })
+        super().__init__(ElementConfig(
+            position=('bottom', 'left'),
+            width=self.log_width, height=(CONSOLE_HEIGHT//4),
+            framed=True
+        ))
         self.NAME = name
         self.model = model
 
-    def draw(self, consoles: Dict[str, Console]) -> None:
-        self.on_draw(consoles)
+    def draw_content(self, consoles: Dict[str, Console]) -> None:
 
         i = 0
         x, y = self.bounds.left + 1, self.bounds.bottom - 2

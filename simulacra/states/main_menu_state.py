@@ -94,5 +94,6 @@ class MainMenuState(State[None]):
         except SystemExit:
             self.storage.write_to_file()
         except EffectsBreak:
+            self.storage.write_to_file()
             self.start()
             

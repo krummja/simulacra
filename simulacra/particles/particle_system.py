@@ -37,7 +37,6 @@ class ParticleSystem:
         if not all(p.is_dead for p in self.particles):
             for p in self.particles:
                 p.draw(consoles)
-            print(len(self.particles))
         else:
             self.model.effect_flag = False
             raise EffectsBreak

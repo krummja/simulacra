@@ -30,7 +30,6 @@ class ResultManager:
         # Sort results into Failure and Success
         if result.success == False:
             self.failures.append(result)
-            print("Failed Result")
             self.state.cmd_equipment()
         else:
             self.results.append(result)
