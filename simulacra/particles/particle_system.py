@@ -16,7 +16,6 @@ class ParticleSystem:
     def __init__(self, model: Model, x: int, y: int) -> None:
         self.model = model
         self.origin: Tuple[int, int] = x, y
-        self.simulating = False
         self.particles: List[Particle] = []
 
     def update(self) -> None:

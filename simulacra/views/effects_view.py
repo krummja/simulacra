@@ -1,24 +1,11 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, Dict, Type
 
-from collections import defaultdict
-
-import time
-
-from graphic import Graphic
-from config import *
-from data.interface_elements import *
-from geometry import *
-from rendering import *
 from tcod import Console
-from view import View
 
+from config import *
+from view import View
 from views.stage_view import StageView
-from views.elements.base_element import BaseElement, ElementConfig
-from views.elements.elem_log import ElemLog
-from views.elements.gauge_element import GaugeElement
-from views.elements.list_element import ListElement
-from views.elements.test_animation_element import AnimationElement, AnimationFrame
 
 if TYPE_CHECKING:
     from states.effects_state import EffectsState

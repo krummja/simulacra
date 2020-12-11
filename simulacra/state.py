@@ -26,34 +26,6 @@ if TYPE_CHECKING:
 
 T = TypeVar("T")
 
-start_time = time.time()
-
-class RepeatedTimer:
-    
-    def __init__(self, interval, function, *args, **kwargs):
-        self._timer = None
-        self.interval = interval
-        self.function = function
-        self.args = args
-        self.kwargs = kwargs
-        self.is_running = False
-        self.start()
-        
-    def _run(self):
-        self.is_running = False
-        self.start()
-        self.function(*self.args, **self.kwargs)
-    
-    def start(self):
-        if not self.is_running:
-            self._timer = threading.Timer(self.interval, self._run)
-            self._timer.start()
-            self.is_running = True
-    
-    def stop(self):
-        self._timer.cancel()
-        self.is_running = False    
-        
 
 class GameOverQuit(Exception):
     pass
@@ -122,19 +94,12 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
         tcod.event.K_KP_9: (1, -1),
         }
 
-    LIMIT_FPS = 30
-    TIC_SEC = 10
-    TIC_SIZE = 1. / TIC_SEC
-    FRAME_LEN = 1. / LIMIT_FPS
-
     def __init__(self) -> None:
         super().__init__()
         self._model: Optional[Model] = None
         self._storage: Optional[Storage] = None
         self._view: Optional[View] = None
         self.suspend = False
-        self.last_tic = time.time()
-        self.tic = 0
         
     @property
     def COMMAND_KEYS(self: State) -> Dict[int, str]:
@@ -155,19 +120,9 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
     @property
     def view(self) -> Optional[View]:
         return self._view
-
-    def thread_time(self):
-        return time.thread_time()
         
     def loop(self) -> Optional[T]:
         while True:
-
-            # if time.time() >= self.TIC_SEC + self.last_tic:
-            #     self.tic += 1
-            #     self.last_tic = time.time()
-                
-            # if time.time() >= self.FRAME_LEN + self.last_tic:
-
             self.on_draw(config.CONSOLES)
             config.CONTEXT.present(config.CONSOLES['ROOT'])
             
@@ -199,8 +154,7 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
             func = getattr(self, f"cmd_{self.COMMAND_KEYS[event.sym]}")
             return func()
         if event.sym in self.MOVE_KEYS:
-            result = self.cmd_move(*self.MOVE_KEYS[event.sym])
-            return result
+            return self.cmd_move(*self.MOVE_KEYS[event.sym])
         return None
 
     def cmd_confirm(self) -> Optional[T]:

@@ -8,9 +8,6 @@ from action import (ActionWithPosition,
                     ActionWithItem,
                     ActionWithDirection)
 
-from data.animations import animations
-
-
 class Move(Action):
 
     class Toward(ActionWithPosition):
@@ -41,7 +38,7 @@ class Move(Action):
                 return self
             if self.area.is_blocked(*self.target_position):
                 self.success = False
-                self.effect = "Effect Test"
+                # TODO: self.effect = "Effect Test"
                 self.message = "the way is blocked."
                 raise Impossible(self)
             return self

@@ -19,10 +19,6 @@ if TYPE_CHECKING:
     from view import View
 
 
-class EffectsBreak(Exception):
-    """Effects State alternative to StateBreak"""
-
-
 class EffectsState(AreaState[None]):
     
     NAME = "Effects"

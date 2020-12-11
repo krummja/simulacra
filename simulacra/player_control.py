@@ -5,7 +5,6 @@ from action import Action, Impossible
 from result import Result
 from control import Control
 from states.player_ready_state import PlayerReadyState
-
 from managers.manager_service import ManagerService
 
 
@@ -26,4 +25,3 @@ class PlayerControl(Control):
                 failure = failure.args[0]
                 result = self.make_result(failure)
                 player_state.result_manager.add_result(result)
-            

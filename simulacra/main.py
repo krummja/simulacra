@@ -16,7 +16,6 @@ def main() -> None:
             vsync=True
         ) as config.CONTEXT:
         while True:
-            # state_manager.STATE_MANAGER.run_state()
             MainMenuState().loop()
 
 
