@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import Dict, Optional, Tuple, TYPE_CHECKING
 
 import tcod
+import time
 
 from state import State, T, SaveAndQuit, GameOverQuit, StateBreak
 from states.area_state import AreaState
@@ -19,6 +20,7 @@ class PickLocationState(AreaState[Tuple[int, int]]):
             desc: str,
             start_xy: Tuple[int, int]
         ) -> None:
+        super().__init__(model)
         self._model = model
         self._view = PickLocationView(self)
         self.cursor_xy = start_xy

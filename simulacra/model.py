@@ -51,9 +51,7 @@ class Model:
         self.area_data = AreaData(self)
         self.entity_data = EntityData(self)
         self.scheduler = EventQueue()
-        self.result_manager = ResultManager(self)
         self.log: List[Message] = []
-
         self._effect_flag = False
         
     @property
@@ -108,7 +106,10 @@ class Model:
         return options
 
     def loop(self) -> None:
+        frame_count = 0
         while True:
+            frame_count += 1
+            # This will count the frames between each screen update
             self.scheduler.invoke_next()
             
     def report(self, msg: str) -> None:

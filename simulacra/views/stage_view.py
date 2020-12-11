@@ -13,6 +13,10 @@ from rendering import *
 from tcod import Console
 from view import View
 
+from particles.particle_system import ParticleSystem
+from particles.test_effect import TestEffect
+from particles.particle import Particle
+
 from views.elements.base_element import BaseElement, ElementConfig
 from views.elements.elem_log import ElemLog
 from views.elements.gauge_element import GaugeElement
@@ -32,6 +36,11 @@ class StageView(View):
         self.state = state
         self.factory = self.state.factory_service.interface_factory
         self.manager = self.state.manager_service.data_manager
+        self.p_system = ParticleSystem(
+            self.model,
+            self.model.player.location.x,
+            self.model.player.location.y
+            )
 
         self.character_panel = BaseElement(
             ElementConfig(
@@ -116,8 +125,6 @@ class StageView(View):
                 width=30, height=30
                 ))
 
-        self._time = 0
-
     def draw(self, consoles: Dict[str, Console]) -> None:
         area = self.model.area_data.current_area
         player = self.model.player
@@ -162,22 +169,19 @@ class StageView(View):
         self.inventory_panel.draw(consoles)
         self.equipment_panel.draw(consoles)
         self.log_panel.draw(consoles)
-
-        interval = int(time.perf_counter() * 10)
-        #! This runs without interrupting the player.
-        #! If input pauses (i.e. whenever not holding down an input)
-        #! ... a tick fires.
-        # if self._time < 10:
-        #     self._time += 1
-        # else:
-        #     self._time = 0
-        #     print("Tick!")
-            
+        # self.render_particles(consoles)
+       
     def refresh(self, area: Area, consoles: Dict[str, Console]) -> None:
-        # TODO: Change this so that it doesn't have to take in 'area'
         update_fov(area)
         render_area_tiles(area, consoles)
         render_visible_entities(area, consoles)
+   
+    # def render_particles(self, consoles: Dict[str, Console]) -> None:
+    #     TestEffect(self.p_system).fire()
+
+    #     while self.model.effect_flag:
+    #         self.p_system.update()
+    #         self.p_system.draw(consoles)
 
     def get_nearby_actors(self):
         # TODO: Move this to the DataManager

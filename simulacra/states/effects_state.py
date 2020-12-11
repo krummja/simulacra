@@ -8,8 +8,8 @@ import tcod
 from config import *
 
 from graphic import Graphic
-from state import State, T, StateBreak
-from states.player_ready_state import PlayerReadyState
+from state import State, T, StateBreak, EffectsBreak
+from states.area_state import AreaState
 from views.effects_view import EffectsView
 from particles.particle_system import ParticleSystem
 
@@ -19,7 +19,11 @@ if TYPE_CHECKING:
     from view import View
 
 
-class EffectsState(PlayerReadyState[None]):
+class EffectsBreak(Exception):
+    """Effects State alternative to StateBreak"""
+
+
+class EffectsState(AreaState[None]):
     
     NAME = "Effects"
     
@@ -37,14 +41,12 @@ class EffectsState(PlayerReadyState[None]):
             self.model.player.location.x,
             self.model.player.location.y)
         self._view = EffectsView(self, model)
-        
-    def loop(self):
-        time.sleep(5)
-        raise StateBreak()
-        
-    def cmd_admin1(self):
-        print("ADMIN >> Starting Animation Loop")
-        self.manager.running = True
-
+        self.model.effect_flag = True
+        self.animation_loop()
+    
+    def animation_loop(self):
+        if self.effect:
+            self.effect(self.p_system).fire()
+    
     def cmd_quit(self):
-        raise StateBreak()
+        raise EffectsBreak()

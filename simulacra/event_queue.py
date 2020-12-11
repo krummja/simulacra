@@ -21,6 +21,7 @@ class Event(NamedTuple):
 
 
 class EventQueue:
+    """The central queue that handles `Actor` scheduling."""
 
     def __init__(self) -> None:
         self.current_tick: int = 0

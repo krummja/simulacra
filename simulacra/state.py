@@ -9,7 +9,10 @@ from typing import (Dict,
 import tcod
 import config
 import time
+import threading
+
 from autologging import logged
+from rendering import frame_count, elapsed_time
 
 from util import log
 from factories.factory_service import FactoryService
@@ -23,12 +26,44 @@ if TYPE_CHECKING:
 
 T = TypeVar("T")
 
+start_time = time.time()
+
+class RepeatedTimer:
+    
+    def __init__(self, interval, function, *args, **kwargs):
+        self._timer = None
+        self.interval = interval
+        self.function = function
+        self.args = args
+        self.kwargs = kwargs
+        self.is_running = False
+        self.start()
+        
+    def _run(self):
+        self.is_running = False
+        self.start()
+        self.function(*self.args, **self.kwargs)
+    
+    def start(self):
+        if not self.is_running:
+            self._timer = threading.Timer(self.interval, self._run)
+            self._timer.start()
+            self.is_running = True
+    
+    def stop(self):
+        self._timer.cancel()
+        self.is_running = False    
+        
 
 class GameOverQuit(Exception):
     pass
 
 
 class SaveAndQuit(Exception):
+    pass
+
+
+class EffectsBreak(Exception):
     pass
 
 
@@ -87,20 +122,19 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
         tcod.event.K_KP_9: (1, -1),
         }
 
-    if config.ADMIN:
-        ADMIN_KEYS: Dict[int, str] = {
-            tcod.event.K_F1: "admin1",
-            tcod.event.K_F2: "admin2",
-            tcod.event.K_F3: "admin3",
-            tcod.event.K_F4: "admin4",
-        }
+    LIMIT_FPS = 30
+    TIC_SEC = 10
+    TIC_SIZE = 1. / TIC_SEC
+    FRAME_LEN = 1. / LIMIT_FPS
 
     def __init__(self) -> None:
         super().__init__()
         self._model: Optional[Model] = None
         self._storage: Optional[Storage] = None
         self._view: Optional[View] = None
-        self._FPS = 0
+        self.suspend = False
+        self.last_tic = time.time()
+        self.tic = 0
         
     @property
     def COMMAND_KEYS(self: State) -> Dict[int, str]:
@@ -122,21 +156,35 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
     def view(self) -> Optional[View]:
         return self._view
 
+    def thread_time(self):
+        return time.thread_time()
+        
     def loop(self) -> Optional[T]:
         while True:
-            start_time = time.time()
+
+            # if time.time() >= self.TIC_SEC + self.last_tic:
+            #     self.tic += 1
+            #     self.last_tic = time.time()
+                
+            # if time.time() >= self.FRAME_LEN + self.last_tic:
+
             self.on_draw(config.CONSOLES)
             config.CONTEXT.present(config.CONSOLES['ROOT'])
-            self._FPS = 1.0 / (time.time() - start_time)
-            for input_event in tcod.event.get():
+            
+            all_key_events = list(tcod.event.get())
+            key_events = [e for e in all_key_events if e.type == 'KEYDOWN']
+            
+            if len(key_events) > 0:
+                event = key_events.pop()
                 try:
-                    value: Optional[T] = self.dispatch(input_event)
+                    value: Optional[T] = self.dispatch(event)
                 except StateBreak:
                     return None
                 if value is not None:
-                    return value
-                    
-    def on_draw(self, consoles: Dict[str, Console]) -> None:
+                    if not self.suspend:
+                        return value
+                
+    def on_draw(self, consoles: Dict[str, Console]) -> None:        
         self._view.draw(consoles)
 
     def ev_quit(self, event: tcod.event.Quit) -> Optional[T]:
@@ -153,14 +201,7 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
         if event.sym in self.MOVE_KEYS:
             result = self.cmd_move(*self.MOVE_KEYS[event.sym])
             return result
-        if config.ADMIN:
-            if event.sym in self.ADMIN_KEYS:
-                func = getattr(self, f"cmd_{self.ADMIN_KEYS[event.sym]}")
-                return func()
         return None
-
-    def cmd_drop(self) -> Optional[T]:
-        pass
 
     def cmd_confirm(self) -> Optional[T]:
         pass
@@ -185,15 +226,3 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
 
     def cmd_quit(self) -> Optional[T]:
         raise SystemExit()
-
-    def cmd_admin1(self):
-        pass
-    
-    def cmd_admin2(self):
-        pass
-    
-    def cmd_admin3(self):
-        pass
-    
-    def cmd_admin4(self):
-        pass

@@ -1,6 +1,9 @@
 from __future__ import annotations
 from typing import Generic, Tuple, TYPE_CHECKING
 
+from config import *
+
+from managers.result_manager import ResultManager
 from actions import common
 from action import Action
 from result import Result
@@ -8,7 +11,8 @@ from state import SaveAndQuit, StateBreak, T
 from states.area_state import AreaState
 from states.pick_location_state import PickLocationState
 from states.menu_states.inventory_menu_state import InventoryMenuState
-# from states.effects_state import EffectsState
+from states.effects_state import EffectsState
+from particles.test_effect import TestEffect
 
 if TYPE_CHECKING:
     from model import Model
@@ -17,26 +21,26 @@ if TYPE_CHECKING:
 class PlayerReadyState(Generic[T], AreaState[T]):
 
     NAME = "Player Ready"
-    
+
     def __init__(self, model: Model) -> None:
         super().__init__(model)
-        self.model.result_manager.state = self
-
-    # def play_effect(self):
-    #     state = EffectsState(self.model)
-    #     state.loop()
+        self.result_manager = ResultManager(self.model, self)
 
     def cmd_move(self, x: int, y: int) -> Action:
         action = common.Move.Start(self.model.player, (x, y))
         action.success = True
-        action.make_result(action)
+        result = action.make_result(action)
+        self.result_manager.add_result(result)
         return action
 
     def cmd_escape(self) -> None:
-        raise SaveAndQuit()
+        if self.suspend:
+            self.suspend = False
+        else:
+            raise SaveAndQuit()
 
     def cmd_quit(self) -> None:
-        raise StateBreak()
+        raise StateBreak("PlayerReadyState")
 
     def cmd_inventory(self):
         state = InventoryMenuState(
@@ -52,7 +56,8 @@ class PlayerReadyState(Generic[T], AreaState[T]):
         cursor_xy: Tuple[int, int] = state.loop()
     
     def cmd_equipment(self):
-        state = EffectsState(self.model)
+        # self.suspend = True
+        state = EffectsState(self.model, TestEffect)
         state.loop()
     
     def cmd_pickup(self):

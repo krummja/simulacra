@@ -45,4 +45,3 @@ class EffectsView(StageView):
         
         self.p_system.draw(consoles)
         self.p_system.update()
-        time.sleep(0.05)

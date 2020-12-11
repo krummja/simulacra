@@ -17,6 +17,7 @@ class Result:
             effect = None,
             message = None
         ) -> None:
+        self.actor = actor
         self.event = event
         self.done = done
         self.success = success
@@ -26,5 +27,5 @@ class Result:
     def __lt__(self, other: Result) -> bool:
         return self.uid < other.uid
     
-    # def __str__(self) -> str:
-    #     return f"{self.uid}"
+    def __str__(self) -> str:
+        return f"{self.uid}\n{self.actor}\n{self.event}\n{self.success}\n{self.message}"

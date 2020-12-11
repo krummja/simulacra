@@ -4,6 +4,7 @@ from contextlib import suppress
 import collections
 import time
 import functools
+import states.main_menu_state
 
 
 def flatten(d, parent_key='', sep='_'):

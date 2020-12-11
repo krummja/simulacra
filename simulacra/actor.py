@@ -36,8 +36,7 @@ class Actor:
             return scheduler.unschedule(event)
         action = self.try_plan()
         return action.act()
-    
-        
+            
     def try_plan(self) -> Action:
         """Attempt to resolve a control's action plan."""
         try:

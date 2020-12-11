@@ -4,6 +4,7 @@ from collections import defaultdict
 
 import time
 import numpy as np
+import threading
 
 from config import *
 from hues import COLOR
@@ -18,23 +19,54 @@ if TYPE_CHECKING:
 
 noise_machine = NoiseMachine()
 
+frames = 0
+start_time = time.time()
+
+
+def frame_count() -> float:
+    """Count the number of frames since process start."""
+    global frames
+    frames += 1
+    return frames
+
+
+def elapsed_time() -> float:
+    """Get the number of seconds since process start."""
+    global start_time
+    current_time = time.time()
+    return current_time - start_time
+
 
 def render_area_tiles(area: Area, consoles: Dict[str, Console]) -> None:
-
-    DARKNESS = np.asarray((0, COLOR['nero'], COLOR['black']),
-                          dtype=tile_graphic)
-
-    consoles['ROOT'].clear()
+    _frames = frame_count()
+    _elapsed = elapsed_time()
+    # print(_elapsed)
 
     screen_view, world_view = area.camera.get_camera_view()
+    consoles['ROOT'].clear()
+    consoles['ROOT'].tiles_rgb[screen_view] = select_tile_mask(area,
+                                                               screen_view,
+                                                               world_view)
 
-    consoles['ROOT'].tiles_rgb[screen_view] = np.select(
-        (area.area_model.visible[world_view],
-         area.area_model.explored[world_view]),
-        (area.area_model.tiles["light"][world_view],
-         area.area_model.tiles["dark"][world_view]),
-        DARKNESS)
+    
+def select_tile_mask(area: Area, screen_view, world_view):
+    UNKNOWN = np.asarray((0, COLOR['nero'], COLOR['black']),
+                          dtype=tile_graphic)
 
+    if_visible = area.area_model.visible[world_view]
+    if_explored = area.area_model.explored[world_view]
+    lit_tiles = area.area_model.tiles["light"][world_view]
+    unlit_tiles = area.area_model.tiles["dark"][world_view]
+
+    condlist = (if_visible, if_explored)
+    choicelist = (lit_tiles, unlit_tiles)
+    
+    #! (default, default, LIT,  LIT,  LIT,  LIT,  default, ...)
+    #* (False,   False,   True, True, True, True, False,   ...)
+    #? (LIT,     LIT,     LIT,  LIT,  LIT,  LIT,  LIT,     ...)
+
+    return np.select(condlist=condlist, choicelist=choicelist, default=UNKNOWN)
+    
 
 def render_visible_entities(area: Area, consoles: Dict[str, Console]) -> None:
     visible_entities: Dict[Tuple[int, int], List[Graphic]] = defaultdict(list)
@@ -119,10 +151,9 @@ def update_fov(area: Area) -> None:
     area.area_model.explored |= area.area_model.visible
 
 
-TORCH_RADIUS = 10
-SQUARED_TORCH_RADIUS = TORCH_RADIUS * TORCH_RADIUS
-
 def render_torch(area: Area, consoles: Dict[str, Console]) -> None:
+    TORCH_RADIUS = 10
+    SQUARED_TORCH_RADIUS = TORCH_RADIUS * TORCH_RADIUS
     
     # Derive the torch from noise based on current time.
     torch_t = time.perf_counter() * 5
@@ -131,7 +162,7 @@ def render_torch(area: Area, consoles: Dict[str, Console]) -> None:
     cam_x, cam_y = area.camera.get_camera_pos()
     player_x = area.player.location.x
     player_y = area.player.location.y
-    print(player_x, player_y)
+
     torch_x = (player_x + noise_machine.noise.get_point(torch_t) * 1.5)
     torch_y = (player_y + noise_machine.noise.get_point(torch_t + 11) * 1.5)
     
@@ -264,6 +295,7 @@ def draw_frame(consoles: Dict[str, Console]) -> None:
         width=CONSOLE_WIDTH-8, height=1,
         string=inner_horizontal,
         fg=inner_frame_color)
+
 
 def draw_logo(consoles: Dict[str, Console]) -> None:
     logo = np.array([

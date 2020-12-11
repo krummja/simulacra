@@ -5,7 +5,7 @@ import tcod
 
 from config import DEBUG
 from model import Model
-from state import State, T, SaveAndQuit, GameOverQuit
+from state import State, T, SaveAndQuit, GameOverQuit, EffectsBreak
 from states.modal_states.confirm_modal_state import ConfirmModalState
 from storage import Storage
 from views import MainMenuView
@@ -47,6 +47,9 @@ class MainMenuState(State[None]):
                     print("Storage: No data for this slot.")
                 self.new_game()
 
+        elif event.sym == tcod.event.K_ESCAPE:
+            pass
+
         elif event.sym == tcod.event.K_d:
             if self.storage.save_slots[index] is not None:
                 confirm_modal = ConfirmModalState(self.model)
@@ -65,8 +68,8 @@ class MainMenuState(State[None]):
                 self.MOVE_KEYS[event.sym][0],
                 self.MOVE_KEYS[event.sym][1]
                 )
-
-        return super().ev_keydown(event)
+        else:
+            return super().ev_keydown(event)
 
     def new_game(self) -> None:
         try:
@@ -90,3 +93,6 @@ class MainMenuState(State[None]):
             self.storage.write_to_file()
         except SystemExit:
             self.storage.write_to_file()
+        except EffectsBreak:
+            self.start()
+            

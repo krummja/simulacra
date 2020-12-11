@@ -6,7 +6,7 @@ import numpy as np
 from geometry import *
 from camera import Camera
 from location import Location
-from tile import tile_dt
+from tile import tile_dt, tile_graphic
 
 if TYPE_CHECKING:
     from states.effects_state import Particle
@@ -26,6 +26,7 @@ class AreaModel:
         self.area = area
         self.shape = self.area.shape
         self.tiles = np.zeros(self.shape, dtype=tile_dt)
+        self.effects = np.zeros(self.shape, dtype=tile_graphic)
         self.explored = np.zeros(self.shape, dtype=bool)
         self.visible = np.zeros(self.shape, dtype=bool)
 

@@ -22,6 +22,7 @@ SIDE_PANEL_HEIGHT: int = CONSOLE_HEIGHT
 
 TILESET: Tileset = tcod.tileset.load_truetype_font(
     "./assets/simulacra.ttf", 16, 16
+    # "simulacra/assets/simulacra.ttf", 16, 16
     )
 
 CONSOLES: Dict[str, Console] = {

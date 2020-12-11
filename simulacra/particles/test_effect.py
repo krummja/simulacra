@@ -27,7 +27,9 @@ class TestEffect:
         
     def __init__(self, p_system: ParticleSystem) -> None:
         self.p_system = p_system
+        self.frames = 10
 
     def fire(self):
         for direction in directions.values():
+            # for frame in range(self.frames):
             self.p_system.add_particles(1, *direction)

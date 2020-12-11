@@ -52,7 +52,7 @@ class Action:
             effect=action.effect,
             message=action.message
             )
-        self.model.result_manager.add_result(result)
+        return result
 
     def report(self, msg: str) -> None:
         message = self.model.report(msg)
