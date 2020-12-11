@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import Dict, TYPE_CHECKING
+from pathlib import Path
 import tcod
 
 if TYPE_CHECKING:
@@ -20,11 +21,16 @@ STAGE_PANEL_HEIGHT: int = (CONSOLE_HEIGHT // 4) * 3
 SIDE_PANEL_WIDTH: int = CONSOLE_WIDTH - STAGE_PANEL_WIDTH
 SIDE_PANEL_HEIGHT: int = CONSOLE_HEIGHT
 
-TILESET: Tileset = tcod.tileset.load_truetype_font(
-    "./assets/simulacra.ttf", 16, 16
-    # "simulacra/assets/simulacra.ttf", 16, 16
-    )
-
+def load_tileset():
+    try:
+        return tcod.tileset.load_truetype_font(
+            "simulacra/assets/simulacra.ttf", 16, 16)
+    except RuntimeError:
+        return tcod.tileset.load_truetype_font(
+            "assets/simulacra.ttf", 16, 16)
+        
+TILESET = load_tileset()
+        
 CONSOLES: Dict[str, Console] = {
     'INTERFACE': tcod.Console(CONSOLE_WIDTH, CONSOLE_HEIGHT),
     'EFFECTS': tcod.Console(CONSOLE_WIDTH, CONSOLE_HEIGHT),
