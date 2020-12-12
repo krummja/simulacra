@@ -1,6 +1,7 @@
 from __future__ import annotations  # type: ignore
-from typing import Dict, List, Tuple, TYPE_CHECKING
+from typing import Optional, Dict, List, Tuple, TYPE_CHECKING
 
+import random
 import time
 from state import EffectsBreak
 from particles.particle import Particle
@@ -18,10 +19,10 @@ class ParticleSystem:
         self.origin: Tuple[int, int] = x, y
         self.particles: List[Particle] = []
 
-    def update(self) -> None:
-        x, y = self.origin
+    def update(self, x: Optional[int] = None, y: Optional[int] = None) -> None:
         for p in self.particles:
             p.move()
+            # p.wiggle()
             if p.is_dead:
                 self.particles.remove(p)
 

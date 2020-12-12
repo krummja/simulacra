@@ -1,0 +1,12 @@
+#background: transparent
+#gutter: 30
+#stroke: white
+#fill: transparent
+
+
+[   Pirate
+|   + eyeCount: int
+|   + raid(): None
+    + pillage(): None
+    + drink()
+]

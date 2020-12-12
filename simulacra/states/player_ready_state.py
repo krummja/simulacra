@@ -48,7 +48,7 @@ class PlayerReadyState(Generic[T], AreaState[T]):
                 entity="PLAYER", 
                 component="INVENTORY", 
                 key="contents"
-                ))
+                ), "inventory")
         return state.loop()
     
     def cmd_examine(self):
@@ -62,3 +62,12 @@ class PlayerReadyState(Generic[T], AreaState[T]):
     
     def cmd_pickup(self):
         return common.Nearby.Pickup(self.model.player)
+    
+    def cmd_drop(self):
+        state = InventoryMenuState(
+            self.manager_service.data_manager.query(
+                entity="PLAYER",
+                component="INVENTORY",
+                key="contents"
+            ), "drop")
+        return state.loop()

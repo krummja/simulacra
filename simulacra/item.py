@@ -39,6 +39,14 @@ class Item(Entity):
         self.color = display['color']
         self.bg = display['bg']
 
+        # TODO: Ideally I would want to assemble this from
+        # ... the item's actual state and attached Components...
+        self.options = {
+            'info': None,
+            'drop': self.place,
+            'use': self.plan_activate
+            }
+
     @property
     def name(self) -> str:
         return self._name

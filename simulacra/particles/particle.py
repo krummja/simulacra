@@ -1,6 +1,8 @@
 from __future__ import annotations  # type: ignore
 from typing import Dict, Tuple, TYPE_CHECKING
 
+import random
+
 import tcod
 import time
 
@@ -24,8 +26,8 @@ class Particle(Graphic):
             system: ParticleSystem,
             origin: AreaLocation,
             vx: int, vy: int,
-            color: Tuple[int, int, int] = (255, 255, 255),
-            lifespan: int = 10
+            color: Tuple[int, int, int] = (255, 0, 255),
+            lifespan: int = 4
         ) -> None:
         self.system = system
         self.x = origin.x
@@ -43,11 +45,12 @@ class Particle(Graphic):
             return False
 
     def move(self) -> None:
-        self.x += self.vx
-        self.y += self.vy
+        d = random.randint(-1, 1)
+        self.x += self.vx + d
+        self.y += self.vy + d
         self.distance += 1
         time.sleep(0.003)
-
+        
     def draw(self, consoles: Dict[str, Console]) -> None:
         cam_x, cam_y = self.system.model.area.camera.get_camera_pos()
         consoles['EFFECTS'].clear()

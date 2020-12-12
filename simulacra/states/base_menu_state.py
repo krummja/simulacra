@@ -1,12 +1,11 @@
 from __future__ import annotations
-from typing import Generic, Optional, TYPE_CHECKING
+from typing import Any, Generic, Optional, TYPE_CHECKING
 from collections import UserList
 
 import tcod
 
 from state import State, StateBreak, T
 from views.base_menu_view import BaseMenuView
-from entity import Entity
 
 if TYPE_CHECKING:
     from model import Model
@@ -15,12 +14,12 @@ if TYPE_CHECKING:
 
 class ListData:
     
-    def __init__(self, data: List[Entity]) -> None:
+    def __init__(self, data: List[Any]) -> None:
         self._data = data
         self._selection = 0
         
     @property
-    def data(self) -> List[Entity]:
+    def data(self) -> List[Any]:
         return self._data
     
     def __getitem__(self, index: int) -> str:
@@ -31,7 +30,7 @@ class ListData:
         if len(self._data) <= index:
             index = len(self._data)
         selection = self._data[index]
-        return str(selection.noun_text)
+        return str(selection)
 
     def __len__(self) -> int:
         return len(self._data)
@@ -47,7 +46,7 @@ class BaseMenuState(Generic[T], State[T]):
     
     NAME = "Menu Base"
     
-    def __init__(self, view: View, data: List[Entity]) -> None:
+    def __init__(self, view: View, data: List[Any]) -> None:
         super().__init__()
         self._view = view(self)
         self._data = data
@@ -73,5 +72,8 @@ class BaseMenuState(Generic[T], State[T]):
         
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[T]:
         if event.sym in self.MOVE_KEYS:
-            self.selection += self.MOVE_KEYS[event.sym][1]
+            self.selection += self.MOVE_KEYS[event.sym][1]           
         return super().ev_keydown(event)
+    
+    def cmd_confirm(self):
+        print(self._data[self.selection])
