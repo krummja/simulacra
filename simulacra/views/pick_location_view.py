@@ -19,14 +19,12 @@ class PickLocationView(StageView):
         
     def draw(self, consoles: Dict[str, Console]) -> None:
         super().draw(consoles)
-        
-        style = {"fg": (255, 255, 255), "bg": (0, 0, 0)}
-        consoles['ROOT'].draw_frame(0, 0, 20, 5, fg=(255, 255, 255))
-        consoles['ROOT'].print(2, 1, self.state.desc, **style)
-        consoles['ROOT'].print(2, 3, self.state.info, **style)
         cam_x, cam_y = self.state.model.area.camera.get_camera_pos()
         x = self.state.cursor_xy[0] - cam_x
         y = self.state.cursor_xy[1] - cam_y
+        style = {"fg": (255, 255, 255), "bg": (0, 0, 0)}
+        consoles['ROOT'].print(x+1, y, string=chr(9665), fg=(255, 150, 150))
+        consoles['ROOT'].print_box(x+2, y, 12, 1, string=self.state.info.upper(), fg=(0, 0, 0), bg=(255, 150, 150))
         if 0 <= x < STAGE_PANEL_WIDTH and 0 <= y < STAGE_PANEL_HEIGHT:
             consoles['ROOT'].tiles_rgb.T[["fg", "bg"]][x, y] = (255, 0, 0), (0, 0, 0)
    

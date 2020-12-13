@@ -40,7 +40,6 @@ class MainMenuState(State[None]):
                 if DEBUG:
                     print("Storage: Save data found")
                 self._model = self.storage.save_slots[index]
-                self.manager_service.initialize_managers(self._model)
                 self.start()
             else:
                 if DEBUG:
@@ -88,6 +87,7 @@ class MainMenuState(State[None]):
     def start(self) -> None:
         assert self.model
         try:
+            self.manager_service.initialize_managers(self.model)
             self.model.loop()
         except SaveAndQuit:
             self.storage.write_to_file()

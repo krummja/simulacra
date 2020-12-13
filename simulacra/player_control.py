@@ -5,7 +5,6 @@ from action import Action, Impossible
 from result import Result
 from control import Control
 from states.player_ready_state import PlayerReadyState
-from managers.manager_service import ManagerService
 
 
 class PlayerControl(Control):
@@ -18,10 +17,11 @@ class PlayerControl(Control):
             if next_action is None:
                 continue
             try:
+                # TODO: Does this actually return anything?
                 success = next_action.plan().act()
-                result = self.make_result(success)
-                player_state.result_manager.add_result(result)
+                result: Result = self.make_result(success)
+                player_state.manager_service.result_manager.add_result(result)
             except Impossible as failure:
                 failure = failure.args[0]
                 result = self.make_result(failure)
-                player_state.result_manager.add_result(result)
+                player_state.manager_service.result_manager.add_result(result)

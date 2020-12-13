@@ -11,9 +11,8 @@ if TYPE_CHECKING:
 
 class ResultManager:
     
-    def __init__(self, model: Model, player_state: PlayerReadyState) -> None:
+    def __init__(self, model: Model) -> None:
         self.model = model
-        self.state = player_state
         self.results = []
         self.failures = []
         self.last_uid = 0

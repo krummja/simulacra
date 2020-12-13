@@ -24,13 +24,12 @@ class PlayerReadyState(Generic[T], AreaState[T]):
 
     def __init__(self, model: Model) -> None:
         super().__init__(model)
-        self.result_manager = ResultManager(self.model, self)
 
     def cmd_move(self, x: int, y: int) -> Action:
         action = common.Move.Start(self.model.player, (x, y))
         action.success = True
         result = action.make_result(action)
-        self.result_manager.add_result(result)
+        self.manager_service.result_manager.add_result(result)
         return action
 
     def cmd_escape(self) -> None:

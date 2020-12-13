@@ -16,7 +16,9 @@ class ManagerService(metaclass=Singleton):
     def __init__(self) -> None:
         self.data_manager = None
         self.effects_manager = None
+        self.result_manager = None
     
     def initialize_managers(self, model: Model) -> None:
         self.data_manager = DataManager(model)
         self.effects_manager = EffectsManager(model)
+        self.result_manager = ResultManager(model)

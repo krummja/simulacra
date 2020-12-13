@@ -107,7 +107,7 @@ class StageView(View):
 
         self.inventory_panel = ListElement(
             config = ElementConfig(**inventory_panel),
-            data = self.manager_service.data_manager.query(
+            data = self.manager.query(
                 entity="PLAYER",
                 component="INVENTORY",
                 key="contents"))

@@ -5,9 +5,20 @@ from entity import Entity
 from actions import common
 
 if TYPE_CHECKING:
-    from action import ActionWithItem
+    from action import Action, ActionWithItem
     from location import Location
     from component import Component
+
+
+class ItemOption:
+
+    # FIXME: Make the attributes here not dependent on the Entity properties
+    
+    def __init__(self, item: Item, text: str, command: Action):
+        self.char = ord("-")
+        self.color = (100, 100, 100)
+        self.noun_text = text
+        self.command = command
 
 
 class Item(Entity):
@@ -40,11 +51,9 @@ class Item(Entity):
         self.color = display['color']
         self.bg = display['bg']
 
-        # TODO: Ideally I would want to assemble this from
-        # ... the item's actual state and attached Components...
-        self.options = {
-            'drop': common.Nearby.Drop,
-            }
+        self.options = [
+            ItemOption(self, "drop", common.Nearby.Drop)
+            ]
 
     @property
     def name(self) -> str:

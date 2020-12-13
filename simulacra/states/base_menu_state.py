@@ -30,7 +30,7 @@ class ListData:
         if len(self._data) <= index:
             index = len(self._data)
         selection = self._data[index]
-        return str(selection)
+        return selection
 
     def __len__(self) -> int:
         return len(self._data)
