@@ -5,7 +5,6 @@ import tcod
 import random
 
 from states.base_menu_state import ListData
-from animation import Animation
 from data.tiles.floors import *
 from data.tiles.walls import *
 from area import Area

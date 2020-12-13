@@ -57,7 +57,7 @@ class PlayerReadyState(Generic[T], AreaState[T]):
     
     def cmd_equipment(self):
         # self.suspend = True
-        state = EffectsState(self.model, TestEffect)
+        state = EffectsState(self.model)
         state.loop()
     
     def cmd_pickup(self):

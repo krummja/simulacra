@@ -30,19 +30,8 @@ class EffectsState(AreaState[None]):
         ) -> None:
         super().__init__(model)
         self.effect = effect
-        self.p_system = ParticleSystem(
-            self.model,
-            self.model.player.location.x,
-            self.model.player.location.y)
         self._view = EffectsView(self, model)
         self.model.effect_flag = True
-        self.animation_loop()
-    
-    def animation_loop(self):
-        if self.effect:
-            self.effect(self.p_system).fire()
-        else:
-            raise EffectsBreak()
     
     def cmd_quit(self):
         raise EffectsBreak()
