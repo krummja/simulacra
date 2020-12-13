@@ -38,7 +38,7 @@ class Move(Action):
                 return self
             if self.area.is_blocked(*self.target_position):
                 self.success = False
-                # TODO: self.effect = "Effect Test"
+                self.effect = True
                 self.message = "the way is blocked."
                 raise Impossible(self)
             return self

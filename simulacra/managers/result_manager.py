@@ -1,6 +1,8 @@
 from __future__ import annotations  # type: ignore
 from typing import TYPE_CHECKING
 
+import states
+
 if TYPE_CHECKING:
     from states import player_ready_state
     from action import Result
@@ -30,6 +32,10 @@ class ResultManager:
             self.failures.append(result)
         else:
             self.results.append(result)
+
+        if result.effect:
+            state = states.effects_state.EffectsState(self.model)
+            state.loop()
 
         # Do a little housekeeping to make things tidy
         if len(self.results) > self._cache_size:

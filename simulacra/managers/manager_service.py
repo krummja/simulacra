@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
-from .interface_manager import InterfaceManager
 from .data_manager import DataManager
 from .result_manager import ResultManager
 from .effects_manager import EffectsManager
@@ -15,7 +14,6 @@ if TYPE_CHECKING:
 class ManagerService(metaclass=Singleton):
 
     def __init__(self) -> None:
-        self.interface_manager = InterfaceManager()
         self.data_manager = None
         self.effects_manager = None
     
