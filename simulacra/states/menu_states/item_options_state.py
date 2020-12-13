@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import Optional, TYPE_CHECKING
 import tcod
 
+from state import StateBreak
 from states.base_menu_state import BaseMenuState
 from views.menu_views.item_options_view import ItemOptionsView
 
@@ -13,8 +14,13 @@ if TYPE_CHECKING:
 
 class ItemOptionsState(BaseMenuState["Action"]):
     
-    def __init__(self, item_options: List[Entity]) -> None:
-        super().__init__(ItemOptionsView, item_options)
+    def __init__(self, item, *args) -> None:
+        options = [_ for _ in item.options.keys()]
+        super().__init__(ItemOptionsView, options)
+        self.item = item
+        self.args = args
     
     def cmd_confirm(self):
-        pass
+        commands = [_ for _ in self.item.options.values()]
+        player = self.manager_service.data_manager.query(entity="PLAYER")
+        return commands[self.selection](player, self.item, *self.args)

@@ -7,7 +7,6 @@ from message import ColorFormatter, ConsoleText
 
 from view import View
 from views.elements.base_element import BaseElement, ElementConfig
-from states.base_menu_state import ListData
 
 
 if TYPE_CHECKING:

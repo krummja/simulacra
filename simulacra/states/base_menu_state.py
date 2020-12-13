@@ -76,4 +76,4 @@ class BaseMenuState(Generic[T], State[T]):
         return super().ev_keydown(event)
     
     def cmd_confirm(self):
-        print(self._data[self.selection])
+        pass

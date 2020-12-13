@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import Any, Dict, List, Optional, Tuple, Type, TYPE_CHECKING
 
 from entity import Entity
+from actions import common
 
 if TYPE_CHECKING:
     from action import ActionWithItem
@@ -42,9 +43,7 @@ class Item(Entity):
         # TODO: Ideally I would want to assemble this from
         # ... the item's actual state and attached Components...
         self.options = {
-            'info': None,
-            'drop': self.place,
-            'use': self.plan_activate
+            'drop': common.Nearby.Drop,
             }
 
     @property
@@ -80,14 +79,12 @@ class Item(Entity):
             )
         return super().copy_to(new_item)
 
-    def __eq__(self, other):
-        return (
-            self.uid == other.uid,
-            self.name == other.name,
-            self.description == other.description,
-            self.material == other.material,
-            self.stats == other.stats
-            )
+    # def __eq__(self, other):
+    #     return (
+    #         self.uid == other.uid,
+    #         self.name == other.name,
+    #         self.description == other.description,
+    #         )
 
     def __ne__(self, other):
         return not self.__eq__(other)
@@ -101,8 +98,9 @@ class Item(Entity):
                      ))
     
     def lift(self) -> None:
+        """Remove this item from any of its containers."""
         if self.owner:
-            self.owner.contents.remove(self)
+            self.owner['contents'].remove(self)
             self.owner = None
         if self.location:
             item_list = self.location.area.items[self.location.xy]
@@ -112,6 +110,7 @@ class Item(Entity):
             self.location = None
             
     def place(self, location: Location) -> None:
+        """Place this item on the floor at the given location."""
         assert not self.location, "This item already has a location."
         assert not self.owner, "Can't be placed because this item is currently owned."
         self.location = location
@@ -119,8 +118,10 @@ class Item(Entity):
         try:
             self.bg = location.area.area_model.get_bg_color(*location.xy)
             items[location.xy].append(self)
+            print(items[location.xy])
         except KeyError:
             items[location.xy] = [self]
+            print(items[location.xy])
             
     def plan_activate(self, action: ActionWithItem) -> ActionWithItem:
         return action

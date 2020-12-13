@@ -114,7 +114,7 @@ class Nearby(Action):
                 try:
                     self.success = True
                     self.message = f"{self.actor.owner.noun_text} picks up the {item.noun_text}" 
-                    self.actor.owner.components['INVENTORY'].add_to(item)
+                    self.actor.owner.components['INVENTORY'].take(item)
                     self.actor.reschedule(100)
                     return self
                 except:

@@ -60,7 +60,6 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
     manager_service = ManagerService()
     
     _COMMAND_KEYS: Dict[int, str] = {
-        tcod.event.K_d: "drop",
         tcod.event.K_e: "equipment",
         tcod.event.K_i: "inventory",
         tcod.event.K_g: "pickup",
@@ -93,6 +92,13 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
         tcod.event.K_KP_8: (0, -1),
         tcod.event.K_KP_9: (1, -1),
         }
+    
+    _DEBUG_KEYS: Dict[int, Tuple[int, str]] = {
+        tcod.event.K_F1: 'debug_1',
+        tcod.event.K_F2: 'debug_2',
+        tcod.event.K_F3: 'debug_3',
+        tcod.event.K_F4: 'debug_4'
+    }
 
     def __init__(self) -> None:
         super().__init__()
@@ -155,6 +161,9 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
             return func()
         if event.sym in self.MOVE_KEYS:
             return self.cmd_move(*self.MOVE_KEYS[event.sym])
+        if event.sym  in self._DEBUG_KEYS:
+            func = getattr(self, f"cmd_{self._DEBUG_KEYS[event.sym]}")
+            return func()
         return None
 
     def cmd_confirm(self) -> Optional[T]:
@@ -180,3 +189,15 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
 
     def cmd_quit(self) -> Optional[T]:
         raise SystemExit()
+
+    def cmd_debug_1(self):
+        pass
+    
+    def cmd_debug_2(self):
+        pass
+    
+    def cmd_debug_3(self):
+        pass
+    
+    def cmd_debug_4(self):
+        pass

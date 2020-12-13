@@ -53,11 +53,13 @@ class ItemFactory:
         for definition in template['components']:
             name = definition[0]
             config = definition[1]
-            new_instance.register_component(component_templates[name](**config))
+            new_instance.register_component(
+                component_templates[name](**config))
+        area = self.model.area_data.current_area
         try:
-            self.model.area_data.current_area.item_model.items[location.xy].append(new_instance)
-            new_instance.bg = self.model.area_data.current_area.area_model.get_bg_color(*location.xy)
+            area.item_model.items[location.xy].append(new_instance)
+            new_instance.bg = area.area_model.get_bg_color(*location.xy)
         except KeyError:
-            self.model.area_data.current_area.item_model.items[location.xy] = [new_instance]
+            area.item_model.items[location.xy] = [new_instance]
 
         return new_instance

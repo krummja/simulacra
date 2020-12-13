@@ -80,13 +80,6 @@ class ItemModel:
                     self.nearby_items.append(self.items[position])
             except KeyError:
                 continue
-            
-
-class ParticleModel:
-    
-    def __init__(self, area: Area) -> None:
-        self.area = area
-        self.particles: Dict[Tuple[int, int], List[Particle]] = {}
 
 
 class AreaLocation(Location):
@@ -109,7 +102,6 @@ class Area:
         self.area_model = AreaModel(self)
         self.actor_model = ActorModel(self)
         self.item_model = ItemModel(self)
-        self.particle_model = ParticleModel(self)
         self.camera = Camera(self)
 
     @property

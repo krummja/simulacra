@@ -16,11 +16,20 @@ if TYPE_CHECKING:
 
 class HelpTextElement(BaseElement):
     
-    def __init__(self, help_options: List[str], hue: Tuple[int, int, int]) -> None:
-        super().__init__(ElementConfig(
+    def __init__(
+            self, 
+            help_options: List[str], 
+            hue: Tuple[int, int, int],
             position=("bottom", "center"),
+            offset_x=0,
+            offset_y=0,
+        ) -> None:
+        super().__init__(ElementConfig(
+            position=position,
             width=CONSOLE_WIDTH,
             height=3,
+            offset_x=offset_x,
+            offset_y=offset_y
             ))
         
         self.help_options = []
@@ -36,7 +45,7 @@ class HelpTextElement(BaseElement):
         text_width = len(help_text)
         
         consoles['ROOT'].print(
-            ((self.content.width - text_width) // 2),
+            ((self.content.width - text_width - self.offset_x) // 2),
             self.content.top,
             help_text,
             fg=self.fg,

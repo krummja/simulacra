@@ -1,8 +1,6 @@
 from __future__ import annotations  # type: ignore
 from typing import TYPE_CHECKING
 
-from particles.test_effect import TestEffect
-
 if TYPE_CHECKING:
     from states import player_ready_state
     from action import Result
@@ -30,7 +28,6 @@ class ResultManager:
         # Sort results into Failure and Success
         if result.success == False:
             self.failures.append(result)
-            self.state.cmd_equipment()
         else:
             self.results.append(result)
 

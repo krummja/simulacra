@@ -4,7 +4,6 @@ from typing import Dict, TYPE_CHECKING
 import tcod
 import random
 
-from states.base_menu_state import ListData
 from data.tiles.floors import *
 from data.tiles.walls import *
 from area import Area
@@ -86,7 +85,7 @@ def debug_area(model: Model) -> Area:
         )
 
     item_factory.build(
-        uid='test_item',
+        uid='other_item',
         location=area[debug_room.center[0] - 2, debug_room.center[1] + 4]
         )
     # manager_service.animation_manager.add_animation(Animation(looping=False))

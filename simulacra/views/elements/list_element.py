@@ -7,7 +7,6 @@ from message import ColorFormatter, ConsoleText
 
 from view import View
 from views.elements.base_element import BaseElement, ElementConfig
-from states.base_menu_state import ListData
 
 
 if TYPE_CHECKING:
@@ -25,20 +24,20 @@ class ListElement(BaseElement):
     
     def __init__(self, config: ElementConfig, data: List[Entity]=[]) -> None:
         super().__init__(config)
-        self._data = data
+        self._data = [entity.noun_text for entity in data]
         
     @property
     def data(self) -> ListData:
-        return ListData(self._data)
+        return self._data
     
     def update(self, data: List[Entity]) -> None:
-        self._data = data
+        self._data = [entity.noun_text for entity in data]
         
     def draw_content(self, consoles: Dict[str, Console]) -> None:
         y_index = 0
-        for i in range(len(self.data)):
+        for i in range(len(self._data)):
             consoles['ROOT'].print(
                 x=self.x+2, y=self.y+y_index+2,
-                string=self.data[y_index],
+                string=self._data[y_index],
                 fg=self.fg)
             y_index += 1

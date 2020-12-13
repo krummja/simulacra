@@ -34,10 +34,7 @@ class PlayerReadyState(Generic[T], AreaState[T]):
         return action
 
     def cmd_escape(self) -> None:
-        if self.suspend:
-            self.suspend = False
-        else:
-            raise SaveAndQuit()
+        raise SaveAndQuit()
 
     def cmd_quit(self) -> None:
         raise StateBreak("PlayerReadyState")
@@ -48,7 +45,7 @@ class PlayerReadyState(Generic[T], AreaState[T]):
                 entity="PLAYER", 
                 component="INVENTORY", 
                 key="contents"
-                ), "inventory")
+                ))
         return state.loop()
     
     def cmd_examine(self):
@@ -56,18 +53,24 @@ class PlayerReadyState(Generic[T], AreaState[T]):
         cursor_xy: Tuple[int, int] = state.loop()
     
     def cmd_equipment(self):
-        # self.suspend = True
-        state = EffectsState(self.model)
-        state.loop()
+        pass
     
     def cmd_pickup(self):
         return common.Nearby.Pickup(self.model.player)
+
+    def cmd_debug_1(self):
+        data = self.manager_service.data_manager.query(
+            entity="PLAYER",
+            component="INVENTORY",
+            key="contents"
+            )
+        print([item.noun_text for item in data])
     
-    def cmd_drop(self):
-        state = InventoryMenuState(
-            self.manager_service.data_manager.query(
-                entity="PLAYER",
-                component="INVENTORY",
-                key="contents"
-            ), "drop")
-        return state.loop()
+    def cmd_debug_2(self):
+        print("F2")
+    
+    def cmd_debug_3(self):
+        print("F3")
+    
+    def cmd_debug_4(self):
+        print("F4")

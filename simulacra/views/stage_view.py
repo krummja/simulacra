@@ -21,7 +21,6 @@ from views.elements.base_element import BaseElement, ElementConfig
 from views.elements.elem_log import ElemLog
 from views.elements.gauge_element import GaugeElement
 from views.elements.list_element import ListElement
-from views.elements.test_animation_element import AnimationElement, AnimationFrame
 
 if TYPE_CHECKING:
     from model import Model
@@ -118,12 +117,6 @@ class StageView(View):
             data = [])
         
         self.log_panel = ElemLog(name="LOG PANEL", model=self.model)
-
-        self.animation = AnimationElement(
-            ElementConfig(
-                x=0, y=0,
-                width=30, height=30
-                ))
 
     def draw(self, consoles: Dict[str, Console]) -> None:
         area = self.model.area_data.current_area

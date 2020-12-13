@@ -16,14 +16,8 @@ class Inventory(Component):
         self.slots = slots        
         self.is_locked: bool = False
 
-    def add_to(self, item: Item) -> None:
-        if len(self['contents']) < self.slots:
-            item.lift()
-            item.owner = self
-            self['contents'].append(item)
-    
-    def remove_from(self, item: Item, location: Location) -> None:
-        if item in self['contents']:
-            item.owner = None
-            item.place(location)
-            self['contents'].remove(item)
+    def take(self, item: Item) -> None:
+        assert item.owner is not self
+        item.lift()
+        self['contents'].append(item)
+        item.owner = self
