@@ -42,8 +42,7 @@ class PlayerReadyState(Generic[T], AreaState[T]):
         state = InventoryMenuState(
             self.manager_service.data_manager.query(
                 entity="PLAYER", 
-                component="INVENTORY", 
-                key="contents"
+                component="INVENTORY"
                 ))
         return state.loop()
     
@@ -53,6 +52,7 @@ class PlayerReadyState(Generic[T], AreaState[T]):
     
     def cmd_equipment(self):
         pass
+        # state = EquipmentMenuState()
     
     def cmd_pickup(self):
         return common.Nearby.Pickup(self.model.player)
@@ -60,13 +60,12 @@ class PlayerReadyState(Generic[T], AreaState[T]):
     def cmd_debug_1(self):
         data = self.manager_service.data_manager.query(
             entity="PLAYER",
-            component="INVENTORY",
-            key="contents"
-            )
-        print([item.noun_text for item in data])
+            component="INVENTORY")
+        for item in data.values():
+            print(repr(item['slot']))        
     
     def cmd_debug_2(self):
-        print("F2")
+        print(self._view.inventory_panel.data)
     
     def cmd_debug_3(self):
         print("F3")

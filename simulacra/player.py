@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 class Player(Entity, Actor):
 
-    NAME = 'PLAYER'
+    uid = 'PLAYER'
     char = ord("@")
     color = (255, 0, 255)
     bg = (0, 0, 0)

@@ -16,14 +16,12 @@ class Component(defaultdict):
     result of an examine action.
     """
 
-    NAME: str = '<unset>'
-    OWNER: Entity = None
-
-    def __init__(self, name: str):
-        self.NAME = name
+    def __init__(self, uid: str = "<unset>"):
+        self.uid = uid
+        self.owner: Entity = None
 
     def on_register(self, owner: Entity) -> None:
-        self.OWNER = owner
+        self.owner = owner
 
     def on_unregister(self) -> None:
-        self.OWNER = None
+        self.owner = None

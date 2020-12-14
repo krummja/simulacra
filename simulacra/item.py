@@ -12,8 +12,6 @@ if TYPE_CHECKING:
 
 class ItemOption:
 
-    # FIXME: Make the attributes here not dependent on the Entity properties
-    
     def __init__(self, item: Item, text: str, command: Action):
         self.char = ord("-")
         self.color = (100, 100, 100)
@@ -39,7 +37,9 @@ class Item(Entity):
             name: str = "",
             description: str = "",
             location: Location = None,
-            display: Dict[str, Any] = None
+            display: Dict[str, Any] = None,
+            equippable: bool = False,
+            slot: str = None
         ) -> None:
         super().__init__(location)
         self.uid = uid
@@ -50,10 +50,12 @@ class Item(Entity):
         self.char = display['char']
         self.color = display['color']
         self.bg = display['bg']
-
-        self.options = [
-            ItemOption(self, "drop", common.Nearby.Drop)
-            ]
+        self.equippable = equippable
+        self.slot = slot
+        
+        self.options = [ItemOption(self, "drop", common.Nearby.Drop)]
+        if self.equippable:
+            self.options.append(ItemOption(self, "equip", common.Equip))
 
     @property
     def name(self) -> str:
@@ -88,28 +90,10 @@ class Item(Entity):
             )
         return super().copy_to(new_item)
 
-    # def __eq__(self, other):
-    #     return (
-    #         self.uid == other.uid,
-    #         self.name == other.name,
-    #         self.description == other.description,
-    #         )
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
-    def __hash__(self):
-        return hash((self.uid,
-                     self.name,
-                     self.description,
-                     self.material,
-                     self.stats
-                     ))
-    
     def lift(self) -> None:
         """Remove this item from any of its containers."""
         if self.owner:
-            self.owner['contents'].remove(self)
+            self.owner.remove(self.uid)
             self.owner = None
         if self.location:
             item_list = self.location.area.items[self.location.xy]
@@ -140,3 +124,6 @@ class Item(Entity):
     
     def consume(self, action: ActionWithItem) -> None:
         pass
+
+    def __repr__(self):
+        return repr(f"{self._name} : {self.char} : {self.equippable} : {self.slot}")

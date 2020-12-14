@@ -124,14 +124,32 @@ class Nearby(Action):
     
     class Drop(ActionWithItem):
         def act(self) -> Action:
-            assert self.item in self.model.player.components['INVENTORY']['contents']
+            assert self.item.uid in self.model.player.components['INVENTORY'].keys()
             self.item.lift()
             self.item.place(self.model.player.location)
             self.success = True
-            self.message = f"you drop the {self.item.noun_text}"
+            self.message = f"you drop the {self.item.noun_text}."
             self.actor.reschedule(100)
             return self
 
+
+class Equip(ActionWithItem):
+    def act(self) -> Action:
+        assert self.item.uid in self.model.player.components['INVENTORY'].keys()
+        try:
+            self.item.lift()
+            slot = self.item.slot
+            self.model.player.components['EQUIPMENT'].equip(slot, self.item)
+            self.success = True
+            # TODO: Make prepositions for different slots
+            self.message = f"you equip the {self.item.noun_text}."
+            self.actor.reschedule(100)
+            return self
+        except:
+            self.success = False
+            self.message = f"cannot equip the {item.noun_text}!"
+            raise Impossible(self)
+            
 
 class Attack(Action):
 

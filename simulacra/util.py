@@ -48,7 +48,7 @@ class Subject:
 
     def attach(self, observer: Observer) -> None:
         if observer not in self._observers.values():
-            self._observers[observer.NAME] = observer
+            self._observers[observer.uid] = observer
             
     def detach(self, observer_name: str) -> None:
         with suppress(ValueError):

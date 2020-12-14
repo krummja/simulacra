@@ -10,8 +10,10 @@ test_item = {
         'color': (255, 0, 0),
         'bg': (0, 0, 0)
         },
+    'equippable': False,
+    'slot': None,
     'components': [('Physics', {'size': 'large'}),
-                   ('Inventory', {'slots': 3})]
+                   ('Inventory', {})]
     }
 
 other_item = {
@@ -23,8 +25,10 @@ other_item = {
         'color': (0, 255, 255),
         'bg': (0, 0, 0)
         },
+    'equippable': True,
+    'slot': 'head',
     'components': [('Physics', {'size': 'large'}),
-                   ('Inventory', {'slots': 3})]
+                   ('Inventory', {})]
     }
 
 item_templates = {

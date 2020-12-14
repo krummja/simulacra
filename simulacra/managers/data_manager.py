@@ -54,7 +54,7 @@ class DataManager:
     def _try_get_entity(self, entity_name: str) -> Optional[Entity]:
         """Try to return a specific entity from the actor set."""
         for actor in self._model.actors:
-            if actor.owner.NAME == entity_name:
+            if actor.owner.uid == entity_name:
                 return actor.owner
             else:
                 pass
@@ -64,11 +64,11 @@ class DataManager:
         all_entities = self._get_all_entities()
         components = []
         for entity in all_entities:
-            if entity.NAME == self.exclude:
+            if entity.uid == self.exclude:
                 continue
             else:
                 for component in entity.components.values():
-                    components.append({entity.NAME: component})
+                    components.append({entity.uid: component})
         return components
     
     def _try_get_component(
@@ -95,7 +95,7 @@ class DataManager:
         results = []
         for item in all_components:
             for k, v in item.items():
-                if v.NAME == component_name:
+                if v.uid == component_name:
                     results.append({k: v[key]})
         return results
     
@@ -107,7 +107,7 @@ class DataManager:
         component_list = []
         for item in self._get_all_components():
             for k, v in item.items():
-                if v.NAME == component_name:
+                if v.uid == component_name:
                     component_list.append({k: v})
         return component_list
     

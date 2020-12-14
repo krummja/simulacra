@@ -102,21 +102,21 @@ class StageView(View):
                 position=('top', 'right'),
                 offset_y=(SIDE_PANEL_HEIGHT // 3),
                 width=SIDE_PANEL_WIDTH, height=8,
-                title="NEARBY", framed=True
-                ))
+                title="NEARBY", framed=True))
 
         self.inventory_panel = ListElement(
             config = ElementConfig(**inventory_panel),
             data = self.manager.query(
                 entity="PLAYER",
-                component="INVENTORY",
-                key="contents"))
+                component="INVENTORY"))
 
         self.equipment_panel = ListElement(
             config = ElementConfig(**equipment_panel),
-            data = [])
+            data = self.manager.query(
+                entity="PLAYER",
+                component="EQUIPMENT"))
         
-        self.log_panel = ElemLog(name="LOG PANEL", model=self.model)
+        self.log_panel = ElemLog(model=self.model)
 
     def draw(self, consoles: Dict[str, Console]) -> None:
         area = self.model.area_data.current_area
@@ -162,19 +162,11 @@ class StageView(View):
         self.inventory_panel.draw(consoles)
         self.equipment_panel.draw(consoles)
         self.log_panel.draw(consoles)
-        # self.render_particles(consoles)
        
     def refresh(self, area: Area, consoles: Dict[str, Console]) -> None:
         update_fov(area)
         render_area_tiles(area, consoles)
         render_visible_entities(area, consoles)
-   
-    # def render_particles(self, consoles: Dict[str, Console]) -> None:
-    #     TestEffect(self.p_system).fire()
-
-    #     while self.model.effect_flag:
-    #         self.p_system.update()
-    #         self.p_system.draw(consoles)
 
     def get_nearby_actors(self):
         # TODO: Move this to the DataManager

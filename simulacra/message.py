@@ -5,12 +5,6 @@ from typing import Optional, TYPE_CHECKING
 from collections import UserString
 from hues import set_color, RESET
 
-class Noun:
-    noun_text: str = "<unset>"
-
-    def __str__(self) -> str:
-        return self.noun_text
-
 
 class Message:
 

@@ -143,6 +143,7 @@ class ParticleEmitter:
         cam_x, cam_y = self._area.camera.get_camera_pos()
         
         # Now draw all of them.
+        # FIXME: Figure out how to constrain rendering to passables
         for particle in self.particles:
             last = particle.last()
             if last is not None:

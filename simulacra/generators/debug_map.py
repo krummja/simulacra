@@ -13,6 +13,7 @@ from room import Room
 from components.attributes import initialize_character_attributes
 from components.physics import Physics
 from components.inventory import Inventory
+from components.equipment import Equipment
 from factories.factory_service import FactoryService
 from factories.item_factory import ItemFactory
 from managers.manager_service import ManagerService
@@ -34,7 +35,7 @@ def roll_asset(area: Area, asset: Dict[str, Dict[str, Tile]], threshold: int):
 
 def debug_area(model: Model) -> Area:
     area = Area(model, 120, 120)
-    area.NAME = 'test area'
+    area.uid = 'test_area'
 
     # TODO: Make a RoomFactory
     debug_room = Room(20, 20, 20, 20)
@@ -56,6 +57,7 @@ def debug_area(model: Model) -> Area:
     player = Player(area[debug_room.center])
     player.register_component(initialize_character_attributes())
     player.register_component(Inventory())
+    player.register_component(Equipment())
     player.register_component(Physics(weight=10.0))
     player.noun_text = "aulia inuicta"
 
@@ -88,7 +90,6 @@ def debug_area(model: Model) -> Area:
         uid='other_item',
         location=area[debug_room.center[0] - 2, debug_room.center[1] + 4]
         )
-    # manager_service.animation_manager.add_animation(Animation(looping=False))
 
     update_fov(area)
 

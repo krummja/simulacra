@@ -47,14 +47,18 @@ class ItemFactory:
             name=template['name'],
             description=template['description'],
             display=template['display'],
-            location=location
+            location=location,
+            equippable=template['equippable'],
+            slot=template['slot']
             )
+
         new_instance.noun_text = template['name']
         for definition in template['components']:
             name = definition[0]
             config = definition[1]
             new_instance.register_component(
                 component_templates[name](**config))
+            
         area = self.model.area_data.current_area
         try:
             area.item_model.items[location.xy].append(new_instance)

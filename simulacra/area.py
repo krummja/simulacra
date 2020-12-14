@@ -20,10 +20,9 @@ if TYPE_CHECKING:
 class AreaModel:
     """Model class that holds the actual data structures for a given area."""
 
-    NAME = '<unset>'
-
     def __init__(self, area: Area) -> None:
         self.area = area
+        self.uid = "<unset>"
         self.shape = self.area.shape
         self.tiles = np.zeros(self.shape, dtype=tile_dt)
         self.effects = np.zeros(self.shape, dtype=tile_graphic)

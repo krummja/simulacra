@@ -10,6 +10,7 @@ from states.base_menu_state import BaseMenuState
 from states.menu_states.item_options_state import ItemOptionsState
 
 if TYPE_CHECKING:
+    from components.inventory import Inventory
     from entity import Entity
     from model import Model
     from view import View
@@ -17,8 +18,12 @@ if TYPE_CHECKING:
 
 class InventoryMenuState(BaseMenuState["Action"]):
     
-    def __init__(self, data: List[Entity]) -> None:
-        super().__init__(InventoryMenuView, data)
+    def __init__(self, data: Inventory) -> None:
+        self._data = []
+        if data is not None:
+            self._entries = [(k, v) for k, v in data.items()]
+            self._data = [entry[1]['slot'] for entry in self._entries]
+        super().__init__(InventoryMenuView, self._data)
     
     def cmd_confirm(self):
         try:
