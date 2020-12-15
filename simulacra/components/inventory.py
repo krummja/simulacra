@@ -26,7 +26,7 @@ class Inventory(Component):
         self.slots = 10
         self.is_locked: bool = False
 
-    def take(self, item: Item) -> None:
+    def add(self, item: Item) -> None:
         assert item.owner is not self
         if self.slots > 0:
             item.lift()
@@ -36,7 +36,7 @@ class Inventory(Component):
         else:
             self.owner.location.area.model.report("There's no room...")
     
-    def remove(self, item_uid: str):
-        assert self[item_uid]
-        del self[item_uid]
+    def remove(self, item: Item):
+        assert self[item.uid]
+        del self[item.uid]
         

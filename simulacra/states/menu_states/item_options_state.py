@@ -1,12 +1,14 @@
 from __future__ import annotations
-from typing import Optional, TYPE_CHECKING
+from typing import Any, List, Optional, TYPE_CHECKING
 import tcod
 
+from actions import common
 from state import StateBreak
 from states.base_menu_state import BaseMenuState
 from views.menu_views.item_options_view import ItemOptionsView
 
 if TYPE_CHECKING:
+    from item import Item
     from entity import Entity
     from model import Model
     from view import View
@@ -14,13 +16,39 @@ if TYPE_CHECKING:
 
 class ItemOptionsState(BaseMenuState["Action"]):
     
-    def __init__(self, item, *args) -> None:
-        options = [_ for _ in item.options]
-        super().__init__(ItemOptionsView, options)
-        self.item = item
-        self.args = args
+    def __init__(self, item: Item) -> None:
+        self._item = item
+        self._player = self.manager_service.data_manager.query(entity="PLAYER")
+        self._options = self._make_options()
+        super().__init__(ItemOptionsView, self._options)
+        
+    def _make_options(self) -> List[Any]:
+        _options = []
+        if self._item.owner is not None and not self._item.equipped:
+            _options.append('drop')
+        if self._item.equippable and not self._item.equipped:
+            _options.append('equip')
+        if self._item.equippable and self._item.equipped:
+            _options.append('dequip')
+            
+        if len(_options) > 0:
+            return _options
+        else:
+            pass
+        
+    def _opt_drop(self):
+        return common.Nearby.Drop(self._player, self._item)
+    
+    def _opt_equip(self):
+        return common.Equip(self._player, self._item)
+    
+    def _opt_dequip(self):
+        return common.Dequip(self._player, self._item)
     
     def cmd_confirm(self):
-        commands = [opt.command for opt in self.item.options]
-        player = self.manager_service.data_manager.query(entity="PLAYER")
-        return commands[self.selection](player, self.item, *self.args)
+        if self._options[self._selection] == 'drop':
+            return self._opt_drop()
+        if self._options[self._selection] == 'equip':
+            return self._opt_equip()
+        if self._options[self._selection] == 'dequip':
+            return self._opt_dequip()

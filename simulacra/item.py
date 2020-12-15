@@ -36,27 +36,32 @@ class Item(Entity):
             uid: str = "",
             name: str = "",
             description: str = "",
-            location: Location = None,
-            display: Dict[str, Any] = None,
-            equippable: bool = False,
-            slot: str = None
+            location: Optional[Location] = None,
+            display: Optional[Dict[str, Any]] = None,
+            equippable: Optional[bool] = False,
+            slot: Optional[str] = None
         ) -> None:
         super().__init__(location)
+        
+        # Basic properties
         self.uid = uid
         self._name = name
-        self._description = description
         self._owner = None
         self._location = location
+        
+        # TODO: Make a Description component
+        self._description = description
+        
+        # Display Properties
         self.char = display['char']
         self.color = display['color']
         self.bg = display['bg']
-        self.equippable = equippable
-        self.slot = slot
         
-        self.options = [ItemOption(self, "drop", common.Nearby.Drop)]
-        if self.equippable:
-            self.options.append(ItemOption(self, "equip", common.Equip))
-
+        # TODO: Break this off into a component?
+        self.equippable = equippable
+        self.equipped = False
+        self.slot = slot
+  
     @property
     def name(self) -> str:
         return self._name
@@ -93,7 +98,7 @@ class Item(Entity):
     def lift(self) -> None:
         """Remove this item from any of its containers."""
         if self.owner:
-            self.owner.remove(self.uid)
+            self.owner.remove(self)
             self.owner = None
         if self.location:
             item_list = self.location.area.items[self.location.xy]

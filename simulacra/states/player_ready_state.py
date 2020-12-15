@@ -11,6 +11,7 @@ from state import SaveAndQuit, StateBreak, T
 from states.area_state import AreaState
 from states.pick_location_state import PickLocationState
 from states.menu_states.inventory_menu_state import InventoryMenuState
+from states.menu_states.equipment_menu_state import EquipmentMenuState
 from states.effects_state import EffectsState
 from particles.test_effect import TestEffect
 
@@ -39,20 +40,25 @@ class PlayerReadyState(Generic[T], AreaState[T]):
         raise StateBreak("PlayerReadyState")
 
     def cmd_inventory(self):
-        state = InventoryMenuState(
-            self.manager_service.data_manager.query(
-                entity="PLAYER", 
-                component="INVENTORY"
-                ))
+        inventory_data = self.manager_service.data_manager.query(
+            entity="PLAYER", 
+            component="INVENTORY")
+        state = InventoryMenuState(inventory_data)
         return state.loop()
+        # self._view.inventory_panel.update(inventory_data)
+    
     
     def cmd_examine(self):
         state = PickLocationState(self.model, "", self.model.player.location.xy)
         cursor_xy: Tuple[int, int] = state.loop()
     
     def cmd_equipment(self):
-        pass
-        # state = EquipmentMenuState()
+        equipment_data = self.manager_service.data_manager.query(
+                entity="PLAYER",
+                component="EQUIPMENT")
+        state = EquipmentMenuState(equipment_data)
+        return state.loop()
+        # self._view.equipment_panel.update(equipment_data)
     
     def cmd_pickup(self):
         return common.Nearby.Pickup(self.model.player)

@@ -48,17 +48,40 @@ class BaseMenuView(View, BaseElement):
         data = self._state.data
         
         y_index = 0
-        for i in range(len(data)):
-            char = data[y_index].char
-            color = data[y_index].color
+        
+        for _ in range(len(data)):
+            if hasattr(data[y_index], 'char'):
+                char = data[y_index].char
+            else:
+                char = ord(' ')
+
+            if hasattr(data[y_index], 'color'):
+                color = data[y_index].color
+            else:
+                color = (0, 0, 0)
+            
+            if hasattr(data[y_index], 'alt_fg'):
+                fg = data[y_index].alt_fg
+            else:
+                if self._state.selection == y_index:
+                    fg = selected
+                else:
+                    fg = unselected
+                    
+            if hasattr(data[y_index], 'noun_text'):
+                text = data[y_index].noun_text
+            else:
+                text = data[y_index]
             
             consoles['ROOT'].print(
                 x=self.x + 2, y=self.y + y_index + 2,
                 string=chr(char),
-                fg=color)
+                fg=color
+                )
             
             consoles['ROOT'].print(
                 x=self.x + 4, y=self.y + y_index + 2,
-                string=data[y_index].noun_text,
-                fg=selected if self._state.selection == y_index else unselected)
+                string=text,
+                fg=fg
+                )
             y_index += 1

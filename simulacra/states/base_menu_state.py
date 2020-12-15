@@ -42,8 +42,15 @@ class BaseMenuState(Generic[T], State[T]):
     Parameters:
         view    -   the desired view of the data
         data    -   a list of entities, usually from a DataManager query
+        
+    -----------------
+    | *  item1      |       _data = [<item1>, <item2>, <item3>, <item4>]
+    | /  item2      |       0 <= _selection < 4
+    | u  item3    4 |
+    | !  item4      |
+    -----------------
     """
-    
+
     NAME = "Menu Base"
     
     def __init__(self, view: View, data: List[Any]) -> None:
@@ -54,6 +61,9 @@ class BaseMenuState(Generic[T], State[T]):
     
     @property
     def data(self) -> ListData:
+        """Getter for classes outside of `BaseMenuState`. Encapsulates the
+        data and provides similar functionality as the `BaseMenuClass` itself,
+        e.g. setting bounds on indexing."""
         return ListData(self._data)
 
     @property
@@ -62,6 +72,9 @@ class BaseMenuState(Generic[T], State[T]):
     
     @selection.setter
     def selection(self, value: int) -> None:
+        """Allow the `selection` attribute to be set within the bounds set by
+        the length of the data list.
+        """
         lower_bound = 0
         upper_bound = len(self.data) - 1
         if value <= lower_bound:
@@ -72,7 +85,7 @@ class BaseMenuState(Generic[T], State[T]):
         
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[T]:
         if event.sym in self.MOVE_KEYS:
-            self.selection += self.MOVE_KEYS[event.sym][1]           
+            self.selection += self.MOVE_KEYS[event.sym][1]    
         return super().ev_keydown(event)
     
     def cmd_confirm(self):

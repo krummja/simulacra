@@ -87,8 +87,13 @@ def debug_area(model: Model) -> Area:
         )
 
     item_factory.build(
-        uid='other_item',
+        uid='test_helmet',
         location=area[debug_room.center[0] - 2, debug_room.center[1] + 4]
+        )
+
+    item_factory.build(
+        uid='test_breastplate',
+        location=area[debug_room.center[0] + 2, debug_room.center[1] + 4]
         )
 
     update_fov(area)

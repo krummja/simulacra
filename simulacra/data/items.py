@@ -16,22 +16,37 @@ test_item = {
                    ('Inventory', {})]
     }
 
-other_item = {
-    'uid': 'other_item',
-    'name': 'other item',
-    'description': 'A simple whatchamacallit. Nothing special.',
+test_helmet = {
+    'uid': 'test_helmet',
+    'name': 'test helmet',
+    'description': '',
     'display': {
-        'char': ord("*"),
+        'char': ord("A"),
         'color': (0, 255, 255),
         'bg': (0, 0, 0)
         },
     'equippable': True,
     'slot': 'head',
-    'components': [('Physics', {'size': 'large'}),
-                   ('Inventory', {})]
+    'components': [('Physics', {'size': 'large'})]
     }
+
+test_breastplate = {
+    'uid': 'test_breastplate',
+    'name': 'test breastplate',
+    'description': '',
+    'display': {
+        'char': ord("H"),
+        'color': (0, 255, 255),
+        'bg': (0, 0, 0)
+        },
+    'equippable': True,
+    'slot': 'torso',
+    'components': [('Physics', {'size': 'large'})]
+    }
+
 
 item_templates = {
     test_item['uid']: test_item,
-    other_item['uid']: other_item
+    test_helmet['uid']: test_helmet,
+    test_breastplate['uid']: test_breastplate
     }

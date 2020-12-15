@@ -114,7 +114,7 @@ class Nearby(Action):
                 try:
                     self.success = True
                     self.message = f"{self.actor.owner.noun_text} picks up the {item.noun_text}" 
-                    self.actor.owner.components['INVENTORY'].take(item)
+                    self.actor.owner.components['INVENTORY'].add(item)
                     self.actor.reschedule(100)
                     return self
                 except:
@@ -135,21 +135,31 @@ class Nearby(Action):
 
 class Equip(ActionWithItem):
     def act(self) -> Action:
-        assert self.item.uid in self.model.player.components['INVENTORY'].keys()
+        print(self.item)
         try:
-            self.item.lift()
-            slot = self.item.slot
-            self.model.player.components['EQUIPMENT'].equip(slot, self.item)
+            self.model.player.components['EQUIPMENT'].equip(self.item)
+            self.model.player.components['INVENTORY'].remove(self.item)
             self.success = True
-            # TODO: Make prepositions for different slots
-            self.message = f"you equip the {self.item.noun_text}."
+            self.message = f"you equip the {self.item.noun_text}"
             self.actor.reschedule(100)
             return self
         except:
             self.success = False
-            self.message = f"cannot equip the {item.noun_text}!"
             raise Impossible(self)
-            
+
+class Dequip(ActionWithItem):
+    def act(self) -> Action:
+        try:
+            self.model.player.components['INVENTORY'].add(self.item)
+            self.model.player.components['EQUIPMENT'].remove(self.item)
+            self.success = True
+            self.message = f"you remove the {self.item.noun_text}"
+            self.actor.reschedule(100)
+            return self
+        except:
+            self.success = False
+            raise Impossible(self)
+
 
 class Attack(Action):
 

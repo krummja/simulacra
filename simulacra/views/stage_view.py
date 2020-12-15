@@ -21,6 +21,7 @@ from views.elements.base_element import BaseElement, ElementConfig
 from views.elements.elem_log import ElemLog
 from views.elements.gauge_element import GaugeElement
 from views.elements.list_element import ListElement
+from views.elements.equipment_element import EquipmentElement
 
 if TYPE_CHECKING:
     from model import Model
@@ -110,11 +111,10 @@ class StageView(View):
                 entity="PLAYER",
                 component="INVENTORY"))
 
-        self.equipment_panel = ListElement(
-            config = ElementConfig(**equipment_panel),
-            data = self.manager.query(
-                entity="PLAYER",
-                component="EQUIPMENT"))
+        self.equipment_panel = EquipmentElement(
+            config=ElementConfig(**equipment_panel),
+            data=self.manager.query(entity="PLAYER",
+                                  component="EQUIPMENT"))
         
         self.log_panel = ElemLog(model=self.model)
 
