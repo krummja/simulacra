@@ -20,16 +20,6 @@ class ItemOption:
 
 
 class Item(Entity):
-    """
-    Items have:
-        - a material, a type, and can be used
-        - stats
-        - a rarity, a level, and a value
-    Items can:
-        - be sharpened, altered, destroyed, and repaired
-        - be held and displayed
-        - be painted, customized, and engraved
-    """
 
     def __init__(
             self,
@@ -38,8 +28,6 @@ class Item(Entity):
             description: str = "",
             location: Optional[Location] = None,
             display: Optional[Dict[str, Any]] = None,
-            equippable: Optional[bool] = False,
-            slot: Optional[str] = None
         ) -> None:
         super().__init__(location)
         
@@ -56,11 +44,6 @@ class Item(Entity):
         self.char = display['char']
         self.color = display['color']
         self.bg = display['bg']
-        
-        # TODO: Break this off into a component?
-        self.equippable = equippable
-        self.equipped = False
-        self.slot = slot
   
     @property
     def name(self) -> str:
@@ -95,6 +78,17 @@ class Item(Entity):
             )
         return super().copy_to(new_item)
 
+    def __eq__(self, other: Item):
+        return (self.uid == other.uid,
+                self.name == other.name,
+                self.description == other.description)
+    
+    def __ne__(self, other: Item):
+        return not self.__eq__(other)
+    
+    def __hash__(self):
+        return hash((self.uid, self.name, self.description))
+        
     def lift(self) -> None:
         """Remove this item from any of its containers."""
         if self.owner:
@@ -116,10 +110,8 @@ class Item(Entity):
         try:
             self.bg = location.area.area_model.get_bg_color(*location.xy)
             items[location.xy].append(self)
-            print(items[location.xy])
         except KeyError:
             items[location.xy] = [self]
-            print(items[location.xy])
             
     def plan_activate(self, action: ActionWithItem) -> ActionWithItem:
         return action

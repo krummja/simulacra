@@ -1,42 +1,71 @@
 from __future__ import annotations
-from typing import List, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Hashable
 
-from collections import defaultdict
 from component import Component
 
 if TYPE_CHECKING:
-    from location import Location
     from item import Item
-    
 
-class InventorySlot(defaultdict):
+
+class ItemStack:
     
-    def __init__(self, item: Item = None) -> None:
-        self['uid']: str = item.uid
-        self['slot']: Optional[Item] = item
+    def __init__(self, item: Item) -> None:
+        self.amount = 1
+        self.item = item
         
-    def __str__(self) -> str:
-        return str(self['uid'])
+    def add_to_stack(self) -> None:
+        self.amount += 1
+        
+    def pop_from_stack(self) -> Item:
+        if self.amount:
+            self.amount -= 1
+        return copy.copy(self.item)
+    
+    def tuple(self):
+        return self.item, self.amount
+    
+    def __hash__(self):
+        return hash(self.item)
+    
+    @property
+    def description(self):
+        return self.item.description
+    
+    @property
+    def name(self):
+        return self.item.name
 
 
 class Inventory(Component):
-   
+    
     def __init__(self) -> None:
         super().__init__("INVENTORY")
-        self.slots = 10
-        self.is_locked: bool = False
-
-    def add(self, item: Item) -> None:
-        assert item.owner is not self
-        if self.slots > 0:
-            item.lift()
-            item.owner = self
-            self[item.uid] = InventorySlot(item)
-            self.slots -= 1
-        else:
-            self.owner.location.area.model.report("There's no room...")
+        self['item_stacks']: Dict[Hashable, ItemStack] = {}
     
-    def remove(self, item: Item):
-        assert self[item.uid]
-        del self[item.uid]
+    def add_item(self, item: Item):
+        if item in self['item_stacks']:
+            self['item_stacks'][item].add_to_stack()
+        else:
+            self['item_stacks'][item] = ItemStack(item)
+
+    def pop_item(self, item: Item):
+        if item in self['item_stacks']:
+            popped_item = self['item_stacks'][item].pop_from_stack()
+            if self['item_stacks'][item].amount <= 0:
+                del self['item_stacks'][item]
+            return popped_item
         
+    def get_items(self, uid, count=0, pop=False):
+        found_items = []
+        item_stacks = [s for s in self['item_stacks'].values() if s.item.uid == uid]
+        for stack in item_stacks:
+            if count and len(found_item) >= count:
+                break
+            if pop:
+                found_items.append(self.pop_item(stack.item))
+            else:
+                found_items.append(stack.item)
+        return found_items
+    
+    def get_all_items(self):
+        return self['item_stacks'].values()

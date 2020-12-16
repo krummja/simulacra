@@ -12,8 +12,6 @@ from player import Player
 from room import Room
 from components.attributes import initialize_character_attributes
 from components.physics import Physics
-from components.inventory import Inventory
-from components.equipment import Equipment
 from factories.factory_service import FactoryService
 from factories.item_factory import ItemFactory
 from managers.manager_service import ManagerService
@@ -56,8 +54,6 @@ def debug_area(model: Model) -> Area:
     # TODO: PlayerFactory will make this easier, of course
     player = Player(area[debug_room.center])
     player.register_component(initialize_character_attributes())
-    player.register_component(Inventory())
-    player.register_component(Equipment())
     player.register_component(Physics(weight=10.0))
     player.noun_text = "aulia inuicta"
 

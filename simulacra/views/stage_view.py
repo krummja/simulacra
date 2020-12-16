@@ -20,8 +20,6 @@ from particles.particle import Particle
 from views.elements.base_element import BaseElement, ElementConfig
 from views.elements.elem_log import ElemLog
 from views.elements.gauge_element import GaugeElement
-from views.elements.list_element import ListElement
-from views.elements.equipment_element import EquipmentElement
 
 if TYPE_CHECKING:
     from model import Model
@@ -98,24 +96,13 @@ class StageView(View):
             hue = (130, 230, 230),
             data = (243, 1000))
 
-        self.nearby_panel = ListElement(
-            config = ElementConfig(
-                position=('top', 'right'),
-                offset_y=(SIDE_PANEL_HEIGHT // 3),
-                width=SIDE_PANEL_WIDTH, height=8,
-                title="NEARBY", framed=True))
+        # self.nearby_panel = ListElement(
+        #     config = ElementConfig(
+        #         position=('top', 'right'),
+        #         offset_y=(SIDE_PANEL_HEIGHT // 3),
+        #         width=SIDE_PANEL_WIDTH, height=8,
+        #         title="NEARBY", framed=True))
 
-        self.inventory_panel = ListElement(
-            config = ElementConfig(**inventory_panel),
-            data = self.manager.query(
-                entity="PLAYER",
-                component="INVENTORY"))
-
-        self.equipment_panel = EquipmentElement(
-            config=ElementConfig(**equipment_panel),
-            data=self.manager.query(entity="PLAYER",
-                                  component="EQUIPMENT"))
-        
         self.log_panel = ElemLog(model=self.model)
 
     def draw(self, consoles: Dict[str, Console]) -> None:
@@ -157,10 +144,6 @@ class StageView(View):
         self.xp_gauge.draw(consoles)
 
         # PANEL FRAMES
-        self.nearby_panel.update(self.get_nearby_actors())
-        self.nearby_panel.draw(consoles)
-        self.inventory_panel.draw(consoles)
-        self.equipment_panel.draw(consoles)
         self.log_panel.draw(consoles)
        
     def refresh(self, area: Area, consoles: Dict[str, Console]) -> None:

@@ -48,8 +48,6 @@ class ItemFactory:
             description=template['description'],
             display=template['display'],
             location=location,
-            equippable=template['equippable'],
-            slot=template['slot']
             )
 
         new_instance.noun_text = template['name']
