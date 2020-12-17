@@ -22,6 +22,7 @@ from views.elements.elem_log import ElemLog
 from views.elements.gauge_element import GaugeElement
 from views.elements.inventory_element import InventoryElement
 from views.elements.equipment_element import EquipmentElement
+from views.elements.list_element import ListElement
 
 if TYPE_CHECKING:
     from model import Model
@@ -98,12 +99,12 @@ class StageView(View):
             hue = (130, 230, 230),
             data = (0, 1000))
 
-        # self.nearby_panel = ListElement(
-        #     config = ElementConfig(
-        #         position=('top', 'right'),
-        #         offset_y=(SIDE_PANEL_HEIGHT // 3),
-        #         width=SIDE_PANEL_WIDTH, height=8,
-        #         title="NEARBY", framed=True))
+        self.nearby_panel = ListElement(
+            config = ElementConfig(
+                position=('top', 'right'),
+                offset_y=(SIDE_PANEL_HEIGHT // 3),
+                width=SIDE_PANEL_WIDTH, height=8,
+                title="NEARBY", framed=True))
 
         self.inventory_panel = InventoryElement(
             config = ElementConfig(**inventory_panel),
@@ -156,6 +157,8 @@ class StageView(View):
         self.xp_gauge.draw(consoles)
 
         # PANEL FRAMES
+        self.nearby_panel.update(self.get_nearby_actors())
+        self.nearby_panel.draw(consoles)
         self.inventory_panel.draw(consoles)
         self.equipment_panel.draw(consoles)
         self.log_panel.draw(consoles)

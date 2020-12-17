@@ -20,9 +20,10 @@ class ItemOptionsView(BaseMenuView):
         super().__init__(
             state=state, 
             config=ElementConfig(
-                position=("bottom", "right"),
+                position=("top", "right"),
                 width=(SIDE_PANEL_WIDTH // 2), 
-                height=(SIDE_PANEL_HEIGHT // 2) + 2,
+                height=len(state._options) + 4,
+                offset_y=(SIDE_PANEL_HEIGHT // 2) - 1,
                 fg=(255, 255, 255),
                 title="",
                 framed=True,

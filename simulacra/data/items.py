@@ -19,7 +19,7 @@ test_helmet = {
     'name': 'test helmet',
     'description': '',
     'display': {
-        'char': ord("A"),
+        'char': 209,
         'color': (0, 255, 255),
         'bg': (0, 0, 0)
         },

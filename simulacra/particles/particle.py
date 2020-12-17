@@ -150,16 +150,12 @@ class ParticleEmitter:
                 char, x, y, fg = last
                 bg = self._area.area_model.get_bg_color(x-cam_x, y-cam_y)
                 consoles['ROOT'].print(x-cam_x, y-cam_y, " ", fg, bg)
-                console_data = consoles['ROOT'].tiles_rgb[
-                    ["ch", "fg", "bg"]][y, x]
             
             if particle.time < particle.lifespan:
                 # Draw the new one
                 char, x, y, fg = particle.next()
                 bg = self._area.area_model.get_bg_color(x-cam_x, y-cam_y)
                 consoles['ROOT'].print(x-cam_x, y-cam_y, char, fg, bg)
-                console_data = consoles['ROOT'].tiles_rgb[
-                    ["ch", "fg", "bg"]][y, x]
             else:
                 self.particles.remove(particle)
 
