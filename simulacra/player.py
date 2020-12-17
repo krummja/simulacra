@@ -19,7 +19,9 @@ class Player(Entity, Actor):
     color = (255, 0, 255)
     bg = (0, 0, 0)
 
-    def __init__(self, location: Location):
-        Entity.__init__(self, location)
+    def __init__(self, name: str, location: Location):
+        Entity.__init__(self, self.uid, location)
+        self._noun_text = name
+        
         self.control = PlayerControl(self)
         Actor.__init__(self, self, self.control)

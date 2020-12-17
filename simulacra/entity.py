@@ -12,14 +12,17 @@ if TYPE_CHECKING:
 class Entity(Graphic, Noun):
     """An `Entity` is a primary game object that is basically a blank wrapper
     for a set of `Component`s."""
-    
-    uid = "<unset>"
 
-    def __init__(self, location: Location) -> None:
+    def __init__(self, uid: str, location: Location) -> None:
         Graphic.__init__(self)
         Noun.__init__(self)
+        self.uid = uid
         self.location = location
         self.components = {}
+        
+    @property
+    def noun_text(self) -> str:
+        return self._noun_text
 
     def copy_to(self, new_entity: Entity) -> Entity:
         """Make a copy of this `Entity` with all components registered."""

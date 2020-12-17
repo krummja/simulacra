@@ -24,13 +24,12 @@ class ItemOptionsState(BaseMenuState["Action"]):
         
     def _make_options(self) -> List[Any]:
         _options = []
-        if self._item.owner is not None and not self._item.equipped:
+        if not self._item.is_equipped and self._item.owner is not None:
             _options.append('drop')
-        if self._item.equippable and not self._item.equipped:
+        if self._item.is_equippable:
             _options.append('equip')
-        if self._item.equippable and self._item.equipped:
+        if self._item.is_equipped:
             _options.append('dequip')
-            
         if len(_options) > 0:
             return _options
         else:

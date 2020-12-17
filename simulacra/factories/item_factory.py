@@ -48,9 +48,9 @@ class ItemFactory:
             description=template['description'],
             display=template['display'],
             location=location,
+            slot=template['slot']
             )
 
-        new_instance.noun_text = template['name']
         for definition in template['components']:
             name = definition[0]
             config = definition[1]

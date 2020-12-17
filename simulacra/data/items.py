@@ -10,6 +10,7 @@ test_item = {
         'color': (255, 0, 0),
         'bg': (0, 0, 0)
         },
+    'slot': None,
     'components': [('Physics', {'size': 'large'})]
     }
 
@@ -22,6 +23,7 @@ test_helmet = {
         'color': (0, 255, 255),
         'bg': (0, 0, 0)
         },
+    'slot': 'head',
     'components': [('Physics', {'size': 'large'})]
     }
 
@@ -34,6 +36,7 @@ test_breastplate = {
         'color': (0, 255, 255),
         'bg': (0, 0, 0)
         },
+    'slot': 'torso',
     'components': [('Physics', {'size': 'large'})]
     }
 

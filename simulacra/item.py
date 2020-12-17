@@ -10,15 +10,6 @@ if TYPE_CHECKING:
     from component import Component
 
 
-class ItemOption:
-
-    def __init__(self, item: Item, text: str, command: Action):
-        self.char = ord("-")
-        self.color = (100, 100, 100)
-        self.noun_text = text
-        self.command = command
-
-
 class Item(Entity):
 
     def __init__(
@@ -28,71 +19,60 @@ class Item(Entity):
             description: str = "",
             location: Optional[Location] = None,
             display: Optional[Dict[str, Any]] = None,
+            slot: Optional[str] = None
         ) -> None:
-        super().__init__(location)
+        super().__init__(uid, location)
         
         # Basic properties
-        self.uid = uid
-        self._name = name
-        self._owner = None
-        self._location = location
-        
-        # TODO: Make a Description component
+        self.owner = None
+        self.location = location
+        self._noun_text = name
         self._description = description
         
         # Display Properties
         self.char = display['char']
         self.color = display['color']
         self.bg = display['bg']
-  
+        
+        self.slot = slot
+        
+        self.is_equipped = False
+        self.is_broken = False
+        self.is_unknown = False
+    
+    @property
+    def is_equippable(self) -> bool:
+        if self.slot is None:
+            return False
+        if self.is_equipped:
+            return False
+        if self.is_broken:
+            return False
+        if self.is_unknown:
+            return False
+        return True
+    
     @property
     def name(self) -> str:
-        return self._name
+        return self._noun_text
 
     @property
     def description(self) -> str:
         return self._description
 
-    @property
-    def owner(self):
-        return self._owner
-    
-    @owner.setter
-    def owner(self, value) -> None:
-        self._owner = value
-
-    @property
-    def location(self):
-        return self._location
-    
-    @location.setter
-    def location(self, value) -> None:
-        self._location = value
-
     def copy(self):
         new_item = Item(
             self.uid,
-            self._name,
+            self._noun_text,
             self._description,
             self.location
             )
         return super().copy_to(new_item)
 
-    def __eq__(self, other: Item):
-        return (self.uid == other.uid,
-                self.name == other.name,
-                self.description == other.description)
-    
-    def __ne__(self, other: Item):
-        return not self.__eq__(other)
-    
-    def __hash__(self):
-        return hash((self.uid, self.name, self.description))
-        
     def lift(self) -> None:
         """Remove this item from any of its containers."""
         if self.owner:
-            self.owner.remove(self)
+            self.owner.pop_item(self)
             self.owner = None
         if self.location:
             item_list = self.location.area.items[self.location.xy]
@@ -113,14 +93,13 @@ class Item(Entity):
         except KeyError:
             items[location.xy] = [self]
             
-    def plan_activate(self, action: ActionWithItem) -> ActionWithItem:
-        return action
+    def __eq__(self, other: Item):
+        return (self.uid == other.uid,
+                self.name == other.name,
+                self.description == other.description)
     
-    def act_activate(self, action: ActionWithItem) -> None:
-        raise Impossible(f"you can do nothing with the {self.noun_text}!")
+    def __ne__(self, other: Item):
+        return not self.__eq__(other)
     
-    def consume(self, action: ActionWithItem) -> None:
-        pass
-
-    def __repr__(self):
-        return repr(f"{self._name} : {self.char} : {self.equippable} : {self.slot}")
+    def __hash__(self):
+        return hash((self.uid, self.name, self.description))

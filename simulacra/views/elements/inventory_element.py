@@ -7,17 +7,41 @@ from views.elements.base_element import BaseElement, ElementConfig
 
 if TYPE_CHECKING:
     from item import Item
-    from component import Component
+    from components.inventory import Inventory
     from tcod.console import Console
 
 
 class InventoryElement(BaseElement):
 
-    def __init__(self, config: ElementConfig, data: Component = None) -> None:
+    def __init__(self, config: ElementConfig, data: Inventory = None) -> None:
         super().__init__(config)
         if data is not None:
-            _entries = [(k, v) for k, v in data.items()]
-            self._data = [entry[1]['slot'] for entry in _entries]
+            self._data = [slot for slot in data.get_all_items()]
 
-    def draw_contents(self, consoles: Dict[str, Console]) -> None:
-        pass
+    def draw_content(self, consoles: Dict[str, Console]) -> None:
+        
+        y_index = 0
+        
+        for _ in range(len(self._data)):
+            char = self._data[y_index].item.char
+            color = self._data[y_index].item.color
+            name = self._data[y_index].item.name
+            
+            if len(name) > 14:
+                name = name[0:12] + "."
+            
+            consoles['ROOT'].print(
+                x = self.x + 2,
+                y = self.y + y_index + 2,
+                string = chr(char),
+                fg = color
+                )
+            
+            consoles['ROOT'].print(
+                x = self.x + 4,
+                y = self.y + y_index + 2,
+                string = name,
+                fg = (255, 255, 255)
+                )
+
+            y_index += 1

@@ -10,6 +10,8 @@ from result import Result
 from state import SaveAndQuit, StateBreak, T
 from states.area_state import AreaState
 from states.pick_location_state import PickLocationState
+from states.menu_states.inventory_menu_state import InventoryMenuState
+from states.menu_states.equipment_menu_state import EquipmentMenuState
 from states.effects_state import EffectsState
 from particles.test_effect import TestEffect
 
@@ -38,27 +40,22 @@ class PlayerReadyState(Generic[T], AreaState[T]):
         raise StateBreak("PlayerReadyState")
 
     def cmd_inventory(self):
-        pass
-        # inventory_data = self.manager_service.data_manager.query(
-        #     entity="PLAYER", 
-        #     component="INVENTORY")
-        # state = InventoryMenuState(inventory_data)
-        # return state.loop()
-        # self._view.inventory_panel.update(inventory_data)
-    
+        inventory_data = self.manager_service.data_manager.query(
+            entity="PLAYER", 
+            component="INVENTORY")
+        state = InventoryMenuState(inventory_data)
+        return state.loop()
     
     def cmd_examine(self):
         state = PickLocationState(self.model, "", self.model.player.location.xy)
         cursor_xy: Tuple[int, int] = state.loop()
     
     def cmd_equipment(self):
-        pass
-        # equipment_data = self.manager_service.data_manager.query(
-        #         entity="PLAYER",
-        #         component="EQUIPMENT")
-        # state = EquipmentMenuState(equipment_data)
-        # return state.loop()
-        # self._view.equipment_panel.update(equipment_data)
+        equipment_data = self.manager_service.data_manager.query(
+                entity="PLAYER",
+                component="EQUIPMENT")
+        state = EquipmentMenuState(equipment_data)
+        return state.loop()
     
     def cmd_pickup(self):
         return common.Nearby.Pickup(self.model.player)
@@ -67,8 +64,7 @@ class PlayerReadyState(Generic[T], AreaState[T]):
         data = self.manager_service.data_manager.query(
             entity="PLAYER",
             component="INVENTORY")
-        for item in data.values():
-            print(repr(item['slot']))        
+        print(data)
     
     def cmd_debug_2(self):
         print(self._view.inventory_panel.data)

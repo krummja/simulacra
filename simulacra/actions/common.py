@@ -114,7 +114,8 @@ class Nearby(Action):
                 try:
                     self.success = True
                     self.message = f"{self.actor.owner.noun_text} picks up the {item.noun_text}" 
-                    self.actor.owner.components['INVENTORY'].add(item)
+                    item.lift()
+                    self.actor.owner.components['INVENTORY'].add_item(item)
                     self.actor.reschedule(100)
                     return self
                 except:
@@ -124,7 +125,7 @@ class Nearby(Action):
     
     class Drop(ActionWithItem):
         def act(self) -> Action:
-            assert self.item.uid in self.model.player.components['INVENTORY'].keys()
+            assert self.item in self.model.player.components['INVENTORY']['item_stacks'].keys()
             self.item.lift()
             self.item.place(self.model.player.location)
             self.success = True
@@ -135,10 +136,10 @@ class Nearby(Action):
 
 class Equip(ActionWithItem):
     def act(self) -> Action:
-        print(self.item)
+        components = self.model.player.components
         try:
-            self.model.player.components['EQUIPMENT'].equip(self.item)
-            self.model.player.components['INVENTORY'].remove(self.item)
+            components['INVENTORY'].pop_item(self.item)
+            components['EQUIPMENT'].equip(self.item.slot, self.item)
             self.success = True
             self.message = f"you equip the {self.item.noun_text}"
             self.actor.reschedule(100)
@@ -147,11 +148,12 @@ class Equip(ActionWithItem):
             self.success = False
             raise Impossible(self)
 
+
 class Dequip(ActionWithItem):
     def act(self) -> Action:
         try:
-            self.model.player.components['INVENTORY'].add(self.item)
-            self.model.player.components['EQUIPMENT'].remove(self.item)
+            self.model.player.components['EQUIPMENT'].remove(self.item.slot)
+            self.model.player.components['INVENTORY'].add_item(self.item)
             self.success = True
             self.message = f"you remove the {self.item.noun_text}"
             self.actor.reschedule(100)

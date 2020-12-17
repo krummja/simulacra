@@ -8,7 +8,8 @@ class Noun:
     reference to entities like Characters and Items.
     """
     
-    noun_text: str = "<unset>"
+    def __init__(self) -> None:
+        self._noun_text: str = "<unset>"
 
     def __str__(self) -> str:
-        return self.noun_text
+        return self._noun_text

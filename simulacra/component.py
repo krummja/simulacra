@@ -25,3 +25,6 @@ class Component(defaultdict):
 
     def on_unregister(self) -> None:
         self.owner = None
+
+    def update(self):
+        pass

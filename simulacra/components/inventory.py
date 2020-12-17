@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, Hashable
 
+import copy
 from component import Component
 
 if TYPE_CHECKING:
@@ -35,6 +36,9 @@ class ItemStack:
     def name(self):
         return self.item.name
 
+    def __str__(self) -> str:
+        return str(self.tuple)
+
 
 class Inventory(Component):
     
@@ -43,6 +47,7 @@ class Inventory(Component):
         self['item_stacks']: Dict[Hashable, ItemStack] = {}
     
     def add_item(self, item: Item):
+        item.owner = self
         if item in self['item_stacks']:
             self['item_stacks'][item].add_to_stack()
         else:
@@ -69,3 +74,6 @@ class Inventory(Component):
     
     def get_all_items(self):
         return self['item_stacks'].values()
+    
+    def __str__(self) -> str:
+        return str([stack.item for stack in self.get_all_items()])

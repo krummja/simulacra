@@ -18,20 +18,15 @@ class Character(Actor, Entity):
             name: str,
             location: Location = None,
             display: Dict[str, Any] = None,
-        ) -> None:
-        """Either a Player Character or an NPC. Has a Control instance.
-
-        Args:
-            uid (str): Backend identifier, for UI & Factory systems.
-            name (str): Frontend identifier, for in-game reference.
-            location (Location, optional): Where it's at. Defaults to None.
-            display (Dict[str, Any], optional): Display props. Defaults to None.
-        """        
-        Entity.__init__(self, location)
-        self.uid = uid
-        self.noun_text = name
+        ) -> None:     
+        Entity.__init__(self, uid, location)
+        self._noun_text = name
         self.char = display['char']
         self.color = display['color']
         self.bg = display['bg']
         self.control = BasicNPC(self)
         Actor.__init__(self, self, self.control)
+
+    @property
+    def name(self) -> str:
+        return self._noun_text

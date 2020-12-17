@@ -5,7 +5,6 @@ import config
 from states.main_menu_state import MainMenuState
 
 
-
 def main() -> None:
     
     with tcod.context.new_terminal(

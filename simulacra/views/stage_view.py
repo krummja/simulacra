@@ -20,6 +20,8 @@ from particles.particle import Particle
 from views.elements.base_element import BaseElement, ElementConfig
 from views.elements.elem_log import ElemLog
 from views.elements.gauge_element import GaugeElement
+from views.elements.inventory_element import InventoryElement
+from views.elements.equipment_element import EquipmentElement
 
 if TYPE_CHECKING:
     from model import Model
@@ -64,7 +66,7 @@ class StageView(View):
                 offset_y=8, title="VIT"
                 ), 
             hue=(255, 0, 0),
-            data = (5.5, 10.0))
+            data = (10.0, 10.0))
 
         self.ep_gauge = GaugeElement(
             config = ElementConfig(
@@ -84,7 +86,7 @@ class StageView(View):
                 offset_y=12, title="HGR"
                 ), 
             hue = (250, 96, 0),
-            data = (8.0, 10.0))
+            data = (10.0, 10.0))
 
         self.xp_gauge = GaugeElement(
             config = ElementConfig(
@@ -94,7 +96,7 @@ class StageView(View):
                 offset_y=15, title="EXP"
                 ),
             hue = (130, 230, 230),
-            data = (243, 1000))
+            data = (0, 1000))
 
         # self.nearby_panel = ListElement(
         #     config = ElementConfig(
@@ -102,6 +104,16 @@ class StageView(View):
         #         offset_y=(SIDE_PANEL_HEIGHT // 3),
         #         width=SIDE_PANEL_WIDTH, height=8,
         #         title="NEARBY", framed=True))
+
+        self.inventory_panel = InventoryElement(
+            config = ElementConfig(**inventory_panel),
+            data = self.manager.query(entity="PLAYER",
+                                      component="INVENTORY"))
+        
+        self.equipment_panel = EquipmentElement(
+            config = ElementConfig(**equipment_panel),
+            data = self.manager.query(entity="PLAYER",
+                                      component="EQUIPMENT"))
 
         self.log_panel = ElemLog(model=self.model)
 
@@ -144,6 +156,8 @@ class StageView(View):
         self.xp_gauge.draw(consoles)
 
         # PANEL FRAMES
+        self.inventory_panel.draw(consoles)
+        self.equipment_panel.draw(consoles)
         self.log_panel.draw(consoles)
        
     def refresh(self, area: Area, consoles: Dict[str, Console]) -> None:
