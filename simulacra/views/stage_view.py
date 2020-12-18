@@ -162,6 +162,12 @@ class StageView(View):
         self.inventory_panel.draw(consoles)
         self.equipment_panel.draw(consoles)
         self.log_panel.draw(consoles)
+        
+        # consoles['ROOT'].draw_frame(
+        #     x=0, y=0, 
+        #     width=STAGE_PANEL_WIDTH, height=STAGE_PANEL_HEIGHT,
+        #     fg=(255, 255, 255)
+        #     )
        
     def refresh(self, area: Area, consoles: Dict[str, Console]) -> None:
         update_fov(area)

@@ -6,7 +6,7 @@ from data.tiles.floors import *
 from data.tiles.walls import *
 from room import Room
 from rendering import update_fov
-from components.attributes import initialize_character_attributes
+from components.stats import initialize_character_stats
 from components.physics import Physics
 from components.inventory import Inventory
 from player import Player
@@ -41,7 +41,7 @@ def testing_area(model: Model) -> Area:
 
 def create_character(area: Area, room: Room) -> Player:
     player = Player(area[room.center])
-    player.register_component(initialize_character_attributes())
+    player.register_component(initialize_character_stats())
     player.register_component(Inventory())
     player.register_component(Physics(weight=10.0))
     return player

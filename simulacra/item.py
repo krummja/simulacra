@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import Any, Dict, List, Optional, Tuple, Type, TYPE_CHECKING
 
+from enum import Enum
+
 from entity import Entity
 from actions import common
 
@@ -103,3 +105,26 @@ class Item(Entity):
     
     def __hash__(self):
         return hash((self.uid, self.name, self.description))
+
+
+class ArmorCategory(Enum):
+    Light = 0
+    Medium = 1
+    Heavy = 2
+    
+
+class WeaponCategory(Enum):
+    Simple = 0
+    Martial = 1
+    Exotic = 2
+    
+
+class WeaponType(Enum):
+    Melee = 0
+    Ranged = 1
+
+
+class WornLayer(Enum):
+    Inner = 0
+    Outer = 1
+    Extra = 2

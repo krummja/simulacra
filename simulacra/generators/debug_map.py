@@ -10,7 +10,7 @@ from area import Area
 from rendering import update_fov
 from player import Player
 from room import Room
-from components.attributes import initialize_character_attributes
+from components.stats import initialize_character_stats
 from components.physics import Physics
 from components.inventory import Inventory
 from components.equipment import Equipment
@@ -18,6 +18,7 @@ from factories.factory_service import FactoryService
 from factories.item_factory import ItemFactory
 from managers.manager_service import ManagerService
 from factories.factory_service import FactoryService
+from data.builders.items import build_short_sword
 
 if TYPE_CHECKING:
     from tile import Tile
@@ -55,7 +56,7 @@ def debug_area(model: Model) -> Area:
 
     # TODO: PlayerFactory will make this easier, of course
     player = Player("test player", area[debug_room.center])
-    player.register_component(initialize_character_attributes())
+    player.register_component(initialize_character_stats())
     player.register_component(Physics(weight=10.0))
     player.register_component(Equipment())
     player.register_component(Inventory())
@@ -99,6 +100,8 @@ def debug_area(model: Model) -> Area:
         uid='test_breastplate',
         location=area[debug_room.center[0] + 2, debug_room.center[1] + 4]
         )
+
+    area = build_short_sword(area, area[debug_room.center[0] - 5, debug_room.center[1] + 4])
 
     update_fov(area)
 

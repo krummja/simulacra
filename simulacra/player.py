@@ -5,7 +5,7 @@ from actor import Actor
 from player_control import PlayerControl
 from entity import Entity
 
-from components.attributes import Attributes
+from components.stats import Stats
 from components.physics import Physics
 
 if TYPE_CHECKING:
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 class Player(Entity, Actor):
 
     uid = 'PLAYER'
-    char = ord("@")
+    char = 228
     color = (255, 0, 255)
     bg = (0, 0, 0)
 

@@ -21,13 +21,15 @@ STAGE_PANEL_HEIGHT: int = (CONSOLE_HEIGHT // 4) * 3
 SIDE_PANEL_WIDTH: int = CONSOLE_WIDTH - STAGE_PANEL_WIDTH
 SIDE_PANEL_HEIGHT: int = CONSOLE_HEIGHT
 
+GLYPH_SIZE = 20
+
 def load_tileset():
     try:
         return tcod.tileset.load_truetype_font(
-            "simulacra/assets/simulacra.ttf", 16, 16)
+            "simulacra/assets/simulacra.ttf", GLYPH_SIZE, GLYPH_SIZE)
     except RuntimeError:
         return tcod.tileset.load_truetype_font(
-            "assets/simulacra.ttf", 16, 16)
+            "assets/simulacra.ttf", GLYPH_SIZE, GLYPH_SIZE)
         
 TILESET = load_tileset()
         
