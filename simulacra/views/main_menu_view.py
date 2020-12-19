@@ -55,7 +55,7 @@ class MainMenuView(View):
         load_new_option = load if self.state.storage.save_slots[
             self.character_select.index_as_int
         ] is not None else new
-        selection_option = "[⬆/⬇/⬅/➡]:change selection, ".upper()
+        selection_option = f"[{chr(8593)}/{chr(8595)}/{chr(8592)}/{chr(8594)}]:change selection, ".upper()
         delete_option = "[D]:delete, ".upper()
         quit_option = "[Q]:quit ".upper()
         
