@@ -24,10 +24,10 @@ SIDE_PANEL_HEIGHT: int = CONSOLE_HEIGHT
 def load_tileset():
     try:
         return tcod.tileset.load_truetype_font(
-            "simulacra/assets/simulacra.ttf", 16, 16)
+            "simulacra/assets/simulacra2.ttf", 16, 16)
     except RuntimeError:
         return tcod.tileset.load_truetype_font(
-            "assets/simulacra.ttf", 16, 16)
+            "assets/simulacra2.ttf", 16, 16)
         
 TILESET = load_tileset()
         
