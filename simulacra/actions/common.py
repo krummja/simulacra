@@ -137,16 +137,19 @@ class Nearby(Action):
 class Equip(ActionWithItem):
     def act(self) -> Action:
         components = self.model.player.components
-        try:
+        result = components['EQUIPMENT'].equip(self.item.slot, self.item)
+        
+        if not result:
+            self.success = False
+            self.message = "You cannot equip that!"
+            raise Impossible(self)
+        else:
             components['INVENTORY'].pop_item(self.item)
-            components['EQUIPMENT'].equip(self.item.slot, self.item)
             self.success = True
             self.message = f"you equip the {self.item.noun_text}"
             self.actor.reschedule(100)
             return self
-        except:
-            self.success = False
-            raise Impossible(self)
+
 
 
 class Dequip(ActionWithItem):

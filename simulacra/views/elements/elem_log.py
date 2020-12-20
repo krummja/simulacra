@@ -29,7 +29,7 @@ class ElemLog(BaseElement):
         # Print lines above the most recent at a slight dim
         for text in self.model.log[-2::-1]:
             y_index += tcod.console.get_height_rect(self.log_width, str(text))
-            if y_index >= 10:
+            if y_index >= 11:
                 break
             consoles['ROOT'].print_box(
                 x, y - y_index, 

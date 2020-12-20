@@ -47,12 +47,17 @@ class InventoryMenuView(BaseMenuView):
             name = data[i].name
             fg = data[i].color
             
-            consoles['ROOT'].print(
-                x = self.x + 2,
-                y = self.y + i + 2,
-                string = chr(char),
-                fg = fg
-                )
+            # consoles['ROOT'].print(
+            #     x = self.x + 2,
+            #     y = self.y + i + 2,
+            #     string = chr(char),
+            #     fg = fg
+            #     )
+            
+            consoles['ROOT'].tiles_rgb[["ch", "fg"]][
+                self.y + i + 2, 
+                self.x + 2
+                ] = char, fg
             
             consoles['ROOT'].print(
                 x = self.x + 4,

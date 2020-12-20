@@ -7,7 +7,7 @@ from states.main_menu_state import MainMenuState
 from tilemap import tileset
 
 def main() -> None:
-    
+
     with tcod.context.new_terminal(
             columns=config.CONSOLE_WIDTH,
             rows=config.CONSOLE_HEIGHT,

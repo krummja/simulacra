@@ -30,12 +30,10 @@ class InventoryElement(BaseElement):
             if len(name) > 14:
                 name = name[0:12] + "."
             
-            consoles['ROOT'].print(
-                x = self.x + 2,
-                y = self.y + y_index + 2,
-                string = chr(char),
-                fg = color
-                )
+            consoles['ROOT'].tiles_rgb[["ch", "fg"]][
+                self.y + y_index + 2, 
+                self.x + 2
+                ] = char, color
             
             consoles['ROOT'].print(
                 x = self.x + 4,

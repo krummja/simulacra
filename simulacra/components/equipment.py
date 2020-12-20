@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import Dict, TYPE_CHECKING, Hashable
 
 from component import Component
+from action import Impossible
 
 if TYPE_CHECKING:
     from item import Item
@@ -33,9 +34,9 @@ class EquipmentSlot:
         return self.item.name
     
     @property
-    def renderables(self) -> Dict[str, str]:
+    def renderables(self):
         return {
-            'char': chr(self.item.char),
+            'char': self.item.char,
             'color': self.item.color,
             'name': self.name,
             'description': self.description
@@ -59,10 +60,12 @@ class Equipment(Component):
         self['legs'] = EquipmentSlot('legs')
         self['feet'] = EquipmentSlot('feet')
         
-    def equip(self, slot: str, item: Item) -> None:
+    def equip(self, slot: str, item: Item) -> bool:
         if self[slot].item is None:
             self[slot].add_to_slot(item)
             item.is_equipped = True
+            return True
+        return False
 
     def remove(self, slot: str) -> Item:
         if self[slot].item is not None:

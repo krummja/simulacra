@@ -22,7 +22,7 @@ class EquipmentSlotElement:
             self.description = data.renderables['description']
             self.durability = "----------"
         else:
-            self.char = "-"
+            self.char = ord("-")
             self.color = (100, 100, 100)
             self.fg = (100, 100, 100)
             self.name = data.slot
@@ -34,12 +34,17 @@ class EquipmentSlotElement:
         if len(self.name) > 14:
             self.name = self.name[0:12] + "."
         
-        consoles['ROOT'].print(
-            x = self.parent.x + 2,
-            y = self.parent.y + 2 + i,
-            string = self.char,
-            fg = self.color
-            )
+        # consoles['ROOT'].print(
+        #     x = self.parent.x + 2,
+        #     y = self.parent.y + 2 + i,
+        #     string = self.char,
+        #     fg = self.color
+        #     )
+        
+        consoles['ROOT'].tiles_rgb[["ch", "fg"]][
+            self.parent.y + 2 + i, 
+            self.parent.x + 2
+            ] = self.char, self.color
         
         consoles['ROOT'].print(
             x = self.parent.x + 4,

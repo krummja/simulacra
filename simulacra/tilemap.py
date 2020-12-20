@@ -22,20 +22,18 @@ BOX_CHARS = [9617, 9618, 9619, 9474, 9508, 9569, 9570, 9558, 9557, 9571, 9553, 9
 # Custom Tiles (57344 - 63743)
 CUSTOM = []
 
+# Add 512 additional tiles
+for i in range(57344, (57344 + 512)):
+    CUSTOM.append(i)
 
 CHARMAP.extend(ARROWS)
 CHARMAP.extend(TEXT)
 CHARMAP.extend(SUPP_TEXT)
 CHARMAP.extend(BOX_CHARS)
-
-CHARMAP.extend(WALLS)
-CHARMAP.extend(FLOORS)
-CHARMAP.extend(ITEMS)
-CHARMAP.extend(OTHER)
-
+CHARMAP.extend(CUSTOM)
 
 tileset = tcod.tileset.load_tilesheet(
     path="./simulacra/assets/simulacra16x16.png",
     columns=16,
-    rows=32,
+    rows=48,
     charmap=CHARMAP)

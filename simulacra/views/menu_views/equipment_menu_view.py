@@ -25,7 +25,7 @@ class EquipmentSlotElement:
             self.description = data[self.index].renderables['description']
             self.durability = "----------"
         else:
-            self.char = "-"
+            self.char = ord("-")
             self.color = (100, 100, 100)
             self.fg = (100, 100, 100)
             self.name = data[self.index].slot
@@ -35,12 +35,17 @@ class EquipmentSlotElement:
     def draw(self, i: int, consoles: Dict[str, Console]) -> None:
         selected = (255, 0, 255)
         
-        consoles['ROOT'].print(
-            x = self.parent.x + 2,
-            y = self.parent.y + 2 + i,
-            string = self.char,
-            fg = self.color
-            )
+        # consoles['ROOT'].print(
+        #     x = self.parent.x + 2,
+        #     y = self.parent.y + 2 + i,
+        #     string = self.char,
+        #     fg = self.color
+        #     )
+        
+        consoles['ROOT'].tiles_rgb[["ch", "fg"]][
+            self.parent.y + i + 2, 
+            self.parent.x + 2
+            ] = self.char, self.color
         
         consoles['ROOT'].print(
             x = self.parent.x + 4,

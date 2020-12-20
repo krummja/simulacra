@@ -14,10 +14,10 @@ from combat.enums import DamageType
 def build_short_sword(area, location):
     _short_sword = Item(
         uid="short_sword",
-        name="short sword",
+        name="Short Sword",
         description="a short sword.",
         location=location,
-        display={'char': ord("!"), 'color': COLOR['silver'], 'bg': (0, 0, 0)},
+        display={'char': 57602, 'color': COLOR['silver'], 'bg': (0, 0, 0)},
         slot='right_hand'
         )
     _short_sword.register_component(Iron.copy())
