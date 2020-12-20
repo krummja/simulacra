@@ -25,18 +25,18 @@ class ItemOptionsState(BaseMenuState["Action"]):
     def _make_options(self) -> List[Any]:
         _options = []
         if not self._item.is_equipped and self._item.owner is not None:
-            _options.append('drop')
+            _options.append('DROP')
         if self._item.is_equippable:
-            _options.append('equip')
+            _options.append('EQUIP')
         if self._item.is_equipped:
-            _options.append('dequip')
+            _options.append('REMOVE')
         if len(_options) > 0:
             return _options
         else:
             pass
         
     def _opt_drop(self):
-        return common.Nearby.Drop(self._player, self._item)
+        return common.Drop(self._player, self._item)
     
     def _opt_equip(self):
         return common.Equip(self._player, self._item)
@@ -45,9 +45,9 @@ class ItemOptionsState(BaseMenuState["Action"]):
         return common.Dequip(self._player, self._item)
     
     def cmd_confirm(self):
-        if self._options[self._selection] == 'drop':
+        if self._options[self._selection] == 'DROP':
             return self._opt_drop()
-        if self._options[self._selection] == 'equip':
+        if self._options[self._selection] == 'EQUIP':
             return self._opt_equip()
-        if self._options[self._selection] == 'dequip':
+        if self._options[self._selection] == 'REMOVE':
             return self._opt_dequip()

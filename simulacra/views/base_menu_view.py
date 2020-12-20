@@ -30,7 +30,7 @@ class BaseMenuView(View, BaseElement):
         help_text = HelpTextElement(
             help_options=[
                 "[ENTER]:select, ".upper(),
-                "[⬆/⬇]:change selection, ".upper(),
+                f"[{chr(8593)}/{chr(8595)}]:change selection, ".upper(),
                 "[ESC]:back".upper()
             ],
             hue=(255, 0, 0),

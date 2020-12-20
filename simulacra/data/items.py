@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from hues import COLOR
+
 
 test_item = {
     'uid': 'test_item',
@@ -19,24 +21,63 @@ test_helmet = {
     'name': 'Simple Helmet',
     'description': '',
     'display': {
-        'char': 57616,
-        'color': (0, 255, 255),
+        'char': 57617,
+        'color': COLOR['silver'],
         'bg': (0, 0, 0)
         },
     'slot': 'head',
     'components': [('Physics', {'size': 'large'})]
     }
 
-test_breastplate = {
-    'uid': 'test_breastplate',
-    'name': 'Simple Breastplate',
+test_cuirass = {
+    'uid': 'test_cuirass',
+    'name': 'Simple Cuirass',
     'description': '',
     'display': {
-        'char': ord("H"),
-        'color': (0, 255, 255),
+        'char': 57618,
+        'color': COLOR['silver'],
         'bg': (0, 0, 0)
         },
     'slot': 'torso',
+    'components': [('Physics', {'size': 'large'})]
+    }
+
+test_greaves = {
+    'uid': 'test_greaves',
+    'name': 'Simple Greaves',
+    'description': '',
+    'display': {
+        'char': 57619,
+        'color': COLOR['silver'],
+        'bg': (0, 0, 0)
+        },
+    'slot': 'legs',
+    'components': [('Physics', {'size': 'large'})]
+    }
+
+test_belt = {
+    'uid': 'test_belt',
+    'name': 'Simple Belt',
+    'description': '',
+    'display': {
+        'char': 57620,
+        'color': COLOR['brown'],
+        'bg': (0, 0, 0)
+        },
+    'slot': 'waist',
+    'components': [('Physics', {'size': 'large'})]
+    }
+
+test_boots = {
+    'uid': 'test_boots',
+    'name': 'Simple Boots',
+    'description': '',
+    'display': {
+        'char': 57621,
+        'color': COLOR['brown'],
+        'bg': (0, 0, 0)
+        },
+    'slot': 'feet',
     'components': [('Physics', {'size': 'large'})]
     }
 
@@ -72,7 +113,7 @@ test_longsword = {
     'description': '',
     'display': {
         'char': 57600,
-        'color': (255, 255, 255),
+        'color': COLOR['silver'],
         'bg': (0, 0, 0)
         },
     'slot': 'right_hand',
@@ -83,7 +124,10 @@ test_longsword = {
 item_templates = {
     test_item['uid']: test_item,
     test_helmet['uid']: test_helmet,
-    test_breastplate['uid']: test_breastplate,
+    test_cuirass['uid']: test_cuirass,
+    test_greaves['uid']: test_greaves,
+    test_belt['uid']: test_belt,
+    test_boots['uid']: test_boots,
     test_chest['uid']: test_chest,
     test_scroll['uid']: test_scroll,
     test_longsword['uid']: test_longsword,

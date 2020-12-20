@@ -1,7 +1,6 @@
 from __future__ import annotations
-from typing import Tuple, TYPE_CHECKING
+from typing import Tuple, Optional, TYPE_CHECKING
 
-from config import DEBUG
 from result import Result
 
 if TYPE_CHECKING:
@@ -30,7 +29,7 @@ class Action:
 
     def act(self) -> Optional[Result]:
         raise RuntimeError(f"{self.__class__.__name__} "
-                            "has no act implementation.")
+                           f"has no act implementation.")
 
     @property
     def area(self) -> Area:
@@ -46,7 +45,7 @@ class Action:
 
     def make_result(self, action):
         result = Result(
-            actor=action.actor, 
+            actor=action.actor,
             event=action,
             success=action.success,
             effect=action.effect,
@@ -69,11 +68,11 @@ class ActionWithPosition(Action):
 class ActionWithDirection(ActionWithPosition):
 
     def __init__(self, actor: Actor, direction: Tuple[int, int]) -> None:
-        position = (actor.location.x + direction[0], 
+        position = (actor.location.x + direction[0],
                     actor.location.y + direction[1])
         super().__init__(actor, position)
         self.direction = direction
-        
+
 
 class ActionWithItem(Action):
 

@@ -34,13 +34,6 @@ class EquipmentSlotElement:
         if len(self.name) > 14:
             self.name = self.name[0:12] + "."
         
-        # consoles['ROOT'].print(
-        #     x = self.parent.x + 2,
-        #     y = self.parent.y + 2 + i,
-        #     string = self.char,
-        #     fg = self.color
-        #     )
-        
         consoles['ROOT'].tiles_rgb[["ch", "fg"]][
             self.parent.y + 2 + i, 
             self.parent.x + 2
@@ -53,12 +46,12 @@ class EquipmentSlotElement:
             fg = self.fg
             )
         
-        consoles['ROOT'].print(
-            x = self.parent.x + 4,
-            y = self.parent.y + 3 + i,
-            string = self.durability,
-            fg = (255, 0, 0)
-            )
+        # consoles['ROOT'].print(
+        #     x = self.parent.x + 4,
+        #     y = self.parent.y + 3 + i,
+        #     string = self.durability,
+        #     fg = (255, 0, 0)
+        #     )
 
 
 class EquipmentElement(BaseElement):

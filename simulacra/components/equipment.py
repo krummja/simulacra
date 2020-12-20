@@ -47,18 +47,18 @@ class Equipment(Component):
     
     def __init__(self) -> None:
         super().__init__("EQUIPMENT")
-        self['left_hand'] = EquipmentSlot('left hand')
-        self['right_hand'] = EquipmentSlot('right hand')
-        self['head'] = EquipmentSlot('head')
-        self['neck'] = EquipmentSlot('neck')
-        self['shoulders'] = EquipmentSlot('shoulders')
-        self['arms'] = EquipmentSlot('arms')
-        self['hands'] = EquipmentSlot('hands')
-        self['torso'] = EquipmentSlot('torso')
-        self['back'] = EquipmentSlot('back')
-        self['waist'] = EquipmentSlot('waist')
-        self['legs'] = EquipmentSlot('legs')
-        self['feet'] = EquipmentSlot('feet')
+        self['left_hand'] = EquipmentSlot('LEFT HAND')
+        self['right_hand'] = EquipmentSlot('RIGHT HAND')
+        self['head'] = EquipmentSlot('HEAD')
+        self['neck'] = EquipmentSlot('NECK')
+        self['shoulders'] = EquipmentSlot('SHOULDERS')
+        self['arms'] = EquipmentSlot('ARMS')
+        self['hands'] = EquipmentSlot('HANDS')
+        self['torso'] = EquipmentSlot('TORSO')
+        self['back'] = EquipmentSlot('BACK')
+        self['waist'] = EquipmentSlot('WAIST')
+        self['legs'] = EquipmentSlot('LEGS')
+        self['feet'] = EquipmentSlot('FEET')
         
     def equip(self, slot: str, item: Item) -> bool:
         if self[slot].item is None:

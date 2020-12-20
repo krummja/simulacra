@@ -1,10 +1,8 @@
 from __future__ import annotations
-from typing import Optional, Type, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 
 import sys
 import traceback
-from config import DEBUG
-from result import Result
 
 from action import Action, Impossible
 
@@ -36,7 +34,7 @@ class Actor:
             return scheduler.unschedule(event)
         action = self.try_plan()
         return action.act()
-            
+
     def try_plan(self) -> Action:
         """Attempt to resolve a control's action plan."""
         try:
@@ -44,7 +42,7 @@ class Actor:
         except Impossible:
             print(f"Unresolved action with {self}", file=sys.stderr)
             traceback.print_exc(file=sys.stderr)
-            return self.reschedule(100)        
+            return self.reschedule(100)
         assert action is action.plan(), f"{action} not fully resolved, {self}."
         return action
 
@@ -52,5 +50,3 @@ class Actor:
         if self.event is None:
             return
         self.event = self.scheduler.reschedule(self.event, interval)
-
-    

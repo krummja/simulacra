@@ -27,7 +27,7 @@ class PlayerReadyState(Generic[T], AreaState[T]):
         super().__init__(model)
 
     def cmd_move(self, x: int, y: int) -> Action:
-        action = common.Move.Start(self.model.player, (x, y))
+        action = common.MoveStart(self.model.player, (x, y))
         action.success = True
         result = action.make_result(action)
         self.manager_service.result_manager.add_result(result)
@@ -58,7 +58,7 @@ class PlayerReadyState(Generic[T], AreaState[T]):
         return state.loop()
     
     def cmd_pickup(self):
-        return common.Nearby.Pickup(self.model.player)
+        return common.Pickup(self.model.player)
 
     def cmd_debug_1(self):
         data = self.manager_service.data_manager.query(

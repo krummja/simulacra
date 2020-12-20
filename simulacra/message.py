@@ -8,11 +8,62 @@ from hues import set_color, RESET
 
 class Message:
 
-    def __init__(self, msg: str) -> None:
-        self.msg = msg
+    def __init__(
+            self, 
+            msg: str,
+            noun1: Optional[Noun] = None,
+            noun2: Optional[Noun] = None,
+            noun3: Optional[Noun] = None
+        ) -> None:
+        self.msg = self._format(msg, noun1=noun1, noun2=noun2, noun3=noun3)
         self.count = 1
+        
+    def singular(self, text: str) -> str:
+        return self._categorize(text, is_first = True)
+
+    def conjugate(self, text: str, pronoun: Pronoun) -> str:
+        if pronoun == Pronoun.you or pronoun == Pronoun.they:
+            is_first = True
+            return _categorize(text, is_first = is_first)
+        return _categorize(text)
+
+    def quantify(self, text: str, count: int) -> str:
+        pass
+
+    def _format(
+            self,
+            text: str,
+            noun1: Optional[Noun] = None,
+            noun2: Optional[Noun] = None,
+            noun3: Optional[Noun] = None
+        ) -> str:
+        result = text
+        
+        nouns = [noun1, noun2, noun3]
+        for i in range(len(nouns)):
+            noun = nouns[i - 1]
+            if noun is not None:
+                result = result.replace(f'{i}', noun.noun_text)
+                
+                result = result.replace("they", noun.pronoun.nom)
+                result = result.replace("them", noun.pronoun.obl)
+                result = result.replace("their", noun.pronoun.gen)
+            
+        if noun1 is not None:
+            result = self.conjugate(result, noun1.pronoun)
+
+        return result
+    
+    def _categorize(
+            self, 
+            text: str, 
+            is_first: bool = False, 
+            force: bool = False
+        ) -> str:
+        pass        
 
     def __str__(self) -> str:
+        
         if self.count > 1:
             return f"{self.msg} (x{self.count})"
         return self.msg

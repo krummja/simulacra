@@ -83,30 +83,35 @@ def debug_area(model: Model) -> Area:
 
     item_factory.build(
         uid='test_helmet',
-        location=area[debug_room.center[0] - 2, debug_room.center[1] + 4]
+        location=area[debug_room.center[0] - 4, debug_room.center[1] + 2]
         )
 
     item_factory.build(
-        uid='test_breastplate',
-        location=area[debug_room.center[0] + 2, debug_room.center[1] + 4]
-        )
-    
-    item_factory.build(
-        uid='test_chest',
-        location=area[debug_room.center[0] + 4, debug_room.center[1] + 2]
+        uid='test_cuirass',
+        location=area[debug_room.center[0] - 3, debug_room.center[1] + 2]
         )
 
-    item_factory.build(
-        uid='test_scroll',
-        location=area[debug_room.center[0] + 6, debug_room.center[1] + 2]
-        )
-    
     item_factory.build(
         uid='test_longsword',
-        location=area[debug_room.center[0] + 4, debug_room.center[1] + 3]
+        location=area[debug_room.center[0], debug_room.center[1] + 2]
+        )
+    
+    item_factory.build(
+        uid='test_greaves',
+        location=area[debug_room.center[0] + 1, debug_room.center[1] + 2]
         )
 
-    area = build_short_sword(area, area[debug_room.center[0] - 5, debug_room.center[1] + 4])
+    item_factory.build(
+        uid='test_belt',
+        location=area[debug_room.center[0] + 2, debug_room.center[1] + 2]
+        )
+    
+    item_factory.build(
+        uid='test_boots',
+        location=area[debug_room.center[0] + 3, debug_room.center[1] + 2]
+        )
+
+    area = build_short_sword(area, area[debug_room.center[0] + 4, debug_room.center[1] + 2])
 
     update_fov(area)
 

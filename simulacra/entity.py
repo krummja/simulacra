@@ -19,7 +19,7 @@ class Entity(Graphic, Noun):
         self.uid = uid
         self.location = location
         self.components = {}
-        
+
     @property
     def noun_text(self) -> str:
         return self._noun_text
