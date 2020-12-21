@@ -3,7 +3,7 @@ from typing import Dict, Optional, TYPE_CHECKING
 
 import tcod
 
-from config import STAGE_PANEL_WIDTH, CONSOLE_HEIGHT
+from config import STAGE_PANEL_WIDTH, CONSOLE_HEIGHT, LOG_PANEL_HEIGHT
 from views.elements.base_element import BaseElement, ElementConfig
 
 if TYPE_CHECKING:
@@ -18,7 +18,7 @@ class LogElement(BaseElement):
         super().__init__(ElementConfig(
             position=('bottom', 'left'),
             width=self.log_width,
-            height=(CONSOLE_HEIGHT // 4),
+            height=LOG_PANEL_HEIGHT,
             framed=True
         ))
 

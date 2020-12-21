@@ -26,7 +26,7 @@ class CharacterSlotElement(BaseElement):
     @property
     def slot_data(self) -> Dict[str, Any]:
         if self._slot_data is not None:
-            character_name = self._slot_data.player.noun_text
+            character_name = self._slot_data.player.name
         else:
             character_name = "<empty>"
 

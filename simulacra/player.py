@@ -32,5 +32,9 @@ class Player(Entity, Actor):
     def pronoun(self) -> Pronoun:
         return Pronoun.you
     
+    @property
+    def name(self) -> str:
+        return self._name
+    
     def __str__(self) -> str:
         return self._name

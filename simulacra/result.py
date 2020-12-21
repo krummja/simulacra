@@ -1,7 +1,10 @@
 from __future__ import annotations  # type: ignore
-from typing import Any, Dict, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 
-from message import Message
+if TYPE_CHECKING:
+    from action import Action
+    from actor import Actor
+    from message import Message
 
 
 class Result:
@@ -10,12 +13,12 @@ class Result:
     
     def __init__(
             self,
-            actor,
-            event,
-            done = False,
-            success = False,
+            actor: Actor,
+            event: Action,
+            done: bool = False,
+            success: bool = False,
             effect = None,
-            message = None
+            message: Optional[Message] = None
         ) -> None:
         self.actor = actor
         self.event = event

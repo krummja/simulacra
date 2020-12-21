@@ -32,9 +32,9 @@ class ResultManager:
         else:
             self.results.append(result)
 
-        if result.effect:
-            state = states.effects_state.EffectsState(self.model)
-            state.loop()
+        # if result.effect:
+        #     state = states.effects_state.EffectsState(self.model)
+        #     state.loop()
 
         # Do a little housekeeping to make things tidy
         if len(self.results) > self._cache_size:

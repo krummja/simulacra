@@ -11,6 +11,7 @@ from storage import Storage
 from views import MainMenuView
 from generators.debug_map import debug_area
 from generators.testing_map import testing_area
+from generators.test_forest import test_forest
 
 if TYPE_CHECKING:
     from managers.manager_service import ManagerService
@@ -77,7 +78,8 @@ class MainMenuState(State[None]):
             
             # TODO: Build an area manager to handle injecting areas easier
             # self._model.area_data.current_area = testing_area(self._model)
-            self._model.area_data.current_area = debug_area(self._model)
+            # self._model.area_data.current_area = debug_area(self._model)
+            self._model.area_data.current_area = test_forest(self._model)
             self.storage.add_save(self._view.character_select.index_as_int,
                                   self.model)
             self.start()

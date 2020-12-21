@@ -132,7 +132,7 @@ class StageView(View):
         consoles['ROOT'].print(
             x=self.player_info_panel.x,
             y=self.player_info_panel.y,
-            string=self.model.player.noun_text.upper(),
+            string=self.model.player.name,
             fg=(255, 255, 255)
             )
 
@@ -146,7 +146,7 @@ class StageView(View):
         consoles['ROOT'].print(
             x=self.player_info_panel.x+8,
             y=self.player_info_panel.y+2,
-            string="WANDERER",
+            string="Wanderer",
             fg=(255, 255, 255)
             )
 

@@ -24,29 +24,20 @@ class EquipmentSlotElement:
             self.fg = (255, 255, 255)
             self.name = data[self.index].renderables['name']
             self.description = data[self.index].renderables['description']
-            self.durability = "----------"
         else:
             self.char = ord("-")
             self.color = (100, 100, 100)
             self.fg = (100, 100, 100)
             self.name = data[self.index].slot
             self.description = ""
-            self.durability = ""
     
     def draw(self, i: int, consoles: Dict[str, Console]) -> None:
         selected = (255, 0, 255)
         
-        # consoles['ROOT'].print(
-        #     x = self.parent.x + 2,
-        #     y = self.parent.y + 2 + i,
-        #     string = self.char,
-        #     fg = self.color
-        #     )
-        
         consoles['ROOT'].tiles_rgb[["ch", "fg"]][
             self.parent.y + i + 2, 
             self.parent.x + 2
-            ] = self.char, self.color
+            ] = self.char, self.color    
         
         consoles['ROOT'].print(
             x = self.parent.x + 4,
@@ -54,13 +45,6 @@ class EquipmentSlotElement:
             string = self.name,
             fg = selected if self.index == self.parent._state.selection else self.fg
             )
-        
-        # consoles['ROOT'].print(
-        #     x = self.parent.x + 4,
-        #     y = self.parent.y + 3 + i,
-        #     string = self.durability,
-        #     fg = (255, 0, 0)
-        #     )
 
 
 class EquipmentMenuView(BaseMenuView):
@@ -94,79 +78,16 @@ class EquipmentMenuView(BaseMenuView):
         self.legs_slot = EquipmentSlotElement(self, data, 10)
         self.feet_slot = EquipmentSlotElement(self, data, 11)
         
-        self.weapon_parts = []
-        crossguard_top_end = 57578
-        crossguard_top_mid = 57594
-        hilt_pommel = 57608
-        hilt_grip = 57609
-        crossguard_base = 57610
-        crossguard_bot_mid = 57626
-        crossguard_bot_end = 57642
-        
-        blade_body = 57611
-        blade_tip = 57612
-        self.weapon_parts.append(crossguard_top_end)    # 0
-        self.weapon_parts.append(crossguard_bot_end)    # 1
-        self.weapon_parts.append(crossguard_top_mid)    # 2
-        self.weapon_parts.append(crossguard_bot_mid)    # 3
-        self.weapon_parts.append(crossguard_base)       # 4
-        self.weapon_parts.append(hilt_pommel)           # 5
-        self.weapon_parts.append(hilt_grip)             # 6
-        self.weapon_parts.append(blade_body)            # 7
-        self.weapon_parts.append(blade_tip)             # 8
-        
     def draw_content(self, consoles: Dict[str, Console]) -> None:
         self.draw_help(consoles)
         self.draw_equipment(consoles)
         
         consoles['ROOT'].draw_frame(
-            x=10, y=10,
-            width=30, height=20,
+            x=0, y=0,
+            width=STAGE_PANEL_WIDTH, height=STAGE_PANEL_HEIGHT,
             fg=(255, 255, 255),
             bg=(0, 0, 0),
             )
-        
-        crossguard_top_end = 57578
-        crossguard_top_mid = 57594
-        hilt_pommel = 57608
-        hilt_grip = 57609
-        crossguard_base = 57610
-        crossguard_bot_mid = 57626
-        crossguard_bot_end = 57642
-        blade_base = 57611
-        blade_body = 57612
-        blade_tip = 57613
-        
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 12] = hilt_pommel, COLOR['gold']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 13] = hilt_grip, COLOR['brown']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 14] = hilt_grip, COLOR['brown']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 15] = hilt_grip, COLOR['brown']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 16] = crossguard_base, COLOR['gold']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][14, 16] = crossguard_top_mid, COLOR['gold']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][13, 16] = crossguard_top_end, COLOR['gold']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][16, 16] = crossguard_bot_mid, COLOR['gold']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][17, 16] = crossguard_bot_end, COLOR['gold']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 17] = blade_base, COLOR['gainsboro']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 18] = blade_body, COLOR['gainsboro']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 19] = blade_body, COLOR['gainsboro']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 20] = blade_body, COLOR['gainsboro']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 21] = blade_body, COLOR['gainsboro']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 22] = blade_body, COLOR['gainsboro']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 23] = blade_body, COLOR['gainsboro']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 24] = blade_body, COLOR['gainsboro']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 25] = blade_body, COLOR['gainsboro']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 26] = blade_body, COLOR['gainsboro']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 27] = blade_body, COLOR['gainsboro']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 28] = blade_body, COLOR['gainsboro']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 29] = blade_body, COLOR['gainsboro']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 30] = blade_body, COLOR['gainsboro']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 31] = blade_body, COLOR['gainsboro']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 32] = blade_body, COLOR['gainsboro']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 33] = blade_body, COLOR['gainsboro']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 34] = blade_body, COLOR['gainsboro']
-        # consoles['ROOT'].tiles_rgb[['ch', 'fg']][15, 35] = blade_tip, COLOR['gainsboro']
-
-        # consoles['ROOT'].print(x=18, y=13, string="Knight's Longsword", fg=(255, 255, 255))
 
     def draw_equipment(self, consoles: Dict[str, Console]) -> None:
 
