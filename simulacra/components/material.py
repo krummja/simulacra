@@ -11,7 +11,7 @@ class Material(Component):
     
     def __init__(
             self,
-            uid,
+            id="<unset>",
             name="",
             hardness=0.0,
             sharpness=0.0,
@@ -20,7 +20,7 @@ class Material(Component):
             value=0.0
         ) -> None:
         super().__init__("MATERIAL")
-        self['uid'] = uid
+        self['id'] = id
         self['name'] = name
         self['hardness'] = hardness
         self['sharpness'] = sharpness

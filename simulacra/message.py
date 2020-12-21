@@ -1,31 +1,42 @@
 from __future__ import annotations
-
-import tcod
 from typing import Optional, TYPE_CHECKING
 from collections import UserString
+
+import re
+import tcod
+
 from hues import set_color, RESET
+
+from noun import Pronoun
+
+if TYPE_CHECKING:
+    from noun import Noun
+
+
+THEY = "nom"
+THEM = "obl"
+THEIR = "gen"
 
 
 class Message:
 
     def __init__(
             self, 
-            msg: str,
+            text: str,
             noun1: Optional[Noun] = None,
             noun2: Optional[Noun] = None,
             noun3: Optional[Noun] = None
         ) -> None:
-        self.msg = self._format(msg, noun1=noun1, noun2=noun2, noun3=noun3)
+        self.text = self._format(text, noun1=noun1, noun2=noun2, noun3=noun3)
         self.count = 1
         
     def singular(self, text: str) -> str:
         return self._categorize(text, is_first = True)
 
-    def conjugate(self, text: str, pronoun: Pronoun) -> str:
+    def conjugate(self, text: str, pronoun: Pronoun) -> text:
         if pronoun == Pronoun.you or pronoun == Pronoun.they:
-            is_first = True
-            return _categorize(text, is_first = is_first)
-        return _categorize(text)
+            return self._categorize(text, is_first=True)
+        return self._categorize(text)
 
     def quantify(self, text: str, count: int) -> str:
         pass
@@ -41,18 +52,19 @@ class Message:
         
         nouns = [noun1, noun2, noun3]
         for i in range(len(nouns)):
-            noun = nouns[i - 1]
+            noun = nouns[i]
             if noun is not None:
-                result = result.replace(f'{i}', noun.noun_text)
                 
-                result = result.replace("they", noun.pronoun.nom)
-                result = result.replace("them", noun.pronoun.obl)
-                result = result.replace("their", noun.pronoun.gen)
-            
+                result = result.replace(f'{i}', noun.noun_text)
+
+                result = result.replace(f"({noun.noun_text}, 'nom')", noun.pronoun().nom)
+                result = result.replace(f"({noun.noun_text}, 'obl')", noun.pronoun().obl)
+                result = result.replace(f"({noun.noun_text}, 'gen')", noun.pronoun().gen)
+
         if noun1 is not None:
             result = self.conjugate(result, noun1.pronoun)
 
-        return result
+        return result[0].upper() + result[1:]
     
     def _categorize(
             self, 
@@ -60,13 +72,49 @@ class Message:
             is_first: bool = False, 
             force: bool = False
         ) -> str:
-        pass        
+        assert is_first is not None
+        
+        optional_suffix = "\[(\w+?)\]"
+        irregular = "\[([^|]+)\|([^\]]+)\]"
+        
+        # If it's a regular word in second category, add "s"
+        if force and not is_first and text.find("[") != -1:
+            return f"{text}s"
+        
+        # Handle words with optional suffixes like `close[s]` and `sword[s]`.
+        while True:
+            match = re.search(optional_suffix, text)
+            if match is None:
+                break
+            
+            before = text[0:match.span()[0]]
+            after = text[match.span()[1]:]
+            
+            if is_first:
+                text = f"{before}{after}"
+            else:
+                text = f"{before}{match[1]}{after}"
+        
+        # And now handle irregulars
+        while True:
+            match = re.search(irregular, text)
+            if match is None:
+                break
+            
+            before = text[0:match.span()[0]]
+            after = text[match.span()[1]:]
+            
+            if is_first:
+                text = f"{before}{match[1]}{after}"
+            else:
+                text = f"{before}{match[2]}{after}"
+            
+        return text
 
     def __str__(self) -> str:
-        
         if self.count > 1:
-            return f"{self.msg} (x{self.count})"
-        return self.msg
+            return f"{self.text} (x{self.count})"
+        return self.text
 
 
 class ColorFormatter:

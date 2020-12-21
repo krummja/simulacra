@@ -21,27 +21,31 @@ class Noun:
 
 class Pronoun:
 
+    nom: str
+    obl: str
+    gen: str
+
     def __init__(self, nom: str, obl: str, gen: str) -> None:
         self.nom = nom
         self.obl = obl
         self.gen = gen
 
-    @property
+    @classmethod
     def you(self) -> Pronoun:
         return Pronoun('you', 'you', 'your')
 
-    @property
+    @classmethod
     def she(self) -> Pronoun:
         return Pronoun('she', 'her', 'her')
 
-    @property
+    @classmethod
     def he(self) -> Pronoun:
         return Pronoun('he', 'him', 'his')
 
-    @property
+    @classmethod
     def it(self) -> Pronoun:
         return Pronoun('it', 'it', 'its')
 
-    @property
+    @classmethod
     def they(self) -> Pronoun:
         return Pronoun('they', 'them', 'their')

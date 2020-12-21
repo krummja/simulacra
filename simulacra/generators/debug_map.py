@@ -55,7 +55,7 @@ def debug_area(model: Model) -> Area:
     area.area_model.tiles[tcod.line_where(*t_middle, *t_end)] = floors['bare']['blank']
 
     # TODO: PlayerFactory will make this easier, of course
-    player = Player("test player", area[debug_room.center])
+    player = Player("Test Player", area[debug_room.center])
     player.register_component(initialize_character_stats())
     player.register_component(Physics(weight=10.0))
     player.register_component(Equipment())

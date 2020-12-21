@@ -22,7 +22,8 @@ class Player(Entity, Actor):
 
     def __init__(self, name: str, location: Location):
         Entity.__init__(self, self.uid, location)
-        self._noun_text = name
+        self._name = name
+        self._noun_text = 'you'
         
         self.control = PlayerControl(self)
         Actor.__init__(self, self, self.control)
@@ -30,3 +31,6 @@ class Player(Entity, Actor):
     @property
     def pronoun(self) -> Pronoun:
         return Pronoun.you
+    
+    def __str__(self) -> str:
+        return self._name

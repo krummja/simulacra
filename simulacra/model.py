@@ -75,9 +75,9 @@ class Model:
         while True:
             self.scheduler.invoke_next()
             
-    def report(self, msg: str) -> None:
-        print(msg)
-        if self.log and self.log[-1].msg == msg:
+    def report(self, msg: Message) -> None:
+        print(msg.text)
+        if self.log and self.log[-1].text == msg.text:
             self.log[-1].count += 1
         else:
-            self.log.append(Message(msg))
+            self.log.append(msg)

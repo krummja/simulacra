@@ -27,8 +27,6 @@ class LogElement(BaseElement):
         y_index = 0
         x = self.bounds.left + 1
         y = self.bounds.bottom - 2
-        
-        
 
 
 class ElemLog(BaseElement):
@@ -48,7 +46,8 @@ class ElemLog(BaseElement):
         x, y = self.bounds.left + 1, self.bounds.bottom - 2
 
         # Print lines above the most recent at a slight dim
-        for text in self.model.log[-2::-1]:
+        messages = [msg for msg in self.model.log[-2::-1]]
+        for text in messages:
             y_index += tcod.console.get_height_rect(self.log_width, str(text))
             if y_index >= 11:
                 break
@@ -61,7 +60,8 @@ class ElemLog(BaseElement):
                 )
 
         # Print the most recent line in full white
-        for text in self.model.log[::1]:
+        messages = [msg for msg in self.model.log[::1]]
+        for text in messages:
             consoles['ROOT'].print_box(
                 x, y,
                 self.log_width, 0,

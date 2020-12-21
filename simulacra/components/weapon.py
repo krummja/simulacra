@@ -13,9 +13,9 @@ class Weapon(Component):
     
     def __init__(
             self,
-            weapon_category,
-            weapon_type,
-            size,
+            weapon_category=None,
+            weapon_type=None,
+            size=None,
             ammunition_uid=None,
             finesse=False,
             loading=False,
