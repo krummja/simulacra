@@ -25,6 +25,7 @@ class Tile(Graphic):
 
     def __new__(
             cls,
+            uid: str,
             move_cost: int,
             transparent: bool,
             char: int,
@@ -32,25 +33,25 @@ class Tile(Graphic):
             bg: Tuple[int, int, int]
         ) -> np.ndarray:
         instance = super(Tile, cls).__new__(cls)
-        instance.__init__(move_cost, transparent, char, color, bg)
+        instance.__init__(uid, move_cost, transparent, char, color, bg)
 
         light = (char, color, bg)
-        dark = (
-            char,
-            (color[0] // 2, color[1] // 2, color[2] // 2),
-            (bg[0] // 2, bg[1] // 2, bg[2] // 2),
-            )
+        dark = (char,
+                (color[0] // 2, color[1] // 2, color[2] // 2),
+                (bg[0] // 2, bg[1] // 2, bg[2] // 2))
 
         return np.array((move_cost, transparent, light, dark), dtype=tile_dt)
 
     def __init__(
             self: Tile,
+            uid: str,
             move_cost: int,
             transparent: bool,
             char: int,
             color: Tuple[int, int, int],
             bg: Tuple[int, int, int]
         ) -> None:
+        self.uid = uid
         self.move_cost = move_cost
         self.transparent = transparent
         self.char = char

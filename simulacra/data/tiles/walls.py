@@ -24,6 +24,7 @@ styles = {
 walls = {
     'bare': {
         'bricks_01': Tile(
+            uid='tile',
             move_cost=0,
             transparent=False,
             char=font_map['bricks_01'],

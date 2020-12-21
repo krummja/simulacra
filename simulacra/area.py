@@ -33,7 +33,7 @@ class AreaModel:
         cam_x, cam_y = self.area.camera.get_camera_pos()
         target_x, target_y = x + cam_x, y + cam_y
         target_tile = self.tiles[target_y, target_x]
-        return list(target_tile[2][1][0:3])
+        return list(target_tile[2][2][0:3])
 
 
 class ActorModel:

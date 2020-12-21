@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from model import Model
 
 
-testing_tile = Tile(1, False, ord("#"), (255, 0, 0), COLOR['nero'])
+testing_tile = Tile('', 1, False, ord("#"), (255, 0, 0), COLOR['nero'])
 
 
 def testing_area(model: Model) -> Area:

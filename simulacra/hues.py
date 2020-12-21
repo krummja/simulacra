@@ -156,6 +156,14 @@ COLOR: Dict[str, Color] = {
     }
 
 
+class Colors:
+    
+    def __init__(self, color_dict: Dict[str, Color]) -> None:
+        for k, v in color_dict.items():
+            k = k.replace(" ", "_")
+            self.__setattr__(k, v)
+
+
 # Alright so it turns out that if an individual color channel's value is non-zero,
 # it gets parsed as a string of length one. That means that I can easily manage the
 # addition of extra characters for length parsing.

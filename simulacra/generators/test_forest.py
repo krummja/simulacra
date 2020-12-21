@@ -16,33 +16,28 @@ from rendering import update_fov
 from tile import Tile
 from room import Room
 
+from factories.factory_service import FactoryService
+
 if TYPE_CHECKING:
     from model import Model
 
 
-bare_floor = Tile(
-    move_cost=1,
-    transparent=True,
-    char=0,
-    color=COLOR['dark dark green'],
-    bg=COLOR['dark dark green']
-    )
+factory_service = FactoryService()
 
-debug_floor = Tile(
-    move_cost=1,
-    transparent=True,
-    char=0,
-    color=COLOR['light coral'],
-    bg=COLOR['light coral']
-    )
 
-brick_wall = Tile(
-    move_cost = 0,
-    transparent=False,
-    char=wall_tiles['brick_1'],
-    color=COLOR['rosy brown'],
-    bg=COLOR['dark dark green']
-    )
+def roll_asset(area: Area, template: str, threshold: int, x=None, y=None):
+    _x_range = range(area.width) if x is None else x
+    _y_range = range(area.height) if y is None else y
+
+    _x = [x for x in range(area.width)] if x is None else [x]
+    _y = [y for y in range(area.height)] if y is None else [y]
+
+    for x in _x:
+        for y in _y:
+            roll = random.randint(0, 100)
+            if roll < threshold:
+                area.area_model.tiles[y, x] = factory_service.tile_factory.build(template)
+    return area
 
 
 def test_forest(model: Model) -> Area:
@@ -51,6 +46,9 @@ def test_forest(model: Model) -> Area:
     
     area = Area(model, width, height)
     area.uid = 'test_forest'
+    
+    factory_service.model = model
+    tile_factory = factory_service.tile_factory
     
     bsp = tcod.bsp.BSP(x=0, y=0, width=width, height=height)
     bsp.split_recursive(
@@ -61,12 +59,16 @@ def test_forest(model: Model) -> Area:
         max_vertical_ratio=2.0,
         )
     
-    area.area_model.tiles[...] = bare_floor
-
+    area.area_model.tiles[...] = tile_factory.build('bare_floor')
+    area = roll_asset(area, 'evergreen_1', 20)
+    area = roll_asset(area, 'evergreen_2', 20)
+    area.area_model.tiles[30, 0:50] = tile_factory.build('dirt_path')
+    area = roll_asset(area, 'rock_1', 20, y=29)
+    area = roll_asset(area, 'rock_2', 20, y=29)
+    area = roll_asset(area, 'rock_3', 20, y=29)
+    area = roll_asset(area, 'rock_4', 20, y=29)
     start_room = Room(20, 20, 20, 20)
-    area.area_model.tiles[start_room.outer] = brick_wall
-    area.area_model.tiles[start_room.inner] = bare_floor
-        
+    
     # for node in bsp.pre_order():
     #     if node.children:
     #         pass

@@ -16,6 +16,7 @@ styles = {
 floors = {
     'bare': {
         'blank': Tile(
+            uid='tile',
             move_cost=1,
             transparent=True,
             char=font_map['blank'],
@@ -23,6 +24,7 @@ floors = {
             bg=styles['bare']['background'],
             ),
         'wood': Tile(
+            uid='tile',
             move_cost=1,
             transparent=True,
             char=font_map['wood_01'],

@@ -5,6 +5,7 @@ from factories.body_factory import BodyFactory
 from factories.character_factory import CharacterFactory
 from factories.item_factory import ItemFactory
 from factories.interface_factory import InterfaceFactory
+from factories.tile_factory import TileFactory
 
 from util import Singleton
 
@@ -20,6 +21,7 @@ class FactoryService(metaclass=Singleton):
         self.body_factory = BodyFactory()
         self.character_factory = CharacterFactory()
         self.item_factory = ItemFactory()
+        self.tile_factory = TileFactory()
     
     @property
     def model(self) -> Model:
@@ -31,3 +33,4 @@ class FactoryService(metaclass=Singleton):
         self.body_factory.model = value
         self.character_factory.model = value
         self.item_factory.model = value
+        self.tile_factory.model = value
