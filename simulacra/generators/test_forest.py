@@ -16,6 +16,8 @@ from rendering import update_fov
 from tile import Tile
 from room import Room
 
+from generators.area_factory import AreaFactory
+
 from factories.factory_service import FactoryService
 
 if TYPE_CHECKING:
@@ -25,24 +27,9 @@ if TYPE_CHECKING:
 factory_service = FactoryService()
 
 
-def roll_asset(area: Area, template: str, threshold: int, x=None, y=None):
-    _x_range = range(area.width) if x is None else x
-    _y_range = range(area.height) if y is None else y
-
-    _x = [x for x in range(area.width)] if x is None else [x]
-    _y = [y for y in range(area.height)] if y is None else [y]
-
-    for x in _x:
-        for y in _y:
-            roll = random.randint(0, 100)
-            if roll < threshold:
-                area.area_model.tiles[y, x] = factory_service.tile_factory.build(template)
-    return area
-
-
 def test_forest(model: Model) -> Area:
-    width: int = 120
-    height: int = 120
+    width: int = 300
+    height: int = 300
     
     area = Area(model, width, height)
     area.uid = 'test_forest'
@@ -50,24 +37,14 @@ def test_forest(model: Model) -> Area:
     factory_service.model = model
     tile_factory = factory_service.tile_factory
     
-    bsp = tcod.bsp.BSP(x=0, y=0, width=width, height=height)
-    bsp.split_recursive(
-        depth=10,
-        min_width=15,
-        min_height=15,
-        max_horizontal_ratio=2.0,
-        max_vertical_ratio=2.0,
-        )
-    
-    area.area_model.tiles[...] = tile_factory.build('bare_floor')
-    area = roll_asset(area, 'evergreen_1', 20)
-    area = roll_asset(area, 'evergreen_2', 20)
-    area.area_model.tiles[30, 0:50] = tile_factory.build('dirt_path')
-    area = roll_asset(area, 'rock_1', 20, y=29)
-    area = roll_asset(area, 'rock_2', 20, y=29)
-    area = roll_asset(area, 'rock_3', 20, y=29)
-    area = roll_asset(area, 'rock_4', 20, y=29)
-    start_room = Room(20, 20, 20, 20)
+    # bsp = tcod.bsp.BSP(x=0, y=0, width=width, height=height)
+    # bsp.split_recursive(
+    #     depth=10,
+    #     min_width=15,
+    #     min_height=15,
+    #     max_horizontal_ratio=2.0,
+    #     max_vertical_ratio=2.0,
+    #     )
     
     # for node in bsp.pre_order():
     #     if node.children:
@@ -77,8 +54,16 @@ def test_forest(model: Model) -> Area:
     #     else:
     #         room = Room(node.x, node.y, node.w, node.h)
     #         area.area_model.tiles[room.inner] = debug_floor
+
+    # area = roll_asset(area, 'rock_1', 20, y=29)
+    # area = roll_asset(area, 'rock_2', 20, y=29)
+    # area = roll_asset(area, 'rock_3', 20, y=29)
+    # area = roll_asset(area, 'rock_4', 20, y=29)
             
-    player = Player("Aulia Inuicta", area[start_room.center])
+    area_factory = AreaFactory(area, 40, 20, 8)
+    area = area_factory.generate()        
+    
+    player = Player("Aulia Inuicta", area[13, 9])
     player.register_component(initialize_character_stats())
     player.register_component(Physics(weight=10.0))
     player.register_component(Equipment())

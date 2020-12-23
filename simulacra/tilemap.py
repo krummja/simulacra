@@ -1,4 +1,8 @@
+from __future__ import annotations
+from typing import Dict
 import tcod
+
+from data.tile_defs import floor_tiles
 
 CHARMAP = []
 ARROWS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -33,7 +37,7 @@ CHARMAP.extend(BOX_CHARS)
 CHARMAP.extend(CUSTOM)
 
 tileset = tcod.tileset.load_tilesheet(
-    path="./simulacra/assets/simulacra16x16.png",
+    path="./simulacra/assets/simulacra16x16_2.png",
     columns=16,
     rows=48,
     charmap=CHARMAP)

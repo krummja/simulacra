@@ -4,14 +4,7 @@ from typing import Tuple, Type
 from enum import Enum
 import numpy as np
 
-
-class classproperty:
-
-    def __init__(self, f):
-        self.f = f
-
-    def __get__(self, obj, owner):
-        return self.f(owner)
+from util import classproperty
 
 
 class Direction(Enum):

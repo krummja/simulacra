@@ -20,14 +20,12 @@ class EquipmentSlotElement:
             self.fg = (255, 255, 255)
             self.name = data.renderables['name']
             self.description = data.renderables['description']
-            self.durability = "----------"
         else:
             self.char = ord("-")
             self.color = (100, 100, 100)
             self.fg = (100, 100, 100)
             self.name = data.slot
             self.description = ""
-            self.durability = ""
         
     def draw(self, i: int, consoles: Dict[str, Console]) -> None:
         
@@ -45,13 +43,6 @@ class EquipmentSlotElement:
             string = self.name,
             fg = self.fg
             )
-        
-        # consoles['ROOT'].print(
-        #     x = self.parent.x + 4,
-        #     y = self.parent.y + 3 + i,
-        #     string = self.durability,
-        #     fg = (255, 0, 0)
-        #     )
 
 
 class EquipmentElement(BaseElement):

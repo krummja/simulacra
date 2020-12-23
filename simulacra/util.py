@@ -7,6 +7,15 @@ import functools
 import states.main_menu_state
 
 
+class classproperty:
+
+    def __init__(self, f):
+        self.f = f
+
+    def __get__(self, obj, owner):
+        return self.f(owner)
+
+
 def flatten(d, parent_key='', sep='_'):
     items = []
     for k, v in d.items():

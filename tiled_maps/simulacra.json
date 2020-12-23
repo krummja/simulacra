@@ -1,0 +1,16 @@
+{
+    "tilesets":[
+        {
+            "columns": 1,
+            "firstgid": 1,
+            "image": "simulacra16x16.png",
+            "imagewidth": 256,
+            "imageheight": 768,
+            "margin": 0,
+            "name": "square",
+            "spacing": 0,
+            "tilewidth": 16,
+            "tileheight": 16
+        }
+    ]
+}

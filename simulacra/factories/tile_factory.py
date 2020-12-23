@@ -1,8 +1,9 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import Dict, TYPE_CHECKING
 
 from tile import Tile
 from data.tile_defs import *
+from tilemap import CHARMAP
 from hues import COLOR
 
 if TYPE_CHECKING:
@@ -13,6 +14,7 @@ class TileFactory:
     
     def __init__(self) -> None:
         self._model = None
+        self.instance_count = {}
         
     @property
     def model(self) -> Model:
@@ -21,7 +23,6 @@ class TileFactory:
     @model.setter
     def model(self, value: Model) -> None:
         self._model = value
-        self.instance_count = {}
     
     def build(self, uid: str) -> Tile:
         template = tile_templates[uid]
@@ -49,3 +50,12 @@ class TileFactory:
             bg=template['bg']
             )
         return new_tile
+    
+    def convert_to_char_id(self, tile_id: int = 0) -> int:
+        return CHARMAP[tile_id]
+    
+    def convert_to_id_dict(self, tile_dict: Dict[str, int]) -> Dict[str, int]:
+        tile_id_dict = {}
+        for k, v in tile_dict.items():
+            tile_id_dict[v] = k
+        return tile_id_dict

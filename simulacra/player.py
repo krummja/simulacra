@@ -17,7 +17,7 @@ class Player(Entity, Actor):
 
     uid = 'PLAYER'
     char = ord("@")
-    color = (255, 0, 255)
+    color = (200, 100, 130)
     bg = (0, 0, 0)
 
     def __init__(self, name: str, location: Location):
