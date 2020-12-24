@@ -4,6 +4,32 @@ from enum import Enum
 from hues import COLOR, Colors
 
 
+color_list = [
+    (25, 40, 40), 
+    (60, 60, 60), 
+    (100, 100, 60), 
+    (50, 140, 100), 
+    (135, 100, 70), 
+    (135, 100, 70), 
+    (100, 60, 40), 
+    (0, 0, 0), 
+    (0, 0, 0), 
+    (0, 0, 0), 
+    (0, 0, 0), 
+    (0, 0, 0), 
+    (0, 0, 0), 
+    (0, 0, 0), 
+    (0, 0, 0), 
+    (0, 0, 0), 
+    (100, 100, 100),
+    (150, 150, 150), 
+    (0, 0, 0), 
+    (100, 150, 30), 
+    (0, 0, 0), 
+    (0, 0, 0)
+    ]
+
+
 wall_tiles: Dict[str, int] = {
     'boulder_1': 57344,
     'boulder_2': 57345,
@@ -19,21 +45,21 @@ wall_tiles: Dict[str, int] = {
     'brick_4': 57379,
     'brick_5': 57380,
     'brick_6': 57381,
+    'brick_wall_L': 57376,
+    'brick_wall': 57377,
+    'brick_wall_R': 57378,
+    'brick_wall_BL': 57379,
+    'brick_wall_BR': 57380,
     'slab_1': 57392,
     'slab_2': 57393,
     'window_1': 57408,
-    'brick_wall_L': 57446,
-    'brick_wall': 57447,
-    'brick_wall_R': 57451,
-    'brick_wall_BL': 57526,
-    'brick_wall_BR': 57531
-}
+    }
 
 door_tiles: Dict[str, int] = {
     'door_open': 57440,
     'door_closed': 57441,
     'stairs_1': 57442,
-}
+    }
 
 ground_tiles: Dict[str, int] = {
     'blank': 0,
@@ -42,18 +68,18 @@ ground_tiles: Dict[str, int] = {
     'rock_1': 57474,
     'rock_2': 57475,
     'grass_1': 57488,
-    'grass_2': 57489
-}
+    'grass_2': 57489,
+    }
 
 floor_tiles: Dict[str, int] = {
-    'brick_TL': 57463,
-    'brick_T': 57464,
-    'brick_TR': 57372,
-    'brick_L': 57479,
-    'brick_M_1': 57480,
-    'brick_R': 57482,
-    'brick_M_2': 57497
-}
+    'brick_TL': 57504,
+    'brick_T': 57505,
+    'brick_TR': 57506,
+    'blank_stone': 57507,
+    'brick_L': 57520,
+    'brick_M_1': 57521,
+    'brick_R': 57522,
+    }
 
 all_tiles: Dict[str, int] = {
     'boulder_1': 57344,
@@ -70,31 +96,32 @@ all_tiles: Dict[str, int] = {
     'brick_4': 57379,
     'brick_5': 57380,
     'brick_6': 57381,
+    'brick_wall_L': 57376,
+    'brick_wall': 57377,
+    'brick_wall_R': 57378,
+    'brick_wall_BL': 57379,
+    'brick_wall_BR': 57380,
     'slab_1': 57392,
     'slab_2': 57393,
     'window_1': 57408,
-    'brick_wall_L': 57446,
-    'brick_wall': 57447,
-    'brick_wall_R': 57451,
-    'brick_wall_BL': 57526,
-    'brick_wall_BR': 57531,
-    'door_closed': 57440,
-    'door_open': 57441,
+    'door_open': 57440,
+    'door_closed': 57441,
     'stairs_1': 57442,
     'blank': 0,
-    'dirt_path': 57472,
+    'dirt_1': 57472,
+    'dirt_2': 57473,
     'rock_1': 57474,
     'rock_2': 57475,
     'grass_1': 57488,
     'grass_2': 57489,
-    'brick_TL': 57463,
-    'brick_T': 57464,
-    'brick_TR': 57466,
-    'brick_L': 57479,
-    'brick_M_1': 57480,
-    'brick_R': 57482,
-    'brick_M_2': 57497
-}
+    'brick_TL': 57504,
+    'brick_T': 57505,
+    'brick_TR': 57506,
+    'blank_stone': 57507,
+    'brick_L': 57520,
+    'brick_M_1': 57521,
+    'brick_R': 57522,
+    }
 
 
 class TileType(Enum):
@@ -102,6 +129,7 @@ class TileType(Enum):
     Floor = 1
 
 FOREST_FLOOR = (25, 40, 40)
+INTERIOR_FLOOR = (60, 60, 60)
 
 bare_floor = {
     'uid': 'blank',
@@ -121,8 +149,17 @@ blank_floor = {
     'bg': FOREST_FLOOR
     }
 
+blank_stone_floor = {
+    'uid': 'blank_stone',
+    'move_cost': TileType.Floor,
+    'transparent': TileType.Floor,
+    'char': floor_tiles['blank_stone'],
+    'color': (255, 255, 255),
+    'bg': INTERIOR_FLOOR
+    }
+
 dirt_path = {
-    'uid': 'dirt_path',
+    'uid': 'dirt_1',
     'move_cost': TileType.Floor,
     'transparent': TileType.Floor,
     'char': ground_tiles['dirt_1'],
@@ -279,7 +316,7 @@ door_open = {
     'move_cost': TileType.Floor,
     'transparent': TileType.Floor,
     'char': door_tiles['door_open'],
-    'color': (100, 100, 100),
+    'color': (100, 60, 40),
     'bg': FOREST_FLOOR
     }
 
@@ -288,7 +325,7 @@ door_closed = {
     'move_cost': TileType.Wall,
     'transparent': TileType.Wall,
     'char': door_tiles['door_closed'],
-    'color': (100, 100, 100),
+    'color': (100, 60, 40),
     'bg': FOREST_FLOOR
     }
 
@@ -298,7 +335,7 @@ stairs_down = {
     'transparent': TileType.Floor,
     'char': door_tiles['stairs_1'],
     'color': (150, 150, 150),
-    'bg': FOREST_FLOOR
+    'bg': INTERIOR_FLOOR
     }
 
 brick_floor_TL = {
@@ -307,7 +344,7 @@ brick_floor_TL = {
     'transparent': TileType.Floor,
     'char': floor_tiles['brick_TL'],
     'color': (150, 150, 150),
-    'bg': FOREST_FLOOR
+    'bg': INTERIOR_FLOOR
     }
 
 brick_floor_TR = {
@@ -316,7 +353,7 @@ brick_floor_TR = {
     'transparent': TileType.Floor,
     'char': floor_tiles['brick_TR'],
     'color': (150, 150, 150),
-    'bg': FOREST_FLOOR
+    'bg': INTERIOR_FLOOR
     }
 
 brick_floor_L = {
@@ -325,7 +362,7 @@ brick_floor_L = {
     'transparent': TileType.Floor,
     'char': floor_tiles['brick_L'],
     'color': (150, 150, 150),
-    'bg': FOREST_FLOOR
+    'bg': INTERIOR_FLOOR
     }
 
 brick_floor_T = {
@@ -334,7 +371,7 @@ brick_floor_T = {
     'transparent': TileType.Floor,
     'char': floor_tiles['brick_T'],
     'color': (150, 150, 150),
-    'bg': FOREST_FLOOR
+    'bg': INTERIOR_FLOOR
     }
 
 brick_floor_R = {
@@ -343,7 +380,7 @@ brick_floor_R = {
     'transparent': TileType.Floor,
     'char': floor_tiles['brick_R'],
     'color': (150, 150, 150),
-    'bg': FOREST_FLOOR
+    'bg': INTERIOR_FLOOR
     }
 
 brick_floor_M_1 = {
@@ -352,16 +389,7 @@ brick_floor_M_1 = {
     'transparent': TileType.Floor,
     'char': floor_tiles['brick_M_1'],
     'color': (150, 150, 150),
-    'bg': FOREST_FLOOR
-    }
-
-brick_floor_M_2 = {
-    'uid': 'brick_M_2',
-    'move_cost': TileType.Floor,
-    'transparent': TileType.Floor,
-    'char': floor_tiles['brick_M_2'],
-    'color': (150, 150, 150),
-    'bg': FOREST_FLOOR
+    'bg': INTERIOR_FLOOR
     }
 
 
@@ -388,11 +416,11 @@ tile_templates = {
     door_open['uid']: door_open,
     door_closed['uid']: door_closed,
     stairs_down['uid']: stairs_down,
+    blank_stone_floor['uid']: blank_stone_floor,
     brick_floor_TL['uid']: brick_floor_TL,
     brick_floor_TR['uid']: brick_floor_TR,
     brick_floor_L['uid']: brick_floor_L,
     brick_floor_R['uid']: brick_floor_R,
     brick_floor_T['uid']: brick_floor_T,
     brick_floor_M_1['uid']: brick_floor_M_1,
-    brick_floor_M_2['uid']: brick_floor_M_2,
     }

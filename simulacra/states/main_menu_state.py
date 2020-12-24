@@ -9,9 +9,7 @@ from state import State, T, SaveAndQuit, GameOverQuit, EffectsBreak
 from states.modal_states.confirm_modal_state import ConfirmModalState
 from storage import Storage
 from views import MainMenuView
-from generators.debug_map import debug_area
-from generators.testing_map import testing_area
-from generators.test_forest import test_forest
+from areas.test_forest import test_forest
 
 if TYPE_CHECKING:
     from managers.manager_service import ManagerService

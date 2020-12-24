@@ -1,43 +1,53 @@
 from __future__ import annotations
-from typing import Dict
+from typing import List, Tuple, Dict
+
+import numpy as np
 import tcod
+from util import Singleton
 
-from data.tile_defs import floor_tiles
+from util import classproperty
 
-CHARMAP = []
-ARROWS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0, 0, 0, 8593, 8595, 8594, 8592, 0, 0, 0, 0]
 
-TEXT = [ 32,  33,  34,  35,  36,  37,  38,  39,  40,  41,  42,  43,  44,  45,  46,  47, 
-         48,  49,  50,  51,  52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,  63, 
-         64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,  76,  77,  78,  79, 
-         80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,  91,  92,  93,  94,  95, 
-         96,  97,  98,  99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 
-        112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127]
-
-SUPP_TEXT = [199, 252, 233, 226, 228, 224, 229, 231, 234,  235, 232, 239, 238, 236,  196, 197, 
-             201, 230, 198, 244, 246, 242, 251, 249, 255,  214, 220, 162, 163, 165, 8359, 402, 
-             225, 237, 243, 250, 241, 209, 170, 186, 191, 8976, 172, 189, 188, 161,  171, 187]
-             
-BOX_CHARS = [9617, 9618, 9619, 9474, 9508, 9569, 9570, 9558, 9557, 9571, 9553, 9559, 9565, 9564, 9563, 9488, 
-             9492, 9524, 9516, 9500, 9472, 9532, 9566, 9567, 9562, 9556, 9577, 9574, 9568, 9552, 9580, 9575, 
-             9576, 9572, 9573, 9561, 9560, 9554, 9555, 9579, 9578, 9496, 9484, 9608, 9604, 9612, 9616, 9600]
-
-# Custom Tiles (57344 - 63743)
-CUSTOM = []
-
-# Add 512 additional tiles
-for i in range(57344, (57344 + 512)):
-    CUSTOM.append(i)
-
-CHARMAP.extend(ARROWS)
-CHARMAP.extend(TEXT)
-CHARMAP.extend(SUPP_TEXT)
-CHARMAP.extend(BOX_CHARS)
-CHARMAP.extend(CUSTOM)
+class TilesetData(metaclass=Singleton):
+    
+    def __init__(self) -> None:
+        self._charmap = tcod.tileset.CHARMAP_CP437
+        _pua_start = 57344
+        _pua_end = 57856
+        self._charmap.extend([_ for _ in range(_pua_start, _pua_end)])
+    
+    @property
+    def charmap(self) -> List[int]:
+        """The extended CP437 charmap, extended with 512 codepoints from the 
+        unicode private use area (codepoints 57344:57856)
+        """
+        return self._charmap
+    
+    @property
+    def tilemap(self) -> List[int]:
+        """A list of integers starting from 0 representing the Tiled-generated
+        tilemap enumeration.
+        """
+        return [_ for _ in range(len(self._charmap))]
+    
+    def __getitem__(
+            self, 
+            key: Tuple[str, slice, slice]
+        ) -> np.ndarray:
+        """Implementation of slice indexing for both map classifications.
+        To slice the `charmap`, set key to ('charmap', :, :).
+        To slice the `tilemap`, set key to ('tilemap', :, :).
+        """
+        _charmap_array = np.array(self.charmap).reshape(80, 16)
+        _tilemap_array = np.array(self.tilemap).reshape(80, 16)
+        if key[0] == 'charmap':
+            return _charmap_array[key[1], key[2]]
+        elif key[0] == 'tilemap':
+            return _tilemap_array[key[1], key[2]]
+    
 
 tileset = tcod.tileset.load_tilesheet(
     path="./simulacra/assets/simulacra16x16_2.png",
     columns=16,
     rows=48,
-    charmap=CHARMAP)
+    charmap=TilesetData().charmap)
