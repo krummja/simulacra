@@ -3,7 +3,7 @@ import tcod
 import config
 from states.main_menu_state import MainMenuState
 from tilemap import tileset
-        
+
 
 def main() -> None:
 

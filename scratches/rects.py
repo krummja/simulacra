@@ -1,11 +1,7 @@
 from __future__ import annotations
-from typing import Iterator
+from typing import Tuple
 
-import random
-
-from area import *
-from graphic import *
-from geometry import Rect, Span
+import numpy as np
 
 
 class Room:
@@ -16,8 +12,6 @@ class Room:
             y: int,
             width: int,
             height: int,
-            max_entities: int=3,
-            room_id: str = ""
         ) -> None:
         self.x1 = x
         self.y1 = y
@@ -25,35 +19,29 @@ class Room:
         self.y2 = y + height
         self.width = width
         self.height = height
-        self.entities = 0
-        self.max_entities = max_entities
-        self.room_id = room_id
 
     @property
     def outer(self) -> Tuple[slice, slice]:
         """Return the NumPy index for the whole room."""
-        index: Tuple[slice, slice] = np.s_[self.x1: self.x2, self.y1: self.y2]
+        index: Tuple[slice, slice] = np.s_[self.x1:self.x2, self.y1:self.y2]
         return index
 
     @property
     def inner(self) -> Tuple[slice, slice]:
         """Return the NumPy index for the inner room area."""
         index: Tuple[slice, slice] = np.s_[
-            self.x1 + 1: self.x2 - 1, self.y1 + 1: self.y2 - 1
+            self.x1 + 1:self.x2 - 1, self.y1 + 1:self.y2 - 1
             ]
         return index
-    
-    @property
-    def bounds(self):
-        return Rect.from_spans(
-            vertical=Span(self.x1, self.y1+self.height), 
-            horizontal=Span(self.y1, self.x1+self.width)
-            )
 
     @property
     def center(self) -> Tuple[int, int]:
         """Return the index for the room's center coordinate."""
         return (self.x1 + self.x2) // 2, (self.y1 + self.y2) // 2
+
+    @property
+    def area(self):
+        return (self.width * self.height)
 
     @property
     def x(self) -> int:
@@ -78,15 +66,15 @@ class Room:
         other_x, other_y = other.center
         return abs(other_x - x) + abs(other_y - y)
 
-    def get_free_spaces(
-            self,
-            area: Area,
-            number: int
-        ) -> Iterator[Tuple[int, int]]:
-        """Iterate over the x,y coordinates up to `number` spaces."""
-        for _ in range(number):
-            x = random.randint(self.x1 + 1, self.x2 - 2)
-            y = random.randint(self.y1 + 1, self.y2 - 2)
-            if area.is_blocked(x, y):
-                continue
-            yield x, y
+
+a = Room(0, 0, 10, 10)
+b = Room(3, 3, 10, 10)
+
+print(a.center)
+print(b.center)
+
+print(a.intersects(b))
+
+SI = max(0, min(a.x2, b.x2) - max(a.x1, b.x1)) * max(0, min(a.y2, b.y2) - max(a.y1, b.y1))
+print(SI)
+

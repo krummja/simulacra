@@ -131,6 +131,42 @@ class TileType(Enum):
 FOREST_FLOOR = (25, 40, 40)
 INTERIOR_FLOOR = (60, 60, 60)
 
+test_floor = {
+    'uid': 'test',
+    'move_cost': TileType.Floor,
+    'transparent': TileType.Floor,
+    'char': ground_tiles['blank'],
+    'color': (255, 0, 0),
+    'bg': (100, 0, 0)
+    }
+
+test_floor2 = {
+    'uid': 'test2',
+    'move_cost': TileType.Floor,
+    'transparent': TileType.Floor,
+    'char': ground_tiles['blank'],
+    'color': (255, 0, 0),
+    'bg': (255, 0, 0)
+    }
+
+test_floor3 = {
+    'uid': 'test3',
+    'move_cost': TileType.Floor,
+    'transparent': TileType.Floor,
+    'char': ground_tiles['blank'],
+    'color': (0, 0, 0),
+    'bg': (50, 50, 200)
+    }
+
+test_floor4 = {
+    'uid': 'test4',
+    'move_cost': TileType.Floor,
+    'transparent': TileType.Floor,
+    'char': ground_tiles['blank'],
+    'color': (0, 0, 0),
+    'bg': (100, 100, 255)
+    }
+
 bare_floor = {
     'uid': 'blank',
     'move_cost': TileType.Floor,
@@ -423,4 +459,8 @@ tile_templates = {
     brick_floor_R['uid']: brick_floor_R,
     brick_floor_T['uid']: brick_floor_T,
     brick_floor_M_1['uid']: brick_floor_M_1,
+    test_floor['uid']: test_floor,
+    test_floor2['uid']: test_floor2,
+    test_floor3['uid']: test_floor3,
+    test_floor4['uid']: test_floor4
     }

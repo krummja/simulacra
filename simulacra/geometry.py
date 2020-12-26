@@ -185,7 +185,7 @@ class Rect(tuple):
     @classmethod
     def from_edges(cls, *, top, bottom, left, right):
         return Rect(Point(left, top), Size(right - left + 1, bottom - top + 1))
-
+    
     @classmethod
     def from_spans(cls, *, vertical: Span, horizontal: Span):
         return cls.from_edges(
@@ -293,6 +293,7 @@ class Rect(tuple):
             self.top + int((self.height - 1) * relative_height + 0.5),
             )
 
+    @property
     def center(self):
         return self.relative_point(0.5, 0.5)
 

@@ -144,7 +144,7 @@ def update_fov(area: Area) -> None:
     area.area_model.visible = tcod.map.compute_fov(
         transparency=area.area_model.tiles["transparent"],
         pov=area.player.location.ij,
-        radius=10,
+        radius=VIEW_RADIUS,
         light_walls=True,
         algorithm=tcod.FOV_RESTRICTIVE,
         )    

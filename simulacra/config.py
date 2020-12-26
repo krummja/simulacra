@@ -8,8 +8,6 @@ if TYPE_CHECKING:
 
 CONTEXT: tcod.context.Context
 
-# 110 x 55
-# 96 x 52
 CONSOLE_WIDTH: int = 110
 CONSOLE_HEIGHT: int = 55
 
@@ -33,5 +31,7 @@ CONSOLES: Dict[str, Console] = {
     'ROOT': tcod.Console(width=CONSOLE_WIDTH, height=CONSOLE_HEIGHT)
     }
 
-DEBUG = True
+DEBUG = False
 ADMIN = True
+
+VIEW_RADIUS: int = 30
