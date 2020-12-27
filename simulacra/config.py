@@ -34,4 +34,4 @@ CONSOLES: Dict[str, Console] = {
 DEBUG = False
 ADMIN = True
 
-VIEW_RADIUS: int = 30
+VIEW_RADIUS: int = 10

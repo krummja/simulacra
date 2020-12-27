@@ -17,6 +17,7 @@ from rendering import update_fov
 from tile import Tile
 from room import Room
 from generators.graph_generator import GraphGenerator
+from generators.dungeon import DungeonGenerator
 
 from factories.area_factory import AreaFactory
 
@@ -30,8 +31,8 @@ factory_service = FactoryService()
 
 
 def test_forest(model: Model) -> Area:
-    width: int = 300
-    height: int = 300
+    width: int = STAGE_WIDTH
+    height: int = STAGE_HEIGHT
     
     area = Area(model, width, height)
     area.uid = 'test_forest'
@@ -46,14 +47,16 @@ def test_forest(model: Model) -> Area:
     w = area.width
     h = area.height
     center = (w // 2, h // 2)
+
+    # generator = DungeonGenerator(x=125, y=125, width=50, height=50)
+    # print(generator.map_data.shape)
+    # generator.generate_rooms(200, 5, 5)
+
+    # generator = GraphGenerator(w, h)
+    # generator.generate_nodes(10, 10, 20, 30)
     
-    generator = GraphGenerator(w, h)
-    debug_map = generator.generate(6, 10, 20, 10)
-    room_map = generator.generate_rooms()
-    area.area_model.tiles[debug_map==1] = tile_factory.build('test4')
-    area.area_model.tiles[debug_map==2] = tile_factory.build('test3')
-    area.area_model.tiles[room_map==1] = tile_factory.build('test')
-    area.area_model.tiles[room_map==2] = tile_factory.build('test2')
+    # area.area_model.tiles.T[generator.map_data == 1] = tile_factory.build('test2')
+    # area.area_model.tiles.T[generator.map_data == 2] = tile_factory.build('test')
     
     player = Player("Aulia Inuicta", area[center])
     player.register_component(initialize_character_stats())

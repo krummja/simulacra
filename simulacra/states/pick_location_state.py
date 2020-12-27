@@ -23,6 +23,7 @@ class PickLocationState(AreaState[Tuple[int, int]]):
         super().__init__(model)
         self._model = model
         self._view = PickLocationView(self)
+        self.start_xy = start_xy
         self.cursor_xy = start_xy
         self.desc = str(self.cursor_xy)
         self.info = str(self.model.area.nearby_actor_entities(*start_xy))
