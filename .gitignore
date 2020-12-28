@@ -3,3 +3,4 @@ __pycache__/
 *.manifest
 *.spec
 .vscode
+impulse

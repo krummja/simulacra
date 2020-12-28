@@ -1,10 +1,12 @@
 from __future__ import annotations
-from typing import Callable, List, Optional, Tuple
+from typing import Callable, List, Optional, Tuple, Union
 
 import math
 import numpy as np
 import random
 import pymunk
+import tcod
+
 from aabbtree import AABB, AABBTree
 from . import vector
 from config import STAGE_WIDTH, STAGE_HEIGHT
@@ -47,44 +49,35 @@ class Vector:
     
 class Node:
     
-    def __init__(self, x: int, y: int, width: int, height: int) -> None:
-        self.x1 = x
-        self.y1 = y
-        self.x2 = x + width
-        self.y2 = y + height
+    def __init__(
+            self,
+            uid: str,
+            position: Union[Tuple[int, int], Node],
+            width: int,
+            height: int
+        ) -> None:
+        if isinstance(position, Node):
+            self.x = position.x
+            self.y = position.y
+        else:
+            self.x = position[0]
+            self.y = position[1]
+        self.uid = uid
         self.width = width
         self.height = height
+        self.parent = None
+        self.children = []
         
-    @property
-    def x(self) -> int:
-        return self.x1
-    
-    @property
-    def y(self) -> int:
-        return self.y1
+        self.x1 = self.x
+        self.y1 = self.y
+        self.x2 = self.x + self.width
+        self.y2 = self.y + self.height
         
-    @x.setter
-    def x(self, value: int) -> None:
-        self.x1 = value
-        self.x2 = value + self.width
-        
-    @y.setter
-    def y(self, value: int) -> None:
-        self.y1 = value
-        self.y2 = value + self.height
-        
-    @property
-    def x_half(self) -> Tuple[int, int]:
-        return (self.width / 2), 0.0
-    
-    @property
-    def y_half(self) -> Tuple[int, int]:
-        return 0.0, (self.height / 2)
-    
     @property
     def center(self) -> Tuple[int, int]:
         """Return the index for the node's center coordinate."""
-        return (self.x1 + self.x2) // 2, (self.y1 + self.y2) // 2
+        return ((self.x + (self.x + self.width)) // 2, 
+                (self.y + (self.y + self.height)) // 2)
     
     def distance_to(self, other: Node) -> float:
         """Return an approximate distance from this node to another."""
@@ -100,6 +93,13 @@ class Node:
             self.y1 <= other.y2 and
             self.y2 >= other.y1
             )
+        
+    def add_child(self, node: Node) -> None:
+        self.children.append(node)
+        node.parent = self
+        
+    def remove_child(self, node: Node) -> None:
+        self.children.remove(node)
 
 
 class GraphGenerator:
@@ -108,7 +108,13 @@ class GraphGenerator:
         self.width = width
         self.height = height
         self.nodes = []
-        self.map_data = np.zeros((300, 300), dtype=np.int)
+        self.map_data = np.zeros((256, 256), dtype=np.int)
+    
+    def generate_rooms(self) -> None:
+        for node in self.nodes:
+            room = Room(node.x, node.y, node.width, node.height)
+            self.map_data[room.inner] = 1
+            self.map_data[room.outer] = 2
     
     def generate_nodes_in_radius(
             self,
@@ -122,11 +128,8 @@ class GraphGenerator:
             x, y = self.get_random_points_in_circle(placement_radius)
             w = random.randint(min_size, max_size)
             h = random.randint(min_size, max_size)
-            new_node = Node(x, y, w, h)
+            new_node = Node(str(i), (x, y), w, h)
             self.nodes.append(new_node)
-
-    def generate_from_rules(self, rule_list):
-        pass
 
     def get_random_points_in_circle(self, placement_radius: int) -> Tuple[int, int]:
         """Generate a random point within a circle defined by `placement_radius`.
@@ -138,3 +141,12 @@ class GraphGenerator:
         x = int(placement_radius * r * math.cos(t) + (self.width // 2))
         y = int(placement_radius * r * math.sin(t) + (self.height // 2))
         return x, y
+
+    def polar_to_cartesian(self, radius: float, theta: float) -> Tuple[float, float]:
+        """Convert polar coordinates to cartesian coordinates."""
+        x = radius * math.cos(theta)
+        y = radius * math.sin(theta)
+        return x, y
+    
+    def cartesian_to_polar(self, x: int, y: int):
+        pass

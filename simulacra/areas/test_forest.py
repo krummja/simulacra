@@ -48,17 +48,13 @@ def test_forest(model: Model) -> Area:
     h = area.height
     center = (w // 2, h // 2)
 
-    # generator = DungeonGenerator(x=125, y=125, width=50, height=50)
-    # print(generator.map_data.shape)
-    # generator.generate_rooms(200, 5, 5)
-
-    # generator = GraphGenerator(w, h)
-    # generator.generate_nodes(10, 10, 20, 30)
+    generator = GraphGenerator(w, h)
+    generator.generate_nodes_in_radius(30, 10, 30, 50)
     
-    # area.area_model.tiles.T[generator.map_data == 1] = tile_factory.build('test2')
-    # area.area_model.tiles.T[generator.map_data == 2] = tile_factory.build('test')
+    area.area_model.tiles.T[generator.map_data == 1] = tile_factory.build('test2')
+    area.area_model.tiles.T[generator.map_data == 2] = tile_factory.build('test')
     
-    player = Player("Aulia Inuicta", area[center])
+    player = Player("Aulia Inuicta", area[150, 150])
     player.register_component(initialize_character_stats())
     player.register_component(Physics(weight=10.0))
     player.register_component(Equipment())
