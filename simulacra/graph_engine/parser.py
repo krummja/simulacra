@@ -24,7 +24,8 @@ class Parser:
         self._parsed_vertices = 0
         
     def parse(self):
-        pass
+        self._parse_configuration()
+        self._parse_productions()
     
     def _consume(self) -> None:
         self.lookahead = self.lexer.next_token()
