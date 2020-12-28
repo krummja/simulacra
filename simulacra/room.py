@@ -5,7 +5,8 @@ import random
 
 from area import *
 from graphic import *
-from geometry import Rect, Span
+from geometry.rect import Rect
+from geometry.span import Span
 
 
 class Room:

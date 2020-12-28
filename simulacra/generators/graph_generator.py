@@ -10,7 +10,6 @@ import tcod
 from aabbtree import AABB, AABBTree
 from . import vector
 from config import STAGE_WIDTH, STAGE_HEIGHT
-from geometry import *
 from room import Room
 
     

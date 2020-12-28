@@ -8,7 +8,6 @@ import time
 from graphic import Graphic
 from config import *
 from data.interface_elements import *
-from geometry import *
 from rendering import *
 from tcod import Console
 from view import View

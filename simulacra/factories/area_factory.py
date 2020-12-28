@@ -7,7 +7,6 @@ import tcod
 
 from area import Area
 from factories.factory_service import FactoryService
-from geometry import *
 from generators.cellular_automata import *
 from data.tile_defs import *
 from room import Room

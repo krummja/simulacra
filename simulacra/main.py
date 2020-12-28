@@ -1,3 +1,7 @@
+"""
+Simulacra
+"""
+
 import tcod
 
 import config
@@ -6,6 +10,7 @@ from tilemap import tileset
 
 
 def main() -> None:
+    """Setup the terminal and start the main game loop."""
 
     with tcod.context.new_terminal(
         columns=config.CONSOLE_WIDTH,

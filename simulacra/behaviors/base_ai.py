@@ -1,3 +1,5 @@
+"""Base class definitions for actor AI."""
+
 from __future__ import annotations
 from typing import Tuple, List, Optional
 
@@ -6,7 +8,6 @@ import random
 import numpy as np
 import tcod.path
 
-from geometry import Direction
 from action import Action, Impossible
 from actions import common
 from behavior import Behavior
@@ -14,16 +15,15 @@ from actor import Actor
 
 
 class PathTo(Action):
+    """Try to path towards a target."""
 
     def __init__(self, actor: Actor, dest_xy: Tuple[int, int]) -> None:
-        
         super().__init__(actor)
         self.subaction: Optional[Action] = None
         self.dest_xy = dest_xy
         self.path_xy: List[Tuple[int, int]] = self.compute_path()
 
     def compute_path(self) -> List[Tuple[int, int]]:
-        
         map_ = self.actor.location.area
         walkable = np.copy(map_.tiles["move_cost"])
         blocker_pos = [e.location.ij for e in map_.actors]
@@ -36,14 +36,14 @@ class PathTo(Action):
         return [(ij[1], ij[0]) for ij in pf.path_to(self.dest_xy[::-1])[1:].tolist()]
 
     def plan(self) -> Action:
-        
+
         if not self.path_xy:
             raise Impossible("End of path reached.")
         self.subaction = common.MoveStart(self.actor, self.path_xy[0]).plan()
         return self
 
     def act(self) -> None:
-        
+
         assert self.subaction
         self.subaction.act()
         if self.path_xy[0] == self.actor.location.xy:
@@ -51,9 +51,9 @@ class PathTo(Action):
 
 
 class BasicNPC(Behavior):
+    """Base class for defining an NPC's behaviors."""
 
     def plan(self: BasicNPC) -> Action:
-        
         owner = self.actor
         area = owner.location.area.area_model
         if area.visible[owner.location.ij]:

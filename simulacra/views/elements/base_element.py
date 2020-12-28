@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from hues import COLOR
 from config import *
-from geometry import *
+from geometry.rect import Rect
 
 if TYPE_CHECKING:
     from model import Model
@@ -53,6 +53,8 @@ class Position:
     """Base class for handling GUI element positioning."""
     
     def __init__(self, config: ElementConfig) -> None:
+        
+        # TODO: Fix this
         for k, v in config.items():
             self.__setattr__(k, v)
 

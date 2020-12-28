@@ -1,51 +1,51 @@
+"""Common Actions"""
+
 from __future__ import annotations
 
 from rendering import update_fov
-from geometry import *
-from action import Action, Impossible
-from result import Result
-from action import (ActionWithPosition,
+from action import (Action,
+                    Impossible,
+                    ActionWithPosition,
                     ActionWithItem,
                     ActionWithDirection)
-from message import Message, THEY, THEM, THEIR
+from message import Message, THEM
 
 
 class MoveToward(ActionWithPosition):
     """Move toward and possibly interact with a destination."""
-    
+
     def plan(self) -> Action:
-        
         dx = self.target_position[0] - self.location.x
         dy = self.target_position[1] - self.location.y
         distance = max(abs(dx), abs(dy))
         dx = int(round(dx / distance))
         dy = int(round(dy / distance))
-        return Move.Start(self.actor, (dx, dy)).plan()
+        return MoveStart(self.actor, (dx, dy)).plan()
 
 
 class MoveStart(ActionWithDirection):
     """Move an entity in a direction, interacting with obstacles."""
-    
+
     def plan(self) -> ActionWithPosition:
-        
+
         self.success = True
         return MoveEnd(self.actor, self.target_position).plan()
 
-        
+
 class MoveEnd(ActionWithPosition):
     """Move an entity to a destination, interacting with obstacles."""
-    
+
     def plan(self) -> ActionWithPosition:
-        
+
         if self.actor.owner.location.distance_to(*self.target_position) > 1:
             self.success = False
             self.message = Message("The distance is too great!")
             raise Impossible(self)
-        
+
         if self.actor.owner.location.xy == self.target_position:
             self.success = True
             return self
-        
+
         if self.area.is_blocked(*self.target_position):
             self.success = False
             self.effect = True
@@ -54,7 +54,7 @@ class MoveEnd(ActionWithPosition):
         return self
 
     def act(self) -> Action:
-        
+
         self.actor.owner.location = self.area[self.target_position]
         if self.actor.is_player:
             update_fov(self.area)
@@ -65,23 +65,20 @@ class MoveEnd(ActionWithPosition):
 
 class ActivateFromInventory(ActionWithItem):
     """Try to activate an item selected from an inventory."""
-    pass
 
 
 class ActivateNearby(ActionWithItem):
     """Try to activate a nearby object."""
-    
+
     def plan(self) -> ActionWithItem:
-        
         try:
             return self.item.plan_activate(self)
-        except:
+        except Impossible(self):
             self.success = False
             self.message = Message("Nothing happens...")
-            raise Impossible(self)
+            raise
 
     def act(self) -> None:
-        
         self.item.act_activate(self)
 
 
@@ -89,9 +86,8 @@ class Pickup(Action):
     """Remove an item from a nearby tile and place it in the player's
     inventory component.
     """
-    
+
     def plan(self) -> Action:
-        
         if not self.area.items.get(self.location.xy):
             self.success = False
             self.message = Message("There is nothing to pick up.")
@@ -103,29 +99,30 @@ class Pickup(Action):
             try:
                 self.success = True
                 self.message = Message(f"{0} pick[s] up the {1} and stow[s] "
-                                       f"{1, THEM}.", 
-                                       noun1=self.actor.owner, 
+                                       f"{1, THEM}.",
+                                       noun1=self.actor.owner,
                                        noun2=item)
                 item.lift()
                 self.actor.owner.components['INVENTORY'].add_item(item)
                 self.actor.reschedule(100)
                 return self
-            except:
+            except Impossible(self):
                 self.success = False
                 self.message = Message(f"{0} cannot lift the {1}!",
                                        noun1=self.actor.owner,
                                        noun2=item)
-                raise Impossible(self)
+                raise
 
 
 class Drop(ActionWithItem):
-    
+    """Remove an item from inventory and place on the ground."""
+
     def act(self) -> Action:
         assert self.item in self.model.player.components['INVENTORY']['item_stacks'].keys()
         self.item.lift()
         self.item.place(self.model.player.location)
         self.success = True
-        self.message = Message(f"{0} drop[s] the {1}.", 
+        self.message = Message(f"{0} drop[s] the {1}.",
                                noun1=self.actor.owner,
                                noun2=self.item)
         self.actor.reschedule(100)
@@ -133,14 +130,15 @@ class Drop(ActionWithItem):
 
 
 class Equip(ActionWithItem):
-    
+    """Remove an item from inventory and place in an equipment slot."""
+
     def act(self) -> Action:
         components = self.model.player.components
-        
+
         result = components['EQUIPMENT'].equip(self.item.slot, self.item)
         if not result:
             self.success = False
-            self.message = Message(f"{0} cannot equip that!", 
+            self.message = Message(f"{0} cannot equip that!",
                                    noun1=self.actor.owner)
             raise Impossible(self)
         else:
@@ -154,7 +152,8 @@ class Equip(ActionWithItem):
 
 
 class Dequip(ActionWithItem):
-    
+    """Remove an item from an equipment slot and place in inventory."""
+
     def act(self) -> Action:
         try:
             self.model.player.components['EQUIPMENT'].remove(self.item.slot)
@@ -164,7 +163,7 @@ class Dequip(ActionWithItem):
                                    noun1=self.actor.owner,
                                    noun2=self.item)
             self.actor.reschedule(100)
-            return self        
-        except:
+            return self
+        except Impossible(self):
             self.success = False
-            raise Impossible(self)
+            raise

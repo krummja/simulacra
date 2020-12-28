@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Callable, Generic, Generator, List, TypeVar, Tuple, TYPE_CHECKING
 
 from util import classproperty
-from geometry import *
+from geometry.rect import Rect
 
 if TYPE_CHECKING:
     from area import Area

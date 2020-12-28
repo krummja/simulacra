@@ -1,10 +1,6 @@
 from __future__ import annotations  # type: ignore
 from typing import TYPE_CHECKING
 
-from geometry import *
-
-# from state import StateBreak
-
 from particles.particle import Particle
 
 if TYPE_CHECKING:

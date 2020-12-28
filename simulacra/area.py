@@ -3,7 +3,7 @@ from typing import Dict, Tuple, List, Set, TYPE_CHECKING
 
 import numpy as np
 
-from geometry import *
+from geometry.point import Point
 from camera import Camera
 from location import Location
 from tile import tile_dt, tile_graphic
