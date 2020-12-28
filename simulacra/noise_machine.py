@@ -84,18 +84,3 @@ class NoiseMachine:
             recth = 10
 
         consoles['ROOT'].draw_semigraphics(self.img)
-        # consoles['ROOT'].draw_rect(
-        #     2, 2,
-        #     rectw, recth,
-        #     ch=0, fg=tcod.white, bg=tcod.grey,
-        #     bg_blend=tcod.BKGND_COLOR_BURN
-        #     )
-        
-        # consoles['ROOT'].print(
-        #     2, 10,
-        #     "Testing"
-        # )
-
-        # consoles['ROOT'].fg[2: 2 + rectw, 2: 2 + recth] = (
-        #     consoles['ROOT'].fg[2: 2 + rectw, 2: 2 + recth] * tcod.grey / 255
-        #     )

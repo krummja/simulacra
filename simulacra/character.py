@@ -45,4 +45,3 @@ class Character(Actor, Entity):
                 return Pronoun.they
         else:
             return Pronoun.it
-                

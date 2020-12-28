@@ -1,11 +1,13 @@
 from __future__ import annotations
-from typing import Tuple, Type
+from typing import Tuple, Type, Optional
 
 from enum import Enum
 import numpy as np
 
 from util import classproperty
 
+# TODO: Split this file into separate files
+# TODO: Move to a 'geometry' module - it's sufficiently complex
 
 class Direction(Enum):
     here: Tuple[int, int] = (0, 0)
@@ -177,6 +179,7 @@ class Span(tuple):
         return Span(start, end)
 
 
+# TODO: Continue to improve this class - and others in this module
 class Rect(tuple):
 
     def __new__(cls: Type[Rect], origin, size):
@@ -200,68 +203,68 @@ class Rect(tuple):
         return Rect(Point(left, top), size)
 
     @property
-    def size(self):
+    def size(self) -> Tuple[int int]:
         return self[1]
 
     @property
-    def top_left(self):
+    def top_left(self) -> Tuple[int, int]:
         return self[0]
 
     @property
-    def top(self):
+    def top(self) -> int:
         return self.top_left.y
 
     @property
-    def bottom(self):
+    def bottom(self) -> int:
         return self.top_left.y + self.size.height - 1
 
     @property
-    def left(self):
+    def left(self) -> int:
         return self.top_left.x
 
     @property
-    def right(self):
+    def right(self) -> int:
         return self.top_left.x + self.size.width - 1
 
     @property
-    def width(self):
+    def width(self) -> int:
         return self.size.width
 
     @property
-    def height(self):
+    def height(self) -> int:
         return self.size.height
 
     @property
-    def area(self):
+    def area(self) -> int:
         return self.size.area
 
     @property
-    def indices(self):
+    def indices(self) -> np.IndexExpression:
         return np.s_[self.top:self.bottom, self.left:self.right]
 
     @property
-    def vertical_span(self):
+    def vertical_span(self) -> Span:
         return Span(self.top, self.bottom)
 
     @property
-    def horizontal_span(self):
+    def horizontal_span(self) -> Span:
         return Span(self.left, self.right)
 
-    def edge_length(self, edge):
+    def edge_length(self, edge: Direction) -> int:
         if edge is Direction.up or edge is Direction.down:
             return self.width
         if edge is Direction.left or edge is Direction.right:
             return self.height
         raise ValueError("Expected an orthogonal direction.")
 
-    def edge_span(self, edge):
+    def edge_span(self, edge: Direction) -> Span:
         if edge is Direction.up or edge is Direction.down:
             return self.horizontal_span
         if edge is Direction.left or edge is Direction.right:
             return self.vertical_span
         raise ValueError("Expected an orthogonal direction.")
 
-    def edge_point(self, edge, parallel, orthogonal):
+    def edge_point(self, edge: Direction, parallel: int, orthogonal: int) -> Point:
         """Return a point, relative to a particular edge.
         `parallel` is the absolute coordinate parallel to the given edge. For
         example, if `edge` is `Direction.top`, then `parallel` is the
@@ -280,7 +283,7 @@ class Rect(tuple):
             return Point(parallel, self.right - parallel)
         raise ValueError("Expected an orthogonal direction.")
 
-    def relative_point(self, relative_width: float, relative_height: float):
+    def relative_point(self, relative_width: float, relative_height: float) -> Point:
         """Find a point x% across the width and y% across the height. The
         arguments should be floats between 0 and 1.
         For example, `relative_point(0, 0)` returns the top left, and
@@ -294,26 +297,15 @@ class Rect(tuple):
             )
 
     @property
-    def center(self):
+    def center(self) -> Point:
         return self.relative_point(0.5, 0.5)
 
-    def __contains__(self, other):
-        if isinstance(other, Rect):
-            return (
-                self.top <= other.top and
-                self.bottom >= other.bottom and
-                self.left <= other.left and
-                self.right >= other.right
-                )
-        elif isinstance(other, Point):
-            return (
-                self.left <= other.x <= self.right and
-                self.top <= other.y <= self.bottom
-                )
-        else:
-            return False
-
-    def replace(self, *, top=None, bottom=None, left=None, right=None):
+    def replace(self, *, 
+            top: Optional[int] = None, 
+            bottom: Optional[int] = None, 
+            left: Optional[int] = None, 
+            right: Optional[int] = None
+        ) -> Rect:
         if top is None:
             top = self.top
         if bottom is None:
@@ -330,7 +322,13 @@ class Rect(tuple):
             right=right,
             )
 
-    def shift(self, *, top=0, bottom=0, left=0, right=0):
+    def shift(
+            self, *, 
+            top: int = 0, 
+            bottom: int = 0, 
+            left: int = 0, 
+            right: int = 0
+        ) -> Rect:
         return type(self).from_edges(
             top=self.top + top,
             bottom=self.bottom + bottom,
@@ -338,7 +336,7 @@ class Rect(tuple):
             right=self.right + right,
             )
 
-    def shrink(self, amount):
+    def shrink(self, amount: int) -> Rect:
         new_left = self.left + amount
         new_right = self.right - amount
         if new_left > new_right:
@@ -379,3 +377,19 @@ class Rect(tuple):
     def range_height(self):
         """Iterate over every y-coordinate within the height of the Rect."""
         return range(self.top, self.bottom + 1)
+
+    def __contains__(self, other) -> bool:
+        if isinstance(other, Rect):
+            return (
+                self.top <= other.top and
+                self.bottom >= other.bottom and
+                self.left <= other.left and
+                self.right >= other.right
+                )
+        elif isinstance(other, Point):
+            return (
+                self.left <= other.x <= self.right and
+                self.top <= other.y <= self.bottom
+                )
+        else:
+            return False
