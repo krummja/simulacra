@@ -79,7 +79,8 @@ class Graph:
 
         self._edges.pop(vid)
         for _vid in self._neighbors:
-            if _vid in self._neighbors[_vid]: self._neighbors[_vid].remove(vid)
+            if _vid in self._neighbors[_vid]:
+                self._neighbors[_vid].remove(vid)
         self._neighbors.pop(vid)
 
         return self._vertices.pop(vid)
