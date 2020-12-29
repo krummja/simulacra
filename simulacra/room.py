@@ -59,7 +59,7 @@ class Room:
     @property
     def x(self) -> int:
         return self.center[0]
-    
+
     @property
     def y(self) -> int:
         return self.center[1]

@@ -1,6 +1,9 @@
 [MASTER]
 init-hook='import sys; sys.path.append("$HOME/Workspace/Python/Simulacra/simulacra/")'
-good-names=i,j,k,x,y,z,xy,ij,_,dx,dy
+good-names=i,j,k,x,y,z,xy,ij,_,dx,dy,w,h,n,m,x1,x2,y1,y2
 
 [MESSAGES CONTROL]
-disable=no-self-argument
+disable=
+    no-self-argument,
+    unsupported-assignment-operation,
+    missing-function-docstring

@@ -3,12 +3,12 @@ from typing import Tuple
 
 from enum import Enum
 
-from simulacra.util import classproperty
+from util import classproperty
 
 
 class Direction(Enum):
     """Enum of normalized orthogonal and diagonal directions."""
-    
+
     here: Tuple[int, int] = (0, 0)
     up: Tuple[int, int] = (0, -1)
     up_right: Tuple[int, int] = (1, -1)
@@ -18,7 +18,7 @@ class Direction(Enum):
     down_left: Tuple[int, int] = (-1, 1)
     left: Tuple[int, int] = (-1, 0)
     up_left: Tuple[int, int] = (-1, -1)
-    
+
     @classproperty
     def orthogonals(self) -> frozenset[Direction]:
         """Return frozen set of the four cardinal directions."""

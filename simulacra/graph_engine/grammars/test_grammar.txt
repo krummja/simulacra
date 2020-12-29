@@ -1,0 +1,10 @@
+# test grammar
+
+configuration {
+    min_vertices = 10;
+}
+
+productions {
+    A1->A4;
+    A1->A2 ==> A1->A->A2;
+}

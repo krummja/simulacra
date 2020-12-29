@@ -1,14 +1,18 @@
+"""Geometry package Rect module"""
+
 from __future__ import annotations
-from typing import Type, Iterable, Tuple, Generator, Union
+from typing import Type, Generator, Union, Optional
 
 import numpy as np
 
+from geometry.direction import Direction
 from geometry.point import Point
 from geometry.size import Size
 from geometry.span import Span
 
 
 class Rect(tuple):
+    """Representation of a Rectangle."""
 
     def __new__(cls: Type[Rect], origin, size) -> Rect:
         return super().__new__(cls, (origin, size))
@@ -16,16 +20,16 @@ class Rect(tuple):
     @classmethod
     def from_edges(cls, *, top: int, bottom: int, left: int, right: int) -> Rect:
         """Constructor method.
-        
+
         Create a new Rect object by defining the values of its four edges.
         """
         return Rect(Point(left, top), Size(right - left + 1, bottom - top + 1))
-    
+
     @classmethod
     def from_spans(cls, *, vertical: Span, horizontal: Span) -> Rect:
         """Constructor method.
-        
-        Create a new Rect object by defining its vertical and horizontal 
+
+        Create a new Rect object by defining its vertical and horizontal
         dimensions as Span objects.
         """
         return cls.from_edges(
@@ -36,7 +40,7 @@ class Rect(tuple):
     @classmethod
     def centered_at(cls, size: Size, center: Point) -> Rect:
         """Constructor method.
-        
+
         Create a new Rect object by defining its dimensions as a Size object
         and its centerpoint as a Point object.
         """
@@ -84,6 +88,18 @@ class Rect(tuple):
         return self.size.area
 
     @property
+    def inner(self) -> np.IndexExpression:
+        """Get a NumPy IndexExpression for the inner portion of the Rect."""
+        return np.s_[(self.left+1):self.right, (self.top+1):self.bottom]
+
+    @property
+    def outer(self) -> np.IndexExpression:
+        """Get a NumPy IndexExpression for the inner portion + the border
+        of the Rect.
+        """
+        return np.s_[self.left:(self.right+1), self.top:(self.bottom+1)]
+
+    @property
     def indices(self) -> np.IndexExpression:
         """Get a NumPy IndexExpression for this Rect."""
         return np.s_[self.top:self.bottom, self.left:self.right]
@@ -107,7 +123,8 @@ class Rect(tuple):
         raise ValueError("Expected an orthogonal Direction.")
 
     def edge_span(self, edge: Direction) -> Span:
-        """Use a Direction to get the relevant edge as a Span object."""
+        """Use a Direction to get a Span that starts and ends at
+        opposite edges and crosses the centerpoint of this Rect."""
         if edge is Direction.up or edge is Direction.down:
             return self.horizontal_span
         if edge is Direction.left or edge is Direction.right:
@@ -151,16 +168,16 @@ class Rect(tuple):
         """Get the center of this Rect as a Point object."""
         return self.relative_point(0.5, 0.5)
 
-    def replace(self, *, 
-            top: Optional[int] = None, 
-            bottom: Optional[int] = None, 
-            left: Optional[int] = None, 
+    def replace(self, *,
+            top: Optional[int] = None,
+            bottom: Optional[int] = None,
+            left: Optional[int] = None,
             right: Optional[int] = None
         ) -> Rect:
         """Get a new Rect derived from this one, optionally defined in terms
         of edge values. Providing values ot this method pass them as arguments
         to `Rect.from_edges()` constructor.
-        
+
         Leave a parameter unfilled to get the current Rect's value for that
         parameter, or provide an integer to override.
         """
@@ -172,19 +189,12 @@ class Rect(tuple):
             left = self.left
         if right is None:
             right = self.right
+        return type(self).from_edges(top=top, bottom=bottom, left=left, right=right)
 
-        return type(self).from_edges(
-            top=top,
-            bottom=bottom,
-            left=left,
-            right=right,
-            )
-
-    def shift(
-            self, *, 
-            top: int = 0, 
-            bottom: int = 0, 
-            left: int = 0, 
+    def shift(self, *,
+            top: int = 0,
+            bottom: int = 0,
+            left: int = 0,
             right: int = 0
         ) -> Rect:
         """Get a new Rect derived from this one, defined as offsets from the
@@ -216,6 +226,10 @@ class Rect(tuple):
             )
 
     def iter_border(self) -> Generator:
+        """Return Points for every x,y in the border of the Rect as well as
+        a Direction object encoding the side of the given edge.
+
+        Returns diagonal Directions for the corners of the Rect."""
         for x in range(self.left + 1, self.right):
             yield Point(x, self.top), Direction.up
             yield Point(x, self.bottom), Direction.down

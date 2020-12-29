@@ -30,8 +30,9 @@ class PickLocationView(StageView):
         
         
         style = {"fg": (255, 255, 255), "bg": (0, 0, 0)}
+        consoles['ROOT'].print(1, 1, string=self.state.desc, **style)
         # consoles['ROOT'].print(x+1, y, string=chr(9665), fg=(255, 150, 150))
-        # consoles['ROOT'].print_box(x+2, y, 12, 1, string=self.state.info.upper(), fg=(0, 0, 0), bg=(255, 150, 150))
+        # consoles['ROOT'].print_box(x1+2, y1, 12, 1, string=self.state.desc.upper(), fg=(0, 0, 0), bg=(255, 150, 150))
         
         if 0 <= x2 < STAGE_PANEL_WIDTH and 0 <= y2 < STAGE_PANEL_HEIGHT:
             consoles['ROOT'].tiles_rgb.T[["fg", "bg"]][x2, y2] = (0, 0, 0), (255, 0, 0)
