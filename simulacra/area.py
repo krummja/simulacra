@@ -1,20 +1,32 @@
+"""Define an area of the game. Includes models for different data structrures
+representing elements contained in the area.
+
+Classes:
+
+    ActorModel
+    Area
+    AreaLocation
+    AreaModel
+    ItemModel
+"""
+
 from __future__ import annotations
-from typing import Dict, Tuple, List, Set, TYPE_CHECKING
+
+from typing import TYPE_CHECKING, Dict, List, Set, Tuple
 
 import numpy as np
 
-from geometry.point import Point
 from camera import Camera
+from geometry.point import Point
 from location import Location
 from tile import tile_dt, tile_graphic
 
 if TYPE_CHECKING:
-    from states.effects_state import Particle
     from actor import Actor
+    from entity import Entity
     from item import Item
     from model import Model
     from player import Player
-    from entity import Entity
 
 
 class AreaModel:
@@ -38,7 +50,7 @@ class AreaModel:
 
 class ActorModel:
     """Model class that holds references to all of the area's actors.
-    
+
     Actors are stored in a set; there shouldn't be a reason to directly access
     an actor in the game. Accessing the owning entity via the Model is usually
     sufficient.
@@ -47,17 +59,17 @@ class ActorModel:
     def __init__(self, area: Area) -> None:
         self.area = area
         self.actors: Set[Actor] = set()
-    
+
     def register_actor(self, actor: Actor) -> None:
         self.actors.add(actor)
 
 
 class ItemModel:
     """Model class that holds references to all of an area's items.
-    
-    Items are stored in arrays representing a tile in the area, keyed to a 
+
+    Items are stored in arrays representing a tile in the area, keyed to a
     tuple that encodes the area location of that tile.
-    
+
     items = { (10, 10): [<Item1>, <Item2>, <Item3>] }
     """
 
@@ -69,7 +81,7 @@ class ItemModel:
     def __getitem__(self, key: Tuple[int, int]) -> List[Item]:
         """Return a list of items at a given y,x position."""
         return self.items[key]
-    
+
     def get_nearby(self) -> None:
         """Return a list of items in all neighboring tiles around the player."""
         self.nearby_items.clear()
@@ -82,6 +94,7 @@ class ItemModel:
 
 
 class AreaLocation(Location):
+    """Representation of a `Location` bound to a specific `Area`."""
 
     def __init__(self, area: Area, x: int, y: int):
         self.area = area
@@ -90,6 +103,7 @@ class AreaLocation(Location):
 
 
 class Area:
+    """Base class for defining new areas of the game."""
 
     def __init__(self, model: Model, width: int, height: int) -> None:
         self._player: Player = None
@@ -114,14 +128,14 @@ class Area:
     @property
     def items(self) -> Dict[Tuple[int, int], List[Item]]:
         return self.item_model.items
-    
+
     @property
     def nearby_items(self) -> List[List[Item]]:
         return self.item_model.nearby_items
 
     def nearby_actor_entities(
-            self, 
-            x: int, 
+            self,
+            x: int,
             y: int
         ) -> Entity:
         entity_dict = {}

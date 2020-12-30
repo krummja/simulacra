@@ -1,25 +1,17 @@
 from __future__ import annotations
-from typing import (Dict,
-                    Callable,
-                    Generic,
-                    Optional,
-                    Tuple,
-                    TypeVar,
-                    TYPE_CHECKING)
+
+from typing import (TYPE_CHECKING, Callable, Dict, Generic, Optional, Tuple,
+                    TypeVar)
+
 import tcod
+
 import config
-import time
-import threading
-
-from autologging import logged
-from rendering import frame_count, elapsed_time
-
-from util import log
 from factories.factory_service import FactoryService
 from managers.manager_service import ManagerService
 
 if TYPE_CHECKING:
     from tcod.console import Console
+
     from model import Model
     from storage import Storage
     from view import View
@@ -55,10 +47,10 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
     """
 
     NAME = "<base state>"
-    
+
     factory_service = FactoryService()
     manager_service = ManagerService()
-    
+
     _COMMAND_KEYS: Dict[int, str] = {
         tcod.event.K_e: "equipment",
         tcod.event.K_i: "inventory",
@@ -92,7 +84,7 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
         tcod.event.K_KP_8: (0, -1),
         tcod.event.K_KP_9: (1, -1),
         }
-    
+
     _DEBUG_KEYS: Dict[int, Tuple[int, str]] = {
         tcod.event.K_F1: 'debug_1',
         tcod.event.K_F2: 'debug_2',
@@ -106,7 +98,7 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
         self._storage: Optional[Storage] = None
         self._view: Optional[View] = None
         self.suspend = False
-        
+
     @property
     def COMMAND_KEYS(self: State) -> Dict[int, str]:
         return self._COMMAND_KEYS
@@ -126,15 +118,15 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
     @property
     def view(self) -> Optional[View]:
         return self._view
-        
+
     def loop(self) -> Optional[T]:
         while True:
             self.on_draw(config.CONSOLES)
             config.CONTEXT.present(config.CONSOLES['ROOT'])
-            
+
             all_key_events = list(tcod.event.get())
             key_events = [e for e in all_key_events if e.type == 'KEYDOWN']
-            
+
             if len(key_events) > 0:
                 event = key_events.pop()
                 try:
@@ -144,8 +136,8 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
                 if value is not None:
                     if not self.suspend:
                         return value
-                
-    def on_draw(self, consoles: Dict[str, Console]) -> None:        
+
+    def on_draw(self, consoles: Dict[str, Console]) -> None:
         self._view.draw(consoles)
 
     def ev_quit(self, event: tcod.event.Quit) -> Optional[T]:
@@ -192,12 +184,12 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
 
     def cmd_debug_1(self):
         pass
-    
+
     def cmd_debug_2(self):
         pass
-    
+
     def cmd_debug_3(self):
         pass
-    
+
     def cmd_debug_4(self):
         pass

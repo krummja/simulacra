@@ -1,9 +1,10 @@
 from __future__ import annotations
-from typing import Any, Dict, Optional, TYPE_CHECKING
 
-from entity import Entity
+from typing import TYPE_CHECKING, Any, Dict, Optional
+
 from actor import Actor
 from behaviors.base_ai import BasicNPC
+from entity import Entity
 
 if TYPE_CHECKING:
     from control import Control
@@ -20,7 +21,7 @@ class Character(Actor, Entity):
             location: Location = None,
             display: Dict[str, Any] = None,
             gender: str = None
-        ) -> None:     
+        ) -> None:
         Entity.__init__(self, uid, location)
         self._noun_text = name
         self.char = display['char']
@@ -33,7 +34,7 @@ class Character(Actor, Entity):
     @property
     def name(self) -> str:
         return self._noun_text
-    
+
     @property
     def pronoun(self) -> Pronoun:
         if self.gender is not None:

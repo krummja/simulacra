@@ -1,8 +1,7 @@
 from __future__ import annotations
-from typing import Callable, List, NamedTuple, Optional, TYPE_CHECKING
 
-from action import Impossible
 import heapq
+from typing import TYPE_CHECKING, Callable, List, NamedTuple, Optional
 
 if TYPE_CHECKING:
     from result import Result
@@ -10,7 +9,7 @@ if TYPE_CHECKING:
 
 class Event(NamedTuple):
     """Representation of a discrete Actor Event.
-    
+
     `tick` is the current time segment.
     `unique_id` is the uniquely identifiable index of the event.
     `func` is an `Actor.act` method, usually from some controller class.

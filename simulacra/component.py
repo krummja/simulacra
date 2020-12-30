@@ -1,7 +1,7 @@
 from __future__ import annotations
-from typing import Callable, List, TYPE_CHECKING
 
 from collections import defaultdict
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from entity import Entity
@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 class Component(defaultdict):
     """Components represent the interactive attributes of an entity.
-    
+
     Every component should provide at least one option to present to any UI
     element that targets that component. For example, an Inventory component
     should provide a 'view' option that will appear in any menu raised as the

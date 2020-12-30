@@ -1,18 +1,29 @@
+"""Define an actor for `Entity` types to interface with the `EventQueue`.
+
+Classes:
+
+    Actor
+"""
+
 from __future__ import annotations
-from typing import Optional, TYPE_CHECKING
 
-import sys
-import traceback
+from typing import TYPE_CHECKING, Optional
 
-from action import Action, Impossible
+from action import Impossible
 
 if TYPE_CHECKING:
     from control import Control
     from entity import Entity
     from event_queue import Event, EventQueue
+    from result import Result
 
 
 class Actor:
+    """Base `Actor` object.
+
+    Used as a mixin with an `Entity` to provide a base API for the
+    game's `EventQueue`.
+    """
 
     def __init__(self, owner: Entity, control: Control) -> None:
         self.owner = owner
@@ -28,23 +39,15 @@ class Actor:
     def scheduler(self) -> EventQueue:
         return self.owner.location.area.model.scheduler
 
-    def act(self, scheduler: EventQueue, event: Event) -> None:
-        """Execute a successfully planned control action."""
+    def act(self, scheduler: EventQueue, event: Event) -> Optional[Result]:
+        """Try to execute a planned `Action`."""
         if event is not self.event:
             return scheduler.unschedule(event)
-        action = self.try_plan()
-        return action.act()
-
-    def try_plan(self) -> Action:
-        """Attempt to resolve a control's action plan."""
         try:
             action = self.control.plan()
         except Impossible:
-            print(f"Unresolved action with {self}", file=sys.stderr)
-            traceback.print_exc(file=sys.stderr)
             return self.reschedule(100)
-        assert action is action.plan(), f"{action} not fully resolved, {self}."
-        return action
+        return action.act()
 
     def reschedule(self, interval: int) -> None:
         if self.event is None:

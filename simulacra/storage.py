@@ -1,13 +1,13 @@
 from __future__ import annotations
-from typing import Dict, Optional, TYPE_CHECKING
 
-from enum import Enum
-import sys
 import datetime
-import traceback
 import lzma
 import pickle
 import pickletools
+import sys
+import traceback
+from typing import TYPE_CHECKING, Dict, Optional
+
 from config import DEBUG
 
 if TYPE_CHECKING:

@@ -1,5 +1,6 @@
 from __future__ import annotations  # type: ignore
-from typing import Optional, TYPE_CHECKING
+
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from action import Action
@@ -8,9 +9,9 @@ if TYPE_CHECKING:
 
 
 class Result:
-    
+
     uid: int = 0
-    
+
     def __init__(
             self,
             actor: Actor,
@@ -26,9 +27,9 @@ class Result:
         self.success = success
         self.effect = effect
         self.message = message
-                
+
     def __lt__(self, other: Result) -> bool:
         return self.uid < other.uid
-    
+
     def __str__(self) -> str:
         return f"{self.uid}\n{self.actor}\n{self.event}\n{self.success}\n{self.message}"

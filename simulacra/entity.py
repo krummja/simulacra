@@ -1,8 +1,9 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
-from location import Location
 from graphic import Graphic
+from location import Location
 from noun import Noun
 
 if TYPE_CHECKING:

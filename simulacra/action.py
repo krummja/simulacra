@@ -1,14 +1,26 @@
+"""Define basic actions for use with the `EventQueue`.
+
+Classes:
+
+    Action
+    ActionWithPosition(Action)
+    ActionWithDirection(ActionWithPosition)
+    ActionWithItem(Action)
+    Impossible(Exception)
+"""
+
 from __future__ import annotations
-from typing import Tuple, Optional, TYPE_CHECKING
+
+from typing import TYPE_CHECKING, Optional, Tuple
 
 from result import Result
 
 if TYPE_CHECKING:
     from actor import Actor
     from area import Area
+    from item import Item
     from location import Location
     from model import Model
-    from item import Item
 
 
 class Impossible(Exception):
@@ -16,8 +28,19 @@ class Impossible(Exception):
 
 
 class Action:
+    """Base `Action` object.
+
+    Defines an action to be performed by an `Actor`.
+    Provides basic properties for handling `Result` objects and reporting
+    to the game's log.
+    """
 
     def __init__(self, actor: Actor) -> None:
+        """Constructor.
+
+        Args:
+            actor (Actor): The `Actor` executing this `Action`.
+        """
         self.actor = actor
         self.done = False
         self.success = False
@@ -25,11 +48,24 @@ class Action:
         self.message = ""
 
     def plan(self) -> Action:
+        """Check(s) to perform prior to executing `Action.act()`.
+
+        This method may be overridden to run checks prior to the execution
+        of the actual effect of the action.
+
+        For example, if an `Action` would interact with another game object,
+        such as picking something up, the relevant planning step might be to
+        check that an item actually exists, that it is able to be picked up,
+        that it is not harmful, etc.
+
+        Returns:
+            Action: The instigating `Action`.
+        """
         return self
 
     def act(self) -> Optional[Result]:
-        raise RuntimeError(f"{self.__class__.__name__} "
-                           f"has no act implementation.")
+        """Method for executing the `Action`."""
+        raise RuntimeError(f"{self.__class__.__name__} has no act implementation.")
 
     @property
     def area(self) -> Area:
@@ -43,7 +79,7 @@ class Action:
     def model(self) -> Model:
         return self.actor.location.area.model
 
-    def make_result(self, action):
+    def make_result(self, action: Action) -> Result:
         result = Result(
             actor=action.actor,
             event=action,
@@ -59,6 +95,7 @@ class Action:
 
 
 class ActionWithPosition(Action):
+    """Base class for `Action` instances that require a position argument."""
 
     def __init__(self, actor: Actor, position: Tuple[int, int]) -> None:
         super().__init__(actor)
@@ -66,6 +103,7 @@ class ActionWithPosition(Action):
 
 
 class ActionWithDirection(ActionWithPosition):
+    """Base class for `Action` instances which require a direction argument."""
 
     def __init__(self, actor: Actor, direction: Tuple[int, int]) -> None:
         position = (actor.location.x + direction[0],
@@ -75,6 +113,7 @@ class ActionWithDirection(ActionWithPosition):
 
 
 class ActionWithItem(Action):
+    """Base class for `Action` instances which interface with an `Item`."""
 
     def __init__(self, actor: Actor, target: Item) -> None:
         super().__init__(actor)

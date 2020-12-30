@@ -30,11 +30,30 @@ class Generator:
     def apply_productions(self, start_graph: Graph, productions, config):
         logging.debug('In Generator.apply_productions()')
         while start_graph.vertex_count < int(config['min_vertices']):
+            # The current behavior of the generator is to try to get to min_vertices
+            # with the available rule. Because it can always add vertices, and because
+            # it doesn't enforce identity on the nodes, we get into the following
+            # situation:
+
+            #   min = 4
+            #   A;
+            #   A ==> A -> B;
+            #   B ==> B -> C;
+            #   C ==> C -> D;
+
+            # The resulting output is not what might be expected:
+
+            #   B2 <- A -> B1 -> C          actual output
+            #   A -> B -> C -> D            expected output
+
+
+
             matches = self._find_matching_productions(start_graph, productions)
             if len(matches) == 0:
                 raise RuntimeError('No productions match the given graph.')
-            (prod, mapping) = random.choice(matches)
-            self._apply_production(start_graph, prod, mapping)
+            # (prod, mapping) = random.choice(matches)
+            for prod, mapping in matches:
+                self._apply_production(start_graph, prod, mapping)
 
     def generate_from_file(self, file_name):
         grammar_file = open(file_name, 'r')

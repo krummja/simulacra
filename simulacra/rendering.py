@@ -1,20 +1,21 @@
 from __future__ import annotations
-from typing import Dict, List, Tuple, TYPE_CHECKING
-from collections import defaultdict
 
 import time
+from collections import defaultdict
+from typing import TYPE_CHECKING, Dict, List, Tuple
+
 import numpy as np
-import threading
 
 from config import *
 from hues import COLOR
-from tile import tile_graphic
 from noise_machine import NoiseMachine
+from tile import tile_graphic
 
 if TYPE_CHECKING:
     from tcod.console import Console
-    from graphic import Graphic
+
     from area import Area
+    from graphic import Graphic
 
 
 noise_machine = NoiseMachine()
@@ -48,7 +49,7 @@ def render_area_tiles(area: Area, consoles: Dict[str, Console]) -> None:
                                                                screen_view,
                                                                world_view)
 
-    
+
 def select_tile_mask(area: Area, screen_view, world_view):
     UNKNOWN = np.asarray((0, COLOR['nero'], COLOR['black']),
                           dtype=tile_graphic)
@@ -60,13 +61,13 @@ def select_tile_mask(area: Area, screen_view, world_view):
 
     condlist = (if_visible, if_explored)
     choicelist = (lit_tiles, unlit_tiles)
-    
+
     #! (default, default, LIT,  LIT,  LIT,  LIT,  default, ...)
     #* (False,   False,   True, True, True, True, False,   ...)
     #? (LIT,     LIT,     LIT,  LIT,  LIT,  LIT,  LIT,     ...)
 
     return np.select(condlist=condlist, choicelist=choicelist, default=UNKNOWN)
-    
+
 
 def render_visible_entities(area: Area, consoles: Dict[str, Console]) -> None:
     visible_entities: Dict[Tuple[int, int], List[Graphic]] = defaultdict(list)
@@ -103,7 +104,7 @@ def render_visible_entities(area: Area, consoles: Dict[str, Console]) -> None:
         if not area.area_model.visible[item_y, item_x]:
             continue
         visible_entities[obj_y, obj_x].extend(items)
-    
+
     # Character
     for ij, graphics in visible_entities.items():
         graphic = min(graphics)
@@ -114,13 +115,13 @@ def render_visible_entities(area: Area, consoles: Dict[str, Console]) -> None:
 def render_visible_particles(area: Area, consoles: Dict[str, Console]) -> None:
     visible_particles: Dict[Tuple[int, int], List[Graphic]] = defaultdict(list)
     cam_x, cam_y = area.camera.get_camera_pos()
-    
+
     # Grab the Tuple[int, int] keys and List[Particle] values
     for (p_x, p_y), particles in area.particle_model.particles.items():
         # Derive camera-adjusted x,y values
         obj_x, obj_y = p_x - cam_x, p_y - cam_y
         for particle in particles:
-            particle.bg = area.area_model.get_bg_color(obj_x, obj_y)        
+            particle.bg = area.area_model.get_bg_color(obj_x, obj_y)
         if not (0 <= obj_x < STAGE_PANEL_WIDTH and
                 0 <= obj_y < STAGE_PANEL_HEIGHT):
             continue
@@ -147,17 +148,17 @@ def update_fov(area: Area) -> None:
         radius=VIEW_RADIUS,
         light_walls=True,
         algorithm=tcod.FOV_RESTRICTIVE,
-        )    
+        )
     area.area_model.explored |= area.area_model.visible
 
 
 def render_torch(area: Area, consoles: Dict[str, Console]) -> None:
     TORCH_RADIUS = 10
     SQUARED_TORCH_RADIUS = TORCH_RADIUS * TORCH_RADIUS
-    
+
     # Derive the torch from noise based on current time.
     torch_t = time.perf_counter() * 5
-    
+
     # Randomize the light position between -1.5 and 1.5
     cam_x, cam_y = area.camera.get_camera_pos()
     player_x = area.player.location.x
@@ -165,19 +166,19 @@ def render_torch(area: Area, consoles: Dict[str, Console]) -> None:
 
     torch_x = (player_x + noise_machine.noise.get_point(torch_t) * 1.5)
     torch_y = (player_y + noise_machine.noise.get_point(torch_t + 11) * 1.5)
-    
+
     # A little extra brightness, as a treat
     brightness = 0.2 * noise_machine.noise.get_point(torch_t + 17)
-    
+
     # Squared distance using a mesh grid
     y, x = np.mgrid[:STAGE_WIDTH, :STAGE_HEIGHT]
     # Center the mesh grid on the target position
     x = (x.astype(np.float32) - torch_x)
     y = (y.astype(np.float32) - torch_y)
-       
+
     # 2D squared distance array
     distance_squared = x ** 2 + y ** 2
-    
+
     # Get the currently visible cells
     # (120, 120)
     fov = tcod.map.compute_fov(
@@ -211,47 +212,47 @@ def render_torch(area: Area, consoles: Dict[str, Console]) -> None:
     consoles['ROOT'].tiles_rgb["bg"][:STAGE_PANEL_HEIGHT, :STAGE_PANEL_WIDTH] = (
         dark_bg + (light_bg - dark_bg) * \
         np.transpose(light[..., np.newaxis], (1, 0, 2)))
-        
+
     area.area_model.explored |= area.area_model.visible
 
 
 def draw_frame(consoles: Dict[str, Console]) -> None:
     outer_frame_color = (200, 155, 155)
     inner_frame_color = (100, 0, 0)
-    
+
     consoles['ROOT'].print_box(
-        x=1, y=1, 
-        width=4, height=4, 
+        x=1, y=1,
+        width=4, height=4,
         string="****************",
         fg=inner_frame_color)
-    
+
     consoles['ROOT'].print_box(
-        x=CONSOLE_WIDTH-5, y=1, 
-        width=4, height=4, 
+        x=CONSOLE_WIDTH-5, y=1,
+        width=4, height=4,
         string="****************",
         fg=inner_frame_color)
-    
+
     consoles['ROOT'].print_box(
-        x=1, y=CONSOLE_HEIGHT-5, 
-        width=4, height=4, 
+        x=1, y=CONSOLE_HEIGHT-5,
+        width=4, height=4,
         string="****************",
         fg=inner_frame_color)
-    
+
     consoles['ROOT'].print_box(
-        x=CONSOLE_WIDTH-5, y=CONSOLE_HEIGHT-5, 
-        width=4, height=4, 
+        x=CONSOLE_WIDTH-5, y=CONSOLE_HEIGHT-5,
+        width=4, height=4,
         string="****************",
         fg=inner_frame_color)
-    
+
     outer_vertical = "#" * CONSOLE_HEIGHT
     outer_horizontal = "#" * CONSOLE_WIDTH
-    
+
     consoles['ROOT'].print_box(
         x=0, y=0,
         width=CONSOLE_WIDTH-1, height=1,
         string=outer_horizontal,
         fg=outer_frame_color)
-    
+
     consoles['ROOT'].print_box(
         x=0, y=CONSOLE_HEIGHT-1,
         width=CONSOLE_WIDTH-1, height=1,
@@ -262,14 +263,14 @@ def draw_frame(consoles: Dict[str, Console]) -> None:
         x=0, y=0,
         width=1, height=CONSOLE_HEIGHT,
         string=outer_vertical,
-        fg=outer_frame_color)    
-    
+        fg=outer_frame_color)
+
     consoles['ROOT'].print_box(
         x=CONSOLE_WIDTH-1, y=0,
         width=1, height=CONSOLE_HEIGHT,
         string=outer_vertical,
-        fg=outer_frame_color) 
-    
+        fg=outer_frame_color)
+
     inner_vertical = "*" * (CONSOLE_HEIGHT-8)
     inner_horizontal = "*" * (CONSOLE_WIDTH-8)
     consoles['ROOT'].print_box(
@@ -277,19 +278,19 @@ def draw_frame(consoles: Dict[str, Console]) -> None:
         width=1, height=CONSOLE_HEIGHT-8,
         string=inner_vertical,
         fg=inner_frame_color)
-    
+
     consoles['ROOT'].print_box(
         x=CONSOLE_WIDTH-2, y=5,
         width=1, height=CONSOLE_HEIGHT-8,
         string=inner_vertical,
         fg=inner_frame_color)
-    
+
     consoles['ROOT'].print_box(
         x=5, y=1,
         width=CONSOLE_WIDTH-8, height=1,
         string=inner_horizontal,
         fg=inner_frame_color)
-    
+
     consoles['ROOT'].print_box(
         x=5, y=CONSOLE_HEIGHT-2,
         width=CONSOLE_WIDTH-8, height=1,
@@ -345,8 +346,8 @@ def draw_logo(consoles: Dict[str, Console]) -> None:
                             ((CONSOLE_WIDTH - width) // 2) + _x,
                             vertical_offset + _y,
                             chr(42),
-                            fg=(noise_machine.get_noise_at_point(_x, _y), 
-                                noise_machine.get_noise_at_point(_x, _y) // 3, 
+                            fg=(noise_machine.get_noise_at_point(_x, _y),
+                                noise_machine.get_noise_at_point(_x, _y) // 3,
                                 noise_machine.get_noise_at_point(_x, _y)))
 
                     elif char == "@":  # BACKGROUND
@@ -355,7 +356,7 @@ def draw_logo(consoles: Dict[str, Console]) -> None:
                             vertical_offset + _y,
                             chr(42),
                             fg=(20,
-                                noise_machine.get_noise_at_point(_x, _y) // 4, 
+                                noise_machine.get_noise_at_point(_x, _y) // 4,
                                 20))
 
                     elif char == "!":  # BORDER
@@ -363,8 +364,8 @@ def draw_logo(consoles: Dict[str, Console]) -> None:
                             ((CONSOLE_WIDTH - width) // 2) + _x,
                             vertical_offset + _y,
                             chr(35),
-                            fg=(noise_machine.get_noise_at_point(_x, _y), 
-                                noise_machine.get_noise_at_point(_x, _y) // 3, 
+                            fg=(noise_machine.get_noise_at_point(_x, _y),
+                                noise_machine.get_noise_at_point(_x, _y) // 3,
                                 noise_machine.get_noise_at_point(_x, _y)))
 
                     else:

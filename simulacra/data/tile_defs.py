@@ -5,27 +5,27 @@ from hues import COLOR, Colors
 
 
 color_list = [
-    (25, 40, 40), 
-    (60, 60, 60), 
-    (100, 100, 60), 
-    (50, 140, 100), 
-    (135, 100, 70), 
-    (135, 100, 70), 
-    (100, 60, 40), 
-    (0, 0, 0), 
-    (0, 0, 0), 
-    (0, 0, 0), 
-    (0, 0, 0), 
-    (0, 0, 0), 
-    (0, 0, 0), 
-    (0, 0, 0), 
-    (0, 0, 0), 
-    (0, 0, 0), 
+    (25, 40, 40),
+    (60, 60, 60),
+    (100, 100, 60),
+    (50, 140, 100),
+    (135, 100, 70),
+    (135, 100, 70),
+    (100, 60, 40),
+    (0, 0, 0),
+    (0, 0, 0),
+    (0, 0, 0),
+    (0, 0, 0),
+    (0, 0, 0),
+    (0, 0, 0),
+    (0, 0, 0),
+    (0, 0, 0),
+    (0, 0, 0),
     (100, 100, 100),
-    (150, 150, 150), 
-    (0, 0, 0), 
-    (100, 150, 30), 
-    (0, 0, 0), 
+    (150, 150, 150),
+    (0, 0, 0),
+    (100, 150, 30),
+    (0, 0, 0),
     (0, 0, 0)
     ]
 
@@ -131,8 +131,8 @@ class TileType(Enum):
 FOREST_FLOOR = (25, 40, 40)
 INTERIOR_FLOOR = (60, 60, 60)
 
-test_floor = {
-    'uid': 'test',
+test_floor1 = {
+    'uid': 'test1',
     'move_cost': TileType.Floor,
     'transparent': TileType.Floor,
     'char': ground_tiles['blank'],
@@ -459,7 +459,7 @@ tile_templates = {
     brick_floor_R['uid']: brick_floor_R,
     brick_floor_T['uid']: brick_floor_T,
     brick_floor_M_1['uid']: brick_floor_M_1,
-    test_floor['uid']: test_floor,
+    test_floor1['uid']: test_floor1,
     test_floor2['uid']: test_floor2,
     test_floor3['uid']: test_floor3,
     test_floor4['uid']: test_floor4

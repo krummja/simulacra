@@ -1,13 +1,11 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from actor import Actor
-from player_control import PlayerControl
 from entity import Entity
-
-from components.stats import Stats
-from components.physics import Physics
 from noun import Pronoun
+from player_control import PlayerControl
 
 if TYPE_CHECKING:
     from location import Location
@@ -24,17 +22,17 @@ class Player(Entity, Actor):
         Entity.__init__(self, self.uid, location)
         self._name = name
         self._noun_text = 'you'
-        
+
         self.control = PlayerControl(self)
         Actor.__init__(self, self, self.control)
-        
+
     @property
     def pronoun(self) -> Pronoun:
         return Pronoun.you
-    
+
     @property
     def name(self) -> str:
         return self._name
-    
+
     def __str__(self) -> str:
         return self._name

@@ -1,12 +1,12 @@
 from __future__ import annotations
-from typing import Iterator
 
 import random
+from typing import Iterator
 
 from area import *
-from graphic import *
 from geometry.rect import Rect
 from geometry.span import Span
+from graphic import *
 
 
 class Room:
@@ -43,11 +43,11 @@ class Room:
             self.x1 + 1: self.x2 - 1, self.y1 + 1: self.y2 - 1
             ]
         return index
-    
+
     @property
     def bounds(self):
         return Rect.from_spans(
-            vertical=Span(self.x1, self.y1+self.height), 
+            vertical=Span(self.x1, self.y1+self.height),
             horizontal=Span(self.y1, self.x1+self.width)
             )
 

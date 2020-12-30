@@ -1,15 +1,14 @@
 from __future__ import annotations
-from typing import Any, Dict, List, Optional, Tuple, Type, TYPE_CHECKING
 
 from enum import Enum
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 from entity import Entity
-from actions import common
 
 if TYPE_CHECKING:
     from action import Action, ActionWithItem
-    from location import Location
     from component import Component
+    from location import Location
 
 
 class Item(Entity):
@@ -24,24 +23,24 @@ class Item(Entity):
             slot: Optional[str] = None
         ) -> None:
         super().__init__(uid, location)
-        
+
         # Basic properties
         self.owner = None
         self.location = location
         self._noun_text = name
         self._description = description
-        
+
         # Display Properties
         self.char = display['char']
         self.color = display['color']
         self.bg = display['bg']
-        
+
         self.slot = slot
-        
+
         self.is_equipped = False
         self.is_broken = False
         self.is_unknown = False
-    
+
     @property
     def is_equippable(self) -> bool:
         if self.slot is None:
@@ -53,7 +52,7 @@ class Item(Entity):
         if self.is_unknown:
             return False
         return True
-    
+
     @property
     def name(self) -> str:
         return self._noun_text
@@ -82,7 +81,7 @@ class Item(Entity):
             if not item_list:
                 del self.location.area.items[self.location.xy]
             self.location = None
-            
+
     def place(self, location: Location) -> None:
         """Place this item on the floor at the given location."""
         assert not self.location, "This item already has a location."
@@ -94,15 +93,15 @@ class Item(Entity):
             items[location.xy].append(self)
         except KeyError:
             items[location.xy] = [self]
-            
+
     def __eq__(self, other: Item):
         return (self.uid == other.uid,
                 self.name == other.name,
                 self.description == other.description)
-    
+
     def __ne__(self, other: Item):
         return not self.__eq__(other)
-    
+
     def __hash__(self):
         return hash((self.uid, self.name, self.description))
 
@@ -111,13 +110,13 @@ class ArmorCategory(Enum):
     Light = 0
     Medium = 1
     Heavy = 2
-    
+
 
 class WeaponCategory(Enum):
     Simple = 0
     Martial = 1
     Exotic = 2
-    
+
 
 class WeaponType(Enum):
     Melee = 0

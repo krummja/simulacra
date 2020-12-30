@@ -1,11 +1,11 @@
 from __future__ import annotations
-from typing import List, Tuple, Dict
+
+from typing import List, Tuple
 
 import numpy as np
 import tcod
-from util import Singleton
 
-from util import classproperty
+from util import Singleton
 
 
 class TilesetData(metaclass=Singleton):

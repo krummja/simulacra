@@ -1,8 +1,7 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
-from enum import Enum
 
 import math
+from enum import Enum
 
 
 class Stat:
@@ -22,13 +21,13 @@ class Stat:
     def modify_max(self, value: int) -> None:
         """Adjust the maximum possible value of the attribute."""
         self.maximum += value
-        
+
     def __str__(self) -> str:
         return str(self.current)
 
     def __int__(self) -> int:
         return int(self.current)
-    
+
     # TODO: Implement other operators
 
 

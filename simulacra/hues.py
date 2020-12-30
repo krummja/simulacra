@@ -1,7 +1,9 @@
 from __future__ import annotations
-from typing import Tuple, Dict, TYPE_CHECKING, Optional
+
+from typing import Dict, Optional, Tuple
 
 import tcod
+
 Color = Tuple[int, int, int]
 
 
@@ -157,7 +159,7 @@ COLOR: Dict[str, Color] = {
 
 
 class Colors:
-    
+
     def __init__(self, color_dict: Dict[str, Color]) -> None:
         for k, v in color_dict.items():
             k = k.replace(" ", "_")

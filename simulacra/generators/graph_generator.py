@@ -5,9 +5,12 @@ from typing import Callable, List, Optional, Tuple, Union
 
 import random
 import math
-
 import numpy as np
 
+from apparata.node import Node
+from apparata.graph import Graph, GraphQuery
+
+from geometry.rect import Rect
 from room import Room
 
 
@@ -44,27 +47,31 @@ class Vector:
         return self.y, self.x
 
 
-class Node:
-    """Graph Node"""
+class WorldNode(Node):
+    """Graph WorldNode"""
 
     def __init__(
             self,
             uid: str,
-            position: Union[Tuple[int, int], Node],
+            position: Union[Tuple[int, int], WorldNode],
             width: int,
-            height: int
+            height: int,
+            rect: Optional[Rect] = None
         ) -> None:
-        if isinstance(position, Node):
+        if isinstance(position, WorldNode):
             self.x = position.x
             self.y = position.y
         else:
             self.x = position[0]
             self.y = position[1]
-        self.uid = uid
+
+        super().__init__(uid, label=(self.x, self.y))
+
         self.width = width
         self.height = height
         self.parent = None
         self.children = []
+        self.rect = rect
 
     @property
     def x1(self):
@@ -88,13 +95,13 @@ class Node:
         return ((self.x + (self.x + self.width)) // 2,
                 (self.y + (self.y + self.height)) // 2)
 
-    def distance_to(self, other: Node) -> float:
+    def distance_to(self, other: WorldNode) -> float:
         """Return an approximate distance from this node to another."""
         x, y = self.center
         other_x, other_y = other.center
         return abs(other_x - x) + abs(other_y - y)
 
-    def intersects(self, other: Node) -> bool:
+    def intersects(self, other: WorldNode) -> bool:
         """Return True if this node intersects with another."""
         return (
             self.x1 <= other.x2 and
@@ -103,11 +110,11 @@ class Node:
             self.y2 >= other.y1
             )
 
-    def add_child(self, node: Node) -> None:
+    def add_child(self, node: WorldNode) -> None:
         self.children.append(node)
         node.parent = self
 
-    def remove_child(self, node: Node) -> None:
+    def remove_child(self, node: WorldNode) -> None:
         self.children.remove(node)
 
 
@@ -116,14 +123,10 @@ class GraphGenerator:
     def __init__(self, width: int, height: int) -> None:
         self.width = width
         self.height = height
-        self.nodes = []
+        self.world_nodes = []
         self.map_data = np.zeros((256, 256), dtype=np.int)
-
-    def generate_rooms(self) -> None:
-        for node in self.nodes:
-            room = Room(node.x, node.y, node.width, node.height)
-            self.map_data[room.inner] = 1
-            self.map_data[room.outer] = 2
+        self.graph = Graph()
+        self.query = GraphQuery(self.graph)
 
     def generate_nodes_in_radius(
             self,
@@ -136,8 +139,8 @@ class GraphGenerator:
             x, y = self.get_random_points_in_circle(placement_radius)
             w = random.randint(min_size, max_size)
             h = random.randint(min_size, max_size)
-            new_node = Node(str(i), (x, y), w, h)
-            self.nodes.append(new_node)
+            new_node = WorldNode(str(i), (x, y), w, h)
+            self.world_nodes.append(new_node)
 
     def get_random_points_in_circle(self, placement_radius: int) -> Tuple[int, int]:
         """Generate a random point within a circle defined by `placement_radius`.
@@ -155,3 +158,15 @@ class GraphGenerator:
         x = radius * math.cos(theta)
         y = radius * math.sin(theta)
         return x, y
+
+    def add_world_node(
+            self,
+            uid: str,
+            position: Union[Tuple[int, int], WorldNode],
+            width: int,
+            height: int,
+            rect: Optional[Rect] = None
+        ) -> None:
+        new_node = WorldNode(uid, position, width, height, rect)
+        self.world_nodes.append(new_node)
+        self.graph.add_node(new_node)

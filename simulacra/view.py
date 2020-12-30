@@ -1,9 +1,11 @@
 from __future__ import annotations
-from typing import Dict, List, Protocol, Optional, TYPE_CHECKING
-from abc import ABC, abstractmethod
+
+from abc import ABC
+from typing import TYPE_CHECKING, Protocol
 
 if TYPE_CHECKING:
     from tcod.console import Console
+
     from state import State
 
 
@@ -13,6 +15,6 @@ class ViewObserver(Protocol):
 
 
 class View(ABC):
-    
+
     def __init__(self, state: State) -> None:
         self._state = state

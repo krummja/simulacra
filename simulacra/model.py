@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, List, Set, Tuple
+from typing import TYPE_CHECKING, List, Set
 
 from event_queue import EventQueue
 from message import Message
@@ -49,15 +49,15 @@ class Model:
         self.scheduler = EventQueue()
         self.log: List[Message] = []
         self._effect_flag = False
-        
+
     @property
     def effect_flag(self) -> bool:
         return self._effect_flag
-    
+
     @effect_flag.setter
     def effect_flag(self, value: bool) -> None:
         if self._effect_flag != value:
-            self._effect_flag = value            
+            self._effect_flag = value
 
     @property
     def player(self) -> Player:
@@ -66,15 +66,15 @@ class Model:
     @property
     def area(self) -> Area:
         return self.area_data.current_area
-    
+
     @property
     def actors(self) -> Set[Actor]:
         return self.area_data.current_area.actor_model.actors
-    
+
     def loop(self) -> None:
         while True:
             self.scheduler.invoke_next()
-            
+
     def report(self, msg: Message) -> None:
         print(msg.text)
         if self.log and self.log[-1].text == msg.text:

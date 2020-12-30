@@ -23,6 +23,14 @@ class Graph:
         self._edges: Dict[str, List[Node]] = {}
         self._neighbors: Dict[str, List[Node]] = {}
 
+    @property
+    def node_count(self) -> int:
+        return len(self._nodes)
+
+    @property
+    def edge_count(self) -> int:
+        return len(self._edges)
+
     def add_edge(self, n: Union[Node, str], m: Union[Node, str]) -> None:
         """Add an edge to the graph by adding two adjacent Nodes.
 

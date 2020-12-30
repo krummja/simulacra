@@ -1,9 +1,10 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING, Optional
 
 from action import Action, Impossible
-from result import Result
 from control import Control
+from result import Result
 from states.player_ready_state import PlayerReadyState
 
 

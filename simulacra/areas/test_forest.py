@@ -28,8 +28,6 @@ factory_service = FactoryService()
 
 def test_forest(model: Model) -> Area:
 
-    test_graph_engine()
-
     width: int = STAGE_WIDTH
     height: int = STAGE_HEIGHT
 
@@ -67,7 +65,7 @@ def test_forest(model: Model) -> Area:
     map_data[rect2.inner] = 4
 
     area.area_model.tiles.T[map_data == 1] = tile_factory.build('test2')
-    area.area_model.tiles.T[map_data == 2] = tile_factory.build('test')
+    area.area_model.tiles.T[map_data == 2] = tile_factory.build('test1')
     area.area_model.tiles.T[map_data == 3] = tile_factory.build('test4')
     area.area_model.tiles.T[map_data == 4] = tile_factory.build('test3')
 
@@ -84,8 +82,3 @@ def test_forest(model: Model) -> Area:
     update_fov(area)
 
     return area
-
-
-def test_graph_engine():
-    generator = Generator()
-    generator.generate_from_file("simulacra/graph_engine/grammars/test_grammar.txt")

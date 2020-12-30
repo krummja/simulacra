@@ -1,9 +1,9 @@
 from __future__ import annotations
-from typing import Dict, Optional, Protocol, TYPE_CHECKING
-from contextlib import suppress
+
 import collections
-import time
 import functools
+from contextlib import suppress
+from typing import Dict, Optional
 
 
 class classproperty:
@@ -35,7 +35,7 @@ class Singleton(type):
                 Singleton, cls
                 ).__call__(*args, **kwargs)
             return cls._instances[cls]
-        
+
 
 def log(func):
     @functools.wraps(func)
@@ -57,11 +57,11 @@ class Subject:
     def attach(self, observer: Observer) -> None:
         if observer not in self._observers.values():
             self._observers[observer.uid] = observer
-            
+
     def detach(self, observer_name: str) -> None:
         with suppress(ValueError):
             del self._observers[observer_name]
-    
+
     def notify(self, modifier: Optional[Observer] = None) -> None:
         for observer in self._observers:
             if modifier != observer:

@@ -1,6 +1,7 @@
 from __future__ import annotations
-from typing import Dict, TYPE_CHECKING
-from pathlib import Path
+
+from typing import TYPE_CHECKING, Dict
+
 import tcod
 
 if TYPE_CHECKING:
@@ -16,9 +17,6 @@ STAGE_HEIGHT: int = 256
 
 STAGE_PANEL_WIDTH: int = (CONSOLE_WIDTH // 3) * 2       # 72
 STAGE_PANEL_HEIGHT: int = (CONSOLE_HEIGHT // 4) * 3     # 39
-
-# STAGE_PANEL_WIDTH = 50
-# STAGE_PANEL_HEIGHT = 30
 
 SIDE_PANEL_WIDTH: int = CONSOLE_WIDTH - STAGE_PANEL_WIDTH
 SIDE_PANEL_HEIGHT: int = CONSOLE_HEIGHT
