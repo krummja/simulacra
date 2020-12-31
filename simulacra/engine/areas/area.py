@@ -1,4 +1,4 @@
-"""Define an area of the game. Includes models for different data structrures
+"""Define an area of the game. Includes models for different data structures
 representing elements contained in the area.
 
 Classes:
@@ -12,19 +12,17 @@ Classes:
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, List, Set, Tuple
+from typing import TYPE_CHECKING, Dict, List, Set, Tuple, Optional
 
 import numpy as np
-
-from engine.rendering import Camera
+from engine.areas.location import Location
 from engine.geometry import Point
-from engine.rendering import tile_dt, tile_graphic
-from .location import Location
+from engine.rendering import Camera, tile_dt, tile_graphic
 
 if TYPE_CHECKING:
-    from engine.events import Actor
     from engine.entities import Item, Player
     from engine.entities.entity import Entity
+    from engine.events import Actor
     from engine.model import Model
 
 
@@ -105,7 +103,7 @@ class Area:
     """Base class for defining new areas of the game."""
 
     def __init__(self, model: Model, width: int, height: int) -> None:
-        self._player: Player = None
+        self._player: Optional[Player] = None
         self.model = model
         self.width = width
         self.height = height

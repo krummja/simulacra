@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Generic, Tuple
 
-from content.actions import common
+import content.actions.move
+import content.actions.pickup
 from engine.events.action import Action
 
 from .area_state import AreaState
@@ -32,7 +33,7 @@ class PlayerReadyState(Generic[T], AreaState[T]):
         super().__init__(model)
 
     def cmd_move(self, x: int, y: int) -> Action:
-        action = common.MoveStart(self._model.player, (x, y))
+        action = content.actions.move.MoveStart(self._model.player, (x, y))
         action.success = True
         result = action.make_result(action)
         self.managers['results'].add_result(result)
@@ -68,7 +69,7 @@ class PlayerReadyState(Generic[T], AreaState[T]):
         return state.loop()
 
     def cmd_pickup(self):
-        return common.Pickup(self._model.player)
+        return content.actions.pickup.Pickup(self._model.player)
 
     def cmd_debug_1(self):
         print("F1")

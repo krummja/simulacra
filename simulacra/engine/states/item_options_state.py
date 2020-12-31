@@ -1,7 +1,8 @@
 from __future__ import annotations
 from typing import Any, List, Optional, TYPE_CHECKING
 
-from content.actions import common
+import content.actions.equip
+import content.actions.pickup
 from interface.views.item_options_view import ItemOptionsView
 
 from .base_menu_state import BaseMenuState
@@ -37,13 +38,13 @@ class ItemOptionsState(BaseMenuState["Action"]):
             pass
 
     def _opt_drop(self):
-        return common.Drop(self._player, self._item)
+        return content.actions.pickup.Drop(self._player, self._item)
 
     def _opt_equip(self):
-        return common.Equip(self._player, self._item)
+        return content.actions.equip.Equip(self._player, self._item)
 
     def _opt_dequip(self):
-        return common.Dequip(self._player, self._item)
+        return content.actions.equip.Dequip(self._player, self._item)
 
     def cmd_confirm(self):
         if self._options[self._selection] == 'DROP':

@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import Any, Dict, List, Optional, TYPE_CHECKING
 
+
 if TYPE_CHECKING:
     from engine.entities.entity import Entity
     from engine.components.component import Component
@@ -13,6 +14,7 @@ class DataManager:
 
     def __init__(self, model: Model) -> None:
         self._model = model
+        self.exclude = None
 
     def query(
             self,
@@ -118,7 +120,7 @@ class DataManager:
             entity_name: str,
             component_name: str,
             key: str
-        ) -> Any:  # TODO: Create reliable data types for this
+        ) -> Any:
         """Try to get a specified value from a specified component on
         a specified entity.
         """

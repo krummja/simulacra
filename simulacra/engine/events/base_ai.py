@@ -10,11 +10,12 @@ from typing import List, Optional, Tuple
 
 import numpy as np
 import tcod.path
-from content.actions import common
 
-from .actor import Actor
-from .behavior import Behavior
-from .action import Action, Impossible
+import content.actions.move
+
+from engine.events.action import Action, Impossible
+from engine.events.actor import Actor
+from engine.events.behavior import Behavior
 
 
 class PathTo(Action):
@@ -34,15 +35,16 @@ class PathTo(Action):
         walkable[blocker_index] = 50
         walkable.T[self.dest_xy] = 1
         graph = tcod.path.SimpleGraph(cost=walkable, cardinal=2, diagonal=3)
-        pf = tcod.path.Pathfinder(graph)
-        pf.add_root(self.actor.location.ij)
-        return [(ij[1], ij[0]) for ij in pf.path_to(self.dest_xy[::-1])[1:].tolist()]
+        pathfinder = tcod.path.Pathfinder(graph)
+        pathfinder.add_root(self.actor.location.ij)
+        return [(ij[1], ij[0]) for ij in \
+                pathfinder.path_to(self.dest_xy[::-1])[1:].tolist()]
 
     def plan(self) -> Action:
 
         if not self.path_xy:
             raise Impossible("End of path reached.")
-        self.subaction = common.MoveStart(self.actor, self.path_xy[0]).plan()
+        self.subaction = content.actions.move.MoveStart(self.actor, self.path_xy[0]).plan()
         return self
 
     def act(self) -> None:
@@ -74,8 +76,8 @@ class BasicNPC(Behavior):
         try:
             roll = random.randint(0, 100)
             if roll < 30:
-                return common.MoveStart(owner, (x, y)).plan()
+                return content.actions.move.MoveStart(owner, (x, y)).plan()
             else:
-                return common.MoveStart(owner, (0, 0)).plan()
+                return content.actions.move.MoveStart(owner, (0, 0)).plan()
         except Impossible:
-            return common.MoveStart(owner, (0, 0)).plan()
+            return content.actions.move.MoveStart(owner, (0, 0)).plan()

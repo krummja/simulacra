@@ -91,6 +91,7 @@ class Action:
         return result
 
     def report(self, msg: str) -> None:
+        """Dispatch a message to the model to display in the in-game log."""
         message = self.model.report(msg)
         return message
 

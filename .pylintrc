@@ -9,5 +9,6 @@ disable=
     missing-function-docstring,
     ungrouped-imports,
     missing-module-docstring,
+    missing-class-docstring,
     consider-using-enumerate,
     unnecessary-lambda,

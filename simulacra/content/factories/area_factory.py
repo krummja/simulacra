@@ -19,14 +19,15 @@ class AreaFactory:
     def __init__(
             self,
             area: Area,
+            *,
             max_rooms: int,
-            max_size: int,
-            min_size: int
+            min_size: int,
+            max_size: int
         ) -> None:
         self.area = area
         self.max_rooms = max_rooms
-        self.max_room_size = max_size
         self.min_room_size = min_size
+        self.max_room_size = max_size
         self.rooms = []
         self.tiles = self.area.area_model.tiles
 
@@ -71,16 +72,18 @@ class AreaFactory:
             h = random.randint(self.min_room_size, self.max_room_size)
             x = random.randint(0, self.area.width - w - 1)
             y = random.randint(0, self.area.height - h - 1)
-            new_room: Rect = Rect.from_edges(left=x, top=y, right=w, bottom=h)
+
+            new_room: Rect = Rect.from_edges(left=x, top=y, right=x+w, bottom=y+h)
 
             # Check for intersections and try again if found.
-            if any(new_room in other for other in self.rooms):
+            if any(new_room.intersects(other) for other in self.rooms):
                 continue
 
             # Connect a new room to an existing room.
             self._generate_tunnels(new_room)
 
             # Clear the inner portion of the room to the default floor type.
+            print(new_room.inner)
             self.tiles.T[new_room.inner] = self.tile_factory.build(
                 floor, color=(25, 40, 40)
                 )

@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING, Optional
 from .action import Impossible
 
 if TYPE_CHECKING:
+    from engine.areas.location import Location
     from .control import Control
     from .event_queue import Event, EventQueue
     from .result import Result
@@ -27,7 +28,7 @@ class Actor:
     game's `EventQueue`.
     """
 
-    def __init__(self, owner: Entity, control: Control) -> None:
+    def __init__(self, *, owner: Entity, control: Control) -> None:
         self.owner = owner
         self.control = control
         self.owner.location.area.actor_model.actors.add(self)

@@ -1,13 +1,12 @@
 from __future__ import annotations
-from typing import List, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
-import math
+import random
 import numpy as np
 import tcod
-import random
 
 from engine.geometry import Rect
-from config import *
+from config import STAGE_WIDTH, STAGE_HEIGHT
 
 if TYPE_CHECKING:
     from engine.areas.area import Area

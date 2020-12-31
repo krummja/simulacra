@@ -2,11 +2,8 @@
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING, Optional, Tuple
+from typing import TYPE_CHECKING, Optional
 
-import tcod
-
-from engine.rendering.hues import RESET
 from engine.entities import Pronoun
 
 if TYPE_CHECKING:
@@ -35,6 +32,7 @@ class Message:
         return self._categorize(text, is_first = True)
 
     def conjugate(self, text: str, pronoun: Pronoun) -> str:
+        # pylint: disable=comparison-with-callable
         if pronoun == Pronoun.you or pronoun == Pronoun.they:
             return self._categorize(text, is_first=True)
         return self._categorize(text)
@@ -75,8 +73,8 @@ class Message:
         ) -> str:
         assert is_first is not None
 
-        optional_suffix = "\[(\w+?)\]"
-        irregular = "\[([^|]+)\|([^\]]+)\]"
+        optional_suffix = r"\[(\w+?)\]"
+        irregular = r"\[([^|]+)\|([^\]]+)\]"
 
         # If it's a regular word in second category, add "s"
         if force and not is_first and text.find("[") != -1:

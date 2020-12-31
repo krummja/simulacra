@@ -27,7 +27,7 @@ class Player(Entity, Actor):
         self._noun_text = 'you'
 
         self.control = PlayerControl(self)
-        Actor.__init__(self, self, self.control)
+        Actor.__init__(self, owner=self, control=self.control)
 
     @property
     def pronoun(self) -> Pronoun:

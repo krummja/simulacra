@@ -1,7 +1,6 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
 
-from config import *
+from config import SIDE_PANEL_WIDTH, SIDE_PANEL_HEIGHT
 
 
 base_template = {
@@ -68,7 +67,7 @@ inventory_panel = {
     'offset_x': -(SIDE_PANEL_WIDTH // 2),
     'width': SIDE_PANEL_WIDTH // 2,
     'height': (SIDE_PANEL_HEIGHT // 2) + 2,
-    'title': "INVENTORY", 
+    'title': "INVENTORY",
     'framed': True
     }
 
@@ -85,6 +84,6 @@ delete = {
     'size': {
         'width': 20,
         'height': 5,
-    },
+        },
     'style': {'framed': True}
-}
+    }

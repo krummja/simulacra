@@ -9,8 +9,6 @@ from engine.entities import Player
 if TYPE_CHECKING:
     from engine.events import Actor, Message
     from engine.areas import Area
-    from engine.entities import Item
-    from engine.components.component import Component
     from engine.entities.entity import Entity
 
 

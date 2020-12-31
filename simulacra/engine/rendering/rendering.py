@@ -46,14 +46,11 @@ def render_area_tiles(area: Area, consoles: Dict[str, Console]) -> None:
 
     screen_view, world_view = area.camera.get_camera_view()
     consoles['ROOT'].clear()
-    consoles['ROOT'].tiles_rgb[screen_view] = select_tile_mask(area,
-                                                               screen_view,
-                                                               world_view)
+    consoles['ROOT'].tiles_rgb[screen_view] = select_tile_mask(area, world_view)
 
 
-def select_tile_mask(area: Area, screen_view, world_view):
-    UNKNOWN = np.asarray((0, COLOR['nero'], COLOR['black']),
-                          dtype=tile_graphic)
+def select_tile_mask(area: Area, world_view):
+    UNKNOWN = np.asarray((0, COLOR['nero'], COLOR['black']), dtype=tile_graphic)
 
     if_visible = area.area_model.visible[world_view]
     if_explored = area.area_model.explored[world_view]
