@@ -3,7 +3,7 @@
 from __future__ import annotations
 from typing import List
 
-from apparata.parser.token import Token, TokenType
+from engine.apparata.parser.token import Token, TokenType
 
 
 class Lexer:

@@ -8,6 +8,8 @@ if TYPE_CHECKING:
 
 
 class DataManager:
+    """Data manager and query system for accessing information from the
+    engine for use in the game's interface."""
 
     def __init__(self, model: Model) -> None:
         self._model = model

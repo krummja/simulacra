@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from apparata.graph import Graph
+from engine.apparata.graph import Graph
 
 
 class Rule:

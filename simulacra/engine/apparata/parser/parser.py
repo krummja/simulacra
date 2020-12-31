@@ -3,11 +3,11 @@
 from __future__ import annotations
 from typing import Optional
 
-from apparata.graph import Graph, GraphQuery
-from apparata.node import Node
-from apparata.parser.lexer import Lexer
-from apparata.parser.rule import Rule
-from apparata.parser.token import Token, TokenType
+from engine.apparata.graph import Graph, GraphQuery
+from engine.apparata.node import Node
+from engine.apparata.parser.lexer import Lexer
+from engine.apparata.parser.rule import Rule
+from engine.apparata.parser.token import Token, TokenType
 
 
 class Parser:
