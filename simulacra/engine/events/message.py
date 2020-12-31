@@ -52,7 +52,7 @@ class Message:
         result = text
 
         nouns = [noun1, noun2, noun3]
-        for i in enumerate(nouns):
+        for i, _ in enumerate(nouns):
             noun = nouns[i]
             if noun is not None:
 

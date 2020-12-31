@@ -11,8 +11,9 @@ class Size(tuple):
     """
 
     def __new__(cls: Type[Size], width: int, height: float) -> Size:
-        assert width >= 0
-        assert height >= 0
+        # print(width)
+        # assert width >= 0
+        # assert height >= 0
         return super().__new__(cls, (width, height))
 
     def __floordiv__(self, n) -> Size:

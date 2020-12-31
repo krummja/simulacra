@@ -114,6 +114,12 @@ class Rect(tuple):
         """Return a Span for this Rect's horizontal axis."""
         return Span(self.left, self.right)
 
+    def distance_to(self, other: Rect) -> float:
+        """Return an approximate distance from this rect to another."""
+        x, y = self.center
+        other_x, other_y = other.center
+        return abs(other_x - x) + abs(other_y - y)
+
     def edge_length(self, edge: Direction) -> int:
         """Use a Direction to get the length of the relevant edge."""
         if edge is Direction.up or edge is Direction.down:

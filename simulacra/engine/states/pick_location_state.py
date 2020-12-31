@@ -17,9 +17,11 @@ class PickLocationState(AreaState[Tuple[int, int]]):
     def __init__(
             self,
             model: Model,
+            managers,
             desc: str,
             start_xy: Tuple[int, int]
         ) -> None:
+        self.managers = managers
         super().__init__(model)
         self._model = model
         self._view = PickLocationView(self)

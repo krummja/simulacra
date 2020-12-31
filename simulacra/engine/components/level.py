@@ -5,5 +5,4 @@ from .component import Component
 
 
 class Level(Component):
-
-    NAME = "LEVEL"
+    """Level component"""

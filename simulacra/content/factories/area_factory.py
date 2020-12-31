@@ -1,18 +1,18 @@
 from __future__ import annotations
-from typing import List, Tuple, Optional, TYPE_CHECKING
+from typing import List, Tuple, Optional
 
-import numpy as np
 import random
+import numpy as np
 import tcod
 
-from content.architect.cellular_automata import *
 from content.factories.factory_service import FactoryService
-from content.tiles.tile_defs import *
+from content.tiles.tile_defs import all_tiles, color_list
 from engine.areas.area import Area
 from engine.geometry import Rect
 
 
 class AreaFactory:
+    """Build a new Area."""
 
     tile_factory = FactoryService().tile_factory
 
@@ -65,10 +65,6 @@ class AreaFactory:
                          bgs=[(25, 40, 40)],
                          threshold=30)
 
-        # self._roll_asset('evergreen_2', threshold=30)
-        # self._roll_asset('evergreen_3', threshold=30)
-        # self._roll_asset(floor, threshold=20)
-
         # Start building rooms.
         for _ in range(self.max_rooms):
             w = random.randint(self.min_room_size, self.max_room_size)
@@ -85,7 +81,9 @@ class AreaFactory:
             self._generate_tunnels(new_room)
 
             # Clear the inner portion of the room to the default floor type.
-            self.tiles.T[new_room.inner] = self.tile_factory.build(floor, color=(25, 40, 40))
+            self.tiles.T[new_room.inner] = self.tile_factory.build(
+                floor, color=(25, 40, 40)
+                )
 
             # Add the new room to the area's room list.
             self.rooms.append(new_room)
@@ -123,9 +121,9 @@ class AreaFactory:
         # TODO: This is an unholy abomination that needs to be banished from this class
 
         # Load the tilemap, foreground color, and background color CSV files
-        tilemap_file = 'simulacra/areas/prefabs/' + prefab_id + '_Tilemap.csv'
-        color_file = 'simulacra/areas/prefabs/' + prefab_id + '_Foreground.csv'
-        bg_file = 'simulacra/areas/prefabs/' + prefab_id + '_Background.csv'
+        tilemap_file = 'simulacra/content/areas/prefabs/' + prefab_id + '_Tilemap.csv'
+        color_file = 'simulacra/content/areas/prefabs/' + prefab_id + '_Foreground.csv'
+        bg_file = 'simulacra/content/areas/prefabs/' + prefab_id + '_Background.csv'
 
         # Turn them into arrays
         tilemap_array = np.genfromtxt(tilemap_file, delimiter=',', dtype=np.int)
@@ -199,14 +197,16 @@ class AreaFactory:
     def _process_ascii_prefab(
             self,
             base: np.ndarray,
-            rules: List[Tuple[str, str]] = [],
-            tilemap: bool = False
+            rules: List[Tuple[str, str]] = None,
         ) -> Area:
         """Iterate through an 1D array consisting of char strings and replace
         for Tile instances based on a supplied list of rewrite rules.
 
         - `base` is the input array of ASCII characters.
         - `rules` is a list of (ASCII character, tile UID) rewrite rules"""
+        if rules is None:
+            rules = []
+
         height: int = base.shape[0]
         base_row: int = 0
 
@@ -229,12 +229,17 @@ class AreaFactory:
     def _roll_asset(
             self,
             template: str,
-            colors = [(255, 255, 255)],
-            bgs = [(0, 0, 0)],
+            colors = None,
+            bgs = None,
             threshold: int = 50,
             x: int = None,
             y: int = None
         ) -> Area:
+        if colors is None:
+            colors = [(255, 255, 255)]
+        if bgs is None:
+            bgs = [(0, 0, 0)]
+
         _x_range = range(self.area.width) if x is None else x
         _y_range = range(self.area.height) if y is None else y
 
@@ -266,7 +271,13 @@ class AreaFactory:
                 # node1, node2 = node.children
                 # Connect Node1, Node2
             else:
-                room = Rect.from_edges(left=node.x, top=node.y, right=node.w, bottom=node.h)
+                room = Rect.from_edges(
+                    left=node.x,
+                    top=node.y,
+                    right=node.w,
+                    bottom=node.h
+                    )
+                yield room
 
     def _generate_cellular(self):
         pass

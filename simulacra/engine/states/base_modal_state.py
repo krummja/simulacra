@@ -15,8 +15,6 @@ if TYPE_CHECKING:
 class BaseModalState(Generic[T], State[T]):
     """Menu state that partially obscures the main game view."""
 
-    NAME = "Modal Base"
-
     def __init__(self, model: Model, view: View) -> None:
         super().__init__()
         self._model = model

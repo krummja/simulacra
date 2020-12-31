@@ -51,8 +51,6 @@ class BaseMenuState(Generic[T], State[T]):
     -----------------
     """
 
-    NAME = "Menu Base"
-
     def __init__(self, view: View, data: List[Any]) -> None:
         super().__init__()
         self._view = view(self)

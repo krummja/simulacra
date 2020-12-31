@@ -11,18 +11,7 @@ if TYPE_CHECKING:
 
 class AreaState(Generic[T], State[T]):
 
-    NAME = "Area"
-
-    def __init__(
-            self,
-            data_manager,
-            result_manager,
-            effects_manager,
-            model: Model
-        ) -> None:
+    def __init__(self, model: Model) -> None:
         super().__init__()
-        self.data_manager = data_manager
-        self.result_manager = result_manager
-        self.effects_manager = effects_manager
         self._model = model
-        self._view = StageView(self, self._model)
+        self._view = StageView(self, model)

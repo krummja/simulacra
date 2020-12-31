@@ -13,8 +13,6 @@ if TYPE_CHECKING:
 
 class EffectsState(AreaState[None]):
 
-    NAME = "Effects"
-
     def __init__(
             self,
             model: Model,

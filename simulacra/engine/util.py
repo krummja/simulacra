@@ -1,22 +1,23 @@
-"""ENGINE.Util"""
+# pylint: skip-file
 from __future__ import annotations
 
 import collections
 import functools
+import weakref
 from contextlib import suppress
 from typing import Dict, Optional
 
 
 class classproperty:
-
+    """Implementation of class properties. Handy!"""
     def __init__(self, f):
         self.f = f
-
     def __get__(self, obj, owner):
         return self.f(owner)
 
 
 def flatten(d, parent_key='', sep='_'):
+    """Handy little function for hammering out nested dicts."""
     items = []
     for k, v in d.items():
         new_key = parent_key + sep + k if parent_key else k
@@ -29,6 +30,8 @@ def flatten(d, parent_key='', sep='_'):
 
 # https://stackoverflow.com/questions/6760685/creating-a-singleton-in-python?noredirect=1&lq=1
 class Singleton(type):
+    """Metaclass for implementing Singletons."""
+
     _instances = {}
     def __cls__(cls, *args, **kwargs):
         if cls not in cls._instances:
@@ -38,32 +41,16 @@ class Singleton(type):
             return cls._instances[cls]
 
 
-def log(func):
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        try:
-            # Execute the called function
-            return func(*args, **kwargs)
-        except Exception as e:
-            error_msg = 'An error has occurred at /' + func.__name__ + '\n'
-            return e
-    return wrapper
+class Flyweight:
+    _pool = weakref.WeakValueDictionary()
 
+    def __new__(cls, model) -> Flyweight:
+        obj = cls._pool.get(model)
+        if obj is None:
+            obj = object.__new__(Flyweight)
+            cls._pool[model] = obj
+            obj.model = model
+        return obj
 
-class Subject:
-
-    def __init__(self) -> None:
-        self._observers: Dict[str, Observer] = {}
-
-    def attach(self, observer: Observer) -> None:
-        if observer not in self._observers.values():
-            self._observers[observer.uid] = observer
-
-    def detach(self, observer_name: str) -> None:
-        with suppress(ValueError):
-            del self._observers[observer_name]
-
-    def notify(self, modifier: Optional[Observer] = None) -> None:
-        for observer in self._observers:
-            if modifier != observer:
-                observer.update(self)
+    def __repr__(self):
+        return f"<Flyweight: {self.model}>"

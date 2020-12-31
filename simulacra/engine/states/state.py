@@ -45,8 +45,6 @@ class State(Generic[T], tcod.event.EventDispatch[T]):
     It is the central representation of all of the game content.
     """
 
-    NAME = "<base state>"
-
     _COMMAND_KEYS: Dict[int, str] = {
         tcod.event.K_e: "equipment",
         tcod.event.K_i: "inventory",

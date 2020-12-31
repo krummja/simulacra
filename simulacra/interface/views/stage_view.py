@@ -27,7 +27,7 @@ class StageView(View):
         super().__init__(state)
         self.model = model
         self.state = state
-        self.manager = self.state.data_manager
+        self.manager = self.state.managers['data']
 
         self.character_panel = BaseElement(
             ElementConfig(

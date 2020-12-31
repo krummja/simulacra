@@ -1,7 +1,7 @@
 """ENGINE.STATES.Main_Menu_State"""
 from __future__ import annotations
 
-from typing import Dict, Optional
+from typing import Optional
 
 import tcod
 
@@ -17,8 +17,7 @@ from .state import State, T, SaveAndQuit, EffectsBreak
 
 
 class MainMenuState(State[None]):
-
-    NAME = "Main Menu"
+    """Main Menu"""
 
     def __init__(self) -> None:
         super().__init__()
@@ -72,14 +71,12 @@ class MainMenuState(State[None]):
     def new_game(self) -> None:
         try:
             self._model = Model()
-            # TODO: Build an area manager to handle injecting areas easier
-            # self._model.area_data.current_area = testing_area(self._model)
-            # self._model.area_data.current_area = debug_area(self._model)
             self._model.area_data.current_area = test_forest(self._model)
             self.storage.add_save(self._view.character_select.index_as_int,
                                   self.model)
             self.start()
         except SystemExit:
+            print("Failed to start game!")
             raise
 
     def start(self) -> None:
