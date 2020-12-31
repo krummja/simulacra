@@ -15,5 +15,5 @@ On Linux, simply open a shell and run `bash run.sh`.
 
 Otherwise, navigate to `simulacra` and run `python3 main.py`.
 
-[splash]: https://imgur.com/fFhWxTo
-[current]: https://imgur.com/VMCeIY7
+[splash]: https://i.imgur.com/fFhWxTo.png
+[current]: https://i.imgur.com/VMCeIY7.png
