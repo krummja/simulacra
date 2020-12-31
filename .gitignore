@@ -3,3 +3,5 @@ __pycache__/
 *.manifest
 *.spec
 .vscode
+.vscode/
+.idea/
