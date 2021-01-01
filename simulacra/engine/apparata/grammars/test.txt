@@ -1,15 +1,25 @@
 
-room_1 {
-    width = 10;
-    height = 20;
+start_room {
+    w = 20;
+    h = 20;
 
-    -> room_2 {
-        repeat = 20;
+    -> corridor {
+        repeat = 5;
+        angle = 90;
+        angle_d = 5;
+        distance = 48;
     }
 }
 
-room_2 {
-    shape = circle;
-    width = 20;
-    height = 20;
+corridor {
+    w = 3;
+    h = 3;
+
+    -> next_room {}
 }
+
+next_room {
+    w = 30;
+    h = 15;
+}
+

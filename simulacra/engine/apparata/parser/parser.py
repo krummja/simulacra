@@ -3,10 +3,12 @@
 from __future__ import annotations
 from typing import Dict, Optional, Union, Tuple
 
-# from engine.apparata.graph import Graph, GraphQuery
-# from engine.apparata.node import Node
+import re
+
+from engine.apparata.graph import Graph, GraphQuery
+from engine.apparata.node import Node
 from engine.apparata.parser.lexer import Lexer
-# from engine.apparata.parser.rule import Rule
+# from engine.apparata.parser.rule import Rule, Transformation
 from engine.apparata.parser.token import Token, TokenType
 
 
@@ -22,6 +24,8 @@ class Parser:
         self.unconfigured_edges = []
         self.nodes: Dict[str, Dict[str, Union[str, int]]] = {}
         self.edges: Dict[Tuple[str, str]] = {}
+
+        self.gquery = GraphQuery()
 
     def parse(self) -> None:
         while self.lookahead.token_type != TokenType.EOF:
@@ -83,7 +87,6 @@ class Parser:
             self.error('ID or NUMBER')
         self.edges[(connecting_node, current_node)][key] = value
 
-
     def parse_edge_property_list(self, connecting_node, current_node):
         """
         edge_property_list -> property ';' edge_property_list | nil
@@ -96,7 +99,7 @@ class Parser:
         """
         edge_configuration -> '->' ID '{' property_list '}'
         """
-        if self.lookahead.token_type == TokenType.ARROW:
+        while self.lookahead.token_type == TokenType.ARROW:
             self.match(TokenType.ARROW)
 
             current_node = self.match(TokenType.ID)
@@ -124,3 +127,27 @@ class Parser:
         self.parse_node_property_list(current_node)
         self.parse_edge_configuration(current_node)
         self.match(TokenType.RBRACE)
+
+    def parse_node_uid(self, token: Token, graph: Graph) -> Node:
+        label = re.match('[A-z]+', token.text).group(0)
+        match = re.search('[0-9]+$', token.text)
+        number = match.group(0) if match is not None else None
+        name = Node.make_name(label, number)
+        node = graph.find_node(name)
+        if node is None:
+            node = Node(f"N{graph.node_count}", label=label, number=number)
+            graph.add_node(node)
+        return node
+
+    def parse_nodes(self):
+        graph = Graph()
+        self.gquery.data_graph = graph
+        for node in self.nodes:
+            # Build nodes for each Token key in the node dictionary.
+            self.parse_node_uid(node, graph)
+        return graph
+
+    def parse_transformations(self):
+        """
+        Take in a generated topology and do some work to it.
+        """

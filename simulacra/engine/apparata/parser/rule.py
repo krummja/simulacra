@@ -12,3 +12,12 @@ class Rule:
         """Constructor."""
         self.pattern = pattern
         self.replacement = replacement
+
+
+class Transformation:
+    """Representation of a transformation rule."""
+
+    def __init__(self, *, pattern: Graph, replacement: Graph) -> None:
+        """Constructor."""
+        self.pattern = pattern
+        self.replacement = replacement

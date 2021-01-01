@@ -10,13 +10,14 @@ from engine.states import MainMenuState
 from engine.rendering import tileset
 
 from engine.apparata.parser.generator import Generator
+from engine.apparata.graph import Graph, GraphQuery
 
 def main() -> None:
     """Setup the terminal and start the main game loop."""
 
     generator = Generator()
-    PATH = "/home/krummja/Workspace/Python/Simulacra/simulacra/"
-    generator.generate_from_file(PATH + 'engine/apparata/grammars/test.txt')
+    path = "/home/krummja/Workspace/Python/Simulacra/simulacra/"
+    generator.generate_from_file(path + 'engine/apparata/grammars/test.txt')
 
     with tcod.context.new_terminal(
         columns=config.CONSOLE_WIDTH,

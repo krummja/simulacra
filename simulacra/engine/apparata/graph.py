@@ -133,17 +133,35 @@ class Graph:
 
 
 class GraphQuery:
-    """Processor for matching Subgraphs of Graphs."""
+    """Processor for matching Subgraphs of Graphs.
 
-    def __init__(self, data_graph: Graph) -> None:
+    Lee et al. (2013) An In-depth Comparison of Subgraph Isomorphism
+    Algorithsms in Graph Databases. In Proceedings of the VLDB Endowment,
+    Vol. 6, No. 2.
+    http://www.vldb.org/pvldb/vol6/p133-han.pdf
+
+        Input:  query graph
+        Input:  data graph
+        Output: all subgraph isomorphisms of q in g
+    """
+
+    def __init__(self) -> None:
         """Constructor.
 
         Args:
             data_graph (Graph): The base graph we're checking against.
         """
-        self._data_graph = data_graph
+        self._data_graph = None
         self._solutions: List[ Dict[str, Node] ] = []
         self._match_history: List[ Dict[str, Node] ] = []
+
+    @property
+    def data_graph(self) -> Graph:
+        return self._data_graph
+
+    @data_graph.setter
+    def data_graph(self, value: Graph) -> None:
+        self._data_graph = value
 
     def search(self, query_graph: Graph) -> List[ Dict[str, Node] ]:
         matches = {}
