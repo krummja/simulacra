@@ -35,7 +35,7 @@ class DungeonGenerator:
             x = random.randint(self.x, self.x + self.width - w)
             y = random.randint(self.y, self.y + self.height - h)
             new_room = Rect.from_edges(left=x, top=y, right=w, bottom=h)
-            if any(new_room in other for other in self.rooms):
+            if any(new_room.intersects(other) for other in self.rooms):
                 continue
 
             # self.generate_connection(new_room, 80)

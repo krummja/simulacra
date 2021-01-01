@@ -102,7 +102,9 @@ class Lexer:
                         self.char == '_')):
                     lexeme += self.char
                     self.consume()
-                    return Token(TokenType.ID, lexeme)
+                return Token(TokenType.ID, lexeme)
+            else:
+                self.error()
 
         return Token(TokenType.EOF, "<EOF>")
 

@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
 
 import numpy as np
 from numpy.fft import fft2, ifft2
@@ -9,7 +8,7 @@ def fft_convolve2d(board, kernel):
     board_ft = fft2(board)
     kernel_ft = fft2(kernel)
     height, width = board_ft.shape
-    
+
     convolution = np.real(ifft2(board_ft * kernel_ft))
     convolution = np.roll(convolution, -(int(height / 2) + 1), axis=0)
     convolution = np.roll(convolution, -(int(width / 2) + 1), axis=1)
@@ -17,7 +16,7 @@ def fft_convolve2d(board, kernel):
 
 
 class Automata:
-    
+
     def __init__(self, shape, density, neighborhood, rule) -> None:
         self.board = np.random.uniform(0, 1, shape)
         self.board = self.board < density
@@ -30,35 +29,18 @@ class Automata:
         self.rule = rule
 
     def update_board(self, intervals=1):
-        for i in range(intervals):
+        for _ in range(intervals):
             convolution = fft_convolve2d(self.board, self.kernel)
-            shape= convolution.shape
+            shape = convolution.shape
             new_board = np.zeros(shape)
-            new_board[np.where(np.in1d(convolution, self.rule[0]).reshape(shape) & (self.board == 1))] = 1
-            new_board[np.where(np.in1d(convolution, self.rule[1]).reshape(shape) & (self.board == 0))] = 1
-
+            new_board[np.where(np.in1d(convolution, self.rule[0]).reshape(shape) \
+                               & (self.board == 1))] = 1
+            new_board[np.where(np.in1d(convolution, self.rule[1]).reshape(shape) \
+                               & (self.board == 0))] = 1
             self.board = new_board
 
     def generate(self, iterations):
         self.update_board(iterations)
-
-    def benchmark(self, iterations):
-        start = time.process_time()
-
-        self.update_board(iterations)
-
-        print("Performed " + str(iterations) + " iterations of " + str(self.board.shape) + " cells in " + str(time.process_time() - start) + " seconds.")
-
-    def animate(self, interval=100):
-        def update_animation(*args):
-            self.update_board()
-            self.image.set_array(self.board)
-            return self.image
-
-        fig = plt.figure()
-        self.image = plt.imshow(self.board, interpolation="nearest", cmap=plt.cm.get_cmap('gray'))
-        ani = anim.FuncAnimation(fig, update_animation, interval=interval)
-        plt.show()
 
 
 class Conway(Automata):
@@ -99,4 +81,3 @@ class Bugs(Automata):
         neighborhood = np.ones((11, 11))
         rule = [np.arange(34, 59), np.arange(34, 46)]
         Automata.__init__(self, shape, density, neighborhood, rule)
-    

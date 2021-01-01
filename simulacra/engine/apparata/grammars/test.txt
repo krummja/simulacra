@@ -1,0 +1,9 @@
+
+room_1 {
+    some_property = 10;
+    other_property = foo;
+}
+
+room_2 {
+    another_property = bar;
+}

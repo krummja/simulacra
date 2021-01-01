@@ -11,8 +11,6 @@ from engine.entities import Player
 from engine.rendering import update_fov
 from content.factories.factory_service import FactoryService
 from content.factories.area_factory import AreaFactory
-from content.architect.dungeon import DungeonGenerator
-from content.architect.graph_generator import GraphGenerator
 
 from graph_engine.generator import Generator
 
