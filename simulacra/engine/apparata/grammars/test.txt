@@ -1,9 +1,15 @@
 
 room_1 {
-    some_property = 10;
-    other_property = foo;
+    width = 10;
+    height = 20;
+
+    -> room_2 {
+        repeat = 20;
+    }
 }
 
 room_2 {
-    another_property = bar;
+    shape = circle;
+    width = 20;
+    height = 20;
 }

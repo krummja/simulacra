@@ -36,3 +36,12 @@ class Token:
 
     def __str__(self) -> str:
         return f"{self.text}, {TokenType(self.token_type).name}"
+
+    def __hash__(self):
+        return hash((self.token_type, self.text))
+
+    def __eq__(self, other: Token) -> bool:
+        return (
+            self.token_type == other.token_type,
+            self.text == other.text
+            )

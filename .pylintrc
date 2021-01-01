@@ -12,3 +12,5 @@ disable=
     missing-class-docstring,
     consider-using-enumerate,
     unnecessary-lambda,
+    too-many-return-statements,
+    too-many-branches

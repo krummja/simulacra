@@ -1,7 +1,6 @@
 """Lexer module."""
 
 from __future__ import annotations
-from typing import List
 
 from engine.apparata.parser.token import Token, TokenType
 
@@ -20,20 +19,10 @@ class Lexer:
         self.line_num: int = 1
         self.char_num: int = 1
 
-        self._properties: List[str] = []
-
         if len(input_stream) != 0:
             self.char = self.input_stream[self.pos]
         else:
             self.char = TokenType.EOF
-
-    @property
-    def properties(self) -> List[str]:
-        return self._properties
-
-    @properties.setter
-    def properties(self, value: List[str]):
-        self._properties = value
 
     def next_token(self) -> Token:
         """Return the next token from the input stream, ignoring whitespace."""

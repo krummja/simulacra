@@ -1,14 +1,12 @@
 """Parser module."""
 
 from __future__ import annotations
-from typing import Dict, Optional, Union
+from typing import Dict, Optional, Union, Tuple
 
-from collections import defaultdict
-
-from engine.apparata.graph import Graph, GraphQuery
-from engine.apparata.node import Node
+# from engine.apparata.graph import Graph, GraphQuery
+# from engine.apparata.node import Node
 from engine.apparata.parser.lexer import Lexer
-from engine.apparata.parser.rule import Rule
+# from engine.apparata.parser.rule import Rule
 from engine.apparata.parser.token import Token, TokenType
 
 
@@ -19,11 +17,15 @@ class Parser:
         self.lexer = lexer
         self.lookahead = self.lexer.next_token()
         self.node_count = 0
+        self.edge_count = 0
+        self.unconfigured_nodes = []
+        self.unconfigured_edges = []
         self.nodes: Dict[str, Dict[str, Union[str, int]]] = {}
+        self.edges: Dict[Tuple[str, str]] = {}
 
     def parse(self) -> None:
         while self.lookahead.token_type != TokenType.EOF:
-            self.parse_node_configuration()
+            self.parse_configurations()
 
     def consume(self) -> None:
         self.lookahead = self.lexer.next_token()
@@ -37,12 +39,11 @@ class Parser:
             old_token = self.lookahead
             self.consume()
             return old_token
-        else:
-            self.error(TokenType[token_type.name])
+        self.error(TokenType[token_type.name])
 
-    def parse_property(self, current_node: str):
+    def parse_node_property(self, current_node: str):
         """
-        property -> ID '=' (ID | NUMBER)
+        node_property -> ID '=' (ID | NUMBER)
         """
         key = self.match(TokenType.ID)
         self.match(TokenType.EQUALS)
@@ -55,22 +56,71 @@ class Parser:
             self.error('ID or NUMBER')
         self.nodes[current_node][key] = value
 
-    def parse_property_list(self, current_node: str):
+    def parse_node_property_list(self, current_node: str):
         """
-        property_list -> property ';' property_list | nil
+        node_property_list -> property ';' node_property_list | nil
         """
+        if current_node not in self.nodes.keys():
+            self.nodes[current_node] = {}
+            self.node_count += 1
+
         while self.lookahead.token_type == TokenType.ID:
-            self.parse_property(current_node)
+            self.parse_node_property(current_node)
             self.match(TokenType.SEMICOLON)
 
-    def parse_node_configuration(self):
+    def parse_edge_property(self, connecting_node, current_node):
         """
-        node_configuration -> node_uid '{' property_list '}'
+        edge_property -> ID '=' (ID | NUMBER)
+        """
+        key = self.match(TokenType.ID)
+        self.match(TokenType.EQUALS)
+
+        if self.lookahead.token_type == TokenType.ID:
+            value = str(self.match(TokenType.ID))
+        elif self.lookahead.token_type == TokenType.NUMBER:
+            value = self.match(TokenType.NUMBER)
+        else:
+            self.error('ID or NUMBER')
+        self.edges[(connecting_node, current_node)][key] = value
+
+
+    def parse_edge_property_list(self, connecting_node, current_node):
+        """
+        edge_property_list -> property ';' edge_property_list | nil
+        """
+        while self.lookahead.token_type == TokenType.ID:
+            self.parse_edge_property(connecting_node, current_node)
+            self.match(TokenType.SEMICOLON)
+
+    def parse_edge_configuration(self, connecting_node):
+        """
+        edge_configuration -> '->' ID '{' property_list '}'
+        """
+        if self.lookahead.token_type == TokenType.ARROW:
+            self.match(TokenType.ARROW)
+
+            current_node = self.match(TokenType.ID)
+
+            if current_node not in self.nodes.keys():
+                self.node_count += 1
+                self.nodes[current_node] = {}
+                self.unconfigured_nodes.append(current_node)
+
+            if (connecting_node, current_node) not in self.edges.keys():
+                self.edges[(connecting_node, current_node)] = {}
+                self.edge_count += 1
+
+            self.match(TokenType.LBRACE)
+            self.parse_edge_property_list(connecting_node, current_node)
+            self.match(TokenType.RBRACE)
+
+    def parse_configurations(self):
+        """
+        configurations -> ID '{' property_list [edge_config] '}'
         """
         current_node = self.match(TokenType.ID)
-        self.nodes[current_node] = {}
 
         self.match(TokenType.LBRACE)
-        self.parse_property_list(current_node)
+        self.parse_node_property_list(current_node)
+        self.parse_edge_configuration(current_node)
         self.match(TokenType.RBRACE)
-        self.node_count += 1

@@ -21,6 +21,17 @@ class Generator:
             for prop, value in prop_dict.items():
                 print(f"{prop} : {value}")
 
+        for (n, m), prop_dict in file.edges.items():
+            print("")
+            print(f"{n}".upper() + "  ->  " + f"{m}".upper())
+            print("====================")
+            for prop, value in prop_dict.items():
+                print(f"{prop} : {value}")
+
+        print("")
+        print(f"# Nodes: {file.node_count}")
+        print(f"# Edges: {file.edge_count}")
+
     def parse_grammar_file(self, grammar_file) -> Parser:
         parser = Parser(Lexer(grammar_file))
         parser.parse()
