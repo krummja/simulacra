@@ -1,12 +1,12 @@
 from __future__ import annotations
-from typing import Optional, TYPE_CHECKING
 
-import tcod
+from typing import TYPE_CHECKING
 
-from .state import State, StateBreak
-from .base_menu_state import BaseMenuState
-from .item_options_state import ItemOptionsState
 from interface.views.inventory_menu_view import InventoryMenuView
+
+from engine.states.base_menu_state import BaseMenuState
+from engine.states.item_options_state import ItemOptionsState
+from engine.states.state import StateBreak
 
 if TYPE_CHECKING:
     from engine.components import Inventory

@@ -1,4 +1,4 @@
-from components.material import Material
+from engine.components.material import Material
 
 Skin = Material('skin', name='Skin', hardness=0, sharpness=0, potency=0.2, weight=0.1, value=0)
 Flesh = Material('flesh', name='Flesh', hardness=0, sharpness=0, potency=0.2, weight=0.15, value=0)

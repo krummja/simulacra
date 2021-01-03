@@ -5,16 +5,25 @@ import random
 import numpy as np
 import tcod
 
-from content.factories.factory_service import FactoryService
+from content.factories.tile_factory import TileFactory
 from content.tiles.tile_defs import all_tiles, color_list
 from engine.areas.area import Area
 from engine.geometry import Rect
 
 
+"""
+In the generate_rooms method, I roll assets using a color list.
+What would work better - and be more flexible overall - is to lean into that and have an
+entire battery of generator functions that I can selectively apply.
+
+e.g. one generator does a certain pattern, with a palette definition and a tile type or
+tile types.
+"""
+
 class AreaFactory:
     """Build a new Area."""
 
-    tile_factory = FactoryService().tile_factory
+    tile_factory = TileFactory()
 
     def __init__(
             self,
@@ -34,7 +43,7 @@ class AreaFactory:
     def generate(
             self,
             floor: Optional[str] = 'bare_floor',
-            wall: Optional[str] = 'evergreen_1'
+            wall: Optional[str] = 'evergreen_1',
         ) -> Area:
         self._generate_rooms(floor, wall)
         self._place_prefab('prefab_1')
@@ -84,7 +93,7 @@ class AreaFactory:
 
             # Clear the inner portion of the room to the default floor type.
             self.tiles.T[new_room.inner] = self.tile_factory.build(
-                floor, color=(25, 40, 40)
+                floor, color=(25, 40, 40), bg=(25, 40, 40)
                 )
 
             # Add the new room to the area's room list.

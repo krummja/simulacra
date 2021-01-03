@@ -2,6 +2,11 @@ from __future__ import annotations
 from typing import Dict
 from enum import Enum
 
+
+class TileType(Enum):
+    Wall = 0
+    Floor = 1
+
 color_list = [
     (25, 40, 40),
     (60, 60, 60),
@@ -26,12 +31,6 @@ color_list = [
     (0, 0, 0),
     (0, 0, 0)
     ]
-
-door_tiles: Dict[str, int] = {
-    'door_open': 57440,
-    'door_closed': 57441,
-    'stairs_1': 57442,
-    }
 
 all_tiles: Dict[str, int] = {
     'boulder_1': 57344,
@@ -75,47 +74,158 @@ all_tiles: Dict[str, int] = {
     'brick_R': 57522,
     }
 
-class TileType(Enum):
-    Wall = 0
-    Floor = 1
-
-FOREST_FLOOR = (25, 40, 40)
-INTERIOR_FLOOR = (60, 60, 60)
-
-test_floor1 = {
-    'uid': 'test1',
-    'move_cost': TileType.Floor,
-    'transparent': TileType.Floor,
-    'char': all_tiles['blank'],
-    'color': (255, 0, 0),
-    'bg': (100, 0, 0)
+evergreen_1 = {
+    'uid': 'evergreen_1',
+    'move_cost': TileType.Wall,
+    'transparent': TileType.Wall,
+    'char': all_tiles['evergreen_1']
     }
 
-test_floor2 = {
-    'uid': 'test2',
-    'move_cost': TileType.Floor,
-    'transparent': TileType.Floor,
-    'char': all_tiles['blank'],
-    'color': (255, 0, 0),
-    'bg': (255, 0, 0)
+evergreen_2 = {
+    'uid': 'evergreen_2',
+    'move_cost': TileType.Wall,
+    'transparent': TileType.Wall,
+    'char': all_tiles['evergreen_2'],
     }
 
-test_floor3 = {
-    'uid': 'test3',
-    'move_cost': TileType.Floor,
-    'transparent': TileType.Floor,
-    'char': all_tiles['blank'],
-    'color': (0, 0, 0),
-    'bg': (50, 50, 200)
+evergreen_3 = {
+    'uid': 'evergreen_3',
+    'move_cost': TileType.Wall,
+    'transparent': TileType.Wall,
+    'char': all_tiles['evergreen_3'],
     }
 
-test_floor4 = {
-    'uid': 'test4',
+boulder_1 = {
+    'uid': 'boulder_1',
+    'move_cost': TileType.Wall,
+    'transparent': TileType.Wall,
+    'char': all_tiles['boulder_1'],
+    }
+
+boulder_2 = {
+    'uid': 'boulder_2',
+    'move_cost': TileType.Wall,
+    'transparent': TileType.Wall,
+    'char': all_tiles['boulder_2'],
+    }
+
+boulder_3 = {
+    'uid': 'boulder_3',
+    'move_cost': TileType.Wall,
+    'transparent': TileType.Wall,
+    'char': all_tiles['boulder_3'],
+    }
+
+boulder_4 = {
+    'uid': 'boulder_4',
+    'move_cost': TileType.Wall,
+    'transparent': TileType.Wall,
+    'char': all_tiles['boulder_4'],
+    }
+
+rock_1 = {
+    'uid': 'rock_1',
     'move_cost': TileType.Floor,
     'transparent': TileType.Floor,
-    'char': all_tiles['blank'],
-    'color': (0, 0, 0),
-    'bg': (100, 100, 255)
+    'char': all_tiles['rock_1'],
+    }
+
+rock_2 = {
+    'uid': 'rock_2',
+    'move_cost': TileType.Floor,
+    'transparent': TileType.Floor,
+    'char': all_tiles['rock_2'],
+    }
+
+grass_1 = {
+    'uid': 'grass_1',
+    'move_cost': TileType.Floor,
+    'transparent': TileType.Floor,
+    'char': all_tiles['grass_1'],
+    }
+
+grass_2 = {
+    'uid': 'grass_2',
+    'move_cost': TileType.Floor,
+    'transparent': TileType.Floor,
+    'char': all_tiles['grass_2'],
+    }
+
+brick_floor_TL = {
+    'uid': 'brick_TL',
+    'move_cost': TileType.Floor,
+    'transparent': TileType.Floor,
+    'char': all_tiles['brick_TL'],
+    }
+
+brick_floor_TR = {
+    'uid': 'brick_TR',
+    'move_cost': TileType.Floor,
+    'transparent': TileType.Floor,
+    'char': all_tiles['brick_TR'],
+    }
+
+brick_floor_L = {
+    'uid': 'brick_L',
+    'move_cost': TileType.Floor,
+    'transparent': TileType.Floor,
+    'char': all_tiles['brick_L'],
+    }
+
+brick_floor_T = {
+    'uid': 'brick_T',
+    'move_cost': TileType.Floor,
+    'transparent': TileType.Floor,
+    'char': all_tiles['brick_T'],
+    }
+
+brick_floor_R = {
+    'uid': 'brick_R',
+    'move_cost': TileType.Floor,
+    'transparent': TileType.Floor,
+    'char': all_tiles['brick_R'],
+    }
+
+brick_floor_M_1 = {
+    'uid': 'brick_M_1',
+    'move_cost': TileType.Floor,
+    'transparent': TileType.Floor,
+    'char': all_tiles['brick_M_1'],
+    }
+
+brick_left = {
+    'uid': 'brick_wall_L',
+    'move_cost': TileType.Wall,
+    'transparent': TileType.Wall,
+    'char': all_tiles['brick_wall_L'],
+    }
+
+brick_right = {
+    'uid': 'brick_wall_R',
+    'move_cost': TileType.Wall,
+    'transparent': TileType.Wall,
+    'char': all_tiles['brick_wall_R'],
+    }
+
+brick_bot_left = {
+    'uid': 'brick_wall_BL',
+    'move_cost': TileType.Wall,
+    'transparent': TileType.Wall,
+    'char': all_tiles['brick_wall_BL'],
+    }
+
+brick_bot_right = {
+    'uid': 'brick_wall_BR',
+    'move_cost': TileType.Wall,
+    'transparent': TileType.Wall,
+    'char': all_tiles['brick_wall_BR'],
+    }
+
+brick_wall = {
+    'uid': 'brick_wall',
+    'move_cost': TileType.Wall,
+    'transparent': TileType.Wall,
+    'char': all_tiles['brick_wall'],
     }
 
 bare_floor = {
@@ -123,8 +233,6 @@ bare_floor = {
     'move_cost': TileType.Floor,
     'transparent': TileType.Floor,
     'char': all_tiles['blank'],
-    'color': (255, 255, 255),
-    'bg': FOREST_FLOOR
     }
 
 blank_floor = {
@@ -132,8 +240,6 @@ blank_floor = {
     'move_cost': TileType.Floor,
     'transparent': TileType.Floor,
     'char': all_tiles['blank'],
-    'color': (255, 255, 255),
-    'bg': FOREST_FLOOR
     }
 
 blank_stone_floor = {
@@ -141,8 +247,6 @@ blank_stone_floor = {
     'move_cost': TileType.Floor,
     'transparent': TileType.Floor,
     'char': all_tiles['blank_stone'],
-    'color': (255, 255, 255),
-    'bg': INTERIOR_FLOOR
     }
 
 dirt_path = {
@@ -150,47 +254,57 @@ dirt_path = {
     'move_cost': TileType.Floor,
     'transparent': TileType.Floor,
     'char': all_tiles['dirt_1'],
-    'color': (180, 100, 55),
-    'bg': FOREST_FLOOR
     }
 
 door_open = {
     'uid': 'door_open',
     'move_cost': TileType.Floor,
     'transparent': TileType.Floor,
-    'char': door_tiles['door_open'],
-    'color': (100, 60, 40),
-    'bg': FOREST_FLOOR
+    'char': all_tiles['door_open'],
     }
 
 door_closed = {
     'uid': 'door_closed',
     'move_cost': TileType.Wall,
     'transparent': TileType.Wall,
-    'char': door_tiles['door_closed'],
-    'color': (100, 60, 40),
-    'bg': FOREST_FLOOR
+    'char': all_tiles['door_closed'],
     }
 
 stairs_down = {
     'uid': 'stairs_1',
     'move_cost': TileType.Floor,
     'transparent': TileType.Floor,
-    'char': door_tiles['stairs_1'],
-    'color': (150, 150, 150),
-    'bg': INTERIOR_FLOOR
+    'char': all_tiles['stairs_1'],
     }
 
 tile_templates = {
+    evergreen_1['uid']: evergreen_1,
+    evergreen_2['uid']: evergreen_2,
+    evergreen_3['uid']: evergreen_3,
+    boulder_1['uid']: boulder_1,
+    boulder_2['uid']: boulder_2,
+    boulder_3['uid']: boulder_3,
+    boulder_4['uid']: boulder_4,
+    grass_1['uid']: grass_1,
+    grass_2['uid']: grass_2,
+    rock_1['uid']: rock_1,
+    rock_2['uid']: rock_2,
+    brick_floor_TL['uid']: brick_floor_TL,
+    brick_floor_TR['uid']: brick_floor_TR,
+    brick_floor_L['uid']: brick_floor_L,
+    brick_floor_R['uid']: brick_floor_R,
+    brick_floor_T['uid']: brick_floor_T,
+    brick_floor_M_1['uid']: brick_floor_M_1,
+    brick_left['uid']: brick_left,
+    brick_right['uid']: brick_right,
+    brick_bot_left['uid']: brick_bot_left,
+    brick_bot_right['uid']: brick_bot_right,
+    brick_wall['uid']: brick_wall,
     bare_floor['uid']: bare_floor,
     blank_floor['uid']: blank_floor,
+    blank_stone_floor['uid']: blank_stone_floor,
     dirt_path['uid']: dirt_path,
     door_open['uid']: door_open,
     door_closed['uid']: door_closed,
     stairs_down['uid']: stairs_down,
-    blank_stone_floor['uid']: blank_stone_floor,
-    test_floor1['uid']: test_floor1,
-    test_floor2['uid']: test_floor2,
-    test_floor3['uid']: test_floor3,
-    test_floor4['uid']: test_floor4
     }
