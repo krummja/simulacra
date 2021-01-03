@@ -83,7 +83,6 @@ class AreaFactory:
             self._generate_tunnels(new_room)
 
             # Clear the inner portion of the room to the default floor type.
-            print(new_room.inner)
             self.tiles.T[new_room.inner] = self.tile_factory.build(
                 floor, color=(25, 40, 40)
                 )

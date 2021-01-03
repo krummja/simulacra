@@ -3,9 +3,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from engine.rendering import Graphic
 from engine.areas import Location
-from .noun import Noun
+from engine.entities.noun import Noun
+from engine.rendering import Graphic
 
 if TYPE_CHECKING:
     from engine.components.component import Component

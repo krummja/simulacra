@@ -1,5 +1,6 @@
 """ENGINE.ENTITIES.Stat"""
 from __future__ import annotations
+from typing import Tuple
 
 import math
 from enum import Enum
@@ -8,7 +9,7 @@ from enum import Enum
 class Stat:
     """Representation of a single stat, for use with a Stats component."""
 
-    def __init__(self, stat: StatsEnum, current: int, maximum: int) -> None:
+    def __init__(self, stat: StatsEnum, current: float, maximum: float) -> None:
         if stat in StatsEnum:
             self.stat = stat
         else:
@@ -16,21 +17,23 @@ class Stat:
         self.current = current
         self.maximum = maximum
 
-    def modify_current(self, value: int) -> None:
+    def modify_current(self, value: float) -> None:
         """Adjust the current value of the attribute."""
         self.current += value
 
-    def modify_max(self, value: int) -> None:
+    def modify_max(self, value: float) -> None:
         """Adjust the maximum possible value of the attribute."""
         self.maximum += value
+
+    @property
+    def display(self) -> Tuple[float, float]:
+        return self.current, self.maximum
 
     def __str__(self) -> str:
         return str(self.current)
 
     def __int__(self) -> int:
         return int(self.current)
-
-    # TODO: Implement other operators
 
 
 class StatModifier:

@@ -17,7 +17,8 @@ from typing import TYPE_CHECKING, Dict, List, Set, Tuple, Optional
 import numpy as np
 from engine.areas.location import Location
 from engine.geometry import Point
-from engine.rendering import Camera, tile_dt, tile_graphic
+from engine.rendering.camera import Camera
+from engine.tiles.tile import tile_dt, tile_graphic
 
 if TYPE_CHECKING:
     from engine.entities import Item, Player

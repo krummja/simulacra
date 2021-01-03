@@ -8,9 +8,9 @@ from typing import TYPE_CHECKING, Dict, List, Tuple
 import numpy as np
 
 from config import *
-from .tile import tile_graphic
-from .noise import NoiseMachine
-from .hues import COLOR
+from engine.tiles.tile import tile_graphic
+from engine.rendering.noise import NoiseMachine
+from engine.rendering.hues import COLOR
 
 if TYPE_CHECKING:
     from tcod.console import Console

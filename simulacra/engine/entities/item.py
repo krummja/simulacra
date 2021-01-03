@@ -96,12 +96,16 @@ class Item(Entity):
         except KeyError:
             items[location.xy] = [self]
 
-    def __eq__(self, other: Item):
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Item):
+            return NotImplemented
         return (self.uid == other.uid,
                 self.name == other.name,
                 self.description == other.description)
 
-    def __ne__(self, other: Item):
+    def __ne__(self, other: object):
+        if not isinstance(other, Item):
+            return NotImplemented
         return not self.__eq__(other)
 
     def __hash__(self):

@@ -10,7 +10,7 @@ from engine.model import Model
 from engine.storage import Storage
 
 from interface.views.main_menu_view import MainMenuView
-from content.areas.test_forest import test_forest
+from content.areas.test_area import test_area
 
 from .confirm_modal_state import ConfirmModalState
 from .state import State, T, SaveAndQuit, EffectsBreak
@@ -71,7 +71,7 @@ class MainMenuState(State[None]):
     def new_game(self) -> None:
         try:
             self._model = Model()
-            self._model.area_data.current_area = test_forest(self._model)
+            self._model.area_data.current_area = test_area(self._model)
             self.storage.add_save(self._view.character_select.index_as_int,
                                   self.model)
             self.start()

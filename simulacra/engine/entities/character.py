@@ -32,7 +32,7 @@ class Character(Actor, Entity):
         self.bg = display['bg']
         self.gender = gender
         self.control = ai.BasicNPC(self)
-        Actor.__init__(self, self, self.control)
+        Actor.__init__(self, owner=self, control=self.control)
 
     @property
     def name(self) -> str:

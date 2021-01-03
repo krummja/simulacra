@@ -16,81 +16,84 @@ class Stats(Component):
 
     def __init__(self, **kwargs) -> None:
         super().__init__("STATS")
-        self._core_stats: Dict[StatsEnum, Stat] = {}
+        # self: Dict[StatsEnum, Stat] = {}
         for k, v in kwargs.items():
             self.add_core_stat(StatsEnum[k.capitalize()], v, v)
 
     def add_core_stat(
             self,
             stat: StatsEnum,
-            current_value: int,
-            maximum_value: int
+            current_value: float,
+            maximum_value: float
         ) -> None:
         if stat in StatsEnum:
-            self._core_stats[stat] = Stat(stat,
-                                          current_value,
-                                          maximum_value)
+            self[stat] = Stat(stat, current_value, maximum_value)
 
     def modify_core_current_value(
             self,
             stat: StatsEnum,
-            modifier: int
+            modifier: float
         ) -> None:
-        if stat in self._core_stats:
-            self._core_stats[stat].current += modifier
+        if stat in self:
+            self[stat].current += modifier
 
     def set_core_current_value(
             self,
             stat: StatsEnum,
-            current_value: int
+            current_value: float
         ) -> None:
-        if stat in self._core_stats:
-            self._core_stats[stat].current = current_value
+        if stat in self:
+            self[stat].current = current_value
 
     def set_core_maximum_value(
             self,
             stat: StatsEnum,
-            maximum_value: int
+            maximum_value: float
         ) -> None:
-        if stat in self._core_stats:
-            self._core_stats[stat].maximum = maximum_value
+        if stat in self:
+            self[stat].maximum = maximum_value
 
     def set_total_core_value(
             self,
             stat: StatsEnum,
-            value: int
+            value: float
         ) -> None:
         self.set_core_current_value(stat, value)
         self.set_core_maximum_value(stat, value)
 
     def remove(self, stat: StatsEnum) -> None:
-        if stat in self._core_stats:
-            del self._core_stats[stat]
+        if stat in self:
+            del self[stat]
 
-    def get_current_value(self, stat: StatsEnum) -> int:
+    def get_current_value(self, stat: StatsEnum) -> float:
         if stat in StatsEnum:
             stat_value = 0
-            if stat in self._core_stats:
-                stat_value += self._core_stats[stat].current
+            if stat in self:
+                stat_value += self[stat].current
             # Responses
             return stat_value
 
     def copy(self) -> Stats:
         copy_instance = Stats()
-        copy_instance._core_stats = self._core_stats.copy()
+        copy_instance._core_stats = self.copy()
         return copy_instance
+
+    def display(self, stat: StatsEnum):
+        return self[stat].get_current_value / self[stat]
 
 
 def initialize_character_stats(
-        health=10,
-        might=10,
-        finesse=10,
-        intellect=10,
+        health=10.0,
+        energy=10.0,
+        might=10.0,
+        finesse=10.0,
+        intellect=10.0,
         size=5,
         **kwargs
     ) -> Stats:
     stats = Stats()
     stats.add_core_stat(StatsEnum.Health, health, health)
+    stats.add_core_stat(StatsEnum.Energy, energy, energy)
     stats.add_core_stat(StatsEnum.Might, might, might)
     stats.add_core_stat(StatsEnum.Finesse, finesse, finesse)
     stats.add_core_stat(StatsEnum.Intellect, intellect, intellect)

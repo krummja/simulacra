@@ -5,7 +5,7 @@ from typing import Tuple
 
 import numpy as np
 
-from .graphic import Graphic
+from engine.rendering.graphic import Graphic
 
 
 tile_graphic = np.dtype([
