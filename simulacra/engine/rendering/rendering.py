@@ -103,7 +103,7 @@ def render_visible_entities(area: Area, consoles: Dict[str, Console]) -> None:
             continue
         visible_entities[obj_y, obj_x].extend(items)
 
-    # Character
+    # Characters
     for ij, graphics in visible_entities.items():
         graphic = min(graphics)
         consoles['ROOT'].tiles_rgb[
