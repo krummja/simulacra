@@ -289,6 +289,9 @@ tile_templates = {
     grass_2['uid']: grass_2,
     rock_1['uid']: rock_1,
     rock_2['uid']: rock_2,
+    bare_floor['uid']: bare_floor,
+    blank_floor['uid']: blank_floor,
+    blank_stone_floor['uid']: blank_stone_floor,
     brick_floor_TL['uid']: brick_floor_TL,
     brick_floor_TR['uid']: brick_floor_TR,
     brick_floor_L['uid']: brick_floor_L,
@@ -300,11 +303,57 @@ tile_templates = {
     brick_bot_left['uid']: brick_bot_left,
     brick_bot_right['uid']: brick_bot_right,
     brick_wall['uid']: brick_wall,
-    bare_floor['uid']: bare_floor,
-    blank_floor['uid']: blank_floor,
-    blank_stone_floor['uid']: blank_stone_floor,
     dirt_path['uid']: dirt_path,
     door_open['uid']: door_open,
     door_closed['uid']: door_closed,
     stairs_down['uid']: stairs_down,
+    }
+
+terrain_templates = {
+    evergreen_1['uid']: evergreen_1,
+    evergreen_2['uid']: evergreen_2,
+    evergreen_3['uid']: evergreen_3,
+    boulder_1['uid']: boulder_1,
+    boulder_2['uid']: boulder_2,
+    boulder_3['uid']: boulder_3,
+    boulder_4['uid']: boulder_4,
+    grass_1['uid']: grass_1,
+    grass_2['uid']: grass_2,
+    rock_1['uid']: rock_1,
+    rock_2['uid']: rock_2,
+    }
+
+wall_templates = {
+    brick_left['uid']: brick_left,
+    brick_right['uid']: brick_right,
+    brick_bot_left['uid']: brick_bot_left,
+    brick_bot_right['uid']: brick_bot_right,
+    brick_wall['uid']: brick_wall,
+    }
+
+floor_templates = {
+    bare_floor['uid']: bare_floor,
+    blank_floor['uid']: blank_floor,
+    blank_stone_floor['uid']: blank_stone_floor,
+    brick_floor_TL['uid']: brick_floor_TL,
+    brick_floor_TR['uid']: brick_floor_TR,
+    brick_floor_L['uid']: brick_floor_L,
+    brick_floor_R['uid']: brick_floor_R,
+    brick_floor_T['uid']: brick_floor_T,
+    brick_floor_M_1['uid']: brick_floor_M_1,
+    }
+
+path_tempaltes = {
+    dirt_path['uid']: dirt_path,
+    }
+
+portal_templates = {
+    door_open['uid']: door_open,
+    door_closed['uid']: door_closed,
+    stairs_down['uid']: stairs_down,
+    }
+
+meta_templates = {
+    blank_floor['uid']: blank_floor,
+    blank_stone_floor['uid']: blank_stone_floor,
     }

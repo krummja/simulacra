@@ -1,10 +1,13 @@
 from __future__ import annotations
 from typing import List, Tuple, Optional
 
+from enum import Enum
 import random
 import numpy as np
 import tcod
 
+from engine.rendering.hues import COLOR
+from content.architect.cellular_automata import Anneal, Amoeba, Conway, Life34, Bugs
 from content.factories.tile_factory import TileFactory
 from content.tiles.tile_defs import all_tiles, color_list
 from engine.areas.area import Area
@@ -20,6 +23,22 @@ e.g. one generator does a certain pattern, with a palette definition and a tile 
 tile types.
 """
 
+class TerrainType(Enum):
+    Plain = 0
+    Swamp = 1
+    Forest = 2
+    Hill = 3
+    Mountain = 4
+    Canyon = 5
+    Water = 6
+
+
+class SaturationType(Enum):
+    Dry = 0
+    Damp = 1
+    Wet = 2
+
+
 class AreaFactory:
     """Build a new Area."""
 
@@ -28,31 +47,77 @@ class AreaFactory:
     def __init__(
             self,
             area: Area,
-            *,
-            max_rooms: int,
-            min_size: int,
-            max_size: int
         ) -> None:
         self.area = area
-        self.max_rooms = max_rooms
-        self.min_room_size = min_size
-        self.max_room_size = max_size
         self.rooms = []
         self.tiles = self.area.area_model.tiles
 
-    def generate(
-            self,
-            floor: Optional[str] = 'bare_floor',
-            wall: Optional[str] = 'evergreen_1',
-        ) -> Area:
-        self._generate_rooms(floor, wall)
-        self._place_prefab('prefab_1')
+    def generate(self) -> Area:
+        self._generate_topography()
         return self.area
+
+    def _generate_base_terrain(
+            self,
+            terrain: TerrainType,
+            saturation: SaturationType
+        ) -> None:
+        pass
+
+    def _generate_topography(self) -> None:
+        # Anneal (d=0.5)        blob shapes with connected voids
+        # Amoeba (d=0.15)       great for clusters of grass/foliage
+        # Life34 (d=0.12-0.2)   makes cool clusters, maybe for rocks or veins
+        # Conway (d=0.5)        granular shapes with large open voids
+        anneal = Anneal(shape=self.area.shape, density=0.5)
+        anneal.generate(iterations=10)
+
+        amoeba = Amoeba(shape=self.area.shape, density=0.15)
+        amoeba.generate(iterations=10)
+
+        conway = Conway(shape=self.area.shape, density=0.5)
+        conway.generate(iterations=10)
+
+        map_data = np.zeros(shape=self.area.shape, dtype=np.int)
+        map_data[anneal.board == 1] = 1
+        map_data[amoeba.board == 1] = 2
+        map_data[conway.board == 1] = 3
+
+        tiles = self.area.area_model.tiles
+
+        # Open everything up to bare floor
+        tiles[...] = self.tile_factory.build('bare_floor', bg=(25, 40, 40))
+
+        tiles.T[map_data == 1] = self.tile_factory.build(
+            'grass_1', color=(95, 150, 95), bg=(25, 40, 40))
+        tiles.T[map_data == 2] = self.tile_factory.build(
+            'grass_2', color=(100, 150, 30), bg=(25, 40, 40))
+        tiles.T[map_data == 3] = self.tile_factory.build(
+            'bare_floor', bg=(25, 40, 40))
+
+        # Use the inverted Anneal map (the 0 values) to "punch" the floor back out
+        tiles.T[anneal.board == 0] = self.tile_factory.build(
+            'boulder_1', color=COLOR['dark chocolate'], bg=(25, 40, 40))
+
+    def _generate_terrain(self):
+        pass
+
+    def _generate_settlements(self):
+        pass
+
+    def _generate_paths(self):
+        pass
+
+    def _generate_structures(self):
+        pass
 
     def _generate_rooms(
             self,
+            *,
+            max_rooms: int,
+            min_size: int,
+            max_size: int,
             floor: Optional[str] = 'bare_floor',
-            wall: Optional[str] = 'bare_wall'
+            wall: Optional[str] = 'bare_wall',
         ) -> Area:
 
         # Set everything on the map to the area's default wall type.
@@ -76,9 +141,9 @@ class AreaFactory:
                          threshold=30)
 
         # Start building rooms.
-        for _ in range(self.max_rooms):
-            w = random.randint(self.min_room_size, self.max_room_size)
-            h = random.randint(self.min_room_size, self.max_room_size)
+        for _ in range(max_rooms):
+            w = random.randint(min_size, max_size)
+            h = random.randint(min_size, max_size)
             x = random.randint(0, self.area.width - w - 1)
             y = random.randint(0, self.area.height - h - 1)
 
@@ -296,3 +361,33 @@ class AreaFactory:
     @property
     def start_tile(self):
         return self.rooms[0].center
+
+
+class AreaPainter:
+
+    def __init__(self, area: Area, colors, bgs) -> None:
+        self.area = area
+        self.colors = colors
+        self.bgs = bgs
+
+    def paint_area(self):
+        pass
+
+    def _paint_base_terrain(self):
+        pass
+
+    def _paint_topography(self):
+        pass
+
+    def _paint_terrain(self):
+        pass
+
+    def _paint_settlements(self):
+        pass
+
+    def _paint_paths(self):
+        pass
+
+    def _paint_structures(self):
+        pass
+

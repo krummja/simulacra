@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import random
+
 import numpy as np
 from config import STAGE_HEIGHT, STAGE_WIDTH
 from content.factories.area_factory import AreaFactory
@@ -30,10 +32,7 @@ def test_area(model: Model) -> Area:
     area.uid = 'test_forest'
 
     tile_factory = TileFactory()
-    area_factory = AreaFactory(area=area,
-                               max_rooms=50,
-                               min_size=16,
-                               max_size=32)
+    area_factory = AreaFactory(area)
 
     area.area_model.tiles[...] = tile_factory.build('grass_1',
                                                     color=(40, 80, 80),

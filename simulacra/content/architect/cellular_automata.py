@@ -32,7 +32,7 @@ class Automata:
         for _ in range(intervals):
             convolution = fft_convolve2d(self.board, self.kernel)
             shape = convolution.shape
-            new_board = np.zeros(shape)
+            new_board = np.zeros(shape, dtype=np.int)
             new_board[np.where(np.in1d(convolution, self.rule[0]).reshape(shape) \
                                & (self.board == 1))] = 1
             new_board[np.where(np.in1d(convolution, self.rule[1]).reshape(shape) \
@@ -54,14 +54,18 @@ class Conway(Automata):
 
 class Life34(Automata):
     def __init__(self, shape, density):
-        neighborhood = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
+        neighborhood = np.array([[1, 1, 1],
+                                 [1, 0, 1],
+                                 [1, 1, 1]])
         rule = [[3, 4], [3, 4]]
         Automata.__init__(self, shape, density, neighborhood, rule)
 
 
 class Amoeba(Automata):
     def __init__(self, shape, density):
-        neighborhood = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
+        neighborhood = np.array([[1, 1, 1],
+                                 [1, 0, 1],
+                                 [1, 1, 1]])
         rule = [[1, 3, 5, 8], [3, 5, 7]]
         Automata.__init__(self, shape, density, neighborhood, rule)
 
