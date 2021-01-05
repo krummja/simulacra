@@ -1,7 +1,7 @@
 """Node of a Graph"""
 
 from __future__ import annotations
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 
 class Node:
@@ -14,7 +14,8 @@ class Node:
             self,
             uid: str,
             label: Optional[str] = None,
-            number: Optional[int] = None
+            number: Optional[int] = None,
+            data: Dict[str, Any] = None
         ) -> None:
         """Constructor.
 
@@ -29,6 +30,19 @@ class Node:
 
         self.degree: int = 0
         self.candidates: List[Node] = []
+
+        if data is None:
+            self._data = {}
+        else:
+            self._data = data
+
+    @property
+    def data(self) -> Dict[str, Any]:
+        return self._data
+
+    @data.setter
+    def data(self, value: Dict[str, Any]) -> None:
+        self._data = value
 
     @staticmethod
     def make_name(label: Optional[str], number: Optional[int]) -> str:

@@ -16,6 +16,10 @@ class Parser:
     """Parser for rules and directives."""
 
     def __init__(self, lexer: Lexer) -> None:
+        """Constructor.
+
+        `nodes` is a dictionary of
+        """
         self.lexer = lexer
         self.lookahead = self.lexer.next_token()
         self.node_count = 0
@@ -139,15 +143,11 @@ class Parser:
             graph.add_node(node)
         return node
 
+    def parse_edges(self, graph: Graph) -> None:
+        pass
+
     def parse_nodes(self):
-        graph = Graph()
-        self.gquery.data_graph = graph
-        for node in self.nodes:
-            # Build nodes for each Token key in the node dictionary.
-            self.parse_node_uid(node, graph)
-        return graph
+        """Build the starting graph by first parsing nodes in the node dict."""
 
     def parse_transformations(self):
-        """
-        Take in a generated topology and do some work to it.
-        """
+        """Take in a generated topology and do some work to it."""

@@ -11,8 +11,10 @@ from content.factories.tile_factory import TileFactory
 from engine.areas import Area
 from engine.components import (Equipment, Inventory, Physics,
                                initialize_character_stats)
-from engine.entities import Player
-from engine.geometry import Rect
+from engine.entities.player import Player
+from engine.geometry.rect import Rect
+from engine.geometry.circ import Circ
+from engine.geometry.point import Point
 from engine.rendering import update_fov
 
 if TYPE_CHECKING:
@@ -34,12 +36,11 @@ def test_area(model: Model) -> Area:
     tile_factory = TileFactory()
     area_factory = AreaFactory(area)
 
-    area.area_model.tiles[...] = tile_factory.build('grass_1',
+    area.area_model.tiles[...] = tile_factory.build('bare_floor',
                                                     color=(40, 80, 80),
                                                     bg=FOREST_FLOOR)
     area_factory.generate()
-
-    player = Player("Aulia Inuicta", area[150, 150])
+    player = Player("Aulia Inuicta", area[128, 128])
     player.register_component(initialize_character_stats())
     player.register_component(Physics(weight=10.0))
     player.register_component(Equipment())

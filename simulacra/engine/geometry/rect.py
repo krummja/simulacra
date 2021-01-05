@@ -264,20 +264,20 @@ class Rect(tuple):
     def intersects(self, other: Rect) -> bool:
         """Returns True if this Rect overlaps with another at any point."""
         return (
-            self.right < other.left and
-            self.left > other.right and
-            self.top < other.bottom and
-            self.bottom > other.top
+            self.top <= other.bottom and
+            self.bottom >= other.top and
+            self.left <= other.right and
+            self.right >= other.left
         )
 
-    def __contains__(self, other: Union[Rect, Point]) -> bool:
+    def __contains__(self, other: object) -> bool:
         """Check if this Rect _properly_ contains a target Rect or Point."""
         if isinstance(other, Rect):
             return (
-                self.top <= other.top and
-                self.bottom >= other.bottom and
-                self.left <= other.left and
-                self.right >= other.right
+                self.top < other.top and
+                self.bottom > other.bottom and
+                self.left < other.left and
+                self.right > other.right
                 )
         elif isinstance(other, Point):
             return (

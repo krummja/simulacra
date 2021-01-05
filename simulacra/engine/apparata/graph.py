@@ -117,11 +117,11 @@ class Graph:
 
     @property
     def labels(self) -> List[str]:
-        return [node.label for node in self._nodes]
+        return [node.label for node in self._nodes.values()]
 
     @property
     def names(self) -> List[str]:
-        return [node.name for node in self._nodes]
+        return [node.name for node in self._nodes.values()]
 
     @property
     def nodes(self) -> List[Node]:

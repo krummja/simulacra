@@ -11,17 +11,14 @@ from content.architect.cellular_automata import Anneal, Amoeba, Conway, Life34, 
 from content.factories.tile_factory import TileFactory
 from content.tiles.tile_defs import all_tiles, color_list
 from engine.areas.area import Area
-from engine.geometry import Rect
+from engine.geometry.direction import Direction
+from engine.geometry.circ import Circ
+from engine.geometry.size import Size
+from engine.geometry.point import Point
+from engine.geometry.rect import Rect
 
+from engine import apparata
 
-"""
-In the generate_rooms method, I roll assets using a color list.
-What would work better - and be more flexible overall - is to lean into that and have an
-entire battery of generator functions that I can selectively apply.
-
-e.g. one generator does a certain pattern, with a palette definition and a tile type or
-tile types.
-"""
 
 class TerrainType(Enum):
     Plain = 0
@@ -50,11 +47,168 @@ class AreaFactory:
         ) -> None:
         self.area = area
         self.rooms = []
+        self.can_place = np.ones((256, 256), dtype=np.int)
         self.tiles = self.area.area_model.tiles
+        self.nodes = 0
 
     def generate(self) -> Area:
-        self._generate_topography()
+        S = Rect.centered_at(center=Point(128, 128), size=Size(30, 30))
+        self.tiles.T[S.outer] = self.tile_factory.build(
+            'bare_floor', bg=COLOR['dark dark green']
+            )
+
+        #! Get a list of cells and a direction vector connected to S
+        cells, direction = self._generate_path(size=6, min_cells=4, max_cells=8, start=S)
+
+        # Display each cell on the map for debugging...
+        for cell in cells:
+            self.tiles.T[cell.outer] = self.tile_factory.build(
+                'bare_floor', bg=COLOR['dark dark green'])
+
+        #! Get the cell farthest from S and mark it as the Connection cell
+        connection = cells[len(cells)-1]
+        self.tiles.T[connection.outer] = self.tile_factory.build('bare_floor', bg=(0, 0, 100))
+
+        #! Now, create the next major node by getting the Connection cell's
+        #! center point and adding it to half the new node size multiplied by
+        #! the direction vector.
+        T = Rect.centered_at(size=Size(20, 20), center=Point(
+            connection.center.x + (direction.value[0] * 10),
+            connection.center.y + (direction.value[1] * 10)
+            ))
+
+        self.tiles.T[T.outer] = self.tile_factory.build('bare_floor', bg=(0, 100, 0))
+
         return self.area
+
+    def _generate_path(
+            self, *,
+            size: int,
+            min_cells: int,
+            max_cells: int,
+            start: Rect,
+        ) -> None:
+        cell_count = random.randint(min_cells, max_cells)
+        directions = [Direction.up, Direction.down, Direction.left, Direction.right]
+        direction = random.choice(directions)
+
+        cell_list = []
+        previous = start
+        while cell_count > 0:
+            if direction == Direction.up:
+                cell = Rect.centered_at(
+                    center=Point(previous.center.x, previous.top - (size // 2)),
+                    size=Size(size, size))
+                cell_list.append(cell)
+                previous = cell
+
+            elif direction == Direction.down:
+                cell = Rect.centered_at(
+                    center=Point(previous.center.x, previous.bottom + (size // 2)),
+                    size=Size(size, size))
+                cell_list.append(cell)
+                previous = cell
+
+            elif direction == Direction.left:
+                cell = Rect.centered_at(
+                    center=Point(previous.left - (size // 2), previous.center.y),
+                    size=Size(size, size))
+                cell_list.append(cell)
+                previous = cell
+
+            elif direction == Direction.right:
+                cell = Rect.centered_at(
+                    center=Point(previous.right + (size // 2) , previous.center.y),
+                    size=Size(size, size))
+                cell_list.append(cell)
+                previous = cell
+
+            cell_count -= 1
+        return cell_list, direction
+
+    def _test_bsp_overlap(self):
+        cells = 0
+        used = 0
+
+        r = Rect.centered_at(center=Point(128, 128), size=Size(30, 30))
+        for room in self._generate_bsp():
+            cells += 1
+
+            if r.intersects(room):
+                used += 1
+                self.can_place.T[room.inner] = 0
+                self.tiles.T[room.inner] = self.tile_factory.build('bare_floor', bg=(0, 100, 0))
+            else:
+                self.tiles.T[room.inner] = self.tile_factory.build('bare_floor', bg=(100, 0, 0))
+        self.tiles.T[r.outer] = self.tile_factory.build('bare_floor', bg=(0, 200, 0))
+        return self.area
+
+    def _test_box_align_process(self):
+        r1 = Rect.centered_at(center=Point(128, 128), size=Size(20, 20))
+        r2 = Rect.centered_at(center=Point(128, 128), size=Size(60, 60))
+
+        offset = 0
+        while r1.intersects(r2):
+            r2 = r2.shift(right=offset, left=offset)
+            print(r1.center, r2.center)
+            print(r1.left, r2.right)
+            offset += 1
+
+        r3 = Rect.centered_at(center=Point(128, 128), size=Size(30, 30))
+
+        offset = 0
+        rects = [r1, r2]
+        for rect in rects:
+            while r3.intersects(rect):
+                r3 = r3.shift(right=offset, left=offset)
+                offset += 1
+
+        tiles = self.area.area_model.tiles
+        tiles.T[r1.outer] = self.tile_factory.build('bare_floor', bg=(100, 0, 0))
+        tiles.T[r2.outer] = self.tile_factory.build('bare_floor', bg=(0, 0, 100))
+        tiles.T[r3.outer] = self.tile_factory.build('bare_floor', bg=(0, 100, 0))
+
+    def _generate_graph(self):
+        """
+        Notes
+        ------------------------
+        One way to get at how to build this is to ask what each constituent
+        part of the final map should be structured as. From that I can
+        generalize some basic building operations (e.g. make a room of
+        x by y and make n copies, place them along an axis edge-to-edge).
+
+        """
+        graph = apparata.graph.Graph()
+
+        S = apparata.node.Node(uid="S", number=1)
+        S.data = Rect.centered_at(center=Point(128, 128), size=Size(30, 30))
+        n1 = self._add_node(graph, S, Direction.right, 50)
+        n2 = self._add_node(graph, n1, Direction.up, 40)
+        n3 = self._add_node(graph, n2, Direction.left, 30)
+        self._add_node(graph, n3, Direction.left, 55)
+
+        for node in graph.nodes:
+            self.tiles.T[
+                node.data.outer
+                ] = self.tile_factory.build('bare_floor', bg=(150, 0, 0))
+
+        for edge in graph.edges:
+            n = edge[0]
+            m = edge[1]
+            self.tiles.T[
+                tcod.line_where(*n.data.center, *m.data.center)
+                ] = self.tile_factory.build('bare_floor', bg=(0, 0, 150))
+
+    def _add_node(self, graph, previous, direction, distance):
+        new_node = apparata.node.Node(uid=str(self.nodes))
+        x = previous.data.center.x + (distance * direction.value[0])
+        y = previous.data.center.y + (distance * direction.value[1])
+        w = random.randint(8, 20)
+        h = random.randint(8, 20)
+        new_node.data = Rect.centered_at(center=Point(x, y), size=Size(w, h))
+        graph.add_edge(previous, new_node)
+        self.nodes += 1
+        return new_node
 
     def _generate_base_terrain(
             self,
@@ -194,7 +348,7 @@ class AreaFactory:
         return self.tiles
 
     def _assemble_prefab(self, prefab_id):
-        # TODO: This is an unholy abomination that needs to be banished from this class
+        # This is an unholy abomination that needs to be banished from this class
 
         # Load the tilemap, foreground color, and background color CSV files
         tilemap_file = 'simulacra/content/areas/prefabs/' + prefab_id + '_Tilemap.csv'
@@ -331,27 +485,25 @@ class AreaFactory:
                     self.tiles[y, x] = self.tile_factory.build(template, color, bg)
         return self.area
 
-    def _generate_bsp(self, width: int, height: int):
-        bsp = tcod.bsp.BSP(x=0, y=0, width=width, height=height)
+    def _generate_bsp(self):
+        bsp = tcod.bsp.BSP(x=0, y=0, width=256, height=256)
         bsp.split_recursive(
-            depth=10,
-            min_width=15,
-            min_height=15,
-            max_horizontal_ratio=2.0,
-            max_vertical_ratio=2.0,
+            depth=12,
+            min_width=20,
+            min_height=20,
+            max_horizontal_ratio=3.0,
+            max_vertical_ratio=3.0,
             )
 
-        for node in bsp.pre_order():
+        for node in bsp.in_order():
             if node.children:
                 pass
-                # node1, node2 = node.children
-                # Connect Node1, Node2
             else:
                 room = Rect.from_edges(
                     left=node.x,
                     top=node.y,
-                    right=node.w,
-                    bottom=node.h
+                    right=node.x + node.w,
+                    bottom=node.y + node.h
                     )
                 yield room
 
@@ -390,4 +542,3 @@ class AreaPainter:
 
     def _paint_structures(self):
         pass
-
