@@ -25,23 +25,6 @@ from content.areas.structures.corridor import Corridor
 from engine import apparata
 
 
-
-class TerrainType(Enum):
-    Plain = 0
-    Swamp = 1
-    Forest = 2
-    Hill = 3
-    Mountain = 4
-    Canyon = 5
-    Water = 6
-
-
-class SaturationType(Enum):
-    Dry = 0
-    Damp = 1
-    Wet = 2
-
-
 class AreaFactory:
     """Build a new Area."""
 
@@ -53,10 +36,10 @@ class AreaFactory:
         ) -> None:
         self.area = area
         self.rooms = []
+        self.nodes = []
         self.owned = np.zeros(area.shape, dtype=np.int)
         self.working = np.zeros(area.shape, dtype=np.int)
         self.tiles = self.area.area_model.tiles
-        self.nodes = []
 
     def generate(self) -> Area:
         self._test_bsp_overlap()
@@ -180,7 +163,7 @@ class AreaFactory:
             for room in rooms:
                 if room.intersects(cell):
                     used += 1
-                    self.tiles.T[cell.inner] = 0
+                    self.owned.T[cell.inner] = 1
                     self.tiles.T[cell.inner] = self.tile_factory.build('bare_floor', bg=(0, 100, 0))
         for room in rooms:
             self.tiles.T[room.outer] = self.tile_factory.build('bare_floor', bg=(0, 200, 0))
@@ -251,13 +234,6 @@ class AreaFactory:
         graph.add_edge(previous, new_node)
         self.nodes += 1
         return new_node
-
-    def _generate_base_terrain(
-            self,
-            terrain: TerrainType,
-            saturation: SaturationType
-        ) -> None:
-        pass
 
     def _generate_topography(self) -> None:
         # Anneal (d=0.5)        blob shapes with connected voids
