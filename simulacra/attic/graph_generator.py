@@ -125,7 +125,6 @@ class GraphGenerator:
         self.world_nodes = []
         self.map_data = np.zeros((256, 256), dtype=np.int)
         self.graph = Graph()
-        self.query = GraphQuery(self.graph)
 
     def generate_nodes_in_radius(
             self,

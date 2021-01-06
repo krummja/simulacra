@@ -5,6 +5,7 @@ from typing import Generator, Optional, Type, Union
 
 import numpy as np
 
+from engine.util import vector2, normalize_vector
 from .direction import Direction
 from .point import Point
 from .size import Size
@@ -268,7 +269,62 @@ class Rect(tuple):
             self.bottom >= other.top and
             self.left <= other.right and
             self.right >= other.left
-        )
+            )
+
+    @property
+    def edge_normals(self):
+        return [vector2(0, -1), vector2(1, 0), vector2(0, 1), vector2(-1, 0)]
+
+    @property
+    def vertices(self):
+        return [vector2(self.left, self.bottom),
+                vector2(self.left, self.top),
+                vector2(self.right, self.top),
+                vector2(self.right, self.bottom)]
+
+    def get_support(self, direction: np.ndarray):
+        best_projection = -float('inf')
+        for i in range(3):
+            v = self.vertices[i]
+            projection = direction.dot(v)
+            if projection > best_projection:
+                best_vertex = v
+                best_projection = projection
+        return best_vertex
+
+    def least_penetration_axis(self, other: Rect):
+        best_distance = -float('inf')
+        best_index = 0
+        for i in range(3):
+            n = self.edge_normals[i]
+            s = other.get_support(-n)
+            v = self.vertices[i]
+            d = n.dot(s - v)
+            if d > best_distance:
+                best_distance = d
+                best_index = i
+        face_index = best_index
+        return face_index, int(best_distance)
+
+    def separate_from(self, other: Rect):
+        attempts = 300
+        A = self
+        B = other
+        A_x = self.center[0]
+        A_y = self.center[1]
+        B_x = other.center[0]
+        B_y = other.center[1]
+        while A.intersects(B) and attempts > 0:
+            face, distance = self.least_penetration_axis(other)
+            direction = self.edge_normals[face]
+            A_x += int(direction[0] * int(distance))
+            A_y += int(direction[1] * int(distance))
+            B_x -= int(direction[0] * int(distance))
+            B_y -= int(direction[1] * int(distance))
+            attempts -= 1
+            A = self.replace(left=A_x, right=A_x+(self.width//2), top=A_y, bottom=A_y+(self.height//2))
+            B = other.replace(left=B_x, right=B_x+(other.width//2), top=B_y, bottom=B_y+(other.height//2))
+        return A, B
 
     def __contains__(self, other: object) -> bool:
         """Check if this Rect _properly_ contains a target Rect or Point."""

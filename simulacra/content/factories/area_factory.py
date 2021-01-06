@@ -2,9 +2,12 @@ from __future__ import annotations
 from typing import List, Tuple, Optional
 
 from enum import Enum
+import math
 import random
 import numpy as np
 import tcod
+
+from engine.util import vector2, magnitude, normalize_vector
 
 from engine.rendering.hues import COLOR
 from content.architect.cellular_automata import Anneal, Amoeba, Conway, Life34, Bugs
@@ -17,7 +20,10 @@ from engine.geometry.size import Size
 from engine.geometry.point import Point
 from engine.geometry.rect import Rect
 
+from content.areas.structures.corridor import Corridor
+
 from engine import apparata
+
 
 
 class TerrainType(Enum):
@@ -47,38 +53,66 @@ class AreaFactory:
         ) -> None:
         self.area = area
         self.rooms = []
-        self.can_place = np.ones((256, 256), dtype=np.int)
+        self.owned = np.zeros(area.shape, dtype=np.int)
+        self.working = np.zeros(area.shape, dtype=np.int)
         self.tiles = self.area.area_model.tiles
-        self.nodes = 0
+        self.nodes = []
 
     def generate(self) -> Area:
+        pass
+
+    def generate_nodes_in_radius(
+            self,
+            max_nodes: int,
+            min_size: int,
+            max_size: int,
+            radius: int
+        ) -> None:
+        for i in range(max_nodes):
+            x, y = self.get_random_points_in_circle(radius)
+            w = random.randint(min_size, max_size)
+            h = random.randint(min_size, max_size)
+            new_node = Rect.centered_at(center=Point(x, y), size=Size(w, h))
+            self.nodes.append(new_node)
+
+    def get_random_points_in_circle(self, radius: int):
+        t = 2 * math.pi * random.random()
+        u = random.random() * random.random()
+        r = 2 - u if u > 1 else u
+        x = int(radius * r * math.cos(t) + (256 // 2))
+        y = int(radius * r * math.sin(t) + (256 // 2))
+        return x, y
+
+    def _test_generate_from_corridor(self):
         S = Rect.centered_at(center=Point(128, 128), size=Size(30, 30))
         self.tiles.T[S.outer] = self.tile_factory.build(
             'bare_floor', bg=COLOR['dark dark green']
             )
 
-        #! Get a list of cells and a direction vector connected to S
-        cells, direction = self._generate_path(size=6, min_cells=4, max_cells=8, start=S)
+        directions = [Direction.up, Direction.down, Direction.left, Direction.right]
+        direction = random.choice(directions)
+        corridor = Corridor(
+            start=S,
+            direction=direction,
+            interval=6,
+            count=6
+            )
 
-        # Display each cell on the map for debugging...
-        for cell in cells:
+        for cell in corridor.cells:
             self.tiles.T[cell.outer] = self.tile_factory.build(
                 'bare_floor', bg=COLOR['dark dark green'])
+            self.tiles.T[cell.center] = self.tile_factory.build(
+                'bare_floor', bg=COLOR['red'])
 
-        #! Get the cell farthest from S and mark it as the Connection cell
-        connection = cells[len(cells)-1]
+        connection = corridor.cells[len(corridor.cells)-1]
         self.tiles.T[connection.outer] = self.tile_factory.build('bare_floor', bg=(0, 0, 100))
 
-        #! Now, create the next major node by getting the Connection cell's
-        #! center point and adding it to half the new node size multiplied by
-        #! the direction vector.
         T = Rect.centered_at(size=Size(20, 20), center=Point(
             connection.center.x + (direction.value[0] * 10),
             connection.center.y + (direction.value[1] * 10)
             ))
 
         self.tiles.T[T.outer] = self.tile_factory.build('bare_floor', bg=(0, 100, 0))
-
         return self.area
 
     def _generate_path(
@@ -136,7 +170,7 @@ class AreaFactory:
 
             if r.intersects(room):
                 used += 1
-                self.can_place.T[room.inner] = 0
+                self.tiles.T[room.inner] = 0
                 self.tiles.T[room.inner] = self.tile_factory.build('bare_floor', bg=(0, 100, 0))
             else:
                 self.tiles.T[room.inner] = self.tile_factory.build('bare_floor', bg=(100, 0, 0))
@@ -176,7 +210,6 @@ class AreaFactory:
         part of the final map should be structured as. From that I can
         generalize some basic building operations (e.g. make a room of
         x by y and make n copies, place them along an axis edge-to-edge).
-
         """
         graph = apparata.graph.Graph()
 
