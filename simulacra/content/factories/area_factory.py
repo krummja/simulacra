@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Generator
 
 from enum import Enum
 import math
@@ -59,7 +59,8 @@ class AreaFactory:
         self.nodes = []
 
     def generate(self) -> Area:
-        pass
+        self._test_bsp_overlap()
+        # self._generate_rooms(max_rooms=10, min_size=30, max_size=50)
 
     def generate_nodes_in_radius(
             self,
@@ -165,16 +166,24 @@ class AreaFactory:
         used = 0
 
         r = Rect.centered_at(center=Point(128, 128), size=Size(30, 30))
-        for room in self._generate_bsp():
+        s = Rect.centered_at(center=Point(128, 80), size=Size(20, 20))
+        rooms = [r, s]
+        for cell in self._generate_bsp(
+                depth=24,
+                min_width=10,
+                min_height=10,
+                max_horizontal_ratio=3.0,
+                max_vertical_ratio=3.0,
+            ):
+            self.tiles.T[cell.inner] = self.tile_factory.build('bare_floor', bg=(100, 0, 0))
             cells += 1
-
-            if r.intersects(room):
-                used += 1
-                self.tiles.T[room.inner] = 0
-                self.tiles.T[room.inner] = self.tile_factory.build('bare_floor', bg=(0, 100, 0))
-            else:
-                self.tiles.T[room.inner] = self.tile_factory.build('bare_floor', bg=(100, 0, 0))
-        self.tiles.T[r.outer] = self.tile_factory.build('bare_floor', bg=(0, 200, 0))
+            for room in rooms:
+                if room.intersects(cell):
+                    used += 1
+                    self.tiles.T[cell.inner] = 0
+                    self.tiles.T[cell.inner] = self.tile_factory.build('bare_floor', bg=(0, 100, 0))
+        for room in rooms:
+            self.tiles.T[room.outer] = self.tile_factory.build('bare_floor', bg=(0, 200, 0))
         return self.area
 
     def _test_box_align_process(self):
@@ -285,18 +294,6 @@ class AreaFactory:
         tiles.T[anneal.board == 0] = self.tile_factory.build(
             'boulder_1', color=COLOR['dark chocolate'], bg=(25, 40, 40))
 
-    def _generate_terrain(self):
-        pass
-
-    def _generate_settlements(self):
-        pass
-
-    def _generate_paths(self):
-        pass
-
-    def _generate_structures(self):
-        pass
-
     def _generate_rooms(
             self,
             *,
@@ -308,24 +305,24 @@ class AreaFactory:
         ) -> Area:
 
         # Set everything on the map to the area's default wall type.
-        self.tiles[...] = self.tile_factory.build(wall,
-                                                  color=(100, 150, 30),
-                                                  bg=(25, 40, 40))
+        # self.tiles[...] = self.tile_factory.build(wall,
+        #                                           color=(100, 150, 30),
+        #                                           bg=(25, 40, 40))
 
         # Randomize things a bit, including adding some floor tiles.
-        self._roll_asset('grass_1',
-                         colors=[(95, 150, 95),
-                                 (90, 160, 60),
-                                 (100, 150, 30)],
-                         bgs=[(25, 40, 40)],
-                         threshold=30)
+        # self._roll_asset('grass_1',
+        #                  colors=[(95, 150, 95),
+        #                          (90, 160, 60),
+        #                          (100, 150, 30)],
+        #                  bgs=[(25, 40, 40)],
+        #                  threshold=30)
 
-        self._roll_asset('grass_2',
-                         colors=[(95, 150, 95),
-                                 (90, 160, 60),
-                                 (100, 150, 30)],
-                         bgs=[(25, 40, 40)],
-                         threshold=30)
+        # self._roll_asset('grass_2',
+        #                  colors=[(95, 150, 95),
+        #                          (90, 160, 60),
+        #                          (100, 150, 30)],
+        #                  bgs=[(25, 40, 40)],
+        #                  threshold=30)
 
         # Start building rooms.
         for _ in range(max_rooms):
@@ -341,11 +338,14 @@ class AreaFactory:
                 continue
 
             # Connect a new room to an existing room.
-            self._generate_tunnels(new_room)
+            # self._generate_tunnels(new_room)
 
             # Clear the inner portion of the room to the default floor type.
+            self.tiles.T[new_room.outer] = self.tile_factory.build(
+                floor, bg=COLOR['red']
+                )
             self.tiles.T[new_room.inner] = self.tile_factory.build(
-                floor, color=(25, 40, 40), bg=(25, 40, 40)
+                floor, bg=COLOR['dark red']
                 )
 
             # Add the new room to the area's room list.
@@ -518,14 +518,21 @@ class AreaFactory:
                     self.tiles[y, x] = self.tile_factory.build(template, color, bg)
         return self.area
 
-    def _generate_bsp(self):
+    def _generate_bsp(
+            self, *,
+            depth: int,
+            min_width: int,
+            min_height: int,
+            max_horizontal_ratio: float,
+            max_vertical_ratio: float
+        ) -> Generator[Rect, None, None]:
         bsp = tcod.bsp.BSP(x=0, y=0, width=256, height=256)
         bsp.split_recursive(
-            depth=12,
-            min_width=20,
-            min_height=20,
-            max_horizontal_ratio=3.0,
-            max_vertical_ratio=3.0,
+            depth=depth,
+            min_width=min_width,
+            min_height=min_height,
+            max_horizontal_ratio=max_horizontal_ratio,
+            max_vertical_ratio=max_vertical_ratio,
             )
 
         for node in bsp.in_order():
