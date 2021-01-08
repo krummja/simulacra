@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Tuple, Optional, Generator
+from typing import List, Tuple, Optional, Generator, Union, Callable
 
 from enum import Enum
 import math
@@ -25,6 +25,8 @@ from content.areas.structures.corridor import Corridor
 from engine import apparata
 
 
+
+
 class AreaFactory:
     """Build a new Area."""
 
@@ -42,7 +44,16 @@ class AreaFactory:
         self.tiles = self.area.area_model.tiles
 
     def generate(self) -> Area:
-        self._test_bsp_overlap()
+        self.generate_nodes_in_radius(50, 10, 20, 100)
+        processor = RoomProcessor(self.nodes)
+        while processor.spread_rooms():
+            print(processor.update)
+
+        rooms = processor.update
+        for room in rooms:
+            self.tiles.T[room.outer] = self.tile_factory.build('bare_floor', bg=(255, 0, 0))
+            self.tiles.T[room.inner] = self.tile_factory.build('bare_floor', bg=(100, 0, 0))
+        # self._test_bsp_overlap()
         # self._generate_rooms(max_rooms=10, min_size=30, max_size=50)
 
     def generate_nodes_in_radius(
@@ -56,7 +67,7 @@ class AreaFactory:
             x, y = self.get_random_points_in_circle(radius)
             w = random.randint(min_size, max_size)
             h = random.randint(min_size, max_size)
-            new_node = Rect.centered_at(center=Point(x, y), size=Size(w, h))
+            new_node = Room.centered_at(center=Point(x, y), size=Size(w, h))
             self.nodes.append(new_node)
 
     def get_random_points_in_circle(self, radius: int):
@@ -531,30 +542,166 @@ class AreaFactory:
         return self.rooms[0].center
 
 
-class AreaPainter:
 
-    def __init__(self, area: Area, colors, bgs) -> None:
-        self.area = area
-        self.colors = colors
-        self.bgs = bgs
+class Room(Rect):
 
-    def paint_area(self):
-        pass
+    _velocity = vector2(0, 0)
+    _vector = vector2(0, 0)
+    _neighbors = []
+    _x = 0
+    _y = 0
 
-    def _paint_base_terrain(self):
-        pass
+    @classmethod
+    def centered_at(cls, size: Size, center: Point) -> Room:
+        """Constructor method.
 
-    def _paint_topography(self):
-        pass
+        Create a new Rect object by defining its dimensions as a Size object
+        and its centerpoint as a Point object.
+        """
+        left = center.x - size.width // 2
+        top = center.y - size.height // 2
+        return Room(Point(left, top), size)
 
-    def _paint_terrain(self):
-        pass
+    @property
+    def velocity(self) -> np.ndarray:
+        return self._velocity
 
-    def _paint_settlements(self):
-        pass
+    @velocity.setter
+    def velocity(self, value: np.ndarray) -> None:
+        self._velocity = value
 
-    def _paint_paths(self):
-        pass
+    @property
+    def neighbors(self) -> List[Room]:
+        return self._neighbors
 
-    def _paint_structures(self):
-        pass
+    @neighbors.setter
+    def neighbors(self, value: Union[Room, List[Room]]) -> None:
+        if isinstance(value, Room):
+            self._neighbors.append(value)
+        else:
+            self._neighbors = value
+
+    @property
+    def x(self) -> int:
+        return self.center.x
+
+    @x.setter
+    def x(self, value: int) -> None:
+        self._x = value
+
+    @property
+    def y(self) -> int:
+        return self.center.y
+
+    @y.setter
+    def y(self, value: int) -> None:
+        self._y = value
+
+    @property
+    def vector(self) -> np.ndarray:
+        return self._vector
+
+    def _is_good_neighbor(self, other: Room) -> bool:
+        if self == other:
+            return False
+        if self.neighbors.count(other) != 0:
+            return False
+        return True
+
+    def pick_closest_neighbor(self, potentials, limit, reset=False):
+        if reset:
+            self.neighbors = []
+
+        neighborhood = {}
+        for p in potentials:
+            if self._is_good_neighbor(p):
+                neighborhood.setdefault(self.distance_to(p), p)
+
+        new_neighbors = [neighborhood[d] for d in sorted(neighborhood)][:limit]
+
+        self.neighbors.extend(new_neighbors)
+        return self.neighbors
+
+    def move(self):
+        self.x += self.velocity[0]
+        self.y += self.velocity[1]
+        self.shift(left=self.x - (self.width // 2), top=self.y - (self.height // 2),
+                   right=self.x + (self.width // 2), bottom=self.y + (self.height // 2))
+
+    def repulse(self, other: Room) -> None:
+        dx = (self.center.x - other.center.x)
+        dy = (self.center.y - other.center.y)
+        self.velocity[0] += dx + random.randint(-10, 10) * random.randint(-1, 1)
+        self.velocity[1] += dy + random.randint(-10, 10) * random.randint(-1, 1)
+
+
+class RoomProcessor:
+
+    def __init__(self, rooms: List[Room]) -> None:
+        self.rooms = rooms
+        self.update = []
+
+    def spread_rooms(self):
+        done = False
+        rooms = self.rooms
+
+        for room in rooms:
+            room.move()
+
+        while not done:
+            for room in self.rooms:
+                done = True
+                collisions = self.collision_process(room, rooms, self.collide_rooms)
+                print(collisions)
+                if len(collisions) > 0:
+                    done = False
+                    break
+                self.update.append(room)
+            if not done:
+                return False
+        self.stop_process()
+        return True
+
+    def stop_process(self):
+        for room in self.rooms:
+            room.velocity *= 0
+
+    def roundm(self, n, m):
+        """Helper function for rounding to grid values."""
+        rnd = lambda x: math.floor((x+m-1)/m)*m
+        try:
+            return [x for x in rnd(n)]
+        except TypeError:
+            return rnd(n)
+
+    def slope(self, p0, p1):
+        try:
+            m = (p1[1] - p0[1]) / (p1[0] - p0[0])
+        except ZeroDivisionError:
+            m = 0
+        return m
+
+    def collision_process(
+            self,
+            agent: Room,
+            rooms: List[Room],
+            collided: Optional[Callable[[Room, Room], List[Room]]] = None
+        ) -> List[Room]:
+        collisions = []
+        for room in rooms:
+            if agent != room:
+                if collided(agent, room):
+                    collisions.append(room)
+        return collisions
+
+    def collide_rooms(self, left: Room, right: Room):
+        if left == right:
+            return False
+        return right.shift(left=-2, top=-2).intersects(left.shift(left=-2, top=-2))
+
+    def collide_and_scatter_rooms(self, left: Room, right: Room):
+        if self.collide_rooms(left, right):
+            right.repulse(left)
+            return True
+        right.velocity *= 0
+        return False

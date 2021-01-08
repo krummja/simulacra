@@ -1,8 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
-
-from __future__ import annotations
-from typing import List, Tuple, Optional
+from typing import Generator, List, Tuple, Optional
 
 from enum import Enum
 import random
@@ -59,34 +56,63 @@ class Climate:
 class AreaEngine:
 
     def __init__(self, area: Area) -> None:
+        """The AreaEngine is the workhorse of the procedural generation
+        system. It maintains two NumPy arrays representing integer masks
+        that will be interpreted by the AreaPainter and Architect.
+
+        AreaEngine also holds the primary battery of generation algorithms.
+        It either runs a simple algorithm from among its methods, or it may
+        delegate construction to one of several more powerful generation
+        systems (e.g. cellular automata, graph generation etc.).
+        """
         self.area = area
         self.owned = np.zeros(area.shape, dtype=np.int)
         self.working = np.zeros(area.shape, dtype=np.int)
 
-    def _generate_map_constituents(self):
-        """
-        In this phase of generation, the engine will use various procedural
-        methods to create a set of individual map areas (constituents of the
-        final map).
-        """
+    def generate(self):
+        R = Rect.centered_at(center=Point(100, 128), size=Size(20, 20))
+        S = Rect.centered_at(center=Point(134, 128), size=Size(20, 20))
 
-    def _generate_base_map(self):
-        """
-        In this phase, the engine takes the rough constituents from the prior
-        phase and attempts to find an optimal arrangement of them based on
-        a graph grammar which specified what types of constituents may (not)
-        branch from which others.
-        """
+        self.owned.T[R.outer] = 1
+        self.owned.T[S.outer] = 2
 
-    def _clean_up_map(self):
-        """
-        After arranging the pieces of the map, there are a lot of loose bits
-        that need to be tidied, e.g. paths that lead nowhere, unconnected
-        rooms, and bad pathing.
-        """
 
-    def _decorate_map(self):
+class AreaPainter:
+
+    def __init__(self, engine: AreaEngine) -> None:
+        self.engine = engine
+        self.tile_factory = TileFactory()
+
+    def paint(self, uid, color=None, bg=None):
+        if color is None:
+            color = (255, 255, 255)
+        if bg is None:
+            bg = (0, 0, 0)
+        return self.tile_factory.build(uid, color, bg)
+
+    def paint_owners(self):
+        tiles = self.engine.area.area_model.tiles
+        tiles[...] = self.paint('bare_floor', bg=COLOR['nero'])
+        tiles[self.engine.owned != 0] = self.paint('bare_floor', bg=COLOR['dark red'])
+
+
+class Architect:
+
+    def __init__(self, area: Area) -> None:
         """
-        Finally, the map data is applied to the actual area map, and
-        appropriate tiles are replaced for their abstract counterparts.
+        The Architect manages the Engine and the Painter.
+
+        While the Engine dumbly chugs along, the Architect executes the larger plan of
+        the area and tells the Engine what it can and cannot do, given some context.
+
+        The Painter wraps the Engine and handles the actual area data mapping to tiles.
+        The Architect again plays a role in this, resolving cases where the Painter
+        may not have all of the necessary configuration to execute operations on the
+        engine's data structures.
         """
+        self.engine = AreaEngine(area)
+        self.painter = AreaPainter(self.engine)
+
+    def generate(self):
+        self.engine.generate()
+        self.painter.paint_owners()

@@ -2,19 +2,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import random
-
-import numpy as np
 from config import STAGE_HEIGHT, STAGE_WIDTH
-from content.factories.area_factory import AreaFactory
-from content.factories.tile_factory import TileFactory
+from content.areas.area_engine import AreaEngine, AreaPainter
 from engine.areas import Area
 from engine.components import (Equipment, Inventory, Physics,
                                initialize_character_stats)
 from engine.entities.player import Player
-from engine.geometry.rect import Rect
-from engine.geometry.circ import Circ
-from engine.geometry.point import Point
 from engine.rendering import update_fov
 
 if TYPE_CHECKING:
@@ -33,13 +26,10 @@ def test_area(model: Model) -> Area:
     area = Area(model, width, height)
     area.uid = 'test_forest'
 
-    tile_factory = TileFactory()
-    area_factory = AreaFactory(area)
+    generator = AreaPainter(AreaEngine(area))
+    generator.engine.generate()
+    generator.paint_owners()
 
-    area.area_model.tiles[...] = tile_factory.build('bare_floor',
-                                                    color=(40, 80, 80),
-                                                    bg=FOREST_FLOOR)
-    area_factory.generate()
     player = Player("Aulia Inuicta", area[128, 128])
     player.register_component(initialize_character_stats())
     player.register_component(Physics(weight=10.0))
