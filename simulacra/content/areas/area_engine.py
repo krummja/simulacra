@@ -70,11 +70,29 @@ class AreaEngine:
         self.working = np.zeros(area.shape, dtype=np.int)
 
     def generate(self):
-        R = Rect.centered_at(center=Point(100, 128), size=Size(20, 20))
-        S = Rect.centered_at(center=Point(134, 128), size=Size(20, 20))
+        self._testing_alg()
 
+    def _testing_alg(self):
+        """
+        - R and S are static rooms placed in the center of the area.
+        - Both are mapped to the `owned` array.
+        - Next, we initialize an instance of `Corridor` which allows us to build
+          long, narrow structures out of `interval`**2 rects for `count` repetitions.
+        - We map those to the `owned` array.
+        - For visualization, the start and end rooms are mapped to different integer
+          values so that they can be differentiated.
+        """
+        R = Rect.centered_at(center=Point(100, 128), size=Size(20, 20))
         self.owned.T[R.outer] = 1
+
+        S = Rect.centered_at(center=Point(134, 128), size=Size(20, 20))
         self.owned.T[S.outer] = 2
+
+        corridor = Corridor(start=S, direction=Direction.left, interval=6, count=5)
+        for cell in corridor.cells:
+            self.owned.T[cell.outer] = 3
+        self.owned.T[corridor.start.outer] = 4
+        self.owned.T[corridor.end.outer] = 5
 
 
 class AreaPainter:
@@ -94,6 +112,8 @@ class AreaPainter:
         tiles = self.engine.area.area_model.tiles
         tiles[...] = self.paint('bare_floor', bg=COLOR['nero'])
         tiles[self.engine.owned != 0] = self.paint('bare_floor', bg=COLOR['dark red'])
+        tiles[self.engine.owned == 4] = self.paint('bare_floor', bg=COLOR['dark blue'])
+        tiles[self.engine.owned == 5] = self.paint('bare_floor', bg=COLOR['dark green'])
 
 
 class Architect:
