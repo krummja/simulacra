@@ -2,6 +2,8 @@ from __future__ import annotations
 from typing import Any, List, Optional
 from abc import ABC, abstractmethod
 
+import numpy as np
+
 
 class Algorithm(ABC):
 
@@ -29,5 +31,5 @@ class Algorithm(ABC):
         return False
 
     @abstractmethod
-    def execute(self) -> None:
+    def execute(self) -> np.ndarray:
         raise NotImplementedError("No generator implemented!")

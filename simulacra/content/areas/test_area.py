@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from config import STAGE_HEIGHT, STAGE_WIDTH
+from content.factories.area_factory import AreaFactory
 from content.areas.area_engine import AreaEngine, AreaPainter
 from engine.areas import Area
 from engine.components import (Equipment, Inventory, Physics,
@@ -27,9 +28,12 @@ def test_area(model: Model) -> Area:
     area = Area(model, width, height)
     area.uid = 'test_forest'
 
-    generator = AreaPainter(AreaEngine(area))
-    generator.engine.generate()
-    generator.paint_owners()
+    factory = AreaFactory(area)
+    factory.generate()
+
+    # generator = AreaPainter(AreaEngine(area))
+    # generator.engine.generate()
+    # generator.paint_owners()
 
     player = Player("Aulia Inuicta", area[128, 128])
     player.register_component(initialize_character_stats())

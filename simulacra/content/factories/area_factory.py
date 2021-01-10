@@ -44,17 +44,7 @@ class AreaFactory:
         self.tiles = self.area.area_model.tiles
 
     def generate(self) -> Area:
-        self.generate_nodes_in_radius(50, 10, 20, 100)
-        processor = RoomProcessor(self.nodes)
-        while processor.spread_rooms():
-            print(processor.update)
-
-        rooms = processor.update
-        for room in rooms:
-            self.tiles.T[room.outer] = self.tile_factory.build('bare_floor', bg=(255, 0, 0))
-            self.tiles.T[room.inner] = self.tile_factory.build('bare_floor', bg=(100, 0, 0))
-        # self._test_bsp_overlap()
-        # self._generate_rooms(max_rooms=10, min_size=30, max_size=50)
+        self._place_prefab('test_area')
 
     def generate_nodes_in_radius(
             self,

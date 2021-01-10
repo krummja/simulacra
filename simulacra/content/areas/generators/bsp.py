@@ -6,7 +6,7 @@ import random
 import tcod
 import numpy as np
 
-from content.areas.generators.generators import Algorithm
+from content.areas.generators.algorithm import Algorithm
 from engine.geometry.rect import Rect
 
 
@@ -26,9 +26,7 @@ class BinarySpacePartition(Algorithm):
         self.min_height = min_height
         self.max_horizontal_ratio = max_horizontal_ratio
         self.max_vertical_ratio = max_vertical_ratio
-
         self.bsp_data = []
-        self.working = np.zeros((256, 256), dtype=np.int)
 
     def execute(
             self,
@@ -36,7 +34,7 @@ class BinarySpacePartition(Algorithm):
             y: int,
             width: int,
             height: int,
-        ) -> np.ndarray:
+        ) -> Generator[Rect, None, None]:
         bsp = tcod.bsp.BSP(x=x, y=y, width=width, height=height)
         bsp.split_recursive(
             depth=self.depth,
@@ -50,10 +48,10 @@ class BinarySpacePartition(Algorithm):
             if partition.children:
                 self.bsp_data.append(partition)
             else:
-                rect = Rect.from_edges(
+                _new = Rect.from_edges(
                     left=partition.x,
                     top=partition.y,
                     right=partition.x + partition.w,
                     bottom=partition.y + partition.h
                     )
-                yield rect
+                yield _new

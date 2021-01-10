@@ -20,9 +20,10 @@ from engine.geometry.rect import Rect
 from content.areas.structures.corridor import Corridor
 
 from engine import apparata
-from content.areas.generators.generators import Algorithm
+from content.areas.generators.algorithm import Algorithm
 from content.areas.generators.bsp import BinarySpacePartition
 from content.areas.generators.room_builder import RoomBuilder
+from content.areas.generators.corridor import Corridor
 
 
 class Climate:
@@ -64,7 +65,36 @@ class AreaEngine:
         self.working = np.zeros(area.shape, dtype=np.int)
 
     def generate(self):
-        pass
+        room1 = Rect.centered_at(size=Size(10, 10), center=Point(100, 128))
+        room2 = Rect.centered_at(size=Size(10, 10), center=Point(160, 128))
+
+        corridor = Corridor(start=room1, end=room2, size=3)
+
+        self.working.T[room1.outer] = 1
+        self.working.T[room2.outer] = 2
+
+        # bsp = BinarySpacePartition(
+        #     depth=5,
+        #     min_width=20,
+        #     min_height=40,
+        #     max_horizontal_ratio=3.0,
+        #     max_vertical_ratio=3.0
+        #     )
+        # rooms = RoomBuilder(max_rooms=3, min_size=10, max_size=20)
+
+        # for partition in bsp.execute(0, 0, 256, 256):
+        #     self.working.T[partition.inner] = 1
+        #     if random.randint(0, 1) == 1:
+        #         self.working.T[partition.inner] = 2
+        #         rooms = []
+        #         for room in rooms.execute(
+        #             partition.left,
+        #             partition.top,
+        #             partition.width,
+        #             partition.height
+        #             ):
+        #             self.owned.T[room.outer] = 1
+        #             rooms.append(room)
 
 
 class AreaPainter:
@@ -83,6 +113,9 @@ class AreaPainter:
     def paint_owners(self):
         tiles = self.engine.area.area_model.tiles
         tiles[...] = self.paint('bare_floor', bg=COLOR['nero'])
+        tiles[self.engine.working == 1 ] = self.paint('bare_floor', bg=COLOR['dark red'])
+        tiles[self.engine.working == 2 ] = self.paint('bare_floor', bg=COLOR['dark green'])
+        tiles[self.engine.owned == 1] = self.paint('bare_floor', bg=COLOR['green'])
 
 
 class Architect:

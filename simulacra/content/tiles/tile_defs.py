@@ -256,6 +256,13 @@ dirt_path = {
     'char': all_tiles['dirt_1'],
     }
 
+dirt_path_2 = {
+    'uid': 'dirt_2',
+    'move_cost': TileType.Floor,
+    'transparent': TileType.Floor,
+    'char': all_tiles['dirt_2'],
+    }
+
 door_open = {
     'uid': 'door_open',
     'move_cost': TileType.Floor,
@@ -276,6 +283,28 @@ stairs_down = {
     'transparent': TileType.Floor,
     'char': all_tiles['stairs_1'],
     }
+
+slab_1 = {
+    'uid': 'slab_1',
+    'move_cost': TileType.Wall,
+    'transparent': TileType.Wall,
+    'char': all_tiles['slab_1'],
+    }
+
+slab_2 = {
+    'uid': 'slab_2',
+    'move_cost': TileType.Wall,
+    'transparent': TileType.Wall,
+    'char': all_tiles['slab_2'],
+    }
+
+bushes_1 = {
+    'uid': 'bushes_1',
+    'move_cost': TileType.Wall,
+    'transparent': TileType.Wall,
+    'char': all_tiles['bushes_1'],
+    }
+
 
 tile_templates = {
     evergreen_1['uid']: evergreen_1,
@@ -304,9 +333,13 @@ tile_templates = {
     brick_bot_right['uid']: brick_bot_right,
     brick_wall['uid']: brick_wall,
     dirt_path['uid']: dirt_path,
+    dirt_path_2['uid']: dirt_path_2,
     door_open['uid']: door_open,
     door_closed['uid']: door_closed,
     stairs_down['uid']: stairs_down,
+    slab_1['uid']: slab_1,
+    slab_2['uid']: slab_2,
+    bushes_1['uid']: bushes_1
     }
 
 terrain_templates = {

@@ -49,7 +49,7 @@ class Parser:
             return old_token
         self.error(TokenType[token_type.name])
 
-    def parse_node_property(self, current_node: str):
+    def parse_node_property(self, current_node: str) -> None:
         """
         node_property -> ID '=' (ID | NUMBER)
         """
@@ -64,7 +64,7 @@ class Parser:
             self.error('ID or NUMBER')
         self.nodes[current_node][key] = value
 
-    def parse_node_property_list(self, current_node: str):
+    def parse_node_property_list(self, current_node: str) -> None:
         """
         node_property_list -> property ';' node_property_list | nil
         """
@@ -76,7 +76,7 @@ class Parser:
             self.parse_node_property(current_node)
             self.match(TokenType.SEMICOLON)
 
-    def parse_edge_property(self, connecting_node, current_node):
+    def parse_edge_property(self, connecting_node: str, current_node: str) -> None:
         """
         edge_property -> ID '=' (ID | NUMBER)
         """
@@ -91,7 +91,7 @@ class Parser:
             self.error('ID or NUMBER')
         self.edges[(connecting_node, current_node)][key] = value
 
-    def parse_edge_property_list(self, connecting_node, current_node):
+    def parse_edge_property_list(self, connecting_node: str, current_node: str) -> None:
         """
         edge_property_list -> property ';' edge_property_list | nil
         """
@@ -99,7 +99,7 @@ class Parser:
             self.parse_edge_property(connecting_node, current_node)
             self.match(TokenType.SEMICOLON)
 
-    def parse_edge_configuration(self, connecting_node):
+    def parse_edge_configuration(self, connecting_node: str) -> None:
         """
         edge_configuration -> '->' ID '{' property_list '}'
         """
@@ -121,7 +121,7 @@ class Parser:
             self.parse_edge_property_list(connecting_node, current_node)
             self.match(TokenType.RBRACE)
 
-    def parse_configurations(self):
+    def parse_configurations(self) -> None:
         """
         configurations -> ID '{' property_list [edge_config] '}'
         """
@@ -142,12 +142,3 @@ class Parser:
             node = Node(f"N{graph.node_count}", label=label, number=number)
             graph.add_node(node)
         return node
-
-    def parse_edges(self, graph: Graph) -> None:
-        pass
-
-    def parse_nodes(self):
-        """Build the starting graph by first parsing nodes in the node dict."""
-
-    def parse_transformations(self):
-        """Take in a generated topology and do some work to it."""

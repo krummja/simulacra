@@ -6,7 +6,7 @@ import random
 import tcod
 import numpy as np
 
-from content.areas.generators.generators import Algorithm
+from content.areas.generators.algorithm import Algorithm
 from engine.geometry.rect import Rect
 
 
@@ -30,8 +30,7 @@ class RoomBuilder(Algorithm):
             y: int,
             width: int,
             height: int,
-            data: Optional[np.ndarray] = None
-        ) -> None:
+        ) -> Generator[Rect, None, None]:
 
         _rooms = []
         for _ in range(self.max_rooms):
@@ -43,8 +42,5 @@ class RoomBuilder(Algorithm):
             _new: Rect = Rect.from_edges(left=_x, top=_y, right=_x+_w, bottom=_y+_h)
             if any(_new.intersects(other) for other in _rooms):
                 continue
-
-            data.T[_new.outer] = 1
-            data.T[_new.inner] = 2
             _rooms.append(_new)
-        return data
+            yield _new
