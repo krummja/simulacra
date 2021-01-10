@@ -20,6 +20,9 @@ from engine.geometry.rect import Rect
 from content.areas.structures.corridor import Corridor
 
 from engine import apparata
+from content.areas.generators.generators import Algorithm
+from content.areas.generators.bsp import BinarySpacePartition
+from content.areas.generators.room_builder import RoomBuilder
 
 
 class Climate:
@@ -56,43 +59,12 @@ class Climate:
 class AreaEngine:
 
     def __init__(self, area: Area) -> None:
-        """The AreaEngine is the workhorse of the procedural generation
-        system. It maintains two NumPy arrays representing integer masks
-        that will be interpreted by the AreaPainter and Architect.
-
-        AreaEngine also holds the primary battery of generation algorithms.
-        It either runs a simple algorithm from among its methods, or it may
-        delegate construction to one of several more powerful generation
-        systems (e.g. cellular automata, graph generation etc.).
-        """
         self.area = area
         self.owned = np.zeros(area.shape, dtype=np.int)
         self.working = np.zeros(area.shape, dtype=np.int)
 
     def generate(self):
-        self._testing_alg()
-
-    def _testing_alg(self):
-        """
-        - R and S are static rooms placed in the center of the area.
-        - Both are mapped to the `owned` array.
-        - Next, we initialize an instance of `Corridor` which allows us to build
-          long, narrow structures out of `interval`**2 rects for `count` repetitions.
-        - We map those to the `owned` array.
-        - For visualization, the start and end rooms are mapped to different integer
-          values so that they can be differentiated.
-        """
-        R = Rect.centered_at(center=Point(100, 128), size=Size(20, 20))
-        self.owned.T[R.outer] = 1
-
-        S = Rect.centered_at(center=Point(134, 128), size=Size(20, 20))
-        self.owned.T[S.outer] = 2
-
-        corridor = Corridor(start=S, direction=Direction.left, interval=6, count=5)
-        for cell in corridor.cells:
-            self.owned.T[cell.outer] = 3
-        self.owned.T[corridor.start.outer] = 4
-        self.owned.T[corridor.end.outer] = 5
+        pass
 
 
 class AreaPainter:
@@ -111,9 +83,6 @@ class AreaPainter:
     def paint_owners(self):
         tiles = self.engine.area.area_model.tiles
         tiles[...] = self.paint('bare_floor', bg=COLOR['nero'])
-        tiles[self.engine.owned != 0] = self.paint('bare_floor', bg=COLOR['dark red'])
-        tiles[self.engine.owned == 4] = self.paint('bare_floor', bg=COLOR['dark blue'])
-        tiles[self.engine.owned == 5] = self.paint('bare_floor', bg=COLOR['dark green'])
 
 
 class Architect:

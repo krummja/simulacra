@@ -10,6 +10,7 @@ from engine.components import (Equipment, Inventory, Physics,
 from engine.entities.player import Player
 from engine.rendering import update_fov
 
+
 if TYPE_CHECKING:
     from engine.model import Model
 
