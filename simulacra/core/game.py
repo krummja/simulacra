@@ -11,7 +11,8 @@ from .player_manager import PlayerManager
 from .world_manager import WorldManager
 
 from .rendering import RenderManager
-from .input import CommandManager
+from .input import CommandManager, InputController
+from .interface import InterfaceManager
 
 class Game:
 
@@ -19,7 +20,6 @@ class Game:
 
     def __init__(self) -> None:
         self.engine = ecs.Engine()
-        # self.clock = None
         self.renderer = RenderManager(self)
         self.state = GameStateManager(self)
         self.world = WorldManager(self)
@@ -27,8 +27,8 @@ class Game:
         self.camera = CameraManager(self)
         self.player = PlayerManager(self)
         self.commands = CommandManager(self)
-        # self.screens = ScreenManager
-        # self.input = InputController
+        self.screens = InterfaceManager(self)
+        self.input = InputController(self)
         self.console = ConsoleManager(self)
 
         self.action_system = None
