@@ -1,0 +1,9 @@
+Entity-Component-System
+=======================
+
+.. module:: ecs
+
+.. class:: Engine
+
+    .. method:: _generate_uid()
+        Make a hex UID using the uuid package.

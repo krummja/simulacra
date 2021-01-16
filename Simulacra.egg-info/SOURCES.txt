@@ -1,0 +1,8 @@
+README.md
+setup.py
+Simulacra.egg-info/PKG-INFO
+Simulacra.egg-info/SOURCES.txt
+Simulacra.egg-info/dependency_links.txt
+Simulacra.egg-info/not-zip-safe
+Simulacra.egg-info/top_level.txt
+simulacra/main.py
