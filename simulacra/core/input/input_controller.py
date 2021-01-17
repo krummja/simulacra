@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import (Callable, Generic, Optional, TypeVar, TYPE_CHECKING)
+
+from typing import TYPE_CHECKING, Callable, Generic, Optional, TypeVar
 
 import tcod
 from tcod.event import EventDispatch
@@ -7,9 +8,7 @@ from tcod.event import EventDispatch
 from ..manager import Manager
 
 if TYPE_CHECKING:
-    from ..states.state import State
     from ..game import Game
-    from .commands import Command
 
 T = TypeVar("T")
 
@@ -23,11 +22,7 @@ class InputController(Generic[T], EventDispatch[T], Manager):
     def __init__(self, game: Game) -> None:
         super().__init__()
         self._game = game
-        self._current_state = self._game.state.current_state
-
-    @property
-    def current_state(self) -> State:
-        return self._current_state
+        self._current_state = game.state.current_state
 
     def handle_input(self) -> Callable[[], Optional[T]]:
         for event in tcod.event.get():
@@ -37,8 +32,8 @@ class InputController(Generic[T], EventDispatch[T], Manager):
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> None:
         if self._current_state is not None:
-            command: Command = self.game.commands.on_input_event(event)
-            if command:
-                getattr(self._current_state, f"cmd_{command.name}")
-                command()
-            return None
+            command = self._game.commands.on_input_event(event)
+            try:
+                getattr(self._current_state, f"cmd_{command.name}")()
+            except AttributeError:
+                return None

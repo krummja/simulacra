@@ -1,8 +1,9 @@
 from __future__ import annotations
-from typing import Optional, TYPE_CHECKING
 
-from .state import State
+from typing import TYPE_CHECKING, Optional
+
 from ..input.input_controller import T
+from .state import State
 
 if TYPE_CHECKING:
     from simulacra.core.game_state_manager import GameStateManager

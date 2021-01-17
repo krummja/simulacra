@@ -18,18 +18,18 @@ from .interface import InterfaceManager
 class Game:
 
     def __init__(self) -> None:
-        self.engine = Engine(self)
+        self.engine = Engine(self)               # Working: 2021-01-16
 
-        self.renderer = RenderManager(self)
-        self.state = GameStateManager(self)
-        self.world = WorldManager(self)
-        self.area = AreaManager(self)
-        self.camera = CameraManager(self)
-        self.player = PlayerManager(self)
-        self.commands = CommandManager(self)
-        self.interface = InterfaceManager(self)
-        self.input = InputController(self)
-        self.console = ConsoleManager(self)
+        self.renderer = RenderManager(self)      # TODO
+        self.state = GameStateManager(self)      # Working: 2021-01-17
+        self.world = WorldManager(self)          # TODO
+        self.area = AreaManager(self)            # TODO
+        self.camera = CameraManager(self)        # TODO
+        self.player = PlayerManager(self)        # TODO
+        self.commands = CommandManager(self)     # Working: 2021-01-17
+        self.interface = InterfaceManager(self)  # TODO
+        self.input = InputController(self)       # Working: 2021-01-17
+        self.console = ConsoleManager(self)      # Working: 2021-01-17
 
         self.action_system = None
         self.status_system = None
@@ -50,4 +50,6 @@ class Game:
 
     def loop(self) -> None:
         while True:
-            pass
+            self.console.context.present(self.console.root_console)
+            self.renderer.render()
+            self.input.handle_input()

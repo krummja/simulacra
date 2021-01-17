@@ -1,8 +1,9 @@
 from __future__ import annotations
+
+from itertools import dropwhile, takewhile
 from typing import TYPE_CHECKING
 
 from tcod.event import KeyboardEvent
-from itertools import takewhile, dropwhile
 
 from ..manager import Manager
 from .commands import command_library
@@ -19,10 +20,12 @@ class CommandManager(Manager):
         self._commands = command_library
 
     def on_input_event(self, event: KeyboardEvent):
-        commands = self.get_state_commands(self._game.input.current_state)
-        match = lambda cmd: cmd.event == event.sym
-        drop = lambda cmd: cmd.event != event.sym
-        return min(list(takewhile(match, dropwhile(drop, commands))))
+        state_commands = self.get_state_commands(self._game.state.current_state)
+        result = list(filter(lambda c: c.event == event.sym, state_commands))
+        if len(result) > 0:
+            return result[0]
+        else:
+            pass
 
     def get_state_commands(self, state: State):
         match = lambda cmd: cmd.state == state.name

@@ -11,3 +11,6 @@ class RenderManager(Manager):
 
     def __init__(self, game: Game) -> None:
         self._game = game
+
+    def render(self) -> None:
+        pass
