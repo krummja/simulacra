@@ -1,5 +1,7 @@
 {
     "todo-tree.tree.showBadges": true,
     "todo-tree.tree.showCountsInTree": true,
-    "restructuredtext.confPath": "${workspaceFolder}/doc/source"
+    "restructuredtext.confPath": "${workspaceFolder}/doc/source",
+    "python.linting.enabled": true,
+    "python.pythonPath": "/usr/bin/python3"
 }
