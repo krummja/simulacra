@@ -44,10 +44,25 @@ class InputController(Generic[T], EventDispatch[T], Manager):
         return self._current_state.cmd_quit()
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[T]:
-        if event.sym in CommandLibrary.COMMAND_KEYS:
-            func = getattr(self._current_state,
-                           f"cmd_{CommandLibrary.COMMAND_KEYS[event.sym]}")
-            return func()
-        elif event.sym in CommandLibrary.MOVE_KEYS:
+
+        # Check if our input is in the MOVE_KEYS library.
+        if event.sym in CommandLibrary.MOVE_KEYS:
             return self._current_state.cmd_move(*CommandLibrary.MOVE_KEYS[event.sym])
-        return None
+
+        try:
+            # If not, first try checking the current state's command library...
+            if event.sym in CommandLibrary.COMMAND_KEYS[self._current_state.name]:
+                commands = CommandLibrary.COMMAND_KEYS[self._current_state]
+                command = getattr(self._current_state, f"cmd_{commands[event.sym]}")
+                return command()
+
+        except KeyError:
+            # ... failing that, try a DEFAULT command.
+            if event.sym in CommandLibrary.COMMAND_KEYS['DEFAULT']:
+                commands = CommandLibrary.COMMAND_KEYS['DEFAULT']
+                command = getattr(self._current_state, f"cmd_{commands[event.sym]}")
+                return command()
+
+        else:
+            # Oops! No valid commands - return None.
+            return None

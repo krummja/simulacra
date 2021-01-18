@@ -5,50 +5,82 @@ from ..input import T, StateBreak
 
 if TYPE_CHECKING:
     from tcod.console import Console
-    from simulacra.core.game_state_manager import GameStateManager
+    from simulacra.core.states.game_state_manager import GameStateManager
 
 
 class State:
     """All game states inherit from this class.
 
-    A State is, fundamentally, a way of mapping input events to particular
-    contexts which implement a view and a set of behaviors. I implement
-    states as nodes of a finite state machine.
-
-    Each state has an `on_draw` method for specific renderables on the
-    render update. A state also has command methods, prefixed with
-    `cmd_{name}`. Each command name must correspond to a registered
-    input -> command mapping in the CommandLibrary.
+    States are essentially domains that restrict input events to certain
+    well-defined contexts.
     """
     name: str
 
     def __init__(self, manager: GameStateManager) -> None:
         self.manager = manager
-        self._view = None
 
-    def on_draw(self, console: Console) -> None:
-        self._view.on_draw(console)
+    def on_enter(self):
+        pass
+
+    def on_leave(self):
+        pass
+
+    def on_update(self):
+        pass
 
     def cmd_confirm(self) -> Optional[T]:
-        pass
+        """
+        [ENTER]
+        Context: DEFAULT
+        """
 
     def cmd_escape(self) -> Optional[T]:
+        """
+        [ESCAPE]
+        Context: DEFAULT
+        """
         raise StateBreak()
 
-    def cmd_examine(self) -> Optional[T]:
-        pass
+    def cmd_move(self, x: int, y: int) -> Optional[T]:
+        """
+        Arrow Keys, Keypad
+        Context: DEFAULT
+        """
+
+    def cmd_drop(self) -> Optional[T]:
+        """
+        Default: [D]
+        Context: STAGE
+        """
 
     def cmd_equipment(self) -> Optional[T]:
-        pass
+        """
+        Default: [E]
+        Context: STAGE
+        """
+
+    def cmd_examine(self) -> Optional[T]:
+        """
+        Default: [L]
+        Context: STAGE
+        """
 
     def cmd_inventory(self) -> Optional[T]:
+        """
+        Default: [I]
+        Context: STAGE
+        """
         print("Inventory")
 
-    def cmd_move(self, x: int, y: int) -> Optional[T]:
-        pass
-
     def cmd_pickup(self) -> Optional[T]:
-        pass
+        """
+        Default: [G]
+        Context: STAGE
+        """
 
     def cmd_quit(self) -> Optional[T]:
+        """
+        Default: [Q],
+        Context: MAIN_MENU
+        """
         raise SystemExit()

@@ -1,12 +1,12 @@
 from __future__ import annotations
 from typing import Dict, Optional, TYPE_CHECKING
 
-from .manager import Manager
-from .states.test_state import TestState
+from ..manager import Manager
+from .test_state import TestState
 
 if TYPE_CHECKING:
-    from .game import Game
-    from .states.state import State
+    from ..game import Game
+    from .state import State
 
 
 class GameStateManager(Manager):
@@ -14,7 +14,7 @@ class GameStateManager(Manager):
     def __init__(self, game: Game) -> None:
         self._game = game
         self._current_state = None
-        self.states = {
+        self.states: Dict[str, State] = {
             'TEST': TestState
             }
         self.transition('TEST')

@@ -6,13 +6,13 @@ from simulacra.ecs.ecs_manager import ECSManager as Engine
 from .area_manager import AreaManager
 from .camera_manager import CameraManager
 from .console_manager import ConsoleManager
-from .game_state_manager import GameStateManager
 from .player_manager import PlayerManager
 from .world_manager import WorldManager
 
-from .rendering import RenderManager
 from .input import InputController
 from .interface import InterfaceManager
+from .rendering import RenderManager
+from .states import GameStateManager
 
 
 class Game:
@@ -21,13 +21,13 @@ class Game:
         self.engine = Engine(self)               # Working: 2021-01-16
 
         self.console = ConsoleManager(self)      # Working: 2021-01-17
-        self.renderer = RenderManager(self)      # DOING
+        self.renderer = RenderManager(self)      # Working: 2021-01-17
         self.state = GameStateManager(self)      # Working: 2021-01-17
         self.world = WorldManager(self)          # TODO
         self.area = AreaManager(self)            # TODO
         self.camera = CameraManager(self)        # TODO
         self.player = PlayerManager(self)        # TODO
-        self.interface = InterfaceManager(self)  # TODO
+        self.interface = InterfaceManager(self)  # Working: 2021-01-17
         self.input = InputController(self)       # Working: 2021-01-17
 
         self.action_system = None

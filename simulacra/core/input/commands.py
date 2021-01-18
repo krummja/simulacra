@@ -7,14 +7,19 @@ import tcod
 class CommandLibrary:
 
     COMMAND_KEYS: Dict[int, str] = {
-        tcod.event.K_e: "equipment",
-        tcod.event.K_i: "inventory",
-        tcod.event.K_g: "pickup",
-        tcod.event.K_ESCAPE: "escape",
-        tcod.event.K_ESCAPE: "quit",
-        tcod.event.K_RETURN: "confirm",
-        tcod.event.K_KP_ENTER: "confirm",
-        tcod.event.K_l: "examine",
+        'DEFAULT': {
+            tcod.event.K_RETURN: "confirm",
+            tcod.event.K_KP_ENTER: "confirm",
+            tcod.event.K_ESCAPE: "escape",
+            },
+        'PLAYER_READY': {
+            tcod.event.K_d: "drop",
+            tcod.event.K_e: "equipment",
+            tcod.event.K_g: "pickup",
+            tcod.event.K_i: "inventory",
+            tcod.event.K_l: "examine",
+            tcod.event.K_q: "quit",
+            }
         }
 
     MOVE_KEYS: Dict[int, Tuple[int, int]] = {

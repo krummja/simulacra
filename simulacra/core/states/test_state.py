@@ -1,20 +1,19 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import Optional
 
 from ..input.input_controller import T
 from .state import State
-
-if TYPE_CHECKING:
-    from tcod.console import Console
-    from simulacra.core.game_state_manager import GameStateManager
 
 
 class TestState(State):
     name: str = "TEST"
 
-    def on_draw(self, console: Console) -> None:
-        console.print(2, 2, "Hello, world! This is Test State!")
+    def on_enter(self) -> None:
+        self.manager.game.interface.transition(self.name)
 
     def cmd_confirm(self) -> Optional[T]:
         print("Command CONFIRM")
+
+    def cmd_escape(self) -> None:
+        self.cmd_quit()

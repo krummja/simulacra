@@ -21,7 +21,8 @@ class TileSize(Enum):
 
 TILESET = tcod.tileset.load_tilesheet(
     # path="./simulacra/assets/simulacra16x16.png",
-    path="./simulacra/assets/Bisasam_20x20.png",
+    # path="./simulacra/assets/Bisasam_20x20.png",
+    path="./simulacra/assets/Japa_20x20.png",
     columns=16,
     rows=16,
     charmap=CharacterMap().data
