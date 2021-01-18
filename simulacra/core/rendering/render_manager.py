@@ -11,6 +11,8 @@ class RenderManager(Manager):
 
     def __init__(self, game: Game) -> None:
         self._game = game
+        self._root_console = game.console.root_console
 
     def render(self) -> None:
-        pass
+        self._root_console.clear()
+        self._root_console.print(2, 2, "Hello, world!")

@@ -31,9 +31,11 @@ class InputController(Generic[T], EventDispatch[T], Manager):
                 return value
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> None:
-        if self._current_state is not None:
-            command = self._game.commands.on_input_event(event)
-            try:
-                getattr(self._current_state, f"cmd_{command.name}")()
-            except AttributeError:
-                return None
+        self._game.commands.on_input_event(event)
+        try:
+            command = self._game.commands.get_next_command()
+            func = getattr(self._current_state,
+                           f"cmd_{command.name}")
+            return func()
+        except AttributeError:
+            return None

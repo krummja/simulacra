@@ -20,7 +20,8 @@ class Game:
     def __init__(self) -> None:
         self.engine = Engine(self)               # Working: 2021-01-16
 
-        self.renderer = RenderManager(self)      # TODO
+        self.console = ConsoleManager(self)      # Working: 2021-01-17
+        self.renderer = RenderManager(self)      # DOING
         self.state = GameStateManager(self)      # Working: 2021-01-17
         self.world = WorldManager(self)          # TODO
         self.area = AreaManager(self)            # TODO
@@ -29,7 +30,6 @@ class Game:
         self.commands = CommandManager(self)     # Working: 2021-01-17
         self.interface = InterfaceManager(self)  # TODO
         self.input = InputController(self)       # Working: 2021-01-17
-        self.console = ConsoleManager(self)      # Working: 2021-01-17
 
         self.action_system = None
         self.status_system = None
