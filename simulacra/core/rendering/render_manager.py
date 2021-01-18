@@ -15,4 +15,4 @@ class RenderManager(Manager):
 
     def render(self) -> None:
         self._root_console.clear()
-        self._root_console.print(2, 2, "Hello, world!")
+        self._game.state.current_state.on_draw(self._root_console)

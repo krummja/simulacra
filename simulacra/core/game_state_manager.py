@@ -14,7 +14,9 @@ class GameStateManager(Manager):
     def __init__(self, game: Game) -> None:
         self._game = game
         self._current_state = None
-        self.states = {'TEST': TestState}
+        self.states = {
+            'TEST': TestState
+            }
         self.transition('TEST')
 
     @property
@@ -23,9 +25,3 @@ class GameStateManager(Manager):
 
     def transition(self, state: str) -> None:
         self._current_state = self.states[state](self)
-
-    def on_draw(self, **kwargs):
-        self.current_state.on_draw(**kwargs)
-
-    def handle_input(self):
-        pass

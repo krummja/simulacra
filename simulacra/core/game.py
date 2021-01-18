@@ -11,7 +11,7 @@ from .player_manager import PlayerManager
 from .world_manager import WorldManager
 
 from .rendering import RenderManager
-from .input import CommandManager, InputController
+from .input import InputController
 from .interface import InterfaceManager
 
 
@@ -27,7 +27,6 @@ class Game:
         self.area = AreaManager(self)            # TODO
         self.camera = CameraManager(self)        # TODO
         self.player = PlayerManager(self)        # TODO
-        self.commands = CommandManager(self)     # Working: 2021-01-17
         self.interface = InterfaceManager(self)  # TODO
         self.input = InputController(self)       # Working: 2021-01-17
 

@@ -11,6 +11,7 @@ class CommandLibrary:
         tcod.event.K_i: "inventory",
         tcod.event.K_g: "pickup",
         tcod.event.K_ESCAPE: "escape",
+        tcod.event.K_ESCAPE: "quit",
         tcod.event.K_RETURN: "confirm",
         tcod.event.K_KP_ENTER: "confirm",
         tcod.event.K_l: "examine",

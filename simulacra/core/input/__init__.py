@@ -1,4 +1,3 @@
-__all__ = ['CommandManager', 'InputController']
+__all__ = ['InputController']
 
-from simulacra.core.input.command_manager import CommandManager
-from simulacra.core.input.input_controller import InputController
+from simulacra.core.input.input_controller import InputController, T, StateBreak
