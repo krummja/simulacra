@@ -1,48 +1,10 @@
 from __future__ import annotations
-from typing import Dict, Tuple, List
+from typing import Dict, Tuple
 
 import tcod
 
-from .input_domain import InputDomain
-
-
-class Command:
-    def __init__(self, **data) -> None:
-        self.domain = data['domain']
-        self.name = data['name']
-        self.event = data['event']
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, int):
-            return self.event == other
-
-
-
-def cmd(domain, name, event) -> Command:
-    return Command(**{
-        'domain': domain,
-        'name': name,
-        'event': event
-        })
-
-
-commands: List[Command] = [
-    #   DEFAULT                   COMMAND             EVENT
-    cmd(InputDomain.DEFAULT,      'confirm',          tcod.event.K_RETURN),
-    cmd(InputDomain.DEFAULT,      'exit',             tcod.event.K_ESCAPE),
-    ]
-
 
 class CommandLibrary:
-
-    COMMANDS = [
-        "equipment",
-        "inventory",
-        "pickup",
-        "escape",
-        "confirm",
-        "examine"
-        ]
 
     COMMAND_KEYS: Dict[int, str] = {
         tcod.event.K_e: "equipment",

@@ -6,6 +6,7 @@ import tcod
 from tcod.event import EventDispatch
 
 from ..manager import Manager
+from .commands import CommandLibrary
 
 if TYPE_CHECKING:
     from ..game import Game
@@ -15,7 +16,6 @@ T = TypeVar("T")
 
 class InputController(Generic[T], EventDispatch[T], Manager):
     """Inherits TCOD's EventDispatch to provide basic input mapping.
-
     Commands are handled separately in the CommandManager.
     """
 
@@ -31,11 +31,10 @@ class InputController(Generic[T], EventDispatch[T], Manager):
                 return value
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> None:
-        self._game.commands.on_input_event(event)
-        try:
-            command = self._game.commands.get_next_command()
+        if event.sym in CommandLibrary.COMMAND_KEYS:
             func = getattr(self._current_state,
-                           f"cmd_{command.name}")
+                           f"cmd_{CommandLibrary.COMMAND_KEYS[event.sym]}")
             return func()
-        except AttributeError:
-            return None
+        if event.sym in CommandLibrary.MOVE_KEYS:
+            return self._current_state.cmd_move(*CommandLibrary.MOVE_KEYS[event.sym])
+        return None

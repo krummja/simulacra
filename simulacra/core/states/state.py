@@ -24,3 +24,10 @@ class State:
 
     def on_draw(self) -> None:
         pass
+
+    def cmd_move(self, x: int, y: int):
+        print(x, y)
+        pass
+
+    def cmd_escape(self):
+        pass
