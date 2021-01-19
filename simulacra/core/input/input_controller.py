@@ -24,8 +24,7 @@ class InputController(Generic[T], EventDispatch[T], Manager):
     """
 
     def __init__(self, game: Game) -> None:
-        super().__init__()
-        self._game = game
+        self.game = game
         self._current_state = game.state.current_state
 
     def handle_input(self) -> Callable[[], Optional[T]]:

@@ -10,20 +10,21 @@ if TYPE_CHECKING:
 class PlayerManager(Manager):
 
     def __init__(self, game: Game) -> None:
-        self._game = game
+        self.game = game
         self._player_uid = None
         self.initialize_player()
 
     @property
     def entity(self):
-        return self._game.ecs.engine.get_entity(self._player_uid)
+        return self.game.ecs.engine.get_entity(self._player_uid)
 
     @property
     def uid(self):
         return self._player_uid
 
     def initialize_player(self):
-        player = self._game.ecs.engine.create_entity()
+        player = self.game.ecs.engine.create_entity()
         player.add('Renderable', {'char': '@', 'color': '#f0f', 'bg': '#000'})
+        player.add('Position', {'x': 10, 'y': 10})
         print(vars(player))
         return player

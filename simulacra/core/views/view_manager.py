@@ -10,10 +10,10 @@ if TYPE_CHECKING:
     from ..game import Game
 
 
-class InterfaceManager(Manager):
+class ViewManager(Manager):
 
     def __init__(self, game: Game) -> None:
-        self._game = game
+        self.game = game
         self._ui_list = []
         self._current_view = None
         self._views: Dict[str, View] = {
@@ -30,5 +30,3 @@ class InterfaceManager(Manager):
 
     def on_draw(self, console: Console) -> None:
         self._current_view.on_draw(console)
-        for element in self._ui_list:
-            element.on_draw(console)

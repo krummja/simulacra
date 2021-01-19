@@ -11,14 +11,21 @@ class RenderSystem(System):
 
     def __init__(self, game: Game) -> None:
         super().__init__(game)
-        self._query = self._game.ecs.engine.create_query(
+        self._query = self.ecs.create_query(
             all_of=['RENDERABLE']
             )
 
     def render_visible_entities(self, area, console) -> None:
         pass
 
+    def render_visible_tiles(self, area, console) -> None:
+        pass
+
     def render(self) -> None:
         self._game.renderer.clear()
         for entity in self._query.result:
-            self._game.renderer.root_console.print(2, 2, entity['RENDERABLE'].char)
+            self._game.renderer.root_console.print(
+                entity['POSITION'].x, entity['POSITION'].y, entity['RENDERABLE'].char)
+
+    def update(self) -> None:
+        self.render()

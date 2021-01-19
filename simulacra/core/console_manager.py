@@ -17,4 +17,4 @@ class ConsoleManager(Manager):
     """Manager for handling in-game log messages."""
 
     def __init__(self, game: Game) -> None:
-        self._game = game
+        self.game = game

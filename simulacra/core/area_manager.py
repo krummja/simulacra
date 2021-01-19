@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 class AreaManager(Manager):
 
     def __init__(self, game: Game) -> None:
-        self._game = game
+        self.game = game
         self._current_area = None
 
     @property

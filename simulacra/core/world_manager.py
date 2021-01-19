@@ -10,4 +10,4 @@ if TYPE_CHECKING:
 class WorldManager(Manager):
 
     def __init__(self, game: Game) -> None:
-        self._game = game
+        self.game = game

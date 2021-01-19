@@ -13,20 +13,14 @@ if TYPE_CHECKING:
     from tcod.console import Console
 
 
-class TileSize(Enum):
-    Small = 0
-    Medium = 1
-    Large = 2
-
-
 class RenderManager(Manager):
     """Manager for handling the render console and running the render loop."""
 
     def __init__(self, game: Game) -> None:
-        self._tilesize = [(110, 55), (90, 45), (80, 40)][TileSize.Medium.value]
+        self.game = game
+        self._tilesize = [(110, 55), (90, 45), (80, 40)][1]
         self._console_width = self._tilesize[0]
         self._console_height = self._tilesize[1]
-        self._game = game
         self._console_config = {
             'columns': self._console_width,
             'rows': self._console_height,
@@ -48,9 +42,3 @@ class RenderManager(Manager):
 
     def clear(self) -> None:
         self._root_console.clear()
-
-    def draw_ui(self) -> None:
-        pass
-
-    def render(self) -> None:
-        pass

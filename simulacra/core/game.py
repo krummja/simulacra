@@ -10,7 +10,7 @@ from .console_manager import ConsoleManager
 from .player_manager import PlayerManager
 from .world_manager import WorldManager
 from .input import InputController
-from .interface import InterfaceManager
+from .views import ViewManager
 from .rendering import RenderManager
 from .states import GameStateManager
 
@@ -28,7 +28,7 @@ class Game:
         self.area = AreaManager(self)            # TODO
         self.camera = CameraManager(self)        # TODO
         self.player = PlayerManager(self)        # TODO
-        self.interface = InterfaceManager(self)  # Working: 2021-01-17
+        self.interface = ViewManager(self)       # Working: 2021-01-17
         self.input = InputController(self)       # Working: 2021-01-17
 
         self.action_system = None
@@ -43,7 +43,7 @@ class Game:
         self.last_update = time.time()
 
     def update_engine_systems(self):
-        self.render_system.render()
+        self.render_system.update()
 
     def update_player_systems(self):
         pass

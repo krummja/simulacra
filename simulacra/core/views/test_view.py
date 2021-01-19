@@ -5,13 +5,13 @@ from .view import View
 
 if TYPE_CHECKING:
     from tcod.console import Console
-    from .interface_manager import InterfaceManager
+    from .view_manager import ViewManager
 
 
 class TestView(View):
     name: str = "TEST"
 
-    def __init__(self, manager: InterfaceManager) -> None:
+    def __init__(self, manager: ViewManager) -> None:
         self.manager = manager
 
     def on_draw(self, console: Console) -> None:

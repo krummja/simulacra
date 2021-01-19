@@ -10,11 +10,12 @@ class System:
 
     def __init__(self, game: Game) -> None:
         self._game = game
-        self._query: Optional[Query] = None
+        self.ecs = self._game.ecs.engine
+        self.query: Optional[Query] = None
 
     @property
     def game(self) -> Game:
         return self._game
 
-    def update(self, dt) -> None:
+    def update(self) -> None:
         pass

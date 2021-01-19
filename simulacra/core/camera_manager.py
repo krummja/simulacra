@@ -10,8 +10,8 @@ if TYPE_CHECKING:
 class CameraManager(Manager):
 
     def __init__(self, game: Game) -> None:
-        self._game = game
-        self._area = self._game.area.current_area
+        self.game = game
+        self._area = self.game.area.current_area
         self._position: Tuple[int, int] = (0, 0)
 
     @property
