@@ -25,3 +25,11 @@ class CharacterMap:
     def enumerated(self) -> Generator[Tuple[int, int], None, None]:
         for count, value in enumerate(self._data):
             yield (count, value)
+
+
+TILESET = tcod.tileset.load_tilesheet(
+    path="./simulacra/assets/Bisasam_20x20.png",
+    columns=16,
+    rows=16,
+    charmap=CharacterMap().data
+    )

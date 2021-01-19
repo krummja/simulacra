@@ -14,6 +14,7 @@ class InterfaceManager(Manager):
 
     def __init__(self, game: Game) -> None:
         self._game = game
+        self._ui_list = []
         self._current_view = None
         self._views: Dict[str, View] = {
             'TEST': TestView
@@ -26,3 +27,8 @@ class InterfaceManager(Manager):
 
     def transition(self, view: str) -> None:
         self._current_view = self._views[view](self)
+
+    def on_draw(self, console: Console) -> None:
+        self._current_view.on_draw(console)
+        for element in self._ui_list:
+            element.on_draw(console)

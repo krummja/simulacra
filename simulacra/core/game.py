@@ -1,24 +1,25 @@
 from __future__ import annotations
 import time
 
-from simulacra.ecs.ecs_manager import ECSManager as Engine
+from simulacra.ecs.ecs_manager import ECSManager as ECS
+from simulacra.ecs.systems.render_system import RenderSystem
 
 from .area_manager import AreaManager
 from .camera_manager import CameraManager
 from .console_manager import ConsoleManager
 from .player_manager import PlayerManager
 from .world_manager import WorldManager
-
 from .input import InputController
 from .interface import InterfaceManager
 from .rendering import RenderManager
 from .states import GameStateManager
 
 
+
 class Game:
 
     def __init__(self) -> None:
-        self.engine = Engine(self)               # Working: 2021-01-16
+        self.ecs = ECS(self)                     # Working: 2021-01-16
 
         self.console = ConsoleManager(self)      # Working: 2021-01-17
         self.renderer = RenderManager(self)      # Working: 2021-01-17
@@ -32,7 +33,7 @@ class Game:
 
         self.action_system = None
         self.status_system = None
-        self.render_system = None
+        self.render_system = RenderSystem(self)
         self.interface_system = None
         self.particle_system = None
         self.destroy_system = None
@@ -41,14 +42,15 @@ class Game:
     def start(self) -> None:
         self.last_update = time.time()
 
-    def update_engine_systems(dt):
-        pass
+    def update_engine_systems(self):
+        self.render_system.render()
 
-    def update_player_systems(dt):
+    def update_player_systems(self):
         pass
 
     def loop(self) -> None:
         while True:
-            self.console.context.present(self.console.root_console)
-            self.renderer.render()
+            self.renderer.context.present(self.renderer.root_console)
+            self.update_engine_systems()
+
             self.input.handle_input()

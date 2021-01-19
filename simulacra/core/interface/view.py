@@ -7,6 +7,12 @@ if TYPE_CHECKING:
 
 
 class View:
+    """The largest organizational unit for on-screen UI elements.
+
+    A View is one or more UI elements that display information to the player.
+    The data presented is typically contextualized to a single game state.
+    """
+
     name: str
 
     def __init__(self, manager: InterfaceManager) -> None:

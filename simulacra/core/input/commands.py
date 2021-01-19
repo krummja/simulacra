@@ -12,13 +12,15 @@ class CommandLibrary:
             tcod.event.K_KP_ENTER: "confirm",
             tcod.event.K_ESCAPE: "escape",
             },
+        'MAIN_MENU': {
+            tcod.event.K_q: "quit",
+            },
         'PLAYER_READY': {
             tcod.event.K_d: "drop",
             tcod.event.K_e: "equipment",
             tcod.event.K_g: "pickup",
             tcod.event.K_i: "inventory",
             tcod.event.K_l: "examine",
-            tcod.event.K_q: "quit",
             }
         }
 
