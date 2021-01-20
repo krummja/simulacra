@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import List, TYPE_CHECKING
 
 import tcod
 from enum import Enum
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 
 class RenderManager(Manager):
-    """Manager for handling the render console and running the render loop."""
+    """Manager for handling the render console."""
 
     def __init__(self, game: Game) -> None:
         self.game = game

@@ -6,7 +6,7 @@ import tcod
 
 class CommandLibrary:
 
-    COMMAND_KEYS: Dict[int, str] = {
+    COMMAND_KEYS: Dict[str, Dict[int, str]] = {
         'DEFAULT': {
             tcod.event.K_RETURN: "confirm",
             tcod.event.K_KP_ENTER: "confirm",

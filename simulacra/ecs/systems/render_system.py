@@ -12,7 +12,13 @@ class RenderSystem(System):
     def __init__(self, game: Game) -> None:
         super().__init__(game)
         self._query = self.ecs.create_query(
-            all_of=['RENDERABLE']
+            all_of=[
+                'RENDERABLE',
+                'POSITION'
+                ],
+            none_of=[
+                'INVISIBLE'
+                ]
             )
 
     def render_visible_entities(self, area, console) -> None:

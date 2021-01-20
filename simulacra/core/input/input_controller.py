@@ -27,7 +27,7 @@ class InputController(Generic[T], EventDispatch[T], Manager):
         self.game = game
         self._current_state = game.state.current_state
 
-    def handle_input(self) -> Callable[[], Optional[T]]:
+    def handle_input(self) -> Optional[Callable[[], Optional[T]]]:
         all_key_events = list(tcod.event.get())
         key_events = [e for e in all_key_events if e.type == 'KEYDOWN']
         if len(key_events) > 0:

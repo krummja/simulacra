@@ -4,7 +4,6 @@ from typing import Optional, TYPE_CHECKING
 from ..input import T, StateBreak
 
 if TYPE_CHECKING:
-    from tcod.console import Console
     from simulacra.core.states.game_state_manager import GameStateManager
 
 
@@ -70,7 +69,6 @@ class State:
         Default: [I]
         Context: STAGE
         """
-        print("Inventory")
 
     def cmd_pickup(self) -> Optional[T]:
         """
