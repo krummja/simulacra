@@ -1,15 +1,18 @@
 from __future__ import annotations
+from core.screens.screen import Screen
 
 from simulacra.ecs.ecs_manager import ECSManager as ECS
 from simulacra.ecs.systems.render_system import RenderSystem
+from simulacra.ecs.systems.action_system import ActionSystem
 
 from .area_manager import AreaManager
 from .camera_manager import CameraManager
 from .player_manager import PlayerManager
 from .world_manager import WorldManager
 from .event_manager import EventManager
+from .clock_manager import ClockManager
+from .screens import ScreenManager
 from .input import InputController
-from .views import ViewManager
 from .rendering import RenderManager
 from .states import GameStateManager
 
@@ -35,17 +38,18 @@ class Game:
         self.ecs = ECS(self)                     # Working: 2021-01-16
 
         # Change to a Renderer class
+        self.clock = ClockManager(self)          # Working: 2021-01-20
         self.renderer = RenderManager(self)      # Working: 2021-01-17
         self.state = GameStateManager(self)      # Working: 2021-01-17
         self.world = WorldManager(self)          # TODO
         self.area = AreaManager(self)            # TODO
         self.camera = CameraManager(self)        # Working: 2021-01-19
         self.player = PlayerManager(self)        # TODO
-        self.interface = ViewManager(self)       # Working: 2021-01-17
+        self.screens = ScreenManager(self)       # Working: 2021-01-20
         self.input = InputController(self)       # Working: 2021-01-17
         self.event = EventManager(self)
 
-        self.action_system = None
+        self.action_system = ActionSystem(self)
         self.status_system = None
         self.render_system = RenderSystem(self)
         self.interface_system = None
@@ -55,6 +59,7 @@ class Game:
 
     def update_engine_systems(self):
         self.render_system.update()
+        # self.action_system.update(dt)
 
     def update_player_systems(self):
         pass
