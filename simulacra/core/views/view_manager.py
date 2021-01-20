@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Dict, TYPE_CHECKING
+from typing import Dict, Type, TYPE_CHECKING
 
 from ..manager import Manager
 from .test_view import TestView
@@ -16,7 +16,7 @@ class ViewManager(Manager):
         self.game = game
         self._ui_list = []
         self._current_view = None
-        self._views: Dict[str, View] = {
+        self._views: Dict[str, Type[View]] = {
             'TEST': TestView
             }
         self.transition('TEST')

@@ -26,5 +26,6 @@ class PlayerManager(Manager):
         player = self.game.ecs.engine.create_entity()
         player.add('Renderable', {'char': '@', 'color': '#f0f', 'bg': '#000'})
         player.add('Position', {'x': 10, 'y': 10})
-        print(vars(player))
+        player.add('Player', {})
+        player.add('Actor', {'controller': None})
         return player

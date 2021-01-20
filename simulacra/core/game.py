@@ -7,6 +7,7 @@ from .area_manager import AreaManager
 from .camera_manager import CameraManager
 from .player_manager import PlayerManager
 from .world_manager import WorldManager
+from .event_manager import EventManager
 from .input import InputController
 from .views import ViewManager
 from .rendering import RenderManager
@@ -42,6 +43,7 @@ class Game:
         self.player = PlayerManager(self)        # TODO
         self.interface = ViewManager(self)       # Working: 2021-01-17
         self.input = InputController(self)       # Working: 2021-01-17
+        self.event = EventManager(self)
 
         self.action_system = None
         self.status_system = None
