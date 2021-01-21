@@ -3,6 +3,7 @@ from typing import Callable, Tuple, TYPE_CHECKING, NamedTuple
 from collections import deque
 
 from simulacra.geometry.direction import Direction
+from simulacra.data.actions.action import Action
 from .manager import Manager
 
 if TYPE_CHECKING:
@@ -48,6 +49,5 @@ class PlayerManager(Manager):
         return self.action_queue.popleft()
 
     def move(self, direction: Tuple[int, int]) -> None:
-        def act():
-            self.entity.fire_event('try_move', direction)
-        self.action_queue.append(act)
+        action = Action(self.entity, 'try_move', direction)
+        self.action_queue.append(action.act)

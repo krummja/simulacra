@@ -12,7 +12,6 @@ from .area_manager import AreaManager
 from .camera_manager import CameraManager
 from .player_manager import PlayerManager
 from .world_manager import WorldManager
-from .event_manager import EventManager
 from .clock_manager import ClockManager
 from .screens import ScreenManager
 from .input import InputController
@@ -35,7 +34,6 @@ class Game:
         self.player = PlayerManager(self)        # Working: 2021-01-19
         self.screens = ScreenManager(self)       # Working: 2021-01-20
         self.input = InputController(self)       # Working: 2021-01-17
-        self.event = EventManager(self)
 
         self.action_system = ActionSystem(self)
         self.status_system = None
@@ -55,7 +53,6 @@ class Game:
 
             player_turn = self.action_system.update(dt)
             if player_turn:
-                print("player turn")
                 self.update_player_systems(dt)
 
             #! Run through systems
