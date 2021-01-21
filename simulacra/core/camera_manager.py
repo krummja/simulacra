@@ -13,8 +13,7 @@ if TYPE_CHECKING:
 class CameraManager(Manager):
 
     def __init__(self, game: Game) -> None:
-        self.game = game
-        self._area = self.game.area.current_area
+        self._game = game
         self._position: Tuple[int, int] = (0, 0)
 
     @property
@@ -33,12 +32,12 @@ class CameraManager(Manager):
 
         screen_width = min(
             Options.STAGE_PANEL_WIDTH - screen_left,
-            self._area.width - world_left
+            self._game.area.current_area.width - world_left
             )
 
         screen_height = min(
             Options.STAGE_PANEL_HEIGHT - screen_top,
-            self._area.height - world_top
+            self._game.area.current_area.height - world_top
             )
 
         screen_view = np.s_[

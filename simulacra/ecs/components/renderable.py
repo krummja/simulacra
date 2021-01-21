@@ -8,11 +8,11 @@ class Renderable(Component):
     name = "RENDERABLE"
     def __init__(
             self,
-            char: int,
+            char: str,
             color: Tuple[int, int, int],
             bg: Tuple[int, int, int]
         ) -> None:
-        self.char = char
+        self.char = ord(char)
         self.color = color
         self.bg = bg
         self.render_order: int = 0

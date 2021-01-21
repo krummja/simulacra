@@ -1,8 +1,8 @@
 from __future__ import annotations
-from typing import Callable, Tuple, TYPE_CHECKING, NamedTuple
+from typing import Tuple, TYPE_CHECKING
 from collections import deque
 
-from simulacra.geometry.direction import Direction
+from simulacra.utils.geometry import Direction
 from simulacra.data.actions.action import Action
 from .manager import Manager
 
@@ -38,10 +38,11 @@ class PlayerManager(Manager):
 
     def initialize_player(self):
         player = self.game.ecs.engine.create_entity()
-        player.add('Renderable', {'char': '@', 'color': '#f0f', 'bg': '#000'})
+        player.add('Renderable', {'char': '@', 'color': (255, 0, 255), 'bg': (0, 0, 0)})
         player.add('Position', {'x': 10, 'y': 10})
         player.add('Player', {})
         player.add('Actor', {})
+        player.add('Motility', {})
         self._player_uid = player.uid
         return player
 
@@ -51,3 +52,4 @@ class PlayerManager(Manager):
     def move(self, direction: Tuple[int, int]) -> None:
         action = Action(self.entity, 'try_move', direction)
         self.action_queue.append(action.act)
+        print(self.entity['POSITION'].xy)                                       #! PRINT

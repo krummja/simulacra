@@ -7,6 +7,7 @@ from simulacra.utils.debug import debug, debugmethods
 from simulacra.ecs.ecs_manager import ECSManager as ECS
 from simulacra.ecs.systems.render_system import RenderSystem
 from simulacra.ecs.systems.action_system import ActionSystem
+from simulacra.ecs.systems.fov_system import FOVSystem
 
 from .area_manager import AreaManager
 from .camera_manager import CameraManager
@@ -37,6 +38,7 @@ class Game:
 
         self.action_system = ActionSystem(self)
         self.status_system = None
+        self.fov_system = FOVSystem(self)
         self.render_system = RenderSystem(self)
         self.interface_system = None
         self.particle_system = None
@@ -61,16 +63,17 @@ class Game:
                 return
 
     def update_player_systems(self, dt):
+        self.fov_system.update(dt)
         self.render_system.update(dt)
+        #! Particle Update
+        #! UI Update
+        #! Map Update
+        #! Log Update
 
     def loop(self) -> None:
         while True:
             now = time.time()
             dt = now - self._last_update
-
             self.screens.update(dt)
-                # ScreenManager.update(dt)
-                #   -> Screen.on_update(dt)
-                #       -> game.update_engine_systems(dt)
             self._last_update = now
             self.renderer.context.present(self.renderer.root_console)

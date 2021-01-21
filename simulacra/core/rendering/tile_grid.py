@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 from .tile_data import tile_graphic, tile_dt
-from simulacra.core.game import Options
+from simulacra.core.options import Options
 
 if TYPE_CHECKING:
     from .render_manager import RenderManager
@@ -19,3 +19,11 @@ class TileGrid:
         self.effects = np.zeros(self.shape, dtype=tile_graphic)
         self.explored = np.zeros(self.shape, dtype=np.bool)
         self.visible = np.zeros(self.shape, dtype=np.bool)
+
+    @property
+    def width(self) -> int:
+        return self.shape[1]
+
+    @property
+    def height(self) -> int:
+        return self.shape[0]

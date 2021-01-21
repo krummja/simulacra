@@ -52,8 +52,8 @@ class RenderManager(Manager):
         _, viewport = self.game.camera.viewport
         if_visible = tile_grid.visible[viewport]
         if_explored = tile_grid.explored[viewport]
-        lit_tiles = tile_grid.tiles[viewport]
-        unlit_tiles = tile_grid.tiles[viewport]
+        lit_tiles = tile_grid.tiles["light"][viewport]
+        unlit_tiles = tile_grid.tiles["dark"][viewport]
 
         condlist = (if_visible, if_explored)
         choicelist = (lit_tiles, unlit_tiles)

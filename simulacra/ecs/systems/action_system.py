@@ -35,7 +35,6 @@ class ActionSystem(System):
 
             if entity.has('PLAYER'):
                 try:
-                    # NOTE No actions available, thus no rendering
                     action = self.game.player.get_next_action()
                     if action:
                         action()
