@@ -60,3 +60,4 @@ class RenderManager(Manager):
         return np.select(condlist=condlist,
                          choicelist=choicelist,
                          default=UNKNOWN)
+

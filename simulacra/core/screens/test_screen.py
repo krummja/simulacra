@@ -30,6 +30,9 @@ class TestScreen(Screen):
         self.handle_input()
         self._game.update_engine_systems(dt)
 
+    def cmd_move(self, x: int, y: int) -> Optional[T]:
+        self._game.player.move((x, y))
+
     def cmd_confirm(self) -> Optional[T]:
         print("Command CONFIRM")
 

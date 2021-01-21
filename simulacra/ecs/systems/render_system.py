@@ -1,12 +1,15 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
+from simulacra.utils.debug import debugmethods
+
 from .system import System
 
 if TYPE_CHECKING:
     from simulacra.core.game import Game
 
 
+@debugmethods
 class RenderSystem(System):
 
     def __init__(self, game: Game) -> None:

@@ -4,6 +4,8 @@ from collections import deque
 
 from .system import System
 
+from simulacra.utils.debug import *
+
 if TYPE_CHECKING:
     from simulacra.core.game import Game
 
@@ -32,13 +34,12 @@ class ActionSystem(System):
             # TODO Add logic for incapacitation, etc.
 
             if entity.has('PLAYER'):
-
                 try:
+                    # NOTE No actions available, thus no rendering
                     action = self.game.player.get_next_action()
                     if action:
                         action()
                     return True
-
                 except IndexError:
                     return False
 

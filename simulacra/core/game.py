@@ -27,13 +27,12 @@ class Game:
 
         self.ecs = ECS(self)                     # Working: 2021-01-16
 
-        # Change to a Renderer class
         self.clock = ClockManager(self)          # Working: 2021-01-20
         self.renderer = RenderManager(self)      # Working: 2021-01-17
         self.world = WorldManager(self)          # TODO
         self.area = AreaManager(self)            # TODO
         self.camera = CameraManager(self)        # Working: 2021-01-19
-        self.player = PlayerManager(self)        # TODO
+        self.player = PlayerManager(self)        # Working: 2021-01-19
         self.screens = ScreenManager(self)       # Working: 2021-01-20
         self.input = InputController(self)       # Working: 2021-01-17
         self.event = EventManager(self)
@@ -53,8 +52,10 @@ class Game:
     def update_engine_systems(self, dt):
         for _ in range(20):
             self.clock.update(dt)
+
             player_turn = self.action_system.update(dt)
             if player_turn:
+                print("player turn")
                 self.update_player_systems(dt)
 
             #! Run through systems
