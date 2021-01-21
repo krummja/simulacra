@@ -25,7 +25,7 @@ class InputController(Generic[T], EventDispatch[T], Manager):
 
     def __init__(self, game: Game) -> None:
         self.game = game
-        self._current_state = game.state.current_state
+        self._current_screen = game.screens.current_screen
 
     def handle_input(self) -> Optional[Callable[[], Optional[T]]]:
         all_key_events = list(tcod.event.get())
@@ -33,34 +33,34 @@ class InputController(Generic[T], EventDispatch[T], Manager):
         if len(key_events) > 0:
             event = key_events.pop()
             try:
-                value: Callable[[], Optional[T]] = self.dispatch(event)
+                command: Callable[[], Optional[T]] = self.dispatch(event)
             except StateBreak:
                 return None
-            if value is not None:
-                return value
+            if command is not None:
+                return command
 
     def ev_quit(self, event: tcod.event.Quit) -> Optional[T]:
-        return self._current_state.cmd_quit()
+        return self._current_screen.cmd_quit()
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[T]:
 
         # Check if our input is in the MOVE_KEYS library.
         if event.sym in CommandLibrary.MOVE_KEYS:
-            return self._current_state.cmd_move(*CommandLibrary.MOVE_KEYS[event.sym])
+            return self._current_screen.cmd_move(*CommandLibrary.MOVE_KEYS[event.sym])
 
         try:
             # If not, first try checking the current state's command library...
-            if event.sym in CommandLibrary.COMMAND_KEYS[self._current_state.name]:
-                commands = CommandLibrary.COMMAND_KEYS[self._current_state]
-                command = getattr(self._current_state, f"cmd_{commands[event.sym]}")
-                return command()
+            if event.sym in CommandLibrary.COMMAND_KEYS[self._current_screen.name]:
+                commands = CommandLibrary.COMMAND_KEYS[self._current_screen]
+                command = getattr(self._current_screen, f"cmd_{commands[event.sym]}")
+                return command
 
         except KeyError:
             # ... failing that, try a DEFAULT command.
             if event.sym in CommandLibrary.COMMAND_KEYS['DEFAULT']:
                 commands = CommandLibrary.COMMAND_KEYS['DEFAULT']
-                command = getattr(self._current_state, f"cmd_{commands[event.sym]}")
-                return command()
+                command = getattr(self._current_screen, f"cmd_{commands[event.sym]}")
+                return command
 
         else:
             # Oops! No valid commands - return None.

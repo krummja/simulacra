@@ -5,7 +5,7 @@ from simulacra.core import Game
 
 def main():
     game = Game()
-    game.loop()
+    game.start()
 
 
 if __name__ == '__main__':

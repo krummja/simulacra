@@ -33,5 +33,5 @@ class RenderSystem(System):
             self._game.renderer.root_console.print(
                 entity['POSITION'].x, entity['POSITION'].y, entity['RENDERABLE'].char)
 
-    def update(self) -> None:
+    def update(self, dt) -> None:
         self.render()

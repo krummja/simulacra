@@ -32,10 +32,17 @@ class ActionSystem(System):
             # TODO Add logic for incapacitation, etc.
 
             if entity.has('PLAYER'):
-                action = self.game.player.get_next_action()
-                if action:
-                    action()
-                return True
+
+                try:
+                    action = self.game.player.get_next_action()
+                    if action:
+                        action()
+                    return True
+
+                except IndexError:
+                    return False
+
             entity.fire_event('take-action')
             entity = entities.popleft()
+
         return False

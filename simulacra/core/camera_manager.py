@@ -4,7 +4,7 @@ from typing import Tuple, TYPE_CHECKING
 import numpy as np
 
 from .manager import Manager
-from .game import Options
+from simulacra.core.options import Options
 
 if TYPE_CHECKING:
     from .game import Game

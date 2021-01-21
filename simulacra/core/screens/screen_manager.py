@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import List, Dict, Optional, TYPE_CHECKING
 
 from simulacra.core.manager import Manager
+from .test_screen import TestScreen
 
 if TYPE_CHECKING:
     from tcod.console import Console
@@ -14,14 +15,17 @@ class ScreenManager(Manager):
     def __init__(self, game: Game) -> None:
         self.game = game
         self._stack: List[Screen] = []
-        self._screens: Dict[str, Screen] = {}
+        self._screens: Dict[str, Screen] = {
+            'TEST': TestScreen(self)
+        }
+        self.set_screen('TEST')
 
     @property
     def current_screen(self) -> Screen:
-        return self._stack(-1)
+        return self._stack[-1]
 
     def set_screen(self, screen: str) -> None:
-        """Dump the current stack and push a new screen."""
+        """Dump the current stack if there is one and push a new screen."""
         while len(self._stack) > 0:
             self.current_screen.on_leave()
             self._stack.pop()

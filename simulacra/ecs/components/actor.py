@@ -15,15 +15,15 @@ class Actor(Component):
 
     def on_energy_consumed(self, event) -> None:
         pass
-    
+
     def on_tick(self, event) -> None:
         pass
-    
+
     def add_energy(self, value: int) -> None:
         self._energy += value
         if self._energy >= 0:
             self._energy = 0
-            
+
     def reduce_energy(self, value: int):
         self.add_energy(value * -1)
 

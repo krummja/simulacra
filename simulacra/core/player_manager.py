@@ -39,7 +39,7 @@ class PlayerManager(Manager):
         player.add('Renderable', {'char': '@', 'color': '#f0f', 'bg': '#000'})
         player.add('Position', {'x': 10, 'y': 10})
         player.add('Player', {})
-        player.add('Actor', {'controller': None})
+        player.add('Actor', {})
         return player
 
     def get_next_action(self):
