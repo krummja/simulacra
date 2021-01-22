@@ -1,5 +1,5 @@
 ecstremity~=1.0.0
 setuptools~=45.2.0
-tcod~=0.0.0
+tcod~=11.19.3
 numpy~=1.19.5
 uuid~=1.30
