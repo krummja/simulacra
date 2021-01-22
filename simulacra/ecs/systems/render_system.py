@@ -5,7 +5,7 @@ from collections import defaultdict
 from simulacra.utils.debug import debugmethods
 
 from .system import System
-from simulacra.core.options import Options
+from simulacra.core.options import *
 
 if TYPE_CHECKING:
     from tcod.console import Console
@@ -36,8 +36,8 @@ class RenderSystem(System):
             e_x, e_y = entity['POSITION'].x - cam_x, entity['POSITION'].y - cam_y
 
             # If they're outside the stage panel, don't render
-            if not (0 <= e_x < Options.STAGE_PANEL_WIDTH and
-                    0 <= e_y < Options.STAGE_PANEL_HEIGHT):
+            if not (0 <= e_x < STAGE_PANEL_WIDTH and
+                    0 <= e_y < STAGE_PANEL_HEIGHT):
                 continue
 
             # If they're not visible, don't render

@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import time
 
-from simulacra.utils.debug import debug, debugmethods
-
 from simulacra.ecs.ecs_manager import ECSManager as ECS
 from simulacra.ecs.systems.render_system import RenderSystem
 from simulacra.ecs.systems.action_system import ActionSystem
@@ -18,6 +16,7 @@ from .log_manager import LogManager
 from .screens import ScreenManager
 from .input import InputController
 from .rendering import RenderManager
+from .screens.interface.ui_manager import UIManager
 
 
 class Game:
@@ -36,6 +35,7 @@ class Game:
         self.player = PlayerManager(self)        # Working: 2021-01-19
         self.screens = ScreenManager(self)       # Working: 2021-01-20
         self.input = InputController(self)       # Working: 2021-01-17
+        self.ui = UIManager(self)                # TODO
         self.log = LogManager(self)              # TODO
 
         self.action_system = ActionSystem(self)
@@ -59,7 +59,7 @@ class Game:
             if player_turn:
                 self.update_player_systems(dt)
 
-            #! Run through systems
+            # TODO Run through systems
 
             if player_turn:
                 return
@@ -67,10 +67,9 @@ class Game:
     def update_player_systems(self, dt):
         self.fov_system.update(dt)
         self.render_system.update(dt)
-        #! Particle Update
-        #! UI Update
-        #! Map Update
-        #! Log Update
+        # TODO Particle Update
+        # TODO Map Update
+        # TODO Log Update
 
     def loop(self) -> None:
         while True:
@@ -79,6 +78,7 @@ class Game:
 
             self.renderer.context.present(self.renderer.root_console)
             self.screens.update(dt)
+            self.ui.update(dt)
 
             self._last_update = now
 

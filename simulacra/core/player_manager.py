@@ -2,13 +2,11 @@ from __future__ import annotations
 from typing import Tuple, TYPE_CHECKING
 from collections import deque
 
-from simulacra.utils.geometry import Direction
 from simulacra.data.actions.action import Action
 from .manager import Manager
 
 if TYPE_CHECKING:
     from .game import Game
-    from ecstremity import EntityEvent
 
 
 class PlayerManager(Manager):
