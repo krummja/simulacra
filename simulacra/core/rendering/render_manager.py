@@ -46,8 +46,10 @@ class RenderManager(Manager):
         self._root_console.clear()
 
     # noinspection PyTypeChecker
-    def select_tile_mask(self, tile_grid: TileGrid, world_view) -> np.ndarray:
+    def select_tile_mask(self, tile_grid: TileGrid) -> np.ndarray:
         UNKNOWN = np.asarray((0, (0, 0, 0), (0, 0, 0)), dtype=tile_graphic)
+
+        _, world_view = self._game.camera.viewport
 
         if_visible = tile_grid.visible[world_view]
         if_explored = tile_grid.explored[world_view]
@@ -56,6 +58,5 @@ class RenderManager(Manager):
 
         condlist = (if_visible, if_explored)
         choicelist = (lit_tiles, unlit_tiles)
-        return np.select(condlist=condlist,
-                         choicelist=choicelist,
-                         default=UNKNOWN)
+
+        return np.select(condlist=condlist, choicelist=choicelist, default=UNKNOWN)

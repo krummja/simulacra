@@ -14,6 +14,7 @@ from .camera_manager import CameraManager
 from .player_manager import PlayerManager
 from .world_manager import WorldManager
 from .clock_manager import ClockManager
+from .log_manager import LogManager
 from .screens import ScreenManager
 from .input import InputController
 from .rendering import RenderManager
@@ -35,6 +36,7 @@ class Game:
         self.player = PlayerManager(self)        # Working: 2021-01-19
         self.screens = ScreenManager(self)       # Working: 2021-01-20
         self.input = InputController(self)       # Working: 2021-01-17
+        self.log = LogManager(self)              # TODO
 
         self.action_system = ActionSystem(self)
         self.status_system = None
@@ -47,9 +49,6 @@ class Game:
 
     def start(self):
         self._last_update = time.time()
-
-        self.area.fill_area()
-
         self.loop()
 
     def update_engine_systems(self, dt):

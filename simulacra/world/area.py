@@ -14,7 +14,7 @@ class Area:
         self._tiles = TileGrid(self._manager._game.renderer)
 
     @property
-    def tiles(self) -> TileGrid:
+    def grid(self) -> TileGrid:
         return self._tiles
 
     @property

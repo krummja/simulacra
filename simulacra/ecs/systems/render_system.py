@@ -26,31 +26,47 @@ class RenderSystem(System):
 
     def render_visible_entities(self, tile_grid: TileGrid) -> None:
         console = self._game.renderer.root_console
-        visible_entities: Dict[Tuple[int, int], List[Entity]] = defaultdict(list)
         cam_x, cam_y = self.game.camera.position
 
+        # Set up our visible entities dict
+        visible_entities: Dict[Tuple[int, int], List[Entity]] = defaultdict(list)
+
+        # Grab all of our RENDERABLE entities with a POSITION
         for entity in self._query.result:
             e_x, e_y = entity['POSITION'].x - cam_x, entity['POSITION'].y - cam_y
+
+            # If they're outside the stage panel, don't render
             if not (0 <= e_x < Options.STAGE_PANEL_WIDTH and
                     0 <= e_y < Options.STAGE_PANEL_HEIGHT):
                 continue
 
+            # If they're not visible, don't render
             if not tile_grid.visible[entity['POSITION'].ij]:
                 continue
 
-            # TODO: entity['RENDERABLE'].bg = self.get_bg_color(e_x, e_y)
+            # Override the background color of the entity to match the tile beneath
+            entity['RENDERABLE'].bg = self.get_bg_color(e_x, e_y)
 
+            # Generate the visible entity list for each dict position
             visible_entities[e_y, e_x].append(entity['RENDERABLE'])
 
+        # Get the ij indexed position and the graphics data
         for ij, graphics in visible_entities.items():
             g = min(graphics)
+
+            # Push the graphics data to the console
             console.tiles_rgb[["ch", "fg", "bg"]][ij] = g.char, g.color, g.bg
 
     def render_visible_tiles(self, tile_grid: TileGrid) -> None:
         console = self._game.renderer.root_console
-        screen_view, world_view = self._game.camera.viewport
-        console.clear()
-        console.tiles_rgb[screen_view] = self._game.renderer.select_tile_mask(tile_grid, world_view)
+        screen_view, _ = self._game.camera.viewport
+        console.tiles_rgb[screen_view] = self._game.renderer.select_tile_mask(tile_grid)
+
+    def get_bg_color(self, x: int, y: int) -> List[int]:
+        cam_x, cam_y = self._game.camera.position
+        target_x, target_y = x + cam_x, y + cam_y
+        target_tile = self._game.area.current_area.grid.tiles[target_y, target_x]
+        return list(target_tile[2][2][0:3])
 
     def update_camera_position(self) -> None:
         self._game.camera.position = self._game.player.entity['POSITION'].xy
@@ -58,8 +74,8 @@ class RenderSystem(System):
     def render(self) -> None:
         self._game.renderer.clear()
         self.update_camera_position()
-        self.render_visible_tiles(self._game.area.current_area.tiles)
-        self.render_visible_entities(self._game.area.current_area.tiles)
+        self.render_visible_tiles(self._game.area.current_area.grid)
+        self.render_visible_entities(self._game.area.current_area.grid)
 
     def update(self, dt) -> None:
         self.render()

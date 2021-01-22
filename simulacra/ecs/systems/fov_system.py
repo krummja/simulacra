@@ -30,4 +30,4 @@ class FOVSystem(System):
         tile_grid.explored |= tile_grid.visible
 
     def update(self, dt):
-        self.update_fov(self._game.area.current_area.tiles)
+        self.update_fov(self._game.area.current_area.grid)

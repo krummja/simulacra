@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from tcod.console import Console
 
 
-class ConsoleManager(Manager):
+class LogManager(Manager):
     """Manager for handling in-game log messages."""
 
     def __init__(self, game: Game) -> None:
