@@ -30,8 +30,8 @@ class Game:
         self.clock = ClockManager(self)          # Working: 2021-01-20
         self.renderer = RenderManager(self)      # Working: 2021-01-17
         self.world = WorldManager(self)          # TODO
-        self.area = AreaManager(self)            # TODO
         self.camera = CameraManager(self)        # Working: 2021-01-19
+        self.area = AreaManager(self)            # Working: 2021-01-21
         self.player = PlayerManager(self)        # Working: 2021-01-19
         self.screens = ScreenManager(self)       # Working: 2021-01-20
         self.input = InputController(self)       # Working: 2021-01-17
@@ -47,6 +47,9 @@ class Game:
 
     def start(self):
         self._last_update = time.time()
+
+        self.area.fill_area()
+
         self.loop()
 
     def update_engine_systems(self, dt):
@@ -74,6 +77,9 @@ class Game:
         while True:
             now = time.time()
             dt = now - self._last_update
-            self.screens.update(dt)
-            self._last_update = now
+
             self.renderer.context.present(self.renderer.root_console)
+            self.screens.update(dt)
+
+            self._last_update = now
+

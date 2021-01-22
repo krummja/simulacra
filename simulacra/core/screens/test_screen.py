@@ -18,7 +18,7 @@ class TestScreen(Screen):
         self._game: Game = manager.game
 
     def on_enter(self) -> None:
-        print(f"Entered: {self.name}")
+        pass
 
     def handle_input(self):
         command = self._game.input.handle_input()

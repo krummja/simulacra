@@ -18,9 +18,13 @@ class CameraManager(Manager):
 
     @property
     def position(self) -> Tuple[int, int]:
-        cam_x = self._position[0]
-        cam_y = self._position[1]
+        cam_x = self._position[0] - Options.STAGE_PANEL_WIDTH // 2
+        cam_y = self._position[1] - Options.STAGE_PANEL_HEIGHT // 2
         return cam_x, cam_y
+
+    @position.setter
+    def position(self, value: Tuple[int, int]) -> None:
+        self._position = value
 
     @property
     def viewport(self) -> Tuple[Tuple[slice, slice], Tuple[slice, slice]]:

@@ -35,7 +35,6 @@ class RenderSystem(System):
                     0 <= e_y < Options.STAGE_PANEL_HEIGHT):
                 continue
 
-            # FIXME: Alright, so we're not correctly setting the tile_grid.visible value
             if not tile_grid.visible[entity['POSITION'].ij]:
                 continue
 
@@ -49,11 +48,16 @@ class RenderSystem(System):
 
     def render_visible_tiles(self, tile_grid: TileGrid) -> None:
         console = self._game.renderer.root_console
-        viewport, _ = self._game.camera.viewport
-        console.tiles_rgb[viewport] = self._game.renderer.select_tile_mask(tile_grid)
+        screen_view, world_view = self._game.camera.viewport
+        console.clear()
+        console.tiles_rgb[screen_view] = self._game.renderer.select_tile_mask(tile_grid, world_view)
+
+    def update_camera_position(self) -> None:
+        self._game.camera.position = self._game.player.entity['POSITION'].xy
 
     def render(self) -> None:
         self._game.renderer.clear()
+        self.update_camera_position()
         self.render_visible_tiles(self._game.area.current_area.tiles)
         self.render_visible_entities(self._game.area.current_area.tiles)
 

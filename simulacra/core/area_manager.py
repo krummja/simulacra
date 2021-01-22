@@ -25,3 +25,13 @@ class AreaManager(Manager):
 
     def set_area(self, area: str) -> None:
         self._current_area = self._areas[area]
+
+    def create_tile_at_pos(self, x: int, y: int):
+        tile = self._game.ecs.engine.create_entity()
+        tile.add("TILE", {'move_cost': 0, 'transparent': True, 'char': ord('#'), 'color': (255,0,0), 'bg': (0,0,0)})
+        self._current_area.tiles.tiles[y, x] = tile['TILE'].data
+
+    def fill_area(self) -> None:
+        tile = self._game.ecs.engine.create_entity()
+        tile.add("TILE", {'move_cost': 0, 'transparent': True, 'char': ord('.'), 'color': (100, 100, 100), 'bg': (0,0,0)})
+        self._current_area.tiles.tiles[:] = tile['TILE'].data

@@ -52,4 +52,3 @@ class PlayerManager(Manager):
     def move(self, direction: Tuple[int, int]) -> None:
         action = Action(self.entity, 'try_move', direction)
         self.action_queue.append(action.act)
-        print(self.entity['POSITION'].xy)                                       #! PRINT
