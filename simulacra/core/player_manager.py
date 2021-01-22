@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Tuple, TYPE_CHECKING
 from collections import deque
 
-from simulacra.data.actions.action import Action
+from simulacra.data.actions.action import Action, Impossible
 from .manager import Manager
 
 if TYPE_CHECKING:
@@ -48,5 +48,6 @@ class PlayerManager(Manager):
         return self.action_queue.popleft()
 
     def move(self, direction: Tuple[int, int]) -> None:
-        action = Action(self.entity, 'try_move', direction)
-        self.action_queue.append(action.act)
+        if not self.game.area.current_area.is_blocked(*direction):
+            action = Action(self.entity, 'try_move', direction)
+            self.action_queue.append(action.act)

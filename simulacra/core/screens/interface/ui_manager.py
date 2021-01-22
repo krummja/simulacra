@@ -11,7 +11,8 @@ if TYPE_CHECKING:
 class UIManager(Manager):
 
     def __init__(self, game: Game) -> None:
-        super().__init__(game)
+        super().__init__()
+        self._game = game
 
     def update(self, dt) -> None:
         pass

@@ -12,6 +12,8 @@ class Motility(Component):
     name = "MOTILITY"
 
     def on_try_move(self, evt):
+        # TODO: I should try using the area_grid's 'move_cost' field to effect the
+        # TODO: ... energy delta, to give terrains different energy requirements.
         position = self.entity['POSITION']
         target_x = position.x + evt.data[0]
         target_y = position.y + evt.data[1]

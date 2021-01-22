@@ -24,3 +24,10 @@ class Area:
     @property
     def height(self) -> int:
         return self._tiles.height
+
+    def is_blocked(self, x: int, y: int) -> bool:
+        if not (0 <= x < self.width and 0 <= y < self.height):
+            return True
+        if not self.grid.tiles[y, x]["move_cost"]:
+            return True
+        return False
