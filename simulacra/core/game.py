@@ -50,6 +50,7 @@ class Game:
 
     def start(self):
         self._last_update = time.time()
+        self.area.current_area.fill_area()
         self.loop()
 
     def update_engine_systems(self, dt):
@@ -77,10 +78,13 @@ class Game:
             now = time.time()
             dt = now - self._last_update
 
+            self.renderer.root_console.print(2, 2, "test text", fg=(255, 255, 255))
+
             self.renderer.context.present(
                 self.renderer.root_console,
                 keep_aspect=True,
-                integer_scaling=True
+                integer_scaling=True,
+                align=(0.5, 0.5)
                 )
 
             self.screens.update(dt)

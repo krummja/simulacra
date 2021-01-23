@@ -54,11 +54,11 @@ class RenderSystem(System):
             visible_entities[e_y, e_x].append(entity['RENDERABLE'])
 
         # Get the ij indexed position and the graphics data
-        for ij, graphics in visible_entities.items():
+        for (y, x), graphics in visible_entities.items():
             g = min(graphics)
 
             # Push the graphics data to the console
-            console.tiles_rgb[["ch", "fg", "bg"]][ij] = g.char, g.color, g.bg
+            console.tiles_rgb[["ch", "fg", "bg"]][y, x] = g.char, g.color, g.bg
 
     def render_visible_tiles(self, tile_grid: TileGrid) -> None:
         console = self._game.renderer.root_console
@@ -77,13 +77,11 @@ class RenderSystem(System):
             condlist=condlist, choicelist=choicelist, default=UNKNOWN
             )
 
-        console.tiles_rgb["bg"] = (100, 0, 0)
-
     def get_bg_color(self, x: int, y: int) -> List[int]:
         cam_x, cam_y = self._game.camera.position
         target_x, target_y = x + cam_x, y + cam_y
         target_tile = self._game.area.current_area.grid.tiles[target_y, target_x]
-        return list(target_tile[2][2][0:3])
+        return list(target_tile[2][1][0:3])
 
     def update_camera_position(self) -> None:
         self._game.camera.position = self._game.player.entity['POSITION'].xy

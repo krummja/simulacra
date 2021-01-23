@@ -50,11 +50,10 @@ class PlayerManager(Manager):
     def move(self, direction: Tuple[int, int]) -> None:
         def blocked() -> bool:
             if self.game.area.current_area.is_blocked(
-                    self.position[0] + direction[0],
-                    self.position[1] + direction[1]
+                self.position[0] + direction[0],
+                self.position[1] + direction[1]
                 ):
                 return False
             return True
         action = Action(self.entity, 'try_move', direction, blocked).plan()
         self.action_queue.append(action.act)
-        print(self.position)

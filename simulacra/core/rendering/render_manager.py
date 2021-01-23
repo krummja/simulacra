@@ -21,7 +21,7 @@ class RenderManager(Manager):
         self.game = game
 
         self._context = tcod.context.new_window(
-            width=(CONSOLE_WIDTH + 5) * TILE_SIZE,
+            width=CONSOLE_WIDTH * TILE_SIZE,
             height=(CONSOLE_HEIGHT * TILE_SIZE),
             tileset=TILESET,
             title="Roguelike",
@@ -30,7 +30,7 @@ class RenderManager(Manager):
             )
 
         self._root_console = self._context.new_console(
-            min_columns=(CONSOLE_WIDTH // 2) + 1,
+            min_columns=(CONSOLE_WIDTH // 2),
             min_rows=(CONSOLE_HEIGHT // 2),
             magnification=MAGNIFICATION
             )

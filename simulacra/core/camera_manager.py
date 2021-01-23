@@ -20,7 +20,6 @@ class CameraManager(Manager):
     def position(self) -> Tuple[int, int]:
         cam_x = self._position[0] - (CONSOLE_WIDTH // 4)
         cam_y = self._position[1] - (CONSOLE_HEIGHT // 4)
-        print(cam_x, cam_y)
         return cam_x, cam_y
 
     @position.setter
