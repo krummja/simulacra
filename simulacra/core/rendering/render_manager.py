@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
-from screeninfo import get_monitors
 import tcod
 
 from simulacra.core.options import *
@@ -41,13 +40,3 @@ class RenderManager(Manager):
 
     def clear(self) -> None:
         self._root_console.clear()
-
-
-def get_screen_dims():
-    monitors = get_monitors()
-    width = monitors[0].width
-    height = monitors[0].height
-    return width, height
-
-
-
