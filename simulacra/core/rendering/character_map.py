@@ -19,7 +19,7 @@ class CharacterMap:
 
     @property
     def as_array(self) -> np.ndarray:
-        return np.array(self._data, dtype=np.int).reshape(80, 16)
+        return np.array(self._data, dtype=np.int).reshape(32, 16)
 
     @property
     def enumerated(self) -> Generator[Tuple[int, int], None, None]:
@@ -28,8 +28,8 @@ class CharacterMap:
 
 
 TILESET = tcod.tileset.load_tilesheet(
-    path="./simulacra/assets/Bisasam_20x20.png",
+    path="./simulacra/assets/Simulacra_20x20.png",
     columns=16,
-    rows=16,
+    rows=32,
     charmap=CharacterMap().data
     )

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Tuple
+from typing import Tuple, Union
 
 from ecstremity import Component
 
@@ -8,11 +8,14 @@ class Renderable(Component):
     name = "RENDERABLE"
     def __init__(
             self,
-            char: str,
+            char: Union[str, int],
             color: Tuple[int, int, int],
             bg: Tuple[int, int, int]
         ) -> None:
-        self.char = ord(char)
+        if isinstance(char, str):
+            self.char = ord(char)
+        else:
+            self.char = char
         self.color = color
         self.bg = bg
         self.render_order: int = 0

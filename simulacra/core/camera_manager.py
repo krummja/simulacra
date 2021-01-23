@@ -18,8 +18,9 @@ class CameraManager(Manager):
 
     @property
     def position(self) -> Tuple[int, int]:
-        cam_x = self._position[0] - STAGE_PANEL_WIDTH // 2
-        cam_y = self._position[1] - STAGE_PANEL_HEIGHT // 2
+        cam_x = self._position[0] - (CONSOLE_WIDTH // 4)
+        cam_y = self._position[1] - (CONSOLE_HEIGHT // 4)
+        print(cam_x, cam_y)
         return cam_x, cam_y
 
     @position.setter
@@ -35,16 +36,22 @@ class CameraManager(Manager):
         world_left = max(0, cam_x)
         world_top = max(0, cam_y)
 
-        screen_width = min(STAGE_PANEL_WIDTH - screen_left,
-                           self._game.area.current_area.width - world_left)
+        screen_width = min(
+            (CONSOLE_WIDTH // 2) - screen_left,
+            self._game.area.current_area.width - world_left
+            )
+        screen_height = min(
+            (CONSOLE_HEIGHT // 2) - screen_top,
+            self._game.area.current_area.height - world_top
+            )
 
-        screen_height = min(STAGE_PANEL_HEIGHT - screen_top,
-                            self._game.area.current_area.height - world_top)
-
-        screen_view = np.s_[screen_top:screen_top + screen_height,
-                            screen_left:screen_left + screen_width]
-
-        world_view = np.s_[world_top:world_top + screen_height,
-                           world_left:world_left + screen_width]
+        screen_view = np.s_[
+            screen_top:screen_top + screen_height,
+            screen_left:screen_left + screen_width
+            ]
+        world_view = np.s_[
+            world_top:world_top + screen_height,
+            world_left:world_left + screen_width
+            ]
 
         return screen_view, world_view

@@ -2,7 +2,10 @@ from __future__ import annotations
 from typing import Dict, List, Tuple, TYPE_CHECKING
 from collections import defaultdict
 
+import numpy as np
+
 from simulacra.utils.debug import debugmethods
+from simulacra.core.rendering.tile_data import tile_graphic
 
 from .system import System
 from simulacra.core.options import *
@@ -36,8 +39,8 @@ class RenderSystem(System):
             e_x, e_y = entity['POSITION'].x - cam_x, entity['POSITION'].y - cam_y
 
             # If they're outside the stage panel, don't render
-            if not (0 <= e_x < STAGE_PANEL_WIDTH and
-                    0 <= e_y < STAGE_PANEL_HEIGHT):
+            if not (0 <= e_x < CONSOLE_WIDTH and
+                    0 <= e_y < CONSOLE_HEIGHT):
                 continue
 
             # If they're not visible, don't render
@@ -59,8 +62,22 @@ class RenderSystem(System):
 
     def render_visible_tiles(self, tile_grid: TileGrid) -> None:
         console = self._game.renderer.root_console
-        screen_view, _ = self._game.camera.viewport
-        console.tiles_rgb[screen_view] = self._game.renderer.select_tile_mask(tile_grid)
+        screen_view, world_view = self._game.camera.viewport
+        UNKNOWN = np.asarray((0, (0, 0, 0), (0, 0, 0)), dtype=tile_graphic)
+
+        if_visible = tile_grid.visible[world_view]
+        if_explored = tile_grid.explored[world_view]
+        lit_tiles = tile_grid.tiles["light"][world_view]
+        unlit_tiles = tile_grid.tiles["dark"][world_view]
+
+        condlist = (if_visible, if_explored)
+        choicelist = (lit_tiles, unlit_tiles)
+
+        console.tiles_rgb[screen_view] = np.select(
+            condlist=condlist, choicelist=choicelist, default=UNKNOWN
+            )
+
+        console.tiles_rgb["bg"] = (100, 0, 0)
 
     def get_bg_color(self, x: int, y: int) -> List[int]:
         cam_x, cam_y = self._game.camera.position

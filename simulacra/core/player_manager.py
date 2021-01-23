@@ -36,8 +36,8 @@ class PlayerManager(Manager):
 
     def initialize_player(self):
         player = self.game.ecs.engine.create_entity()
-        player.add('Renderable', {'char': '@', 'color': (255, 0, 255), 'bg': (0, 0, 0)})
-        player.add('Position', {'x': 10, 'y': 10})
+        player.add('Renderable', {'char': 57345, 'color': (255, 0, 255), 'bg': (0, 0, 0)})
+        player.add('Position', {'x': 30, 'y': 30})
         player.add('Player', {})
         player.add('Actor', {})
         player.add('Motility', {})
@@ -48,6 +48,13 @@ class PlayerManager(Manager):
         return self.action_queue.popleft()
 
     def move(self, direction: Tuple[int, int]) -> None:
-        if not self.game.area.current_area.is_blocked(*direction):
-            action = Action(self.entity, 'try_move', direction)
-            self.action_queue.append(action.act)
+        def blocked() -> bool:
+            if self.game.area.current_area.is_blocked(
+                    self.position[0] + direction[0],
+                    self.position[1] + direction[1]
+                ):
+                return False
+            return True
+        action = Action(self.entity, 'try_move', direction, blocked).plan()
+        self.action_queue.append(action.act)
+        print(self.position)

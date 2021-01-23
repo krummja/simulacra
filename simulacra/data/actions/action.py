@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import Any, NamedTuple, TYPE_CHECKING
+from typing import Callable, Any, Optional, TYPE_CHECKING
+from dataclasses import dataclass
 
 if TYPE_CHECKING:
     from ecstremity import Entity
@@ -9,11 +10,29 @@ class Impossible(Exception):
     """Halt the current action attempt and send a message to the log."""
 
 
-class Action(NamedTuple):
+@dataclass
+class Action:
     entity: Entity
     event: str
     data: Any
+    condition: Callable[[], bool] = None
 
-    def act(self):
+    @property
+    def success(self) -> bool:
+        return self._success
+
+    @success.setter
+    def success(self, value: bool) -> None:
+        self._success = value
+
+    def plan(self) -> Optional[Action]:
+        if self.condition:
+            self.success = self.condition()
+        return self
+
+    def act(self) -> None:
         """Act step, which fires the event for an action success."""
-        self.entity.fire_event(self.event, self.data)
+        if self.success == False:
+            self.entity.fire_event(self.event, self.success)
+        else:
+            self.entity.fire_event(self.event, self.data)

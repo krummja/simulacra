@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import tcod
 import time
 
 from simulacra.ecs.ecs_manager import ECSManager as ECS
@@ -76,9 +77,13 @@ class Game:
             now = time.time()
             dt = now - self._last_update
 
-            self.renderer.context.present(self.renderer.root_console)
+            self.renderer.context.present(
+                self.renderer.root_console,
+                keep_aspect=True,
+                integer_scaling=True
+                )
+
             self.screens.update(dt)
             self.ui.update(dt)
 
             self._last_update = now
-
