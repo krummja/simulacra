@@ -22,18 +22,14 @@ class RenderManager(Manager):
 
         self._context = tcod.context.new_window(
             width=CONSOLE_WIDTH * TILE_SIZE,
-            height=(CONSOLE_HEIGHT * TILE_SIZE),
+            height=CONSOLE_HEIGHT * TILE_SIZE,
             tileset=TILESET,
             title="Roguelike",
             renderer=tcod.RENDERER_SDL2,
             vsync=True
             )
 
-        self._root_console = self._context.new_console(
-            min_columns=(CONSOLE_WIDTH // 2),
-            min_rows=(CONSOLE_HEIGHT // 2),
-            magnification=MAGNIFICATION
-            )
+        self._root_console = tcod.Console(CONSOLE_WIDTH, CONSOLE_HEIGHT)
 
     @property
     def context(self) -> Context:

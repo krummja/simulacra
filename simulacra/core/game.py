@@ -79,12 +79,10 @@ class Game:
             dt = now - self._last_update
 
             self.renderer.root_console.print(2, 2, "test text", fg=(255, 255, 255))
-
             self.renderer.context.present(
                 self.renderer.root_console,
                 keep_aspect=True,
-                integer_scaling=True,
-                align=(0.5, 0.5)
+                integer_scaling=True
                 )
 
             self.screens.update(dt)

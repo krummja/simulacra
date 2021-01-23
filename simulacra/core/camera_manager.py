@@ -18,8 +18,8 @@ class CameraManager(Manager):
 
     @property
     def position(self) -> Tuple[int, int]:
-        cam_x = self._position[0] - (CONSOLE_WIDTH // 4)
-        cam_y = self._position[1] - (CONSOLE_HEIGHT // 4)
+        cam_x = self._position[0] - STAGE_PANEL_WIDTH // 2
+        cam_y = self._position[1] - STAGE_PANEL_HEIGHT // 2
         return cam_x, cam_y
 
     @position.setter
@@ -36,11 +36,11 @@ class CameraManager(Manager):
         world_top = max(0, cam_y)
 
         screen_width = min(
-            (CONSOLE_WIDTH // 2) - screen_left,
+            STAGE_PANEL_WIDTH - screen_left,
             self._game.area.current_area.width - world_left
             )
         screen_height = min(
-            (CONSOLE_HEIGHT // 2) - screen_top,
+            STAGE_PANEL_HEIGHT - screen_top,
             self._game.area.current_area.height - world_top
             )
 
