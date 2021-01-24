@@ -1,49 +1,51 @@
 from __future__ import annotations
 from typing import Dict, Tuple
 
+from bearlibterminal import terminal as blt
 import tcod
+
+blt.TK_KP_ENTER
 
 
 class CommandLibrary:
 
     COMMAND_KEYS: Dict[str, Dict[int, str]] = {
         'DEFAULT': {
-            tcod.event.K_RETURN: "confirm",
-            tcod.event.K_KP_ENTER: "confirm",
-            tcod.event.K_ESCAPE: "escape",
+            blt.TK_RETURN: "confirm",
+            blt.TK_KP_ENTER: "confirm",
+            blt.TK_ESCAPE: "escape",
             },
         'MAIN_MENU': {
-            tcod.event.K_q: "quit",
+            blt.TK_Q: "quit",
             },
         'PLAYER_READY': {
-            tcod.event.K_d: "drop",
-            tcod.event.K_e: "equipment",
-            tcod.event.K_g: "pickup",
-            tcod.event.K_i: "inventory",
-            tcod.event.K_l: "examine",
+            blt.TK_D: "drop",
+            blt.TK_E: "equipment",
+            blt.TK_G: "pickup",
+            blt.TK_I: "inventory",
+            blt.TK_L: "examine",
             }
         }
 
     MOVE_KEYS: Dict[int, Tuple[int, int]] = {
         # Arrow keys.
-        tcod.event.K_LEFT: (-1, 0),
-        tcod.event.K_RIGHT: (1, 0),
-        tcod.event.K_UP: (0, -1),
-        tcod.event.K_DOWN: (0, 1),
-        tcod.event.K_HOME: (-1, -1),
-        tcod.event.K_END: (-1, 1),
-        tcod.event.K_PAGEUP: (1, -1),
-        tcod.event.K_PAGEDOWN: (1, 1),
-        tcod.event.K_PERIOD: (0, 0),
+        blt.TK_LEFT: (-2, 0),
+        blt.TK_RIGHT: (2, 0),
+        blt.TK_UP: (0, -1),
+        blt.TK_DOWN: (0, 1),
+        blt.TK_HOME: (-2, -1),
+        blt.TK_END: (-2, 1),
+        blt.TK_PAGEUP: (2, -1),
+        blt.TK_PAGEDOWN: (2, 1),
+        blt.TK_PERIOD: (0, 0),
         # Numpad keys.
-        tcod.event.K_KP_1: (-1, 1),
-        tcod.event.K_KP_2: (0, 1),
-        tcod.event.K_KP_3: (1, 1),
-        tcod.event.K_KP_4: (-1, 0),
-        tcod.event.K_KP_5: (0, 0),
-        tcod.event.K_CLEAR: (0, 0),
-        tcod.event.K_KP_6: (1, 0),
-        tcod.event.K_KP_7: (-1, -1),
-        tcod.event.K_KP_8: (0, -1),
-        tcod.event.K_KP_9: (1, -1),
+        blt.TK_KP_1: (-2, 1),
+        blt.TK_KP_2: (0, 1),
+        blt.TK_KP_3: (2, 1),
+        blt.TK_KP_4: (-2, 0),
+        blt.TK_KP_5: (0, 0),
+        blt.TK_KP_6: (2, 0),
+        blt.TK_KP_7: (-2, -1),
+        blt.TK_KP_8: (0, -1),
+        blt.TK_KP_9: (2, -1),
         }

@@ -41,7 +41,7 @@ class Game:
 
         self.action_system = ActionSystem(self)
         self.status_system = None
-        self.fov_system = FOVSystem(self)
+        # self.fov_system = FOVSystem(self)
         self.render_system = RenderSystem(self)
         self.interface_system = None
         self.particle_system = None
@@ -50,8 +50,8 @@ class Game:
 
     def start(self):
         self._last_update = time.time()
-        self.area.current_area.fill_area()
         self.loop()
+        self.renderer.root_console.close()
 
     def update_engine_systems(self, dt):
         for _ in range(20):
@@ -67,8 +67,9 @@ class Game:
                 return
 
     def update_player_systems(self, dt):
-        self.fov_system.update(dt)
+        # self.fov_system.update(dt)
         self.render_system.update(dt)
+        print(self.player.position)
         # TODO Particle Update
         # TODO Map Update
         # TODO Log Update
@@ -78,13 +79,7 @@ class Game:
             now = time.time()
             dt = now - self._last_update
 
-            self.renderer.root_console.print(2, 2, "test text", fg=(255, 255, 255))
-            self.renderer.context.present(
-                self.renderer.root_console,
-                keep_aspect=True,
-                integer_scaling=True
-                )
-
+            self.renderer.root_console.refresh()
             self.screens.update(dt)
             self.ui.update(dt)
 

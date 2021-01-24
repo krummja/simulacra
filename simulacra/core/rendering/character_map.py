@@ -3,6 +3,7 @@ from typing import List, Generator, Tuple
 
 import numpy as np
 import tcod
+import bearlibterminal as blt
 
 
 class CharacterMap:
@@ -27,9 +28,4 @@ class CharacterMap:
             yield (count, value)
 
 
-TILESET = tcod.tileset.load_tilesheet(
-    path="./simulacra/assets/Simulacra_20x20.png",
-    columns=16,
-    rows=32,
-    charmap=CharacterMap().data
-    )
+

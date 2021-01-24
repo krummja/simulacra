@@ -12,6 +12,10 @@ from .size import Size
 from .span import Span
 
 
+def clamp(n, smallest, largest):
+    return max(smallest, min(n, largest))
+
+
 class Rect(tuple):
     """Representation of a Rectangle."""
 
@@ -325,6 +329,11 @@ class Rect(tuple):
             A = self.replace(left=A_x, right=A_x+(self.width//2), top=A_y, bottom=A_y+(self.height//2))
             B = other.replace(left=B_x, right=B_x+(other.width//2), top=B_y, bottom=B_y+(other.height//2))
         return A, B
+
+    def clamp(self, x: int, y: int):
+        x = clamp(x, self.left, self.right)
+        y = clamp(y, self.top, self.bottom)
+        return x, y
 
     def __contains__(self, other: object) -> bool:
         """Check if this Rect _properly_ contains a target Rect or Point."""

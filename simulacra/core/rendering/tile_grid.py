@@ -16,7 +16,6 @@ class TileGrid:
         self.manager = manager
         self.shape = (STAGE_HEIGHT, STAGE_WIDTH)
         self.tiles = np.zeros(self.shape, dtype=tile_dt)
-        self.effects = np.zeros(self.shape, dtype=tile_graphic)
         self.explored = np.zeros(self.shape, dtype=np.bool)
         self.visible = np.zeros(self.shape, dtype=np.bool)
 

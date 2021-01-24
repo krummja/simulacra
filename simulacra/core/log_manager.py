@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING
 import tcod
 from enum import Enum
 
-from .rendering.character_map import TILESET
 from .manager import Manager
 
 if TYPE_CHECKING:

@@ -9,14 +9,14 @@ class Renderable(Component):
     def __init__(
             self,
             char: Union[str, int],
-            color: Tuple[int, int, int],
+            fg: Tuple[int, int, int],
             bg: Tuple[int, int, int]
         ) -> None:
         if isinstance(char, str):
             self.char = ord(char)
         else:
             self.char = char
-        self.color = color
+        self.fg = fg
         self.bg = bg
         self.render_order: int = 0
 

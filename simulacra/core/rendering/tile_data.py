@@ -5,8 +5,8 @@ import numpy as np
 
 tile_graphic = np.dtype([
     ("ch", np.int),
-    ("fg", "3B"),
-    ("bg", "3B")
+    ("fg", "4B"),
+    ("bg", "4B")
     ])
 
 
