@@ -12,8 +12,8 @@ from .size import Size
 from .span import Span
 
 
-def clamp(n, smallest, largest):
-    return max(smallest, min(n, largest))
+def clamp(number, low, high):
+    return max(low * 1.0, min(number * 1.0, high * 1.0))
 
 
 class Rect(tuple):
@@ -333,7 +333,7 @@ class Rect(tuple):
     def clamp(self, x: int, y: int):
         x = clamp(x, self.left, self.right)
         y = clamp(y, self.top, self.bottom)
-        return x, y
+        return int(x), int(y)
 
     def __contains__(self, other: object) -> bool:
         """Check if this Rect _properly_ contains a target Rect or Point."""

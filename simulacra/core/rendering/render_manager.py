@@ -33,8 +33,8 @@ class RenderManager(Manager):
         window_title = "Simulacra"
         size = f"size={CONSOLE_WIDTH}x{CONSOLE_HEIGHT}"
         title = f"title={window_title}"
-        cellsize = f"cellsize={TILE_SIZE//2}x{TILE_SIZE}"
-        window = "window: " + size + "," + title + "," + cellsize
+        cellsize = f"cellsize={20//2}x{20}"
+        window = "window: " + ", " + size + "," + title + "," + cellsize
 
         self._root_console.set(window)
         self._root_console.set("font: default")
@@ -47,6 +47,8 @@ class RenderManager(Manager):
         datastring += tiledata['path'] + ", "
         datastring += "codepage=" + tiledata['codepage'] + ", "
         datastring += "size=" + tiledata['size'] + ", "
+        # datastring += 'resize=' + tiledata['resize'] + ", "
+        # datastring += 'resize-filter=' + tiledata['resize-filter'] + ", "
         datastring += "align=" + tiledata['align'] + ", "
         datastring += "spacing=" + tiledata['spacing']
         self._root_console.set(datastring)
@@ -59,8 +61,10 @@ TILE_DATA = {
         'path': './simulacra/assets/Simulacra_20x20_BLT.png',
         'codepage': '1250',
         'size': '20x20',
+        'resize': '40x40',
+        'resize-filter': 'none',
         'align': 'center',
-        'spacing': '2x2'
+        'spacing': '4x4'
         },
     'ASCII': {
         'address': 0xE500,

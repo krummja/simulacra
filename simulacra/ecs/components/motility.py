@@ -17,7 +17,7 @@ class Motility(Component):
                 evt.prevent()
         else:
             position = self.entity['POSITION']
-            target_x = position.x + evt.data[0]
+            target_x = position.x + (evt.data[0] * 2)
             target_y = position.y + evt.data[1]
             self.entity['POSITION'].xy = (target_x, target_y)
             evt.handle()

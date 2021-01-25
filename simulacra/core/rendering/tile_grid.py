@@ -14,7 +14,7 @@ class TileGrid:
 
     def __init__(self, manager: RenderManager) -> None:
         self.manager = manager
-        self.shape = (STAGE_HEIGHT, STAGE_WIDTH)
+        self.shape = (STAGE_HEIGHT * 2, STAGE_WIDTH * 4)
         self.tiles = np.zeros(self.shape, dtype=tile_dt)
         self.explored = np.zeros(self.shape, dtype=np.bool)
         self.visible = np.zeros(self.shape, dtype=np.bool)
