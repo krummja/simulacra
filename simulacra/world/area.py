@@ -12,8 +12,8 @@ if TYPE_CHECKING:
 class Tile(defaultdict):
     def __init__(
             self,
-            char: str = chr(0xE003),
-            fg: str = "dark green",
+            char: str = chr(0xE006),
+            fg: str = 0xFF888888,
             bg: str = None,
             transparent: bool= True,
             move_cost: int = 1,
@@ -40,11 +40,6 @@ class Area:
             STAGE_HEIGHT - 1,
             base_tile
             )
-
-        test_tile = self._manager.game.ecs.engine.create_entity()
-        test_tile.add('TILE', Tile(fg="red"))
-        for i in range(STAGE_HEIGHT):
-            self._tiles[10, i] = test_tile
 
     @property
     def grid(self) -> Array2D:

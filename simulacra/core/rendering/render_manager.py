@@ -33,7 +33,7 @@ class RenderManager(Manager):
         window_title = "Simulacra"
         size = f"size={CONSOLE_WIDTH}x{CONSOLE_HEIGHT}"
         title = f"title={window_title}"
-        cellsize = f"cellsize={20//2}x{20}"
+        cellsize = f"cellsize={TILE_SIZE//2}x{TILE_SIZE}"
         window = "window: " + ", " + size + "," + title + "," + cellsize
 
         self._root_console.set(window)
@@ -58,13 +58,13 @@ TILE_DATA = {
     'Simulacra': {
         'address': 0xE000,
         'codepoint': 'U+E000',
-        'path': './simulacra/assets/Simulacra_20x20_BLT.png',
+        'path': './simulacra/assets/simulacra16x16.png',
         'codepage': '1250',
-        'size': '20x20',
-        'resize': '40x40',
+        'size': '16x16',
+        'resize': '32x32',
         'resize-filter': 'nearest',
         'align': 'top-left',
-        'spacing': '2x2'
+        'spacing': '1x1'
         },
     'ASCII': {
         'address': 0xE500,
