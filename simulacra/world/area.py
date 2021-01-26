@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING
 from collections import defaultdict
 from simulacra.core.options import *
 from simulacra.utils.geometry.array2d import Array2D
-from simulacra.core.rendering.tile_grid import TileGrid
 
 if TYPE_CHECKING:
     from simulacra.core.area_manager import AreaManager
@@ -37,18 +36,18 @@ class Area:
         base_tile = self._manager.game.ecs.engine.create_entity()
         base_tile.add('TILE', Tile())
         self._tiles = Array2D(
-            STAGE_WIDTH,
-            STAGE_HEIGHT,
+            STAGE_WIDTH - 3,
+            STAGE_HEIGHT - 1,
             base_tile
             )
 
         test_tile = self._manager.game.ecs.engine.create_entity()
         test_tile.add('TILE', Tile(fg="red"))
         for i in range(STAGE_HEIGHT):
-            self._tiles[20, i] = test_tile
+            self._tiles[10, i] = test_tile
 
     @property
-    def grid(self) -> TileGrid:
+    def grid(self) -> Array2D:
         return self._tiles
 
     @property

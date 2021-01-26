@@ -31,7 +31,7 @@ class Game:
         self.clock = ClockManager(self)          # Working: 2021-01-20
         self.renderer = RenderManager(self)      # Working: 2021-01-17
         self.world = WorldManager(self)          # TODO
-        # self.camera = CameraManager(self)        # Working: 2021-01-19
+        self.camera = CameraManager(self)        # Working: 2021-01-19
         self.area = AreaManager(self)            # Working: 2021-01-21
         self.player = PlayerManager(self)        # Working: 2021-01-19
         self.screens = ScreenManager(self)       # Working: 2021-01-20
@@ -68,6 +68,7 @@ class Game:
 
     def update_player_systems(self, dt):
         # self.fov_system.update(dt)
+        self.camera.update(dt)
         self.render_system.update(dt)
         # TODO Particle Update
         # TODO Map Update

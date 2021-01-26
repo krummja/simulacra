@@ -47,8 +47,8 @@ class RenderManager(Manager):
         datastring += tiledata['path'] + ", "
         datastring += "codepage=" + tiledata['codepage'] + ", "
         datastring += "size=" + tiledata['size'] + ", "
-        # datastring += 'resize=' + tiledata['resize'] + ", "
-        # datastring += 'resize-filter=' + tiledata['resize-filter'] + ", "
+        datastring += 'resize=' + tiledata['resize'] + ", "
+        datastring += 'resize-filter=' + tiledata['resize-filter'] + ", "
         datastring += "align=" + tiledata['align'] + ", "
         datastring += "spacing=" + tiledata['spacing']
         self._root_console.set(datastring)
@@ -62,9 +62,9 @@ TILE_DATA = {
         'codepage': '1250',
         'size': '20x20',
         'resize': '40x40',
-        'resize-filter': 'none',
-        'align': 'center',
-        'spacing': '4x4'
+        'resize-filter': 'nearest',
+        'align': 'top-left',
+        'spacing': '2x2'
         },
     'ASCII': {
         'address': 0xE500,
