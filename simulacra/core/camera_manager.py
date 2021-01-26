@@ -63,7 +63,7 @@ class CameraManager(Manager):
         # The camera is positioned at player coordinates, offset by half the width of the
         # total viewport in both dimensions.
         camera = (
-            player_x - ((STAGE_PANEL_WIDTH - 4) // 2),
+            player_x - ((STAGE_PANEL_WIDTH - 8) // 2),
             player_y - ((STAGE_PANEL_HEIGHT - 4) // 2)
             )
 
