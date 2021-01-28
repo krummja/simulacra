@@ -28,7 +28,7 @@ class Array2D(Generic[T]):
         return self._elements
 
     def __getitem__(self, key: Tuple[int, int]) -> T:
-        return self._elements[key[0] // 4][key[1] // 2]
+        return self._elements[key[0]][key[1]]
 
     def __setitem__(self, key: Tuple[int, int], value: T) -> None:
-        self._elements[key[0] // 2][key[1]] = value
+        self._elements[key[0]][key[1]] = value

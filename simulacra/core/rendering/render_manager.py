@@ -60,8 +60,8 @@ TILE_DATA = {
         'codepoint': 'U+E000',
         'path': './simulacra/assets/simulacra16x16.png',
         'codepage': '1250',
-        'size': '16x16',
-        'resize': '32x32',
+        'size': f'{TILE_SIZE}x{TILE_SIZE}',
+        'resize': f'{TILE_SIZE * SCALE}x{TILE_SIZE * SCALE}',
         'resize-filter': 'nearest',
         'align': 'top-left',
         'spacing': '1x1'

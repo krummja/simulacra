@@ -5,6 +5,7 @@ import math
 
 from simulacra.utils.math_utils import mod
 from simulacra.utils.geometry import Rect
+from simulacra.utils.render_utils import *
 
 from .manager import Manager
 from simulacra.core.options import *
@@ -61,11 +62,11 @@ class CameraManager(Manager):
         player_y = self._game.player.position[1]
 
         camera = (
-            player_x - ((STAGE_PANEL_WIDTH - 8) // 2),
-            player_y - ((STAGE_PANEL_HEIGHT - 4) // 2)
+            player_x - ((STAGE_PANEL_WIDTH) // 2),
+            player_y - ((STAGE_PANEL_HEIGHT) // 2)
             )
 
-        camera = camera_range.clamp(camera[0] * 2, camera[1] * 2)
+        camera = camera_range.clamp(camera[0], camera[1])
 
         self._camera_bounds = Rect.from_edges(
             left=camera[0],
