@@ -3,7 +3,6 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from .tile_data import tile_graphic, tile_dt
 from simulacra.core.options import *
 
 if TYPE_CHECKING:

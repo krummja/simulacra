@@ -18,13 +18,15 @@ class CameraManager(Manager):
 
     def __init__(self, game: Game) -> None:
         self._game = game
+        self._focus_x = 0
+        self._focus_y = 0
+
         self.width = 32
         self.height = 32
         self.padding = 0
+
         self.clamp_x = 32
         self.clamp_y = 20
-        self._focus_x = 0
-        self._focus_y = 0
         self.world_x = 0
         self.world_y = 0
 

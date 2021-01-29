@@ -11,19 +11,6 @@ if TYPE_CHECKING:
     from simulacra.core.rendering.tile_grid import TileGrid
 
 
-def draw_box(console, x, y, w, h):
-    # upper border
-    border = '┌' + '─' * (w) + '┐'
-    console.puts(x - 1, y - 1, border)
-    # sides
-    for i in range(h):
-        console.puts(x - 1, y + i, '│')
-        console.puts(x + w, y + i, '│')
-    # lower border
-    border = '└' + '─' * (w) + '┘'
-    console.puts(x - 1, y + h, border)
-
-
 class RenderSystem(System):
 
     def __init__(self, game: Game) -> None:

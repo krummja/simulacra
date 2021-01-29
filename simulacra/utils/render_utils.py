@@ -19,3 +19,15 @@ def subtile_dimensions_from_tile(w, h):
 
 def cell_dimensions_from_subtile(w, h):
     return (w * 2, h)
+
+def draw_box(console, x, y, w, h):
+    # upper border
+    border = '┌' + '─' * (w) + '┐'
+    console.puts(x - 1, y - 1, border)
+    # sides
+    for i in range(h):
+        console.puts(x - 1, y + i, '│')
+        console.puts(x + w, y + i, '│')
+    # lower border
+    border = '└' + '─' * (w) + '┘'
+    console.puts(x - 1, y + h, border)

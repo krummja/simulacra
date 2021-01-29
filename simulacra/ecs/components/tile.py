@@ -1,10 +1,6 @@
 from __future__ import annotations
 
-from bearlibterminal import terminal as blt
-from simulacra.utils.render_utils import argb_from_color
-from simulacra.core.rendering.tile_data import tile_dt
 from ecstremity import Component
-import numpy as np
 
 
 class Tile(Component):
