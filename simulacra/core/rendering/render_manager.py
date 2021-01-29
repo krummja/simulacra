@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import Dict, TYPE_CHECKING
 
 from dataclasses import dataclass
 
@@ -31,6 +31,11 @@ class RenderManager(Manager):
         self.game = game
         self._root_console = terminal
 
+        self._tilesets = [
+            ('0xE000', "./simulacra/assets/base_tileset.png"),
+            ('0xE500', "./simulacra/assets/entity_tileset.png")
+            ]
+
     @property
     def root_console(self):
         return self._root_console
@@ -60,13 +65,16 @@ class RenderManager(Manager):
 
     def initialize_tiles(self):
         tile_config = ""
-        tile_config += f"U+E000: {TILESET_PATH}, "
-        tile_config += f"size={TILE_SIZE}x{TILE_SIZE}, "
-        tile_config += f"align={TILE_ALIGN}, "
-        tile_config += f"codepage={CODEPAGE}, "
-        tile_config += f"resize={TILE_SIZE*SCALE}x{TILE_SIZE*SCALE}, "
-        tile_config += f"resize-filter={RESIZE_FILTER}, "
-        tile_config += f"spacing={SPACING} "
+
+        for tileset in self._tilesets:
+            tile_config += f"{tileset[0]}: {tileset[1]}, "
+            tile_config += f"size={TILE_SIZE}x{TILE_SIZE}, "
+            tile_config += f"align={TILE_ALIGN}, "
+            tile_config += f"codepage={CODEPAGE}, "
+            tile_config += f"resize={TILE_SIZE*SCALE}x{TILE_SIZE*SCALE}, "
+            tile_config += f"resize-filter={RESIZE_FILTER}, "
+            tile_config += f"spacing={SPACING} "
+            tile_config += "; "
         self._root_console.set(tile_config)
 
     def teardown(self):

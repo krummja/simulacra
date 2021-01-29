@@ -36,21 +36,17 @@ class CameraManager(Manager):
 
     def compute_size(self):
         self.width = max(self.clamp_x,
-                         math.floor(STAGE_PANEL_WIDTH / self.rendered_tile_size))
+                         math.ceil(STAGE_PANEL_WIDTH / self.rendered_tile_size))
         self.height = max(self.clamp_y,
-                          math.floor(STAGE_PANEL_HEIGHT / self.rendered_tile_size))
+                          math.ceil(STAGE_PANEL_HEIGHT / self.rendered_tile_size))
         self.world_x = math.floor(
-            min(
-                max(-self.padding, self._focus_x - self.width / 2),
+            min(max(-self.padding, self._focus_x - self.width / 2),
                 max((self.width - STAGE_WIDTH) / -2,
-                    self.padding + STAGE_WIDTH - self.width)
-                ))
+                    self.padding + STAGE_WIDTH - self.width)))
         self.world_y = math.floor(
-            min(
-                max(-self.padding, self._focus_y - self.height / 2),
+            min(max(-self.padding, self._focus_y - self.height / 2),
                 max((self.height - STAGE_HEIGHT) / -2,
-                    self.padding + STAGE_HEIGHT - self.height)
-                ))
+                    self.padding + STAGE_HEIGHT - self.height)))
 
     def set_focus(self, x, y):
         self._focus_x = x

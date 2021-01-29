@@ -38,7 +38,7 @@ class RenderSystem(System):
         if entities[world['x'], world['y']]:
             graphic = min(entities[world['x'], world['y']])
             console.layer(1)
-            console.color(graphic.fg)
+            console.color(0xFFFFFFFF)
             x, y = tile_from_subtile(*subtile_from_cell(x, y))
             console.put(x, y, graphic.char)
 

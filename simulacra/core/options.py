@@ -10,7 +10,6 @@ TILE_SIZE: int = 16
 HALF_TILE_SIZE: int = TILE_SIZE // 2
 
 DEFAULT_TILESET: str = "Simulacra"
-TILESET_PATH: str = "./simulacra/assets/simulacra16x16.png"
 TILE_ALIGN: str = "top-left"
 CODEPAGE: str = "1250"
 RESIZE_FILTER: str = "nearest"

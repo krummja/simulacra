@@ -20,8 +20,8 @@ class Area:
 
         default_tile = manager.game.ecs.engine.create_entity()
         default_tile.add('TILE', {
-            'char': 0xE000+3,
-            'fg': 0x88FF0000,
+            'char': 0xE000+16+16+16,
+            'fg': 0xAAAAAAAA,
             'bg': 0xFF000000,
             'transparent': True,
             'move_cost': 1,
