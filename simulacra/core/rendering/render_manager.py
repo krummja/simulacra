@@ -1,8 +1,8 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
-import tcod
-import bearlibterminal as blt
+from dataclasses import dataclass
+
 from bearlibterminal import terminal
 
 from simulacra.core.options import *
@@ -12,13 +12,24 @@ if TYPE_CHECKING:
     from ..game import Game
 
 
+@dataclass
+class TerminalConfig:
+    width: int = CONSOLE_WIDTH
+    height: int = CONSOLE_HEIGHT
+    cell_width: int = HALF_TILE_SIZE
+    cell_height: int = TILE_SIZE
+    title: str = "Simulacra"
+    font: str = "default"
+
+
 class RenderManager(Manager):
     """Manager for handling the render console."""
+
+    config = TerminalConfig()
 
     def __init__(self, game: Game) -> None:
         self.game = game
         self._root_console = terminal
-        self.initialize_console()
 
     @property
     def root_console(self):
@@ -28,68 +39,36 @@ class RenderManager(Manager):
         self._root_console.clear()
 
     def initialize_console(self):
-        self._root_console.composition(True)
-        self._root_console.open()
-        window_title = "Simulacra"
-        size = f"size={CONSOLE_WIDTH}x{CONSOLE_HEIGHT}"
-        title = f"title={window_title}"
-        cellsize = f"cellsize={TILE_SIZE//2}x{TILE_SIZE}"
-        window = "window: " + ", " + size + "," + title + "," + cellsize
+        size: str = f"{self.config.width}x{self.config.height}, "
+        cellsize: str = f"{self.config.cell_width}x{self.config.cell_height}, "
+        title: str = f"'{self.config.title}'; "
+        font: str = f"{self.config.font}"
 
-        self._root_console.set(window)
-        self._root_console.set("font: default")
-        self.initialize_tiles(TILE_DATA[DEFAULT_TILESET])
+        self._root_console.set(f"window: size={size}")
+        self._root_console.set(f"window: cellsize={cellsize}")
+        self._root_console.set(f"window: title={title}")
+        self._root_console.set(f"window: font: {font}")
+
+    def setup(self):
+        self._root_console.open()
+        self._root_console.composition(True)
+
+        self.initialize_console()
+        self.initialize_tiles()
+
         self._root_console.refresh()
 
-    def initialize_tiles(self, tiledata):
-        datastring = ""
-        datastring += tiledata['codepoint'] + ": "
-        datastring += tiledata['path'] + ", "
-        datastring += "codepage=" + tiledata['codepage'] + ", "
-        datastring += "size=" + tiledata['size'] + ", "
-        datastring += 'resize=' + tiledata['resize'] + ", "
-        datastring += 'resize-filter=' + tiledata['resize-filter'] + ", "
-        datastring += "align=" + tiledata['align'] + ", "
-        datastring += "spacing=" + tiledata['spacing']
-        self._root_console.set(datastring)
+    def initialize_tiles(self):
+        tile_config = ""
+        tile_config += f"U+E000: {TILESET_PATH}, "
+        tile_config += f"size={TILE_SIZE}x{TILE_SIZE}, "
+        tile_config += f"align={TILE_ALIGN}, "
+        tile_config += f"codepage={CODEPAGE}, "
+        tile_config += f"resize={TILE_SIZE*SCALE}x{TILE_SIZE*SCALE}, "
+        tile_config += f"resize-filter={RESIZE_FILTER}, "
+        tile_config += f"spacing={SPACING} "
+        self._root_console.set(tile_config)
 
-
-TILE_DATA = {
-    'Simulacra': {
-        'address': 0xE000,
-        'codepoint': 'U+E000',
-        'path': './simulacra/assets/simulacra16x16.png',
-        'codepage': '1250',
-        'size': f'{TILE_SIZE}x{TILE_SIZE}',
-        'resize': f'{TILE_SIZE * SCALE}x{TILE_SIZE * SCALE}',
-        'resize-filter': 'nearest',
-        'align': 'top-left',
-        'spacing': '1x1'
-        },
-    'ASCII': {
-        'address': 0xE500,
-        'codepoint': 'U+E500',
-        'path': './simulacra/assets/',
-        'codepage': '1250',
-        'size': '20x20',
-        'align': 'center',
-        'spacing': '2x2'
-        }
-    }
-
-def tilemap(tileset=None):
-    tiles = {}
-
-    if tileset is None:
-        tileset = DEFAULT_TILESET
-
-    if tileset == "Simulacra":
-        tiles = {
-            "bricks": (0xE000+0, 0xE000+1, 0xE000+2),
-            }
-
-    elif tileset == "ASCII":
-        tiles = {}
-
-    tile_data = TILE_DATA[tileset]
-    return tiles, tile_data
+    def teardown(self):
+        self._root_console.composition(False)
+        self._root_console.close()

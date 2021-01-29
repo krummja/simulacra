@@ -49,9 +49,12 @@ class Game:
         self.ability_system = None
 
     def start(self):
+        self.renderer.setup()
+
         self._last_update = time.time()
         self.loop()
-        self.renderer.root_console.close()
+
+        self.renderer.teardown()
 
     def update_engine_systems(self, dt):
         for _ in range(20):
