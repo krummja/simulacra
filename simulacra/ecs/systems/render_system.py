@@ -34,56 +34,44 @@ class RenderSystem(System):
                       'POSITION'    ],
             none_of=[ 'INVISIBLE'   ])
 
-    def render_visible_entities(self):
+        self._tiles = self.ecs.create_query(
+            all_of=[ 'TILE' ])
+
+    def render_entity(self, x, y):
         entities = defaultdict(list)
+        world = self._game.camera.screen_to_world(x, y)
+        console = self._game.renderer.root_console
 
         for entity in self._query.result:
-            if not (0 <= entity['POSITION'].x < STAGE_PANEL_WIDTH and
-                    0 <= entity['POSITION'].y < STAGE_PANEL_HEIGHT):
+            if not (0 <= entity['POSITION'].x < STAGE_SIZE and
+                    0 <= entity['POSITION'].y < STAGE_SIZE):
                 continue
             entities[entity['POSITION'].xy].append(entity['RENDERABLE'])
 
-        for (x, y), graphics in entities.items():
-            g = min(graphics)
-            self.draw_stage_glyph(x, y, g, layer=1)
+        if entities[world['x'], world['y']]:
+            graphic = min(entities[world['x'], world['y']])
+            console.layer(1)
+            console.color(graphic.fg)
+            x, y = tile_from_subtile(*subtile_from_cell(x, y))
+            console.put(x, y, graphic.char)
 
-    def render_visible_tiles(self, grid: TileGrid) -> None:
-        camera_bounds = self._game.camera.camera_bounds
-        for x in range(camera_bounds.left, camera_bounds.right):
-            for y in range(camera_bounds.top, camera_bounds.bottom):
-                glyph = grid.tiles[x, y]['TILE']
-                self.draw_stage_glyph(x, y, glyph, layer=0)
-
-    def draw_stage_glyph(self, x, y, glyph, layer=0):
+    def render_tile(self, x, y):
+        world = self._game.camera.screen_to_world(x, y)
+        if not self._game.camera.is_in_view(world['x'], world['y']):
+            return
         console = self._game.renderer.root_console
-        console.layer(layer)
-        console.color(glyph.fg)
-
-        x, y = tile_to_pixel(*cell_to_tile(x, y))
-        console.put(x, y, glyph.char)
+        tile = self._game.area.current_area.grid.tiles[world['x'], world['y']]['TILE']
+        console.layer(0)
+        console.color(tile.fg)
+        x, y = tile_from_subtile(*subtile_from_cell(x, y))
+        console.put(x, y, tile.char)
 
     def render(self) -> None:
         self._game.renderer.clear()
-        self.render_visible_tiles(self._game.area.current_area.grid)
-        self.render_visible_entities()
-
-        console = self._game.renderer.root_console
-        #! for debugging /////////////////////////////////////////////////////////////////
-        draw_box(console, 1, STAGE_PANEL_HEIGHT+1, STAGE_PANEL_WIDTH-2, LOG_PANEL_HEIGHT-2)
-        draw_box(console, STAGE_PANEL_WIDTH+1, 1, SIDE_PANEL_WIDTH-2, CONSOLE_HEIGHT-2)
-        #! for debugging /////////////////////////////////////////////////////////////////
-
-        offset = 3
-
-        width, height = tile_to_pixel(*cell_to_tile(STAGE_WIDTH, STAGE_HEIGHT))
-        console.puts(width + offset, 2, "player pos: " + str(self._game.player.position))
-
-        cell_pos = tile_to_pixel(*cell_to_tile(*self._game.player.position))
-        console.puts(width + offset, 3, "cell pos:   " + str(cell_pos))
-
-        pixel_pos = cell_pos[0] * 4, cell_pos[1] * 8
-        console.puts(width + offset, 4, "pixel pos:  " + str(pixel_pos))
-
+        for x in range(self._game.camera.width):
+            for y in range(self._game.camera.height):
+                self.render_tile(x, y)
+                self.render_entity(x, y)
 
     def update(self, dt) -> None:
         self.render()

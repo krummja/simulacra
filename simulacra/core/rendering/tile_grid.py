@@ -14,14 +14,14 @@ class TileGrid:
 
     def __init__(self) -> None:
         self.shape = (STAGE_WIDTH, STAGE_HEIGHT)
-        self.tiles = np.zeros(self.shape, dtype=object)
-        self.explored = np.zeros(self.shape, dtype=np.bool)
-        self.visible = np.zeros(self.shape, dtype=np.bool)
+        self.tiles = np.zeros(self.shape, dtype=object, order="F")
+        self.explored = np.zeros(self.shape, dtype=np.bool, order="F")
+        self.visible = np.zeros(self.shape, dtype=np.bool, order="F")
 
     @property
     def width(self) -> int:
-        return self.shape[1]
+        return self.shape[0]
 
     @property
     def height(self) -> int:
-        return self.shape[0]
+        return self.shape[1]

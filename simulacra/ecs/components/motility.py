@@ -19,5 +19,5 @@ class Motility(Component):
             position = self.entity['POSITION']
             target_x = position.x + evt.data[0]
             target_y = position.y + evt.data[1]
-            self.entity['POSITION'].xy = (target_x, target_y)
+            self.entity['POSITION'].xy = target_x, target_y
             evt.handle()

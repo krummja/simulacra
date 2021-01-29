@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
+import random
+
 from simulacra.core.options import *
 from simulacra.core.rendering.tile_grid import TileGrid
 
@@ -23,8 +25,26 @@ class Area:
             'bg': 0xFF000000,
             'transparent': True,
             'move_cost': 1,
-            'unformed': True})
+            'unformed': True
+            })
         self._tiles.tiles[:] = default_tile
+
+        test_tile = manager.game.ecs.engine.create_entity()
+        test_tile.add('TILE', {
+            'char': 0xE000+3,
+            'fg': 0x88FF00FF,
+            'bg': 0xFF000000,
+            'transparent': True,
+            'move_cost': 1,
+            'unformed': True
+            })
+
+        for _ in range(60):
+            roll = random.randrange(0, 1)
+            if roll == 1:
+                x = random.randrange(0, STAGE_WIDTH)
+                y = random.randrange(0, STAGE_HEIGHT)
+                self._tiles.tiles[x, y] = test_tile
 
     @property
     def grid(self) -> TileGrid:

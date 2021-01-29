@@ -18,67 +18,76 @@ class CameraManager(Manager):
 
     def __init__(self, game: Game) -> None:
         self._game = game
-        self._position: Tuple[int, int] = (0, 0)
-
-        self.x = 0
-        self.y = 0
-        self.width = STAGE_PANEL_WIDTH
-        self.height = STAGE_PANEL_HEIGHT
-
-        self._camera_bounds: Rect = None
-        self._render_offset = (0, 0)
-
-        self._bounds = Rect.from_edges(
-            left=self.x,
-            top=self.y,
-            right=self.width,
-            bottom=self.height
-            )
+        self.width = 32
+        self.height = 32
+        self.padding = 0
+        self.clamp_x = 32
+        self.clamp_y = 20
+        self._focus_x = 0
+        self._focus_y = 0
+        self.world_x = 0
+        self.world_y = 0
 
     @property
-    def camera_bounds(self):
-        return self._camera_bounds
+    def rendered_tile_size(self):
+        return SCALE * TILE_SIZE
+
+    def compute_size(self):
+        self.width = max(self.clamp_x,
+                         math.floor(STAGE_PANEL_WIDTH / self.rendered_tile_size))
+        self.height = max(self.clamp_y,
+                          math.floor(STAGE_PANEL_HEIGHT / self.rendered_tile_size))
+        self.world_x = math.floor(
+            min(
+                max(-self.padding, self._focus_x - self.width / 2),
+                max((self.width - STAGE_WIDTH) / -2,
+                    self.padding + STAGE_WIDTH - self.width)
+                ))
+        self.world_y = math.floor(
+            min(
+                max(-self.padding, self._focus_y - self.height / 2),
+                max((self.height - STAGE_HEIGHT) / -2,
+                    self.padding + STAGE_HEIGHT - self.height)
+                ))
+
+    def set_focus(self, x, y):
+        self._focus_x = x
+        self._focus_y = y
+        self.compute_size()
+
+    def set_padding(self, value):
+        self.padding = value
+        self.compute_size()
+
+    def world_to_screen(self, x, y):
+        return {
+            'x': x - self.world_x,
+            'y': y - self.world_y
+            }
+
+    def screen_to_world(self, x, y):
+        return {
+            'x': x + self.world_x,
+            'y': y + self.world_y
+            }
 
     @property
-    def render_offset(self):
-        return self._render_offset
+    def screen_rect(self):
+        return {
+            'x': self.world_x,
+            'y': self.world_y,
+            'width': self.width,
+            'height': self.height
+            }
 
-    @property
-    def bounds(self):
-        return self._bounds
-
-    def position_camera(self):
-        range_width = max(0, STAGE_WIDTH - STAGE_PANEL_WIDTH)
-        range_height = max(0, STAGE_HEIGHT - STAGE_PANEL_HEIGHT)
-
-        camera_range = Rect.from_edges(
-            left=0,
-            top=0,
-            right=range_width,
-            bottom=range_height
-            )
-
-        player_x = self._game.player.position[0]
-        player_y = self._game.player.position[1]
-
-        camera = (
-            player_x - ((STAGE_PANEL_WIDTH) // 2),
-            player_y - ((STAGE_PANEL_HEIGHT) // 2)
-            )
-
-        camera = camera_range.clamp(camera[0], camera[1])
-
-        self._camera_bounds = Rect.from_edges(
-            left=camera[0],
-            top=camera[1],
-            right=camera[0] + min(STAGE_PANEL_WIDTH, STAGE_WIDTH),
-            bottom=camera[1] + min(STAGE_PANEL_HEIGHT, STAGE_HEIGHT)
-            )
-
-        self._render_offset = (
-            mod(max(0, STAGE_PANEL_WIDTH - STAGE_WIDTH), 2),
-            mod(max(0, STAGE_PANEL_HEIGHT - STAGE_HEIGHT), 2)
+    def is_in_view(self, world_x, world_y):
+        screen = self.world_to_screen(world_x, world_y)
+        return (
+            screen['x'] < self.width and
+            screen['y'] < self.height and
+            screen['x'] >= 0 and
+            screen['y'] >= 0
             )
 
     def update(self, dt):
-        self.position_camera()
+        self.set_focus(*self._game.player.position)
