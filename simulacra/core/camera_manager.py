@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 class CameraManager(Manager):
 
     def __init__(self, game: Game) -> None:
-        self._game = game
+        super().__init__(game)
         self._focus_x = 0
         self._focus_y = 0
 
@@ -88,4 +88,4 @@ class CameraManager(Manager):
             )
 
     def update(self, dt):
-        self.set_focus(*self._game.player.position)
+        self.set_focus(*self.game.player.position)

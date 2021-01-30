@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 class ScreenManager(Manager):
 
     def __init__(self, game: Game) -> None:
-        self._game = game
+        super().__init__(game)
         self._stack: List[Screen] = []
         self._screens: Dict[str, Screen] = {
             'MAIN MENU': MainMenuScreen(self),
@@ -45,7 +45,7 @@ class ScreenManager(Manager):
         """Push a screen onto the top of the stack."""
         self.current_screen.on_leave()
         self._stack.append(self._screens[screen])
-        self._game.input._current_screen = self.current_screen
+        self.game.input._current_screen = self.current_screen
         self.current_screen.on_enter()
 
     def pop_screen(self) -> Screen:

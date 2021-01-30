@@ -30,21 +30,23 @@ class ElementConfig:
 
 class Position(ElementConfig):
 
-    def __init__(self) -> None:
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
         if self.frame_fg is None:
             self.frame_fg = self.fg
         if self.parent is None:
             self.parent = self
 
         _position = self._set_position()
-        setattr(self, _position[1])
-        setattr(self, _position[0])
+        setattr(self, 'x', _position[1])
+        setattr(self, 'y', _position[0])
 
         self.x += self.offset_x
         self.y += self.offset_y
 
     def _set_position(self):
         switch = self.parent is not self
+
         self.width -= self.margin
         self.height -= self.margin
 
@@ -55,7 +57,7 @@ class Position(ElementConfig):
 
         bottom = (
             CONSOLE_HEIGHT - self.height,
-            self.parent.bounds.bottom - self.height
+            self.parent.container.bottom - self.height
             )[switch]
 
         left = (
@@ -65,7 +67,7 @@ class Position(ElementConfig):
 
         right = (
             CONSOLE_WIDTH - self.width,
-            self.parent.bounds.right - self.width
+            self.parent.container.right - self.width
             )[switch]
 
         h_center = (
@@ -93,9 +95,10 @@ class Position(ElementConfig):
 
 class Element(Position):
 
-    def __init__(self, manager: UIManager) -> None:
-        super().__init__()
+    def __init__(self, manager: UIManager, **kwargs) -> None:
+        super().__init__(**kwargs)
         self.manager = manager
+        self.console = self.manager.game.renderer.root_console
 
     @property
     def container(self) -> Rect:
@@ -110,33 +113,21 @@ class Element(Position):
     def content(self) -> Rect:
         return Rect.from_edges(
             top=self.container.top + 1,
-            bottom=self.bounds.bottom - 1,
-            left=self.bounds.left + 1,
-            right=self.bounds.right - 1,
+            bottom=self.container.bottom - 1,
+            left=self.container.left + 2,
+            right=self.container.right - 1,
             )
 
-    def on_render(self) -> None:
-        self.draw_frame()
-        self.draw_content()
+    def on_render(self, dt) -> None:
+        # self.draw_frame()
+        self.draw_content(dt)
 
     def draw_frame(self) -> None:
         console = self.manager._game.renderer.root_console
         if self.framed:
-            console.draw_frame(
-                x=self.x,
-                y=self.y,
-                width=self.width,
-                height=self.height,
-                fg=self.frame_fg,
-                bg=self.bg
-                )
-
+            pass
         if self.title:
-            console.print(
-                x=self.x + 2,
-                y=self.y,
-                string=f" {self.title} "
-                )
+            pass
 
-    def draw_content(self) -> None:
+    def draw_content(self, dt) -> None:
         pass

@@ -16,4 +16,4 @@ class LogManager(Manager):
     """Manager for handling in-game log messages."""
 
     def __init__(self, game: Game) -> None:
-        self.game = game
+        super().__init__(game)

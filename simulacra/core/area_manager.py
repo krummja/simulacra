@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 class AreaManager(Manager):
 
     def __init__(self, game: Game) -> None:
-        self._game = game
+        super().__init__(game)
         self._current_area: Optional[Area] = None
         self._areas = {
             'TEST': TestArea(self)

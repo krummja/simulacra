@@ -15,7 +15,7 @@ class MainMenuScreen(Screen):
 
     def __init__(self, manager: ScreenManager) -> None:
         super().__init__(manager)
-        self._game: Game = manager.game
+        self.game: Game = manager.game
 
     def on_enter(self) -> None:
         print("Entered Main Menu")

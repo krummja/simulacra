@@ -23,10 +23,5 @@ class Manager(ABC):
     the RenderSystem can grab and utilize.
     """
 
-    @property
-    def game(self) -> Game:
-        return self._game
-
-    @game.setter
-    def game(self, value: Game) -> None:
-        self._game = value
+    def __init__(self, game: Game) -> None:
+        self.game = game

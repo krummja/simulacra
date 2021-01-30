@@ -8,6 +8,7 @@ from simulacra.ecs.systems.render_system import RenderSystem
 from simulacra.ecs.systems.action_system import ActionSystem
 from simulacra.ecs.systems.fov_system import FOVSystem
 
+from .rendering.fps_manager import FPSManager
 from .area_manager import AreaManager
 from .camera_manager import CameraManager
 from .player_manager import PlayerManager
@@ -26,22 +27,23 @@ class Game:
 
     def __init__(self) -> None:
 
-        self.ecs = ECS(self)                     # Working: 2021-01-16
+        self.ecs = ECS(self)
 
-        self.clock = ClockManager(self)          # Working: 2021-01-20
-        self.renderer = RenderManager(self)      # Working: 2021-01-17
+        self.clock = ClockManager(self)
+        self.renderer = RenderManager(self)
         self.world = WorldManager(self)          # TODO
-        self.camera = CameraManager(self)        # Working: 2021-01-19
-        self.area = AreaManager(self)            # Working: 2021-01-21
-        self.player = PlayerManager(self)        # Working: 2021-01-19
-        self.screens = ScreenManager(self)       # Working: 2021-01-20
-        self.input = InputController(self)       # Working: 2021-01-17
+        self.camera = CameraManager(self)
+        self.area = AreaManager(self)
+        self.player = PlayerManager(self)
+        self.screens = ScreenManager(self)
+        self.input = InputController(self)
         self.ui = UIManager(self)                # TODO
         self.log = LogManager(self)              # TODO
+        self.fps = FPSManager(self)
 
         self.action_system = ActionSystem(self)
         self.status_system = None
-        # self.fov_system = FOVSystem(self)
+        # TODO self.fov_system = FOVSystem(self)
         self.render_system = RenderSystem(self)
         self.interface_system = None
         self.particle_system = None
@@ -70,7 +72,7 @@ class Game:
                 return
 
     def update_player_systems(self, dt):
-        # self.fov_system.update(dt)
+        # TODO self.fov_system.update(dt)
         self.camera.update(dt)
         self.render_system.update(dt)
         # TODO Particle Update
@@ -84,6 +86,7 @@ class Game:
 
             self.screens.update(dt)
             self.ui.update(dt)
+            self.fps.update(dt)
             self.renderer.root_console.refresh()
 
             self._last_update = now

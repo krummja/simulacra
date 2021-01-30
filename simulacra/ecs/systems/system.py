@@ -9,13 +9,9 @@ if TYPE_CHECKING:
 class System:
 
     def __init__(self, game: Game) -> None:
-        self._game = game
-        self.ecs = self._game.ecs.engine
+        self.game = game
+        self.ecs = self.game.ecs.engine
         self.query: Optional[Query] = None
-
-    @property
-    def game(self) -> Game:
-        return self._game
 
     def update(self) -> None:
         pass

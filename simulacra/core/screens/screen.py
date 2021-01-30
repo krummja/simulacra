@@ -13,10 +13,10 @@ class Screen:
 
     def __init__(self, manager: ScreenManager) -> None:
         self.manager = manager
-        self._game: Game = manager.game
+        self.game: Game = manager.game
 
     def handle_input(self):
-        command = self._game.input.handle_input()
+        command = self.game.input.handle_input()
         if not command:
             return
         command()

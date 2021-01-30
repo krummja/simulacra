@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 class PlayerManager(Manager):
 
     def __init__(self, game: Game) -> None:
-        self.game = game
+        super().__init__(game)
         self.action_queue = deque([])
 
         self._player_uid = None

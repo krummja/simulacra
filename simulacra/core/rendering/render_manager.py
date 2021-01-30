@@ -29,7 +29,7 @@ class RenderManager(Manager):
     config = TerminalConfig()
 
     def __init__(self, game: Game) -> None:
-        self.game = game
+        super().__init__(game)
         self._root_console = terminal
 
         self._tilesets = [

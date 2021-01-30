@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 class ClockManager(Manager):
 
     def __init__(self, game: Game) -> None:
-        self.game = game
+        super().__init__(game)
         self._tick: int = 0
         self._tick_delta: int = 0
         self._turn_delta: int = 0

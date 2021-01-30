@@ -24,7 +24,7 @@ class InputController(Manager):
     """
 
     def __init__(self, game: Game) -> None:
-        self.game = game
+        super().__init__(game)
         self._current_screen = game.screens.current_screen
 
     def handle_input(self) -> Optional[Callable[[], Optional[T]]]:
