@@ -26,7 +26,7 @@ class CameraManager(Manager):
         self.padding = 0
 
         self.clamp_x = 32
-        self.clamp_y = 20
+        self.clamp_y = 22
         self.world_x = 0
         self.world_y = 0
 
@@ -36,9 +36,9 @@ class CameraManager(Manager):
 
     def compute_size(self):
         self.width = max(self.clamp_x,
-                         math.ceil(STAGE_PANEL_WIDTH / self.rendered_tile_size))
+                         math.floor(STAGE_PANEL_WIDTH / self.rendered_tile_size))
         self.height = max(self.clamp_y,
-                          math.ceil(STAGE_PANEL_HEIGHT / self.rendered_tile_size))
+                          math.floor(STAGE_PANEL_HEIGHT / self.rendered_tile_size))
         self.world_x = math.floor(
             min(max(-self.padding, self._focus_x - self.width / 2),
                 max((self.width - STAGE_WIDTH) / -2,

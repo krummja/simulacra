@@ -10,31 +10,27 @@ if TYPE_CHECKING:
     from simulacra.core.game import Game
 
 
-class TestScreen(Screen):
-    name: str = "TEST"
+class MainMenuScreen(Screen):
+    name: str = "MAIN MENU"
 
     def __init__(self, manager: ScreenManager) -> None:
         super().__init__(manager)
         self._game: Game = manager.game
 
     def on_enter(self) -> None:
-        pass
+        print("Entered Main Menu")
 
-    def handle_input(self):
-        command = self._game.input.handle_input()
-        if not command:
-            return
-        command()
+    def on_leave(self) -> None:
+        print("Leaving Main Menu")
 
     def on_update(self, dt) -> None:
         self.handle_input()
-        self._game.update_engine_systems(dt)
 
     def cmd_move(self, x: int, y: int) -> Optional[T]:
-        self._game.player.move((x, y))
+        pass
 
     def cmd_confirm(self) -> Optional[T]:
-        print("Command CONFIRM")
+        self.manager.push_screen('STAGE')
 
     def cmd_escape(self) -> None:
         self.cmd_quit()

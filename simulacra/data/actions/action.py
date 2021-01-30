@@ -32,7 +32,4 @@ class Action:
 
     def act(self) -> None:
         """Act step, which fires the event for an action success."""
-        if self.success == False:
-            self.entity.fire_event(self.event, self.success)
-        else:
-            self.entity.fire_event(self.event, self.data)
+        self.entity.fire_event(self.event, (self.success, self.data))

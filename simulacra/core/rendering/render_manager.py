@@ -34,7 +34,8 @@ class RenderManager(Manager):
 
         self._tilesets = [
             ('0xE000', "./simulacra/assets/base_tileset.png"),
-            ('0xE500', "./simulacra/assets/entity_tileset.png")
+            ('0xE500', "./simulacra/assets/entity_tileset.png"),
+            ('0xEF00', "./simulacra/assets/ui_tileset.png"),
             ]
 
         self.sprites = SpriteRegistry()
@@ -57,15 +58,7 @@ class RenderManager(Manager):
         self._root_console.set(f"window: title={title}")
         self._root_console.set(f"window: font: {font}")
         self._root_console.set("ui font: ./simulacra/assets/ui_font.ttf, size=10x20")
-
-    def setup(self):
-        self._root_console.open()
-        self._root_console.composition(True)
-
-        self.initialize_console()
-        self.initialize_tiles()
-
-        self._root_console.refresh()
+        self._root_console.set("big font: ./simulacra/assets/ui_font.ttf, size=20x40, spacing=2x2")
 
     def initialize_tiles(self):
         tile_config = ""
@@ -80,6 +73,15 @@ class RenderManager(Manager):
             tile_config += f"spacing={SPACING} "
             tile_config += "; "
         self._root_console.set(tile_config)
+
+    def setup(self):
+        self._root_console.open()
+        self._root_console.composition(True)
+
+        self.initialize_console()
+        self.initialize_tiles()
+
+        self._root_console.refresh()
 
     def teardown(self):
         self._root_console.composition(False)

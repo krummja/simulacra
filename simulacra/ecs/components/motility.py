@@ -16,12 +16,15 @@ class Motility(Component):
         }
 
     def on_try_move(self, evt):
-        if isinstance(evt.data, bool):
-            if evt.data == False:
-                evt.prevent()
-        else:
-            self.update_position(*self.set_facing(*evt.data))
+        success = evt.data[0]
+        direction = evt.data[1]
+
+        if success:
+            self.update_position(*self.set_facing(*direction))
             evt.handle()
+        else:
+            self.set_facing(*direction)
+            evt.prevent()
 
     def set_facing(self, x, y):
         position = self.entity['POSITION']

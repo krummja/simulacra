@@ -82,8 +82,8 @@ class Game:
             now = time.time()
             dt = now - self._last_update
 
-            self.renderer.root_console.refresh()
             self.screens.update(dt)
             self.ui.update(dt)
+            self.renderer.root_console.refresh()
 
             self._last_update = now

@@ -2,7 +2,8 @@ from __future__ import annotations
 from typing import List, Dict, Optional, TYPE_CHECKING
 
 from simulacra.core.manager import Manager
-from .test_screen import TestScreen
+from .stage_screen import StageScreen
+from .main_menu_screen import MainMenuScreen
 
 if TYPE_CHECKING:
     from tcod.console import Console
@@ -13,12 +14,13 @@ if TYPE_CHECKING:
 class ScreenManager(Manager):
 
     def __init__(self, game: Game) -> None:
-        self.game = game
+        self._game = game
         self._stack: List[Screen] = []
         self._screens: Dict[str, Screen] = {
-            'TEST': TestScreen(self)
+            'MAIN MENU': MainMenuScreen(self),
+            'STAGE': StageScreen(self),
         }
-        self.set_screen('TEST')
+        self.set_screen('MAIN MENU')
 
     @property
     def current_screen(self) -> Screen:
@@ -43,6 +45,7 @@ class ScreenManager(Manager):
         """Push a screen onto the top of the stack."""
         self.current_screen.on_leave()
         self._stack.append(self._screens[screen])
+        self._game.input._current_screen = self.current_screen
         self.current_screen.on_enter()
 
     def pop_screen(self) -> Screen:

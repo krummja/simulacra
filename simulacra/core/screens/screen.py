@@ -15,6 +15,12 @@ class Screen:
         self.manager = manager
         self._game: Game = manager.game
 
+    def handle_input(self):
+        command = self._game.input.handle_input()
+        if not command:
+            return
+        command()
+
     def on_enter(self):
         pass
 
