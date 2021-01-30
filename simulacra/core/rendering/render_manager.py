@@ -7,6 +7,7 @@ from bearlibterminal import terminal
 
 from simulacra.core.options import *
 from ..manager import Manager
+from .sprite_registry import SpriteRegistry
 
 if TYPE_CHECKING:
     from ..game import Game
@@ -19,7 +20,7 @@ class TerminalConfig:
     cell_width: int = HALF_TILE_SIZE
     cell_height: int = TILE_SIZE
     title: str = "Simulacra"
-    font: str = "default"
+    font: str = "../../assets/ui_font.ttf"
 
 
 class RenderManager(Manager):
@@ -35,6 +36,8 @@ class RenderManager(Manager):
             ('0xE000', "./simulacra/assets/base_tileset.png"),
             ('0xE500', "./simulacra/assets/entity_tileset.png")
             ]
+
+        self.sprites = SpriteRegistry()
 
     @property
     def root_console(self):
@@ -53,6 +56,7 @@ class RenderManager(Manager):
         self._root_console.set(f"window: cellsize={cellsize}")
         self._root_console.set(f"window: title={title}")
         self._root_console.set(f"window: font: {font}")
+        self._root_console.set("ui font: ./simulacra/assets/ui_font.ttf, size=10x20")
 
     def setup(self):
         self._root_console.open()

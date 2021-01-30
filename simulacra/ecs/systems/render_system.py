@@ -2,6 +2,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from collections import defaultdict
 
+from numpy.lib.arraysetops import isin
+
 from .system import System
 from simulacra.core.options import *
 from simulacra.utils.render_utils import *
@@ -47,8 +49,21 @@ class RenderSystem(System):
         if not self._game.camera.is_in_view(world['x'], world['y']):
             return
         console = self._game.renderer.root_console
-        tile = self._game.area.current_area.grid.tiles[world['x'], world['y']]['TILE']
+        tile = self._game.area.current_area.grid.ground[world['x'], world['y']]['TILE']
         console.layer(0)
+        console.color(tile.fg)
+        x, y = tile_from_subtile(*subtile_from_cell(x, y))
+        console.put(x, y, tile.char)
+
+    def render_obstacle(self, x, y):
+        world = self._game.camera.screen_to_world(x, y)
+        if not self._game.camera.is_in_view(world['x'], world['y']):
+            return
+        if isinstance(self._game.area.current_area.grid.obstacle[world['x'], world['y']], int):
+            return
+        console = self._game.renderer.root_console
+        tile = self._game.area.current_area.grid.obstacle[world['x'], world['y']]['TILE']
+        console.layer(1)
         console.color(tile.fg)
         x, y = tile_from_subtile(*subtile_from_cell(x, y))
         console.put(x, y, tile.char)
@@ -59,6 +74,7 @@ class RenderSystem(System):
             for y in range(self._game.camera.height):
                 self.render_tile(x, y)
                 self.render_entity(x, y)
+                self.render_obstacle(x, y)
 
     def update(self, dt) -> None:
         self.render()

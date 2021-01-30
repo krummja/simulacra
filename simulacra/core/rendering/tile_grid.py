@@ -13,7 +13,8 @@ class TileGrid:
 
     def __init__(self) -> None:
         self.shape = (STAGE_WIDTH, STAGE_HEIGHT)
-        self.tiles = np.zeros(self.shape, dtype=object, order="F")
+        self.obstacle = np.zeros(self.shape, dtype=object, order="F")
+        self.ground = np.zeros(self.shape, dtype=object, order="F")
         self.explored = np.zeros(self.shape, dtype=np.bool, order="F")
         self.visible = np.zeros(self.shape, dtype=np.bool, order="F")
 

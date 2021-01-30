@@ -21,7 +21,7 @@ class FOVSystem(System):
 
     def update_fov(self, tile_grid: TileGrid) -> None:
         tile_grid.visible = tcod.map.compute_fov(
-            transparency=tile_grid.tiles["transparent"],
+            transparency=tile_grid.ground["transparent"],
             pov=self._query.result[0]['POSITION'].ij,
             radius=10,
             light_walls=True,
