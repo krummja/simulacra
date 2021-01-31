@@ -8,16 +8,12 @@ class Renderable(Component):
     name = "RENDERABLE"
     def __init__(
             self,
-            char: Union[str, int],
-            fg: Tuple[int, int, int],
-            bg: Tuple[int, int, int]
+            char: Union[str, int]
         ) -> None:
         if isinstance(char, str):
             self.char = ord(char)
         else:
             self.char = char
-        self.fg = fg
-        self.bg = bg
         self.render_order: int = 0
 
     def __lt__(self, other: Renderable) -> bool:

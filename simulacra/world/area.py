@@ -19,33 +19,40 @@ class Area:
         self._grid = TileGrid()
         self._sprites = self._manager.game.renderer.sprites
 
+        # TODO apparently walk this refactor back - performance nose dived :(
+
         default_tile = manager.game.ecs.engine.create_entity()
-        default_tile.add('TILE', {
+        # default_tile.add('POSITION', {})
+        default_tile.add('RENDERABLE', {
             'char': self._sprites.get_codepoint('ground', 'grass_1'),
-            'fg': 0xFFFFFFFF,
-            'bg': 0xFF000000,
+            })
+        default_tile.add('TILE', {
             'transparent': True,
             'move_cost': 1,
             'unformed': True
             })
+        self._grid.transparent[:] = default_tile['TILE'].transparent
         self._grid.ground[:] = default_tile
-
-        test_tree = manager.game.ecs.engine.create_entity()
-        test_tree.add('TILE', {
-            'char': self._sprites.get_codepoint('tree', 'tree_2'),
-            'fg': 0xFFFFFFFF,
-            'bg': 0xFF000000,
-            'transparent': True,
-            'move_cost': 0,
-            'unformed': True
-            })
 
         for _ in range(100):
             roll = random.randrange(0, 100)
             if roll <= 50:
                 x = random.randrange(0, self._grid.width)
                 y = random.randrange(0, self._grid.height)
-                self._grid.obstacle[x, y] = test_tree
+                test_tree = manager.game.ecs.engine.create_entity()
+                test_tree.add('POSITION', {'x': x, 'y': y})
+                test_tree.add('OBSTACLE', {})
+                test_tree.add('RENDERABLE', {
+                    'char': self._sprites.get_codepoint('tree', 'tree_2'),
+                    })
+                test_tree.add('TILE', {
+                    'transparent': False,
+                    'move_cost': 0,
+                    'unformed': True
+                    })
+                self._grid.obstacle[x, y] = test_tree['RENDERABLE']
+                self._grid.transparent[x, y] = test_tree['TILE'].transparent
+                self._grid.move_cost[x, y] = test_tree['TILE'].move_cost
 
     @property
     def grid(self) -> TileGrid:
@@ -62,7 +69,9 @@ class Area:
     def is_blocked(self, x: int, y: int) -> bool:
         if not (0 <= x < self.width and 0 <= y < self.height):
             return True
-        if self.grid.obstacle[x, y] != 0:
-            if not self.grid.obstacle[x, y]['TILE'].move_cost:
+        if self.grid.move_cost[x, y] != 0:
+            if not self.grid.move_cost[x, y]:
                 return True
+        if self.grid.move_cost[x, y] == 0:
+            return True
         return False

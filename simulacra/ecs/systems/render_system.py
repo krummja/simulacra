@@ -1,8 +1,6 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import Type, TYPE_CHECKING
 from collections import defaultdict
-
-from numpy.lib.arraysetops import isin
 
 from .system import System
 from simulacra.core.options import *
@@ -10,62 +8,65 @@ from simulacra.utils.render_utils import *
 
 if TYPE_CHECKING:
     from simulacra.core.game import Game
-    from simulacra.core.rendering.tile_grid import TileGrid
+    from ecstremity import Component
 
 
 class RenderSystem(System):
+    x_offset = (CONSOLE_WIDTH - STAGE_PANEL_WIDTH) // 2
+    y_offset = 1
 
     def __init__(self, game: Game) -> None:
         super().__init__(game)
+        self.console = self.game.renderer.root_console
+        self.area_grid = self.game.area.current_area.grid
+
         self._query = self.ecs.create_query(
             all_of=[  'RENDERABLE',
                       'POSITION'    ],
-            none_of=[ 'INVISIBLE'   ])
+            none_of=[ 'INVISIBLE',
+                      'OBSTACLE'    ])
 
         self._tiles = self.ecs.create_query(
             all_of=[ 'TILE' ])
-
-    def render_entity(self, x, y):
-        entities = defaultdict(list)
-        world = self.game.camera.screen_to_world(x, y)
-        console = self.game.renderer.root_console
-
-        for entity in self._query.result:
-            if not (0 <= entity['POSITION'].x < STAGE_SIZE and
-                    0 <= entity['POSITION'].y < STAGE_SIZE):
-                continue
-            entities[entity['POSITION'].xy].append(entity['RENDERABLE'])
-
-        if entities[world['x'], world['y']]:
-            graphic = min(entities[world['x'], world['y']])
-            console.layer(1)
-            console.color(0xFFFFFFFF)
-            x, y = tile_from_subtile(*subtile_from_cell(x, y))
-            console.put(x, y, graphic.char)
 
     def render_tile(self, x, y):
         world = self.game.camera.screen_to_world(x, y)
         if not self.game.camera.is_in_view(world['x'], world['y']):
             return
-        console = self.game.renderer.root_console
-        tile = self.game.area.current_area.grid.ground[world['x'], world['y']]['TILE']
-        console.layer(0)
-        console.color(tile.fg)
-        x, y = tile_from_subtile(*subtile_from_cell(x, y))
-        console.put(x, y, tile.char)
+
+        tile = self.area_grid.ground[world['x'], world['y']]
+        self.draw_to_stage(x, y, tile['RENDERABLE'], layer=0)
+
+    def render_entity(self, x, y):
+        entities = defaultdict(list)
+        for entity in self._query.result:
+            entities[entity['POSITION'].xy].append(entity['RENDERABLE'])
+
+        world = self.game.camera.screen_to_world(x, y)
+        if entities[world['x'], world['y']]:
+            graphic = min(entities[world['x'], world['y']])
+            self.draw_to_stage(x, y, graphic, layer=1)
 
     def render_obstacle(self, x, y):
         world = self.game.camera.screen_to_world(x, y)
         if not self.game.camera.is_in_view(world['x'], world['y']):
             return
-        if isinstance(self.game.area.current_area.grid.obstacle[world['x'], world['y']], int):
+        if isinstance(self.area_grid.obstacle[world['x'], world['y']], int):
             return
-        console = self.game.renderer.root_console
-        tile = self.game.area.current_area.grid.obstacle[world['x'], world['y']]['TILE']
-        console.layer(1)
-        console.color(tile.fg)
+        obstacle = self.area_grid.obstacle[world['x'], world['y']]
+        self.draw_to_stage(x, y, obstacle, layer=1)
+
+    def draw_to_stage(
+            self,
+            x: int,
+            y: int,
+            target: Type[Component],
+            layer: int = 0
+        ) -> None:
+        self.console.layer(layer)
+        self.console.color(0xFFFFFFFF)
         x, y = tile_from_subtile(*subtile_from_cell(x, y))
-        console.put(x, y, tile.char)
+        self.console.put(self.x_offset + x, self.y_offset + y, target.char)
 
     def render(self) -> None:
         self.game.renderer.clear()

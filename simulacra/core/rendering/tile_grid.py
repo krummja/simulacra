@@ -15,6 +15,8 @@ class TileGrid:
         self.shape = (STAGE_WIDTH, STAGE_HEIGHT)
         self.obstacle = np.zeros(self.shape, dtype=object, order="F")
         self.ground = np.zeros(self.shape, dtype=object, order="F")
+        self.move_cost = np.ones(self.shape, dtype=np.int32, order="F")
+        self.transparent = np.zeros(self.shape, dtype=np.bool, order="F")
         self.explored = np.zeros(self.shape, dtype=np.bool, order="F")
         self.visible = np.zeros(self.shape, dtype=np.bool, order="F")
 

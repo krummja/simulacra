@@ -43,20 +43,16 @@ class StageScreen(Screen):
 
     def draw_ui(self, dt) -> None:
         self.game.renderer.root_console.layer(5)
-        self.draw_stage_panel_frame(dt)
-        self.draw_side_panel(dt)
+        # self.draw_stage_panel_frame(dt)
+        # self.draw_side_panel(dt)
 
     def draw_side_panel(self, dt):
-        surface = Surface(
+        Surface(
             self.manager,
             position=("top", "right"),
             width=SIDE_PANEL_WIDTH,
             height=SIDE_PANEL_HEIGHT // 4,
-            # offset_x=1,
-            # offset_y=1
-            )
-
-        surface.on_render(dt)
+            ).on_render(dt)
 
     def draw_stage_panel_frame(self, dt):
         self.game.renderer.root_console.put(   0,  0, 0xEF04 + (16*0) )

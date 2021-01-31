@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import tcod
+import numpy as np
 import time
 
 from simulacra.ecs.ecs_manager import ECSManager as ECS
@@ -43,7 +43,7 @@ class Game:
 
         self.action_system = ActionSystem(self)
         self.status_system = None
-        # TODO self.fov_system = FOVSystem(self)
+        self.fov_system = FOVSystem(self)
         self.render_system = RenderSystem(self)
         self.interface_system = None
         self.particle_system = None
@@ -72,9 +72,10 @@ class Game:
                 return
 
     def update_player_systems(self, dt):
-        # TODO self.fov_system.update(dt)
+        self.fov_system.update(dt)
         self.camera.update(dt)
         self.render_system.update(dt)
+
         # TODO Particle Update
         # TODO Map Update
         # TODO Log Update
