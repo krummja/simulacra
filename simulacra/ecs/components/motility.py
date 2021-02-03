@@ -20,29 +20,23 @@ class Motility(Component):
         direction = evt.data[1]
 
         if success:
-            self.update_position(*self.set_facing(*direction))
+            self.set_facing(*direction)
+            self.update_position(*direction)
             evt.handle()
         else:
             self.set_facing(*direction)
             evt.prevent()
 
     def set_facing(self, x, y):
-        position = self.entity['POSITION']
-
-        if x == self.facing[0] and y == self.facing[1]:
-            target_x = position.x + x
-            target_y = position.y + y
-            return target_x, target_y
-
-        else:
-            target_x = position.x
-            target_y = position.y
-            self.facing = (x, y)
-            self.update_sprite()
-            return target_x, target_y
+        self.facing = (x, 0)
+        self.update_sprite()
 
     def update_sprite(self):
         self.entity['SPRITE'].set_facing(self.facings[self.facing])
 
     def update_position(self, x, y):
-        self.entity['POSITION'].xy = x, y
+        pos_x, pos_y = self.entity['POSITION'].xy
+        target_x = pos_x + x
+        target_y = pos_y + y
+        self.entity['POSITION'].x = target_x
+        self.entity['POSITION'].y = target_y

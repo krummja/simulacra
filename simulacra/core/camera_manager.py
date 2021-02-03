@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import Tuple, TYPE_CHECKING
 
+from simulacra.utils.debug import debug
+
 import math
 
 from simulacra.utils.math_utils import mod
@@ -25,8 +27,8 @@ class CameraManager(Manager):
         self.height = 32
         self.padding = 0
 
-        self.clamp_x = 32
-        self.clamp_y = 22
+        self.clamp_x = 31
+        self.clamp_y = 21
         self.world_x = 0
         self.world_y = 0
 
@@ -36,15 +38,18 @@ class CameraManager(Manager):
 
     def compute_size(self):
         self.width = max(self.clamp_x,
-                         math.floor(STAGE_PANEL_WIDTH / self.rendered_tile_size))
+                         math.ceil(STAGE_PANEL_WIDTH / self.rendered_tile_size))
         self.height = max(self.clamp_y,
-                          math.floor(STAGE_PANEL_HEIGHT / self.rendered_tile_size))
-        self.world_x = math.floor(
-            min(max(-self.padding, self._focus_x - self.width / 2),
+                          math.ceil(STAGE_PANEL_HEIGHT / self.rendered_tile_size))
+        self.world_x = math.ceil(
+            min(max(-self.padding,
+                    self._focus_x - self.width / 2),
                 max((self.width - STAGE_WIDTH) / -2,
                     self.padding + STAGE_WIDTH - self.width)))
-        self.world_y = math.floor(
-            min(max(-self.padding, self._focus_y - self.height / 2),
+        self.world_y = math.ceil(
+            min(
+                max(-self.padding,
+                    self._focus_y - self.height / 2),
                 max((self.height - STAGE_HEIGHT) / -2,
                     self.padding + STAGE_HEIGHT - self.height)))
 

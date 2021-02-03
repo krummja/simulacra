@@ -23,8 +23,10 @@ class RenderSystem(System):
         self._query = self.ecs.create_query(
             all_of=[  'RENDERABLE',
                       'POSITION'    ],
-            none_of=[ 'INVISIBLE',
-                      'OBSTACLE'    ])
+            none_of=[ 'OBSTACLE'    ])
+
+        self._player = self.ecs.create_query(
+            all_of=['PLAYER'])
 
         self._tiles = self.ecs.create_query(
             all_of=[ 'TILE' ])
@@ -33,16 +35,14 @@ class RenderSystem(System):
         world = self.game.camera.screen_to_world(x, y)
         if not self.game.camera.is_in_view(world['x'], world['y']):
             return
-
         tile = self.area_grid.ground[world['x'], world['y']]
         self.draw_to_stage(x, y, tile['RENDERABLE'], layer=0)
 
     def render_entity(self, x, y):
         entities = defaultdict(list)
+        world = self.game.camera.screen_to_world(x, y)
         for entity in self._query.result:
             entities[entity['POSITION'].xy].append(entity['RENDERABLE'])
-
-        world = self.game.camera.screen_to_world(x, y)
         if entities[world['x'], world['y']]:
             graphic = min(entities[world['x'], world['y']])
             self.draw_to_stage(x, y, graphic, layer=1)
@@ -63,6 +63,8 @@ class RenderSystem(System):
             target: Type[Component],
             layer: int = 0
         ) -> None:
+        self.console.layer(0)
+        self.console.color(0xFF003300)
         self.console.layer(layer)
         self.console.color(0xFFFFFFFF)
         x, y = tile_from_subtile(*subtile_from_cell(x, y))
@@ -78,4 +80,3 @@ class RenderSystem(System):
 
     def update(self, dt) -> None:
         self.render()
-

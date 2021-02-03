@@ -13,10 +13,8 @@ class Sprite(Component):
         self.codepoint: int = sheet + row
 
         self.facing = {
-            'down'  : 0,
-            'up'    : 1,
-            'left'  : 2,
-            'right' : 3,
+            'left'  : 0,
+            'right' : 1,
             }
 
         self.animations = {
@@ -27,10 +25,8 @@ class Sprite(Component):
             }
 
     def set_facing(self, key: str) -> None:
-        try:
+        if key == 'left' or key == 'right':
             self.entity['RENDERABLE'].char = self.codepoint + self.facing[key]
-        except:
-            raise KeyError(f"No facing sprite keyed to {key}")
 
     def get_animation(self, key: str) -> Generator[int, None, None]:
         animation_list = self.animations[key]
