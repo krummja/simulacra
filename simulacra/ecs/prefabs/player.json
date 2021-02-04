@@ -1,0 +1,18 @@
+{
+    "name": "Player",
+    "inherit": "",
+    "components": [
+        {   "type": "SPRITE",
+            "properties": {"row": 1}},
+        {   "type": "RENDERABLE",
+            "properties": {"codepoint": "0xE500", "row": 1, "col": 1}},
+        {   "type": "POSITION",
+            "properties": {"x": 1, "y": 1}},
+        {   "type": "IS_PLAYER",
+            "properties": {}},
+        {   "type": "ACTOR",
+            "properties": {}},
+        {   "type": "MOTILITY",
+            "properties": {}}
+    ]
+}

@@ -1,7 +1,7 @@
 CONSOLE_WIDTH: int = 192
 CONSOLE_HEIGHT: int = 56
 
-STAGE_SIZE: int = 32
+STAGE_SIZE: int = 64
 STAGE_WIDTH: int = STAGE_SIZE
 STAGE_HEIGHT: int = STAGE_SIZE
 
@@ -27,4 +27,4 @@ LOG_PANEL_HEIGHT: int = (CONSOLE_HEIGHT // 4)
 
 DEBUG: bool = False
 DEVELOP: bool = True
-VIEW_RADIUS: int = 10 if DEBUG is False else 30
+VIEW_RADIUS: int = 8 if DEBUG is False else 16

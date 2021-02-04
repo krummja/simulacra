@@ -1,24 +1,23 @@
 from __future__ import annotations
 
-import numpy as np
 import time
 
 from simulacra.ecs.ecs_manager import ECSManager as ECS
-from simulacra.ecs.systems.render_system import RenderSystem
 from simulacra.ecs.systems.action_system import ActionSystem
 from simulacra.ecs.systems.fov_system import FOVSystem
+from simulacra.ecs.systems.render_system import RenderSystem
 
-from .rendering.fps_manager import FPSManager
 from .area_manager import AreaManager
 from .camera_manager import CameraManager
-from .player_manager import PlayerManager
-from .world_manager import WorldManager
 from .clock_manager import ClockManager
-from .log_manager import LogManager
-from .screens import ScreenManager
 from .input import InputController
+from .log_manager import LogManager
+from .player_manager import PlayerManager
 from .rendering import RenderManager
+from .rendering.fps_manager import FPSManager
+from .screens import ScreenManager
 from .screens.interface.ui_manager import UIManager
+from .world_manager import WorldManager
 
 
 class Game:

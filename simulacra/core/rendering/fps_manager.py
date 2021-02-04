@@ -1,9 +1,9 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
 
 import math
 from collections import deque
 from functools import reduce
+from typing import TYPE_CHECKING
 
 from simulacra.core.manager import Manager
 
@@ -28,6 +28,3 @@ class FPSManager(Manager):
         frame_sum = reduce((lambda s, v: s + v), self.frames)
         fps = math.trunc((frame_sum / self.frame_count) / 1000)
         self.fps = fps
-
-        # 1612032459|444         JS
-        # 1612032480|.1643255    PY

@@ -10,11 +10,11 @@ class Sprite(Component):
     def __init__(self, sheet: int = 0xE500, row: int = 0) -> None:
         self.sheet: int = sheet
         self.row: int = 16 * row
-        self.codepoint: int = sheet + row
+        self.codepoint: int = sheet + self.row
 
         self.facing = {
-            'left'  : 0,
-            'right' : 1,
+            'left' : 0,
+            'right'  : 1,
             }
 
         self.animations = {

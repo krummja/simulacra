@@ -16,14 +16,14 @@ class FOVSystem(System):
     def __init__(self, game: Game) -> None:
         super().__init__(game)
         self._query = self.ecs.create_query(
-            all_of=['PLAYER']
+            all_of=['IS_PLAYER']
             )
 
     def update_fov(self) -> None:
         tile_grid = self.game.area.current_area.grid
         tile_grid.visible = tcod.map.compute_fov(
             transparency=tile_grid.transparent,
-            pov=self._query.result[0]['POSITION'].ij,
+            pov=self._query.result[0]['POSITION'].xy,
             radius=10,
             light_walls=True,
             algorithm=tcod.FOV_RESTRICTIVE

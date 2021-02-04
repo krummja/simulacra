@@ -21,54 +21,41 @@ class RenderSystem(System):
         self.area_grid = self.game.area.current_area.grid
 
         self._query = self.ecs.create_query(
-            all_of=[  'RENDERABLE',
-                      'POSITION'    ],
-            none_of=[ 'OBSTACLE'    ])
-
-        self._player = self.ecs.create_query(
-            all_of=['PLAYER'])
-
-        self._tiles = self.ecs.create_query(
-            all_of=[ 'TILE' ])
+            all_of=[ 'RENDERABLE',
+                     'SPRITE'     ])
 
     def render_tile(self, x, y):
         world = self.game.camera.screen_to_world(x, y)
         if not self.game.camera.is_in_view(world['x'], world['y']):
             return
+
+        x, y = tile_from_subtile(*subtile_from_cell(x, y))
         tile = self.area_grid.ground[world['x'], world['y']]
-        self.draw_to_stage(x, y, tile['RENDERABLE'], layer=0)
+
+        if self.area_grid.visible[world['x'], world['y']]:
+            self.console.color(0xFFFFFFFF)
+        elif self.area_grid.explored[world['x'], world['y']]:
+            self.console.color(0xFF888888)
+        else:
+            self.console.color(0xFF000000)
+
+        self.console.layer(0)
+        self.console.put(self.x_offset + x, self.y_offset + y, tile['RENDERABLE'].char)
 
     def render_entity(self, x, y):
         entities = defaultdict(list)
         world = self.game.camera.screen_to_world(x, y)
-        for entity in self._query.result:
-            entities[entity['POSITION'].xy].append(entity['RENDERABLE'])
-        if entities[world['x'], world['y']]:
-            graphic = min(entities[world['x'], world['y']])
-            self.draw_to_stage(x, y, graphic, layer=1)
-
-    def render_obstacle(self, x, y):
-        world = self.game.camera.screen_to_world(x, y)
         if not self.game.camera.is_in_view(world['x'], world['y']):
             return
-        if isinstance(self.area_grid.obstacle[world['x'], world['y']], int):
-            return
-        obstacle = self.area_grid.obstacle[world['x'], world['y']]
-        self.draw_to_stage(x, y, obstacle, layer=1)
 
-    def draw_to_stage(
-            self,
-            x: int,
-            y: int,
-            target: Type[Component],
-            layer: int = 0
-        ) -> None:
-        self.console.layer(0)
-        self.console.color(0xFF003300)
-        self.console.layer(layer)
-        self.console.color(0xFFFFFFFF)
-        x, y = tile_from_subtile(*subtile_from_cell(x, y))
-        self.console.put(self.x_offset + x, self.y_offset + y, target.char)
+        for entity in self._query.result:
+            entities[entity['POSITION'].xy].append(entity['RENDERABLE'])
+
+        if entities[world['x'], world['y']]:
+            graphic = min(entities[world['x'], world['y']])
+            self.console.layer(1)
+            self.console.color(0xFFFFFFFF)
+            self.console.put(self.x_offset + (x * 4), self.y_offset + (y * 2) - 1, graphic.char)
 
     def render(self) -> None:
         self.game.renderer.clear()
@@ -76,7 +63,6 @@ class RenderSystem(System):
             for y in range(self.game.camera.height):
                 self.render_tile(x, y)
                 self.render_entity(x, y)
-                self.render_obstacle(x, y)
 
     def update(self, dt) -> None:
         self.render()

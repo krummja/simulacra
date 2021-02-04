@@ -1,10 +1,8 @@
 from __future__ import annotations
+
 from typing import Dict, Tuple
 
 from bearlibterminal import terminal as blt
-import tcod
-
-blt.TK_KP_ENTER
 
 
 class CommandLibrary:

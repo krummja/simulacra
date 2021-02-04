@@ -36,12 +36,8 @@ class PlayerManager(Manager):
 
     def initialize_player(self):
         player = self.game.ecs.engine.create_entity()
-        player.add('Renderable', {'char': 0xE500})
-        player.add('Position', {'x': 1, 'y': 1})
-        player.add('Player', {})
-        player.add('Actor', {})
-        player.add('Motility', {})
-        player.add('Sprite', {})
+        self.game.ecs.engine.prefabs.apply_to_entity(player, 'Player', {
+            'POSITION': {'x': 5, 'y': 8}})
         self._player_uid = player.uid
         return player
 

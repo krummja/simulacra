@@ -23,6 +23,7 @@ class StageScreen(Screen):
 
     def on_enter(self) -> None:
         self.game.camera.update(100)
+        self.game.fov_system.update_fov()
         self.game.render_system.update(100)
         self.draw_ui(100)
         print("Entered Stage")

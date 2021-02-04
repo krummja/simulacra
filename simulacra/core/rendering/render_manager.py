@@ -1,11 +1,11 @@
 from __future__ import annotations
-from typing import Dict, TYPE_CHECKING
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 from bearlibterminal import terminal
-
 from simulacra.core.options import *
+
 from ..manager import Manager
 from .sprite_registry import SpriteRegistry
 

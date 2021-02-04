@@ -1,9 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Callable, Generic, Optional, TypeVar
-
-import tcod
-from tcod.event import EventDispatch
+from typing import TYPE_CHECKING, Callable, Optional, TypeVar
 
 from ..manager import Manager
 from .commands import CommandLibrary

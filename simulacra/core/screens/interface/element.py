@@ -1,10 +1,10 @@
 from __future__ import annotations
-from typing import Tuple
 
 from dataclasses import dataclass
+from typing import Tuple
 
-from simulacra.utils.geometry import *
 from simulacra.core.options import *
+from simulacra.utils.geometry import *
 
 from .ui_manager import UIManager
 

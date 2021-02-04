@@ -9,9 +9,9 @@ class Tile(Component):
     def __init__(
             self,
             transparent: bool,
-            move_cost: int,
+            passable: bool,
             unformed: bool
         ) -> None:
         self.transparent = transparent
-        self.move_cost = move_cost
+        self.passable = passable
         self.unformed = unformed
