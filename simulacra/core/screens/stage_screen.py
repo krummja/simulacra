@@ -45,6 +45,7 @@ class StageScreen(Screen):
     def draw_ui(self, dt) -> None:
         self.game.renderer.root_console.layer(5)
         self.draw_stage_panel_frame(dt)
+        # self.draw_fps_counter(dt)
         # self.draw_side_panel(dt)
 
     def draw_side_panel(self, dt):
@@ -58,6 +59,7 @@ class StageScreen(Screen):
     def draw_stage_panel_frame(self, dt):
         x_offset = (CONSOLE_WIDTH - STAGE_PANEL_WIDTH) // 2
         y_offset = 1
+        self.game.renderer.root_console.color(0xFFFFFFFF)
         self.game.renderer.root_console.layer(self.game.renderer.layers['INTERFACE'])
         self.game.renderer.root_console.put(   0 + x_offset,  0 + y_offset, 0xEF04 + (16*0) )
         self.game.renderer.root_console.put( 120 + x_offset,  0 + y_offset, 0xEF06 + (16*0) )
