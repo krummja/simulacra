@@ -27,4 +27,4 @@ LOG_PANEL_HEIGHT: int = (CONSOLE_HEIGHT // 4)
 
 DEBUG: bool = False
 DEVELOP: bool = True
-VIEW_RADIUS: int = 8 if DEBUG is False else 16
+VIEW_RADIUS: int = 6 if DEBUG is False else 16

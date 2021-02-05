@@ -32,8 +32,19 @@ class RenderManager(Manager):
         super().__init__(game)
         self._root_console = terminal
 
+        self._layers = {
+            'BACKGROUND': 0,
+            'VISIBLE': 1,
+            'EXPLORED': 2,
+            'ENTITY A': 10,
+            'ENTITY B': 11,
+            'UNKNOWN': 200,
+            'INTERFACE': 220,
+            }
+
         self._tilesets = [
-            ('0xE000', "./simulacra/assets/base_tileset.png"),
+            ('0xE000', "./simulacra/assets/base_tileset_saturated.png"),
+            ('0xE200', "./simulacra/assets/base_tileset_desaturated.png"),
             ('0xE500', "./simulacra/assets/entity_tileset.png"),
             ('0xEF00', "./simulacra/assets/ui_tileset.png"),
             ]
@@ -44,8 +55,13 @@ class RenderManager(Manager):
     def root_console(self):
         return self._root_console
 
+    @property
+    def layers(self):
+        return self._layers
+
     def clear(self) -> None:
         self._root_console.clear()
+        self._root_console.bkcolor(0xFFFDCBB0)
 
     def initialize_console(self):
         size: str = f"{self.config.width}x{self.config.height}, "
@@ -53,6 +69,7 @@ class RenderManager(Manager):
         title: str = f"'{self.config.title}'; "
         font: str = f"{self.config.font}"
 
+        self._root_console.bkcolor(0xFFFDCBB0)
         self._root_console.set(f"window: size={size}")
         self._root_console.set(f"window: cellsize={cellsize}")
         self._root_console.set(f"window: title={title}")

@@ -44,7 +44,7 @@ class StageScreen(Screen):
 
     def draw_ui(self, dt) -> None:
         self.game.renderer.root_console.layer(5)
-        # self.draw_stage_panel_frame(dt)
+        self.draw_stage_panel_frame(dt)
         # self.draw_side_panel(dt)
 
     def draw_side_panel(self, dt):
@@ -56,16 +56,28 @@ class StageScreen(Screen):
             ).on_render(dt)
 
     def draw_stage_panel_frame(self, dt):
-        self.game.renderer.root_console.put(   0,  0, 0xEF04 + (16*0) )
-        self.game.renderer.root_console.put( 124,  0, 0xEF06 + (16*0) )
-        self.game.renderer.root_console.put(   0, 42, 0xEF04 + (16*2) )
-        self.game.renderer.root_console.put( 124, 42, 0xEF06 + (16*2) )
-        for x in range(0, 124, 2):
-            self.game.renderer.root_console.put( 2+x, 0,  0xEF05 + (16*0) )
-            self.game.renderer.root_console.put( 2+x, 42, 0xEF05 + (16*2) )
-        for y in range(0, 40, 2):
-            self.game.renderer.root_console.put( 0,   2+y, 0xEF04 + (16*1) )
-            self.game.renderer.root_console.put( 124, 2+y, 0xEF06 + (16*1) )
+        x_offset = (CONSOLE_WIDTH - STAGE_PANEL_WIDTH) // 2
+        y_offset = 1
+        self.game.renderer.root_console.layer(self.game.renderer.layers['INTERFACE'])
+        self.game.renderer.root_console.put(   0 + x_offset,  0 + y_offset, 0xEF04 + (16*0) )
+        self.game.renderer.root_console.put( 120 + x_offset,  0 + y_offset, 0xEF06 + (16*0) )
+        self.game.renderer.root_console.put(   0 + x_offset, 40 + y_offset, 0xEF04 + (16*2) )
+        self.game.renderer.root_console.put( 120 + x_offset, 40 + y_offset, 0xEF06 + (16*2) )
+        for x in range(0+x_offset, 120+x_offset, 2):
+            self.game.renderer.root_console.put( 2 + x,  0 + y_offset, 0xEF05 + (16*0) )
+            self.game.renderer.root_console.put( 2 + x, 40 + y_offset, 0xEF05 + (16*2) )
+        for y in range(0+y_offset, 40+y_offset, 2):
+            self.game.renderer.root_console.put(   0 + x_offset, 2 + y, 0xEF04 + (16*1) )
+            self.game.renderer.root_console.put( 120 + x_offset, 2 + y, 0xEF06 + (16*1) )
+
+        # Draw the stage panel shadow
+        self.game.renderer.root_console.put( 0 + x_offset, 0 + y_offset + 42, 0xEF04 + (16*3) )
+        self.game.renderer.root_console.put( 0 + x_offset + 124, 0 + y_offset, 0xEF07 + (16*0) )
+        for x in range(0+x_offset+4, 121+x_offset, 2):
+            self.game.renderer.root_console.put( 0 + x, 42 + y_offset, 0xEF05 + (16*3) )
+        for y in range(0+y_offset, 39+y_offset, 2):
+            self.game.renderer.root_console.put( 124 + x_offset, 2 + y, 0xEF07 + (16*1) )
+        self.game.renderer.root_console.put( 124 + x_offset, 42 + y_offset, 0xEF07 + (16*3) )
 
     def draw_log_panel(self, dt):
         self.game.renderer.root_console.put( 1,   44, 0xEF00 + (16*0) )

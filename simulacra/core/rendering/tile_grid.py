@@ -9,9 +9,9 @@ class TileGrid:
     def __init__(self) -> None:
         self.shape = (STAGE_WIDTH, STAGE_HEIGHT)
 
-        # Tile Arrays
-        self.ground = np.zeros(self.shape, dtype=object, order="F")
-        self.obstacle = np.zeros(self.shape, dtype=object, order="F")
+        # Renderable Arrays
+        self.saturated = np.zeros(self.shape, dtype=object, order="F")
+        self.desaturated = np.zeros(self.shape, dtype=object, order="F")
 
         # Boolean Mask Arrays
         self.passable = np.ones(self.shape, dtype=np.bool, order="F")

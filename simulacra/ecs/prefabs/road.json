@@ -1,0 +1,8 @@
+{
+    "name": "Road",
+    "inherit": "",
+    "components": [
+        {   "type": "TILE",
+            "properties": {}}
+    ]
+}

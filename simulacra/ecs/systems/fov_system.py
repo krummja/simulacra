@@ -24,7 +24,7 @@ class FOVSystem(System):
         tile_grid.visible = tcod.map.compute_fov(
             transparency=tile_grid.transparent,
             pov=self._query.result[0]['POSITION'].xy,
-            radius=10,
+            radius=8,
             light_walls=True,
             algorithm=tcod.FOV_RESTRICTIVE
             )
