@@ -49,6 +49,11 @@ class RenderManager(Manager):
             ('0xEF00', "./simulacra/assets/ui_tileset.png"),
             ]
 
+        self.named_colors = {
+            'parchment'  : 0xFFFDCBB0,
+            'dreamscape' : 0xFF3E3546,
+            }
+
         self.sprites = SpriteRegistry()
 
     @property
@@ -61,7 +66,8 @@ class RenderManager(Manager):
 
     def clear(self) -> None:
         self._root_console.clear()
-        self._root_console.bkcolor(0xFFFDCBB0)
+        # TODO: Change this to clear area and then set a global bkcolor for the UI
+        self._root_console.bkcolor(self.game.area.current_area.background)
 
     def initialize_console(self):
         size: str = f"{self.config.width}x{self.config.height}, "
@@ -69,7 +75,7 @@ class RenderManager(Manager):
         title: str = f"'{self.config.title}'; "
         font: str = f"{self.config.font}"
 
-        self._root_console.bkcolor(0xFFFDCBB0)
+        self._root_console.bkcolor(self.game.area.current_area.background)
         self._root_console.set(f"window: size={size}")
         self._root_console.set(f"window: cellsize={cellsize}")
         self._root_console.set(f"window: title={title}")
@@ -84,7 +90,6 @@ class RenderManager(Manager):
             tile_config += f"{tileset[0]}: {tileset[1]}, "
             tile_config += f"size={TILE_SIZE}x{TILE_SIZE}, "
             tile_config += f"align={TILE_ALIGN}, "
-            tile_config += f"codepage={CODEPAGE}, "
             tile_config += f"resize={TILE_SIZE*SCALE}x{TILE_SIZE*SCALE}, "
             tile_config += f"resize-filter={RESIZE_FILTER}, "
             tile_config += f"spacing={SPACING} "

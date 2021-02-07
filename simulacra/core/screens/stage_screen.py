@@ -45,6 +45,7 @@ class StageScreen(Screen):
     def draw_ui(self, dt) -> None:
         self.game.renderer.root_console.layer(5)
         self.draw_stage_panel_frame(dt)
+        # self.draw_player_energy(dt)
         # self.draw_fps_counter(dt)
         # self.draw_side_panel(dt)
 
@@ -98,4 +99,9 @@ class StageScreen(Screen):
     def draw_fps_counter(self, dt):
         fps = self.game.fps.fps
         self.game.renderer.root_console.color(0xFFFF0000)
-        self.game.renderer.root_console.puts( CONSOLE_WIDTH - 10, 0, "FPS: " + str(fps))
+        self.game.renderer.root_console.puts(CONSOLE_WIDTH - 10, 0, "FPS: " + str(fps))
+
+    def draw_player_energy(self, dt):
+        energy = self.game.player.entity['Actor'].energy
+        self.game.renderer.root_console.color(0xFFFF00FF)
+        self.game.renderer.root_console.puts(CONSOLE_WIDTH - 10, 2, "ENR: " + str(energy))

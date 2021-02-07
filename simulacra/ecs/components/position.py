@@ -5,7 +5,6 @@ from ecstremity import Component
 
 
 class Position(Component):
-    name = "POSITION"
 
     def __init__(self, x: int, y: int) -> None:
         self.x = x

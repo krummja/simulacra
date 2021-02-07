@@ -16,6 +16,7 @@ class Action:
     event: str
     data: Any
     condition: Callable[[], bool] = None
+    cost: int = 0
 
     @property
     def success(self) -> bool:
@@ -32,4 +33,5 @@ class Action:
 
     def act(self) -> None:
         """Act step, which fires the event for an action success."""
+        self.entity['Actor'].reduce_energy(self.cost)
         self.entity.fire_event(self.event, (self.success, self.data))

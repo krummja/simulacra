@@ -5,7 +5,7 @@ from ecstremity import Component
 
 
 class Renderable(Component):
-    name = "RENDERABLE"
+
     def __init__(self, codepoint: str, row: int = 0, col: int = 0) -> None:
         if isinstance(codepoint, str):
             self.char = int(codepoint, base=16) + (16 * row) + col

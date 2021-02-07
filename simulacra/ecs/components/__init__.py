@@ -6,6 +6,7 @@ from simulacra.ecs.components.position import Position
 from simulacra.ecs.components.renderable import Renderable
 from simulacra.ecs.components.tile import Tile
 from simulacra.ecs.components.sprite import Sprite
+from simulacra.ecs.components.name import Name
 
 
 def all_components():
@@ -17,4 +18,5 @@ def all_components():
         Renderable,
         Tile,
         Sprite,
+        Name,
         ]

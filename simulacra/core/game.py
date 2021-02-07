@@ -13,6 +13,7 @@ from .clock_manager import ClockManager
 from .input import InputController
 from .log_manager import LogManager
 from .player_manager import PlayerManager
+from .procgen_manager import ProcGenManager
 from .rendering import RenderManager
 from .rendering.fps_manager import FPSManager
 from .screens import ScreenManager
@@ -33,6 +34,7 @@ class Game:
         self.world = WorldManager(self)          # TODO
         self.camera = CameraManager(self)
         self.area = AreaManager(self)
+        self.procgen = ProcGenManager(self)
         self.player = PlayerManager(self)
         self.screens = ScreenManager(self)
         self.input = InputController(self)

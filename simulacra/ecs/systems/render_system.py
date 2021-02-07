@@ -21,8 +21,10 @@ class RenderSystem(System):
         self.area_grid = self.game.area.current_area.grid
 
         self._query = self.ecs.create_query(
-            all_of=[ 'RENDERABLE',
-                     'SPRITE'     ])
+            all_of=[
+                'Renderable',
+                'Sprite'
+                ])
 
     def render_tile(self, x: int, y: int) -> None:
         world = self.game.camera.screen_to_world(x, y)
@@ -38,24 +40,53 @@ class RenderSystem(System):
         elif self.area_grid.explored[world['x'], world['y']]:
             self.draw_explored(wx=world['x'], wy=world['y'], at=position)
         else:
-            self.draw_unknown(at=position)
+            if self.game.area.current_area.background == self.game.renderer.named_colors['dreamscape']:
+                self.draw_dungeon_unknown(at=position)
+            else:
+                self.draw_unknown(wx=world['x'], wy=world['y'], at=position)
+
 
     def draw_visible(self, *, wx: int, wy: int, at: Tuple[int, int]) -> None:
-        saturated = self.area_grid.saturated[wx, wy]['RENDERABLE']
+        saturated = self.area_grid.saturated[wx, wy]['Renderable']
         self.console.layer(self.game.renderer.layers['VISIBLE'])
         self.console.color(0xFFFFFFFF)
         self.console.put(*at, saturated.char)
 
     def draw_explored(self, *, wx: int, wy: int, at: Tuple[int, int]) -> None:
-        desaturated = self.area_grid.desaturated[wx, wy]['RENDERABLE']
+        desaturated = self.area_grid.desaturated[wx, wy]['Renderable']
         self.console.layer(self.game.renderer.layers['EXPLORED'])
-        self.console.color(0x88FFFFFF)
+
+        color = 0x88FFFFFF
+        self.console.color(color)
         self.console.put(*at, desaturated.char)
 
-    def draw_unknown(self, *, at: Tuple[int, int]) -> None:
+    def draw_dungeon_unknown(self, *, at: Tuple[int, int]) -> None:
+        explored = self.game.area.current_area.grid.explored
         self.console.layer(self.game.renderer.layers['UNKNOWN'])
         self.console.color(0xFFFFFFFF)
-        self.console.put(*at, 0xE000)
+        self.console.put(*at, self.game.renderer.sprites.get_codepoint('other', 'unknown9'))
+
+    def draw_unknown(self, *, wx: int, wy: int, at: Tuple[int, int]) -> None:
+        explored = self.game.area.current_area.grid.explored
+        top_left = explored[wx - 1, wy - 1]
+        top = explored[wx, wy - 1]
+        left = explored[wx - 1, wy]
+
+        tile = {
+            (True,  True,  True ): 'unknown2',
+            (True,  True,  False): 'unknown3',
+            (True,  False, True ): 'unknown4',
+            (True,  False, False): 'unknown5',
+            (False, True,  True ): 'unknown8',
+            (False, True,  False): 'unknown6',
+            (False, False, True ): 'unknown7',
+            (False, False, False): 'unknown1',
+            }
+        selection = tile[(top_left, top, left)]
+
+        self.console.layer(self.game.renderer.layers['UNKNOWN'])
+        self.console.color(0xFFFFFFFF)
+        self.console.put(*at, self.game.renderer.sprites.get_codepoint('other', selection))
 
     def render_entity(self, x: int, y: int) -> None:
         entities = defaultdict(list)
@@ -64,7 +95,7 @@ class RenderSystem(System):
             return
 
         for entity in self._query.result:
-            entities[entity['POSITION'].xy].append(entity['RENDERABLE'])
+            entities[entity['POSITION'].xy].append(entity['Renderable'])
 
         if entities[world['x'], world['y']]:
             graphic = min(entities[world['x'], world['y']])
@@ -81,3 +112,6 @@ class RenderSystem(System):
 
     def update(self, dt) -> None:
         self.render()
+
+    def alpha_subtract(self, alpha: int, value: int, shift: int) -> int:
+        return int(((alpha >> shift) - value) << shift)

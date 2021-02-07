@@ -4,7 +4,6 @@ from ecstremity import Component
 
 
 class Tile(Component):
-    name = "TILE"
 
     def __init__(
             self,

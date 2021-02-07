@@ -1,0 +1,9 @@
+
+test_shop {
+    x = 20;
+    y = 20;
+    w = 10;
+    h = 10;
+    floor = wood;
+    wall = wood;
+}

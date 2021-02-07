@@ -4,4 +4,4 @@ from ecstremity import Component
 
 
 class IsPlayer(Component):
-    name = "IS_PLAYER"
+    """Player flag component."""

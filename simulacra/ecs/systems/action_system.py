@@ -31,9 +31,9 @@ class ActionSystem(System):
 
         while entity and entity['ACTOR'].has_energy:
 
-            # TODO Add logic for incapacitation, etc.
+            # Additional conditions and checks can go here!
 
-            if entity.has('IS_PLAYER'):
+            if entity.has('isplayer'):
                 try:
                     action = self.game.player.get_next_action()
                     if action:
@@ -42,8 +42,6 @@ class ActionSystem(System):
                 except IndexError:
                     return False
 
-            # FIXME: I know this is going to break later
-            # Need to figure out a good way for entities to pass a `data` arg.
             entity.fire_event('take-action')
             entity = entities.popleft()
 

@@ -28,16 +28,16 @@ class PlayerManager(Manager):
 
     @property
     def is_turn(self) -> bool:
-        return self.entity['ACTOR'].has_energy
+        return self.entity['Actor'].has_energy
 
     @property
     def position(self) -> Tuple[int, int]:
-        return self.entity['POSITION'].xy
+        return self.entity['Position'].xy
 
     def initialize_player(self):
         player = self.game.ecs.engine.create_entity()
-        self.game.ecs.engine.prefabs.apply_to_entity(player, 'Player', {
-            'POSITION': {'x': 5, 'y': 8}})
+        self.game.ecs.engine.prefabs.apply_to_entity(
+            player, 'Player', {'Position': {'x': 5,'y': 8}})
         self._player_uid = player.uid
         return player
 

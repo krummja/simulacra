@@ -25,6 +25,8 @@ SIDE_PANEL_HEIGHT: int = CONSOLE_HEIGHT
 
 LOG_PANEL_HEIGHT: int = (CONSOLE_HEIGHT // 4)
 
+GRAMMAR_PATH = "simulacra/world/grammars/"
+
 DEBUG: bool = False
 DEVELOP: bool = True
 VIEW_RADIUS: int = 6 if DEBUG is False else 16

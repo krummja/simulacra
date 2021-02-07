@@ -1,7 +1,7 @@
 class SpriteRegistry:
 
     SATURATED = 0x0
-    DESATURATED = 0xC8
+    DESATURATED = 0x200
 
     ground = {
         'green_1'     : ( 0xE000, 0,  0 ),
@@ -65,11 +65,62 @@ class SpriteRegistry:
 
         }
 
+    dungeon = {
+        'wall': {
+            'brick_1' : ( 0xE000, 11, 1 ),
+            'brick_2' : ( 0xE000, 11, 2 ),
+            'brick_3' : ( 0xE000, 11, 3 ),
+            'void'    : ( 0xE000, 11, 5 ),
+            },
+        'floor': {
+            'stone_1' : ( 0xE000, 12, 1 ),
+            'stone_2' : ( 0xE000, 12, 2 ),
+            'stone_3' : ( 0xE000, 12, 3 ),
+            'stone_4' : ( 0xE000, 13, 0 ),
+            'stone_5' : ( 0xE000, 13, 1 ),
+            'stone_6' : ( 0xE000, 13, 3 ),
+            'stone_7' : ( 0xE000, 14, 1 ),
+            'stone_8' : ( 0xE000, 14, 2 ),
+            'stone_9' : ( 0xE000, 14, 3 ),
+            'gap'     : ( 0xE000, 13, 2 ),
+            },
+        'border': {
+            'northwest'       : ( 0xE000, 10, 0 ),
+            'north'           : ( 0xE000, 10, 1 ),
+            'northeast'       : ( 0xE000, 10, 4 ),
+            'west'            : ( 0xE000, 11, 0 ),
+            'east'            : ( 0xE000, 11, 4 ),
+            'southwest'       : ( 0xE000, 15, 0 ),
+            'south'           : ( 0xE000, 15, 1 ),
+            'southeast'       : ( 0xE000, 15, 4 ),
+            'northwest_inner' : ( 0xE000, 12, 0 ),
+            'northeast_inner' : ( 0xE000, 12, 4 ),
+            'southwest_inner' : ( 0xE000, 14, 0 ),
+            'southeast_inner' : ( 0xE000, 14, 4 ),
+            }
+        }
+
     other = {
-        'unknown' : ( 0xE000, 0, 0 )
+        'unknown1' : ( 0xE000, 0, 0 ),
+        'unknown2' : ( 0xE000, 9, 0 ),
+        'unknown3' : ( 0xE000, 9, 1 ),
+        'unknown4' : ( 0xE000, 9, 2 ),
+        'unknown5' : ( 0xE000, 9, 3 ),
+        'unknown6' : ( 0xE000, 9, 4 ),
+        'unknown7' : ( 0xE000, 9, 5 ),
+        'unknown8' : ( 0xE000, 9, 6 ),
+        'unknown9' : ( 0xE000, 9, 7 ),
         }
 
     def get_codepoint(self, registry: str, uid: str, saturated: bool = True):
         registry = getattr(self, registry)
-        struct = registry[uid]
-        return struct[0] + (16 * struct[1]) + struct[2] + (0x0 if saturated else 0x200)
+        tag_list = uid.split("/")
+        if len(tag_list) > 1:
+            subregistry = tag_list[0]
+            uid = tag_list[1]
+            struct = registry[subregistry][uid]
+        else:
+            struct = registry[uid]
+        return struct[0] + (16 * struct[1]) + struct[2] + (
+            self.SATURATED if saturated else self.DESATURATED
+            )

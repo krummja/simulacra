@@ -5,7 +5,6 @@ from ecstremity import Component
 
 
 class Motility(Component):
-    name = "MOTILITY"
     facing = (0, 0)
     facings = {
         ( 0,  0): 'static',

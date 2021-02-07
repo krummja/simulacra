@@ -16,7 +16,7 @@ class FOVSystem(System):
     def __init__(self, game: Game) -> None:
         super().__init__(game)
         self._query = self.ecs.create_query(
-            all_of=['IS_PLAYER']
+            all_of=['ISPLAYER']
             )
 
     def update_fov(self) -> None:
