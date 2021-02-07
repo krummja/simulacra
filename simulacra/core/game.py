@@ -31,9 +31,9 @@ class Game:
 
         self.clock = ClockManager(self)
         self.renderer = RenderManager(self)
-        self.world = WorldManager(self)          # TODO
         self.camera = CameraManager(self)
         self.area = AreaManager(self)
+        self.world = WorldManager(self)          # TODO
         self.procgen = ProcGenManager(self)
         self.player = PlayerManager(self)
         self.screens = ScreenManager(self)

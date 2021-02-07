@@ -1,9 +1,36 @@
 
-test_shop {
+test_shop
+{
     x = 20;
     y = 20;
     w = 10;
     h = 10;
     floor = wood;
     wall = wood;
+}
+
+test_road
+{
+    x = center;
+    y = center;
+    bends = 10;
+    deviance = 5;
+
+    -> area_entry
+    {
+        x = left;
+        y = 20;
+    }
+
+    -> area_exit
+    {
+        x = right;
+        y = 80;
+    }
+
+    -> test_shop
+    {
+        place = 30;
+        offset = 5;
+    }
 }

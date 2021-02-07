@@ -1,4 +1,16 @@
 from __future__ import annotations
+from enum import Enum
+
+
+class Floor(Enum):
+    WOOD = 0
+    STONE = 1
+    BRICK = 2
+
+class Wall(Enum):
+    WOOD = 0
+    STONE = 1
+    BRICK = 2
 
 
 class Structure:
@@ -7,17 +19,17 @@ class Structure:
         self.build_floor()
         self.build_size()
 
-    def build_floor(self):
+    def build_floor(self) -> None:
         raise NotImplementedError
 
-    def build_size(self):
+    def build_size(self) -> None:
         raise NotImplementedError
 
 
 class Shop(Structure):
 
     def build_floor(self):
-        self.floor = "wood"
+        self.floor = Floor.STONE
 
     def build_size(self):
         self.size = (10, 10)
