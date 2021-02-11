@@ -32,15 +32,15 @@ class RenderManager(Manager):
         super().__init__(game)
         self._root_console = terminal
 
-        self._layers = {
-            'BACKGROUND': 0,
-            'VISIBLE': 1,
-            'EXPLORED': 2,
-            'ENTITY A': 10,
-            'ENTITY B': 11,
-            'UNKNOWN': 200,
-            'INTERFACE': 220,
-            }
+        # self._layers = {
+        #     'BACKGROUND': 0,
+        #     'VISIBLE': 1,
+        #     'EXPLORED': 2,
+        #     'ENTITY A': 10,
+        #     'ENTITY B': 11,
+        #     'UNKNOWN': 200,
+        #     'INTERFACE': 220,
+        #     }
 
         self._tilesets = [
             ('0xE000', "./simulacra/assets/base_tileset_saturated.png"),
@@ -48,6 +48,13 @@ class RenderManager(Manager):
             ('0xE500', "./simulacra/assets/entity_tileset.png"),
             ('0xEF00', "./simulacra/assets/ui_tileset.png"),
             ]
+
+        self.templates = [
+            ('0xE100', "./simulacra/assets/Template/Ground.png"),
+            ('0xE12C', "./simulacra/assets/Template/Floor.png"),
+            ('0xE180', "./simulacra/assets/Template/Below_Entity.png"),
+            ('0xE1C0', "./simulacra/assets/Template/Above_Entity.png"),
+        ]
 
         self.named_colors = {
             'parchment'  : 0xFFFDCBB0,
@@ -61,8 +68,37 @@ class RenderManager(Manager):
         return self._root_console
 
     @property
+    def tilesets(self):
+        return {
+            'ABOVE_ENTITY'  : 0xE1C0 ,
+            'BELOW_ENTITY'  : 0xE180 ,
+            'FLOOR'         : 0xE12C ,
+            'GROUND'        : 0xE100 ,
+            }
+
+    @property
     def layers(self):
-        return self._layers
+        """To facilitate sprite layering, I have earmarked discrete ranges of
+        BearLibTerminal's 255 layers for particular uses.
+
+        Using a dict is handy since I can adjust the values for different layers
+        without actually changing anything in the code.
+        """
+        return {
+            # ...       UNASSIGNED
+            'INTERFACE'     : 0xEE ,
+            'UNKNOWN'       : 0xDD ,
+            # ...       UNASSIGNED
+            'WALLTOP'       : 0x32 ,
+            # ...       UNASSIGNED
+            'EQUIPMENT'     : 0x0C ,
+            'CLOTHING'      : 0x0B ,
+            'ENTITY BASE'   : 0x0A ,
+            # ...       UNASSIGNED
+            'FLOOR'         : 0x02 ,
+            'GROUND'        : 0x01 ,
+            'BACKGROUND'    : 0x00 ,
+            }
 
     def clear(self) -> None:
         self._root_console.clear()
@@ -94,6 +130,16 @@ class RenderManager(Manager):
             tile_config += f"resize-filter={RESIZE_FILTER}, "
             tile_config += f"spacing={SPACING} "
             tile_config += "; "
+
+        for tileset in self.templates:
+            tile_config += f"{tileset[0]}: {tileset[1]}, "
+            tile_config += f"size=8x8, "
+            tile_config += f"align={TILE_ALIGN}, "
+            tile_config += f"resize={TILE_SIZE*SCALE}x{TILE_SIZE*SCALE}, "
+            tile_config += f"resize-filter={RESIZE_FILTER}, "
+            tile_config += f"spacing={SPACING} "
+            tile_config += "; "
+
         self._root_console.set(tile_config)
 
     def setup(self):

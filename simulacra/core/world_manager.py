@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
+import numpy as np
+
 from .manager import Manager
 
 if TYPE_CHECKING:
@@ -21,7 +23,9 @@ class WorldManager(Manager):
         return self.areas[self.game.area.current_area.name]
 
     def generate_world(self):
+        """Create and initialize a world consisting of many Area instances."""
         pass
 
     def generate_area(self):
+        """Create and initialize a specific area using an Architect."""
         pass

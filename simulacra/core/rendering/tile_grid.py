@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 from simulacra.core.options import *
+from simulacra.utils.map_grid import new_grid
 
 
 class TileGrid:

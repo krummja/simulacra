@@ -37,31 +37,29 @@ class RenderSystem(System):
 
         if self.area_grid.visible[world['x'], world['y']]:
             self.draw_visible(wx=world['x'], wy=world['y'], at=position)
+
         elif self.area_grid.explored[world['x'], world['y']]:
             self.draw_explored(wx=world['x'], wy=world['y'], at=position)
+
         else:
             if self.game.area.current_area.background == self.game.renderer.named_colors['dreamscape']:
                 self.draw_dungeon_unknown(at=position)
             else:
                 self.draw_unknown(wx=world['x'], wy=world['y'], at=position)
 
-
     def draw_visible(self, *, wx: int, wy: int, at: Tuple[int, int]) -> None:
-        saturated = self.area_grid.saturated[wx, wy]['Renderable']
-        self.console.layer(self.game.renderer.layers['VISIBLE'])
+        renderable = self.area_grid.saturated[wx, wy]
+        self.console.layer(self.game.renderer.layers['GROUND'])
         self.console.color(0xFFFFFFFF)
-        self.console.put(*at, saturated.char)
+        self.console.put(*at, renderable)
 
     def draw_explored(self, *, wx: int, wy: int, at: Tuple[int, int]) -> None:
-        desaturated = self.area_grid.desaturated[wx, wy]['Renderable']
-        self.console.layer(self.game.renderer.layers['EXPLORED'])
-
-        color = 0x88FFFFFF
-        self.console.color(color)
-        self.console.put(*at, desaturated.char)
+        renderable = self.area_grid.desaturated[wx, wy]
+        self.console.layer(self.game.renderer.layers['GROUND'])
+        self.console.color(0x88FFFFFF)
+        self.console.put(*at, renderable)
 
     def draw_dungeon_unknown(self, *, at: Tuple[int, int]) -> None:
-        explored = self.game.area.current_area.grid.explored
         self.console.layer(self.game.renderer.layers['UNKNOWN'])
         self.console.color(0xFFFFFFFF)
         self.console.put(*at, self.game.renderer.sprites.get_codepoint('other', 'unknown9'))
@@ -99,7 +97,7 @@ class RenderSystem(System):
 
         if entities[world['x'], world['y']]:
             graphic = min(entities[world['x'], world['y']])
-            self.console.layer(self.game.renderer.layers['ENTITY A'])
+            self.console.layer(self.game.renderer.layers['ENTITY BASE'])
             self.console.color(0xFFFFFFFF)
             self.console.put(self.x_offset + (x * 4), self.y_offset + (y * 2) - 1, graphic.char)
 

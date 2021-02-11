@@ -15,14 +15,6 @@ from .span import Span
 def clamp(number, low, high):
     return max(low * 1.0, min(number * 1.0, high * 1.0))
 
-# def clamp(val, min=0, max=1):
-#     if val < min:
-#         return min
-#     if val > max:
-#         return max
-#     return val
-
-
 
 class Rect(tuple):
     """Representation of a Rectangle."""

@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 
 from simulacra.core.options import *
 from simulacra.world.area import Area
+from simulacra.utils.geometry import Rect
 
 if TYPE_CHECKING:
     from simulacra.core.area_manager import AreaManager
@@ -15,6 +16,7 @@ class TestArea(Area):
         super().__init__(manager)
         self.background = 0xFFFDCBB0
 
+        # TODO: Move all of this to an Architect subclass
         for x in range(STAGE_WIDTH):
             for y in range(STAGE_HEIGHT):
                 self.make_tile(x, y, 'decoration', 'grass_2')
@@ -28,3 +30,4 @@ class TestArea(Area):
         self.make_tile(20, 3, 'path', 'turn_top_right')
         for y in range(4, 13):
             self.make_tile(20, y, 'path', 'vertical')
+

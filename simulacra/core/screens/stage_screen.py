@@ -26,7 +26,6 @@ class StageScreen(Screen):
         self.game.fov_system.update_fov()
         self.game.render_system.update(100)
         self.draw_ui(100)
-        print("Entered Stage")
 
     def on_update(self, dt) -> None:
         self.handle_input()
@@ -45,17 +44,7 @@ class StageScreen(Screen):
     def draw_ui(self, dt) -> None:
         self.game.renderer.root_console.layer(5)
         self.draw_stage_panel_frame(dt)
-        # self.draw_player_energy(dt)
-        # self.draw_fps_counter(dt)
-        # self.draw_side_panel(dt)
-
-    def draw_side_panel(self, dt):
-        Surface(
-            self.manager,
-            position=("top", "right"),
-            width=SIDE_PANEL_WIDTH,
-            height=SIDE_PANEL_HEIGHT // 4,
-            ).on_render(dt)
+        self.draw_fps_counter(dt)
 
     def draw_stage_panel_frame(self, dt):
         x_offset = (CONSOLE_WIDTH - STAGE_PANEL_WIDTH) // 2
@@ -100,8 +89,3 @@ class StageScreen(Screen):
         fps = self.game.fps.fps
         self.game.renderer.root_console.color(0xFFFF0000)
         self.game.renderer.root_console.puts(CONSOLE_WIDTH - 10, 0, "FPS: " + str(fps))
-
-    def draw_player_energy(self, dt):
-        energy = self.game.player.entity['Actor'].energy
-        self.game.renderer.root_console.color(0xFFFF00FF)
-        self.game.renderer.root_console.puts(CONSOLE_WIDTH - 10, 2, "ENR: " + str(energy))

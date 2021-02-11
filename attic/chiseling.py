@@ -8,6 +8,7 @@ from typing import Callable, List, Tuple, TypeVar, Generic, Optional
 import random
 import math
 import numpy as np
+from collections import defaultdict
 
 DType = TypeVar("DType")
 U = TypeVar("U")
@@ -19,6 +20,52 @@ class Array(np.ndarray, Generic[DType]):
     """Dummy class for type annotating NumPy ndarrays."""
 
 
+
+
+class Graph:
+
+    def __init__(self, vertices) -> None:
+        self.vertices = vertices
+        self.graph = defaultdict([list])
+        self.time = 0
+
+    def add_edge(self, u, v) -> None:
+        self.graph[u].append(v)
+        self.graph[v].append(u)
+
+    def find_articulation_points(self, u, visited, ap, parent, low, disc):
+        children = 0
+        visited[u] = True
+        disc[u] = self.time
+        low[u] = self.time
+        self.time += 1
+
+        for v in self.graph[u]:
+            if not visited[v]:
+                parent[v] = u
+                children += 1
+                self.find_articulation_points(v, visited, ap, parent, low, disc)
+                low[u] = min(low[u], low[v])
+                if parent[u] == -1 and children > 1:
+                    ap[u] = True
+                if parent[u] != -1 and low[v] >= disc[u]:
+                    ap[u] = True
+            elif v != parent[u]:
+                low[u] = min(low[u], disc[v])
+
+    def traverse(self):
+        visited = [False] * self.vertices
+        disc = [float("Inf")] * self.vertices
+        low = [float("Inf")] * self.vertices
+        parent = [-1] * self.vertices
+        ap_list = [False] * self.vertices
+
+        for i in range(self.vertices):
+            if not visited[i]:
+                self.find_articulation_points(i, visited, ap_list, parent, low, disc)
+        return ap_list
+
+
 class ChiselingAlgorithm:
 
     def __init__(self) -> None:
@@ -26,8 +73,6 @@ class ChiselingAlgorithm:
                           (  0,  1 ),
                           ( -1,  0 ),
                           (  0, -1 )]
-        self.num = 1
-
 
     def find_articulation_points(
             self,
@@ -50,14 +95,16 @@ class ChiselingAlgorithm:
         is_articulation: Array[np.bool] = np.zeros(shape, dtype=np.bool, order="F")
 
         def cut_vertex(ux: int, uy: int) -> Tuple[int, bool]:
-            child_count = 0;
+            child_count = 0
             is_relevant = np.any(relevant) and relevant[ux][uy]
             if is_relevant:
                 is_articulation[ux][uy] = True
             is_relevant_subtree = is_relevant
 
-            self.num += 1
-            low[ux][uy] = dfs_num[ux][uy] = self.num
+            num: int = 1
+            low[ux][uy] = dfs_num[ux][uy] = num
+            num += 1
+            print(num)
 
             for (dx, dy) in self.neighbors:
                 vx = ux + dx
@@ -192,11 +239,13 @@ class ChiselingAlgorithm:
 
 
 if __name__ == '__main__':
-    w = np.zeros((10, 10), dtype=np.bool, order="F")
+    width = 32  # over 30 and it gets a recursion error lol
+                # I'll have to do it in chunks, ideally of 16x16
+    w = np.zeros((width, width), dtype=np.bool, order="F")
     w[:] = True
     chiseling = ChiselingAlgorithm()
-    points = np.zeros((10, 10), dtype=np.bool, order="F")
+    points = np.zeros((width, width), dtype=np.bool, order="F")
     points[0][0] = True
-    points[9][9] = True
-    result = chiseling.random_path(10, 10, w, points)
+    points[width-1][width-1] = True
+    result = chiseling.random_path(width, width, w, points)
     print(result)
