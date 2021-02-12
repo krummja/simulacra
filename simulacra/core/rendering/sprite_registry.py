@@ -90,37 +90,33 @@ class SpriteRegistry:
 
     structure = {
         'wall': {
-            'inner_endcap_right' : ( 0xE000, 4, 0 ),
-            'inner_endcap_left'  : ( 0xE000, 4, 1 ),
-            'inner_horizontal'   : ( 0xE000, 4, 2 ),
-            'inner_top_left'     : ( 0xE000, 4, 3 ),
-            'inner_top_right'    : ( 0xE000, 4, 4 ),
-            'inner_bottom_left'  : ( 0xE000, 4, 5 ),
-            'inner_bottom_right' : ( 0xE000, 4, 6 ),
-            'inner_left'         : ( 0xE000, 4, 7 ),
-            'inner_right'        : ( 0xE000, 4, 8 ),
-            'facing_outer'       : ( 0xE000, 5, 0 ),
-            'facing_inner'       : ( 0xE000, 5, 1 ),
-            'facing_left'        : ( 0xE000, 5, 2 ),
-            'facing_right'       : ( 0xE000, 5, 3 ),
-            },
-        'door': {
-            'inner_open'         : ( 0xE000, 4,  9 ),
-            'facing_open'        : ( 0xE000, 5,  9 ),
-            'inner_closed'       : ( 0xE000, 4, 10 ),
-            'facing_closed'      : ( 0xE000, 5, 10 ),
+            'top_left'      : ( 0xE000, 4, 0 ),
+            'horizontal'    : ( 0xE000, 4, 1 ),
+            'top_T'         : ( 0xE000, 4, 2 ),
+            'top_right'     : ( 0xE000, 4, 3 ),
+            'top_end'       : ( 0xE000, 4, 4 ),
+            'vertical'      : ( 0xE000, 5, 0 ),
+            'left_T'        : ( 0xE000, 6, 0 ),
+            'four_way'      : ( 0xE000, 6, 2 ),
+            'right_T'       : ( 0xE000, 6, 3 ),
+            'bottom_end'    : ( 0xE000, 6, 4 ),
+            'bottom_left'   : ( 0xE000, 7, 0 ),
+            'bottom_T'      : ( 0xE000, 7, 2 ),
+            'bottom_right'  : ( 0xE000, 7, 3 ),
+            'left_end'      : ( 0xE000, 8, 0 ),
+            'right_end'     : ( 0xE000, 8, 2 )
             },
         'floor': {
-            'top_left'       : ( 0xE000, 6, 0 ),
-            'top'            : ( 0xE000, 6, 1 ),
-            'top_right'      : ( 0xE000, 6, 2 ),
-            'center_bare'    : ( 0xE000, 6, 3 ),
-            'left'           : ( 0xE000, 7, 0 ),
-            'center_bricks'  : ( 0xE000, 7, 1 ),
-            'right'          : ( 0xE000, 7, 2 ),
-            'bottom_left'    : ( 0xE000, 8, 0 ),
-            'bottom'         : ( 0xE000, 8, 1 ),
-            'bottom_right'   : ( 0xE000, 8, 2 ),
+            'top_left' : ( 0xE000, 4, 5),
+            'top' : (0xE000, 4, 6),
+            'top_right' : (0xE000, 4, 7),
+            'blank': (0xE000, 4, 8),
+            'left': (0xE000, 5, 5),
+            'center': (0xE000, 5, 6),
+            'right': (0xE000, 5, 7),
+            'bottom_left': (0xE000, 6, 5),
+            'bottom': (0xE000, 6, 6),
+            'bottom_right': (0xE000, 6, 7)
             }
         }
 
@@ -169,6 +165,12 @@ class SpriteRegistry:
         'unknown7' : ( 0xEF00, 0, 13 ),
         'unknown8' : ( 0xEF00, 0, 14 ),
         'unknown9' : ( 0xEF00, 0, 15 ),
+        }
+
+    template = {
+        'above': {
+            'top_left': ( 0xE1C0, 0, 0 ),
+            }
         }
 
     def get_codepoint(self, registry: str, uid: str, saturated: bool = True):

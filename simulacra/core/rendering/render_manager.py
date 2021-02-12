@@ -32,29 +32,12 @@ class RenderManager(Manager):
         super().__init__(game)
         self._root_console = terminal
 
-        # self._layers = {
-        #     'BACKGROUND': 0,
-        #     'VISIBLE': 1,
-        #     'EXPLORED': 2,
-        #     'ENTITY A': 10,
-        #     'ENTITY B': 11,
-        #     'UNKNOWN': 200,
-        #     'INTERFACE': 220,
-        #     }
-
         self._tilesets = [
             ('0xE000', "./simulacra/assets/base_tileset_saturated.png"),
             ('0xE200', "./simulacra/assets/base_tileset_desaturated.png"),
             ('0xE500', "./simulacra/assets/entity_tileset.png"),
             ('0xEF00', "./simulacra/assets/ui_tileset.png"),
             ]
-
-        self.templates = [
-            ('0xE100', "./simulacra/assets/Template/Ground.png"),
-            ('0xE12C', "./simulacra/assets/Template/Floor.png"),
-            ('0xE180', "./simulacra/assets/Template/Below_Entity.png"),
-            ('0xE1C0', "./simulacra/assets/Template/Above_Entity.png"),
-        ]
 
         self.named_colors = {
             'parchment'  : 0xFFFDCBB0,
@@ -102,8 +85,7 @@ class RenderManager(Manager):
 
     def clear(self) -> None:
         self._root_console.clear()
-        # TODO: Change this to clear area and then set a global bkcolor for the UI
-        self._root_console.bkcolor(self.game.area.current_area.background)
+        self._root_console.bkcolor(0xFFFDCBB0)
 
     def initialize_console(self):
         size: str = f"{self.config.width}x{self.config.height}, "
@@ -111,7 +93,7 @@ class RenderManager(Manager):
         title: str = f"'{self.config.title}'; "
         font: str = f"{self.config.font}"
 
-        self._root_console.bkcolor(self.game.area.current_area.background)
+        self._root_console.bkcolor(0xFFFDCBB0)
         self._root_console.set(f"window: size={size}")
         self._root_console.set(f"window: cellsize={cellsize}")
         self._root_console.set(f"window: title={title}")
@@ -125,15 +107,6 @@ class RenderManager(Manager):
         for tileset in self._tilesets:
             tile_config += f"{tileset[0]}: {tileset[1]}, "
             tile_config += f"size={TILE_SIZE}x{TILE_SIZE}, "
-            tile_config += f"align={TILE_ALIGN}, "
-            tile_config += f"resize={TILE_SIZE*SCALE}x{TILE_SIZE*SCALE}, "
-            tile_config += f"resize-filter={RESIZE_FILTER}, "
-            tile_config += f"spacing={SPACING} "
-            tile_config += "; "
-
-        for tileset in self.templates:
-            tile_config += f"{tileset[0]}: {tileset[1]}, "
-            tile_config += f"size=8x8, "
             tile_config += f"align={TILE_ALIGN}, "
             tile_config += f"resize={TILE_SIZE*SCALE}x{TILE_SIZE*SCALE}, "
             tile_config += f"resize-filter={RESIZE_FILTER}, "

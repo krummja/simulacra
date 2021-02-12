@@ -6,7 +6,7 @@
             "properties": {"row": 1}},
         {   "type": "RENDERABLE",
             "properties": {"codepoint": "0xE500", "row": 1, "col": 1}},
-        {   "type": "POSITION",
+        {   "type": "Position",
             "properties": {"x": 2, "y": 2}},
         {   "type": "ISPLAYER",
             "properties": {}},

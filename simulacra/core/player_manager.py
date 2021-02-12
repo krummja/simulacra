@@ -37,7 +37,7 @@ class PlayerManager(Manager):
     def initialize_player(self):
         player = self.game.ecs.engine.create_entity()
         self.game.ecs.engine.prefabs.apply_to_entity(
-            player, 'Player', {'Position': {'x': 5,'y': 8}})
+            player, 'Player', {'Position': {'x': 14, 'y': 14}})
         self._player_uid = player.uid
         return player
 
@@ -46,7 +46,7 @@ class PlayerManager(Manager):
 
     def move(self, direction: Tuple[int, int]) -> None:
         def blocked() -> bool:
-            if self.game.area.current_area.is_blocked(
+            if self.game.world.current_area.is_blocked(
                 self.position[0] + direction[0],
                 self.position[1] + direction[1]
                 ):

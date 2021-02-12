@@ -1,7 +1,5 @@
 from __future__ import annotations
 from typing import Optional, TYPE_CHECKING
-from data.areas.test_area import TestArea
-from data.areas.test_dungeon import TestDungeon
 
 from simulacra.world.area import Area
 from .manager import Manager
@@ -14,12 +12,8 @@ class AreaManager(Manager):
 
     def __init__(self, game: Game) -> None:
         super().__init__(game)
+        self._world = game.world
         self._current_area: Optional[Area] = None
-        self._areas = {
-            'TEST': TestArea(self),
-            'DUNGEON': TestDungeon(self)
-            }
-        self.set_area('TEST')
 
     @property
     def current_area(self) -> Optional[Area]:

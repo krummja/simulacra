@@ -18,7 +18,7 @@ class RenderSystem(System):
     def __init__(self, game: Game) -> None:
         super().__init__(game)
         self.console = self.game.renderer.root_console
-        self.area_grid = self.game.area.current_area.grid
+        self.area_grid = self.game.world.current_area.grid
 
         self._query = self.ecs.create_query(
             all_of=[
@@ -42,10 +42,7 @@ class RenderSystem(System):
             self.draw_explored(wx=world['x'], wy=world['y'], at=position)
 
         else:
-            if self.game.area.current_area.background == self.game.renderer.named_colors['dreamscape']:
-                self.draw_dungeon_unknown(at=position)
-            else:
-                self.draw_unknown(wx=world['x'], wy=world['y'], at=position)
+            self.draw_unknown(wx=world['x'], wy=world['y'], at=position)
 
     def draw_visible(self, *, wx: int, wy: int, at: Tuple[int, int]) -> None:
         renderable = self.area_grid.saturated[wx, wy]
@@ -65,7 +62,7 @@ class RenderSystem(System):
         self.console.put(*at, self.game.renderer.sprites.get_codepoint('other', 'unknown9'))
 
     def draw_unknown(self, *, wx: int, wy: int, at: Tuple[int, int]) -> None:
-        explored = self.game.area.current_area.grid.explored
+        explored = self.game.world.current_area.grid.explored
         top_left = explored[wx - 1, wy - 1]
         top = explored[wx, wy - 1]
         left = explored[wx - 1, wy]
