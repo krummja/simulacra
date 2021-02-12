@@ -3,18 +3,20 @@ from __future__ import annotations
 import abc
 import random
 from collections import deque
-from typing import TYPE_CHECKING, List, Type
+from typing import TYPE_CHECKING, Tuple, List, Type
 
 import numpy as np
 from simulacra.core.options import *
+from simulacra.utils.geometry import Rect, Point
 
 if TYPE_CHECKING:
+    from simulacra.core.area_manager import AreaManager
     from simulacra.world.area import Area
 
 
 class Workspace:
 
-    def __init__(self) -> None:
+    def __init__(self, manager: AreaManager) -> None:
         """Procedural Generation Workspace
 
         Implementation of the `Blackboard` pattern representing a shared construction
@@ -24,6 +26,7 @@ class Workspace:
         The cumulative result is represented as a `progress` entry in the shared
         construction state.
         """
+        self.manager = manager
         self.shape = (STAGE_WIDTH, STAGE_HEIGHT)
         self.architects = []
         self.construction_state = {
@@ -63,6 +66,20 @@ class Controller:
         return self.workspace['architects']
 
 
+class Task(metaclass=abc.ABCMeta):
+
+    def __init__(self, workspace: Workspace) -> None:
+        self.workspace = workspace
+
+    @abc.abstractmethod
+    def perform(self) -> Workspace:
+        raise NotImplementedError
+
+    @property
+    def result(self):
+        return self.workspace
+
+
 class AbstractArchitect(metaclass=abc.ABCMeta):
 
     def __init__(self, workspace: Workspace) -> None:
@@ -85,6 +102,9 @@ class AbstractArchitect(metaclass=abc.ABCMeta):
     def perform_tasks(self):
         raise NotImplementedError("Must provide implementation in subclass.")
 
+    def add_task(self, task: Task):
+        self.tasks.append(task)
+
 
 class ShopArchitect(AbstractArchitect):
 
@@ -93,16 +113,25 @@ class ShopArchitect(AbstractArchitect):
         if len(self.tasks) > 0:
             return True
 
-    def perform_task(self):
-        task = self.tasks.popleft()
-        return task(self.workspace)
+    def perform_tasks(self):
+        while self.has_tasks:
+            task = self.tasks.popleft()
+            task(self.workspace)
+            task.perform()
+            yield task.result
 
 
 class Painter:
 
-    def __init__(self) -> None:
+    def __init__(self, workspace: Workspace) -> None:
+        self.workspace = workspace
+        self._manager = self.workspace.manager
         self.decoration_state = {
             "saturated": np.zeros(self.shape, dtype=object, order="F"),
             "desaturated": np.zeros(self.shape, dtype=object, order="F"),
             "progress": 0,
             }
+
+
+if __name__ == '__main__':
+    print("Running Architect")
