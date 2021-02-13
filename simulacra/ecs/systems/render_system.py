@@ -37,35 +37,28 @@ class RenderSystem(System):
 
         if self.area_grid.visible[world['x'], world['y']]:
             self.draw_visible(wx=world['x'], wy=world['y'], at=position)
-
         elif self.area_grid.explored[world['x'], world['y']]:
             self.draw_explored(wx=world['x'], wy=world['y'], at=position)
-
         else:
             self.draw_unknown(wx=world['x'], wy=world['y'], at=position)
 
     def draw_visible(self, *, wx: int, wy: int, at: Tuple[int, int]) -> None:
-        renderable = self.area_grid.saturated[wx, wy]
+        renderable = self.area_grid.tiles[wx][wy].entity['Renderable'].char
         self.console.layer(self.game.renderer.layers['GROUND'])
         self.console.color(0xFFFFFFFF)
         self.console.put(*at, renderable)
 
     def draw_explored(self, *, wx: int, wy: int, at: Tuple[int, int]) -> None:
-        renderable = self.area_grid.desaturated[wx, wy]
+        renderable = self.area_grid.tiles[wx][wy].entity['Renderable'].variant
         self.console.layer(self.game.renderer.layers['GROUND'])
         self.console.color(0x88FFFFFF)
         self.console.put(*at, renderable)
 
-    def draw_dungeon_unknown(self, *, at: Tuple[int, int]) -> None:
-        self.console.layer(self.game.renderer.layers['UNKNOWN'])
-        self.console.color(0xFFFFFFFF)
-        self.console.put(*at, self.game.renderer.sprites.get_codepoint('other', 'unknown9'))
-
     def draw_unknown(self, *, wx: int, wy: int, at: Tuple[int, int]) -> None:
         explored = self.game.world.current_area.grid.explored
-        top_left = explored[wx - 1, wy - 1]
-        top = explored[wx, wy - 1]
-        left = explored[wx - 1, wy]
+        top_left = explored[wx - 1][wy - 1]
+        top = explored[wx][wy - 1]
+        left = explored[wx - 1][wy]
 
         tile = {
             (True,  True,  True ): 'unknown2',

@@ -9,8 +9,6 @@ class Tile(Component):
             self,
             transparent: bool,
             passable: bool,
-            unformed: bool
         ) -> None:
         self.transparent = transparent
         self.passable = passable
-        self.unformed = unformed

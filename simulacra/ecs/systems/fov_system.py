@@ -4,6 +4,8 @@ from typing import TYPE_CHECKING
 import numpy as np
 import tcod
 
+from simulacra.core.options import *
+
 from .system import System
 
 if TYPE_CHECKING:

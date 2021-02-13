@@ -6,6 +6,8 @@ from ecstremity import Component
 
 class Renderable(Component):
 
+    char: int
+
     def __init__(
             self,
             codepoint: str,
@@ -13,14 +15,15 @@ class Renderable(Component):
             col: int = 0,
             variant: Optional[str] = None
         ) -> None:
+
         if isinstance(codepoint, str):
             self.char = int(codepoint, base=16) + (16 * row) + col
         else:
             self.char = codepoint + (16 * row) + col
-
         if variant is not None:
-            self.variant = variant
-
+            self.variant = self.codepoint + 0x200
+        else:
+            self.variant = self.char
         self.render_order: int = 0
 
     def __lt__(self, other: Renderable) -> bool:

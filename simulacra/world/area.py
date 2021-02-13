@@ -1,24 +1,23 @@
 from __future__ import annotations
-from typing import Tuple, List, TYPE_CHECKING
-
-import random
+from typing import TYPE_CHECKING
 
 from simulacra.core.options import *
-from simulacra.utils.geometry import Rect, Point
-from simulacra.core.rendering.tile_grid import TileGrid
+from simulacra.world.grid import TileGrid
+
 
 if TYPE_CHECKING:
     from simulacra.core.world_manager import WorldManager
-    from simulacra.core.area_manager import AreaManager
 
 
 class Area:
 
-    name: str = ""
+    def __init__(self, manager: WorldManager) -> None:
+        self._manager = manager
+        self._grid = TileGrid(self, STAGE_WIDTH, STAGE_HEIGHT)
 
-    def __init__(self, world: WorldManager) -> None:
-        self._world = world
-        self._grid = TileGrid()
+    def initialize_area(self):
+        self._grid.initialize_tiles()
+        self._grid.fill_tiles()
 
     @property
     def grid(self) -> TileGrid:
@@ -35,6 +34,6 @@ class Area:
     def is_blocked(self, x: int, y: int) -> bool:
         if not (0 <= x < self.width and 1 <= y < self.height):
             return True
-        if not self.grid.passable[x, y]:
+        if not self.grid.tiles[x][y].passable:
             return True
         return False

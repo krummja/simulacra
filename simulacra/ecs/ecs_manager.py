@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from simulacra.core.game import Game
 
 
-JSON_PATH = "simulacra/ecs/prefabs/"
+JSON_PATH = "simulacra/data/prefabs/"
 
 
 class ECSManager(Manager):
