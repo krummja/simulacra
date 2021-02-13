@@ -16,8 +16,15 @@ class Area:
         self._grid = TileGrid(self, STAGE_WIDTH, STAGE_HEIGHT)
 
     def initialize_area(self):
+        """Set up unformed tiles, fill with a base tile type, and map the visibility
+        data to the grid's visibility arrays.
+
+        Specific generators can intervene here to create different output areas.
+        """
         self._grid.initialize_tiles()
+        self._grid.generate()
         self._grid.fill_tiles()
+        self._grid.initialize_visibility()
 
     @property
     def grid(self) -> TileGrid:

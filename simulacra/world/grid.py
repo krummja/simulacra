@@ -1,6 +1,11 @@
 from __future__ import annotations
+from dataclasses import dataclass
+from typing import Tuple
 from abc import ABC, abstractmethod
 import numpy as np
+import tcod
+from collections import deque
+from simulacra.utils.geometry import Rect
 
 from simulacra.core.options import *
 
@@ -82,26 +87,90 @@ class VisibilityMixin:
                 self.transparent[x][y] = self.tiles[x][y].entity['Tile'].transparent
 
 
+@dataclass
+class Workspace:
+    tiles: deque[Tile]
+    rect: Rect
+
+
+
 class TileGrid(ProceduralTiles2D, InitRealTiles, VisibilityMixin):
 
     def __init__(self, area, width, height, variant=None) -> None:
         super().__init__(width, height, variant)
         self.area = area
-        self.entrances = []
-        self.exits = []
         self.tiles = None
 
+    def generate(self):
+        tile_count = STAGE_WIDTH * STAGE_HEIGHT
+        formed_tiles = 0
+
+        #! We're going to start out by running a BSP to divide up the area.
+        bsp = tcod.bsp.BSP(x=0, y=0, width=STAGE_WIDTH, height=STAGE_HEIGHT)
+        bsp.split_recursive(
+            depth=5,
+            min_width=3,
+            min_height=3,
+            max_horizontal_ratio=2,
+            max_vertical_ratio=2,
+            )
+
+        #! We'll store the terminal nodes as Rect objects in a List.
+        rooms = deque([])
+        for node in bsp.pre_order():
+            if node.children:
+                pass
+            else:
+                x, y = node.x, node.y
+                w, h = node.width, node.height
+                rooms.append(Rect.from_edges(left=x, top=y, right=x+w, bottom=y+h))
+
+        #! Now we can start working with them! One way to do this might be to
+        #! pass Rects to other generators, then get them back and map them to the grid.
+
+        completed = deque([])
+        while len(rooms) > 0:
+            room = rooms.popleft()
+            workspaces = deque([])
+            for x in range(room.horizontal_span.start, room.horizontal_span.end):
+                for y in range(room.vertical_span.start, room.vertical_span.end):
+                    tiles = deque([])
+                    tiles.append(self.tiles[x][y])
+                    workspaces.append(Workspace(tiles, room))
+            workspaces = self.delegate_to_generator(workspaces)
+            completed.append(room)
+
+        #! Grab any outlier unformed tiles to clean up.
+        unformed = []
+        for x in range(self.width):
+            for y in range(self.height):
+                if not self.tiles[x][y].UNFORMED:
+                    continue
+                tile = self.tiles[x][y]
+                unformed.append(tile)
+
+    def delegate_to_generator(self, workspaces: deque[Tuple[Tile, Rect]]):
+        #! Toss a List of workspaces to a generator for generation!
+        return workspaces
+
     def fill_tiles(self):
+        """Fill the entire area with an actual entity which has a Tile component."""
+        tile_count = STAGE_WIDTH * STAGE_HEIGHT
+        formed_tiles = 0
+
         for x in range(self.width):
             for y in range(self.height):
                 tile = self.tiles[x][y]
                 if isinstance(tile, Tile) and tile.UNFORMED:
                     real_tile = self.area._manager.game.ecs.engine.create_entity()
                     self.area._manager.game.ecs.engine.prefabs.apply_to_entity(
-                        real_tile, 'Grass Tile', {'Position': {'x': x, 'y': y}}
-                        )
+                        real_tile,
+                        'Grass Tile', {'Position': {'x': x, 'y': y}})
                     tile.entity = real_tile
-        self.initialize_visibility()
+                    formed_tiles += 1
+
+            # print("Generating... " + "|" * int((formed_tiles / tile_count) * 100))
+        print("Done!")
 
     def place_entities(self, room, area_type, subtype, power):
         pass
