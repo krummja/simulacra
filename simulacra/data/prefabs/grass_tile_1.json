@@ -1,0 +1,14 @@
+{
+    "name": "Grass Tile 1",
+    "inherit": "",
+    "components": [
+        {   "type": "Renderable",
+            "properties": {"codepoint": "0xE000"}},
+        {   "type": "Position",
+            "properties": {}},
+        {   "type": "Tile",
+            "properties": {}},
+        {   "type": "Transparent",
+            "properties": {}}
+    ]
+}

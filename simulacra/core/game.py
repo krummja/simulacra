@@ -6,6 +6,7 @@ from simulacra.ecs.ecs_manager import ECSManager as ECS
 from simulacra.ecs.systems.action_system import ActionSystem
 from simulacra.ecs.systems.fov_system import FOVSystem
 from simulacra.ecs.systems.render_system import RenderSystem
+from simulacra.ecs.systems.physics_system import PhysicsSystem
 
 from .area_manager import AreaManager
 from .camera_manager import CameraManager
@@ -39,6 +40,7 @@ class Game:
         self.fps = FPSManager(self)
 
         self.action_system = ActionSystem(self)
+        self.physics_system = PhysicsSystem(self)
         self.fov_system = FOVSystem(self)
         self.render_system = RenderSystem(self)
 
@@ -57,6 +59,7 @@ class Game:
                 return
 
     def update_player_systems(self, dt):
+        self.physics_system.update(dt)
         self.fov_system.update(dt)
         self.camera.update(dt)
         self.render_system.update(dt)

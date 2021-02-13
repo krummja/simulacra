@@ -1,13 +1,17 @@
 from __future__ import annotations
+
+from abc import ABC, abstractmethod
+from collections import deque
 from dataclasses import dataclass
 from typing import Tuple
-from abc import ABC, abstractmethod
+
+import random
+
 import numpy as np
 import tcod
-from collections import deque
-from simulacra.utils.geometry import Rect
-
 from simulacra.core.options import *
+from simulacra.utils.geometry import Rect
+from .algorithms import random_grass, random_assets
 
 
 class AbstractInitTiles(ABC):
@@ -73,18 +77,20 @@ class ProceduralTiles2D(AbstractInitTiles, AbstractFillTiles, ABC):
 
 
 class VisibilityMixin:
-    transparent: np.ndarray
-    visible: np.ndarray
-    explored: np.ndarray
 
-    def initialize_visibility(self) -> None:
-        self.transparent = np.zeros((STAGE_WIDTH, STAGE_HEIGHT), dtype=np.bool, order="F")
-        self.visible = np.zeros((STAGE_WIDTH, STAGE_HEIGHT), dtype=np.bool, order="F")
-        self.explored = np.zeros((STAGE_WIDTH, STAGE_HEIGHT), dtype=np.bool, order="F")
+    visible = np.zeros((STAGE_WIDTH, STAGE_HEIGHT), dtype=np.bool, order="F")
+    explored = np.zeros((STAGE_WIDTH, STAGE_HEIGHT), dtype=np.bool, order="F")
 
-        for x in range(self.width):
-            for y in range(self.height):
-                self.transparent[x][y] = self.tiles[x][y].entity['Tile'].transparent
+
+class RandomSelection:
+
+    def __init__(self, workspace: Workspace) -> None:
+        self.workspace = workspace
+        self.random_selection('grass_1')
+
+    def random_selection(self, tile):
+        print(self.workspace)
+        return self.workspace
 
 
 @dataclass
@@ -93,13 +99,15 @@ class Workspace:
     rect: Rect
 
 
-
 class TileGrid(ProceduralTiles2D, InitRealTiles, VisibilityMixin):
 
     def __init__(self, area, width, height, variant=None) -> None:
         super().__init__(width, height, variant)
         self.area = area
         self.tiles = None
+        self.generators = {
+            'random': RandomSelection
+            }
 
     def generate(self):
         tile_count = STAGE_WIDTH * STAGE_HEIGHT
@@ -137,7 +145,9 @@ class TileGrid(ProceduralTiles2D, InitRealTiles, VisibilityMixin):
                     tiles = deque([])
                     tiles.append(self.tiles[x][y])
                     workspaces.append(Workspace(tiles, room))
-            workspaces = self.delegate_to_generator(workspaces)
+
+            workspaces = self.delegate_to_generator('random', workspaces)
+
             completed.append(room)
 
         #! Grab any outlier unformed tiles to clean up.
@@ -149,28 +159,26 @@ class TileGrid(ProceduralTiles2D, InitRealTiles, VisibilityMixin):
                 tile = self.tiles[x][y]
                 unformed.append(tile)
 
-    def delegate_to_generator(self, workspaces: deque[Tuple[Tile, Rect]]):
+    def delegate_to_generator(self, generator: str, workspaces: deque[Tuple[Tile, Rect]]):
         #! Toss a List of workspaces to a generator for generation!
+        algorithm = self.generators[generator]
+        algorithm(workspaces.popleft())
         return workspaces
 
     def fill_tiles(self):
         """Fill the entire area with an actual entity which has a Tile component."""
-        tile_count = STAGE_WIDTH * STAGE_HEIGHT
-        formed_tiles = 0
+        ecs = self.area._manager.game.ecs
 
-        for x in range(self.width):
-            for y in range(self.height):
-                tile = self.tiles[x][y]
-                if isinstance(tile, Tile) and tile.UNFORMED:
-                    real_tile = self.area._manager.game.ecs.engine.create_entity()
-                    self.area._manager.game.ecs.engine.prefabs.apply_to_entity(
-                        real_tile,
-                        'Grass Tile', {'Position': {'x': x, 'y': y}})
-                    tile.entity = real_tile
-                    formed_tiles += 1
-
-            # print("Generating... " + "|" * int((formed_tiles / tile_count) * 100))
-        print("Done!")
+        random_assets(
+            ecs,
+            self.tiles,
+            [( 'Grass Tile 1'   , 10 ),
+             ( 'Grass Tile 2'   , 50 ),
+             ( 'Grass Tile 3'   , 50 ),
+             ( 'Flowers Tile 1' , 10 ),
+             ( 'Flowers Tile 2' , 10 ),
+             ( 'Tree Tile 1'    , 2 )
+             ])
 
     def place_entities(self, room, area_type, subtype, power):
         pass

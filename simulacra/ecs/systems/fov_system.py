@@ -10,7 +10,6 @@ from .system import System
 
 if TYPE_CHECKING:
     from simulacra.core.game import Game
-    from simulacra.core.rendering.tile_grid import TileGrid
 
 
 class FOVSystem(System):
@@ -21,10 +20,24 @@ class FOVSystem(System):
             all_of=['ISPLAYER']
             )
 
+        self._opaque = self.ecs.create_query(
+            all_of=['Opaque']
+            )
+        self.transparent = np.zeros((STAGE_WIDTH, STAGE_HEIGHT), dtype=np.bool, order="F")
+        self.transparent[:] = True
+
     def update_fov(self) -> None:
         tile_grid = self.game.world.current_area.grid
+
+        opaque_list = []
+        for opaque in self._opaque.result:
+            x, y = opaque['Position'].xy
+            if opaque['Position'].xy != (63, 63):
+                opaque_list.append((x, y))
+            self.transparent[x][y] = False
+
         tile_grid.visible = tcod.map.compute_fov(
-            transparency=tile_grid.transparent,
+            transparency=self.transparent,
             pov=self._query.result[0]['POSITION'].xy,
             radius=8,
             light_walls=True,

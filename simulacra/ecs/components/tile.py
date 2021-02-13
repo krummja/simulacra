@@ -7,8 +7,8 @@ class Tile(Component):
 
     def __init__(
             self,
-            transparent: bool,
-            passable: bool,
+            transparent: bool = True,
+            passable: bool = True,
         ) -> None:
         self.transparent = transparent
         self.passable = passable

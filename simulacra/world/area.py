@@ -22,9 +22,7 @@ class Area:
         Specific generators can intervene here to create different output areas.
         """
         self._grid.initialize_tiles()
-        self._grid.generate()
         self._grid.fill_tiles()
-        self._grid.initialize_visibility()
 
     @property
     def grid(self) -> TileGrid:
@@ -41,6 +39,6 @@ class Area:
     def is_blocked(self, x: int, y: int) -> bool:
         if not (0 <= x < self.width and 1 <= y < self.height):
             return True
-        if not self.grid.tiles[x][y].passable:
+        if not self._manager.game.physics_system.passable[x][y]:
             return True
         return False

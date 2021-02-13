@@ -1,9 +1,9 @@
 {
-    "name": "Grass Tile",
+    "name": "Grass Tile 2",
     "inherit": "",
     "components": [
         {   "type": "Renderable",
-            "properties": {"codepoint": "0xE000"}},
+            "properties": {"codepoint": "0xE020"}},
         {   "type": "Position",
             "properties": {}},
         {   "type": "Tile",

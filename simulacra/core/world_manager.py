@@ -62,21 +62,9 @@ class WorldManager(Manager):
         self.current_region = None
         self.current_area = self.new()
 
-
     def new(self):
         """Builds a new Overworld consisting of a selection of Regions, where each
         Region contains a selection of Areas."""
         area = Area(self)
         area.initialize_area()
         return area
-
-        # regions = {}
-        # overworld, nodes = self.build.overworld()
-        # regions[overworld.name] = overworld
-
-        # alpha = self.build.core_plot(nodes)
-        # regions[alpha.name] = alpha
-
-        # self.regions = regions
-        # self.current_region = regions['alpha']
-        # self.current_area = regions['alpha'].areas[0]

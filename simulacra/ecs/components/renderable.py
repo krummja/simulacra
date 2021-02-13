@@ -13,15 +13,15 @@ class Renderable(Component):
             codepoint: str,
             row: int = 0,
             col: int = 0,
-            variant: Optional[str] = None
+            variant: bool = True
         ) -> None:
 
         if isinstance(codepoint, str):
             self.char = int(codepoint, base=16) + (16 * row) + col
         else:
             self.char = codepoint + (16 * row) + col
-        if variant is not None:
-            self.variant = self.codepoint + 0x200
+        if variant:
+            self.variant = self.char + 0x200
         else:
             self.variant = self.char
         self.render_order: int = 0

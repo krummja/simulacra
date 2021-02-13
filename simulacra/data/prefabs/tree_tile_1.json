@@ -1,0 +1,17 @@
+{
+    "name": "Tree Tile 1",
+    "inherit": "",
+    "components": [
+        {   "type": "Renderable",
+            "properties": {"codepoint": "0xE031"}},
+        {   "type": "Position",
+            "properties": {}},
+        {   "type": "Tile",
+            "properties": {"transparent": 0,
+                           "passable": 0}},
+        {   "type": "Opaque",
+            "properties": {}},
+        {   "type": "Blocker",
+            "properties": {}}
+    ]
+}
