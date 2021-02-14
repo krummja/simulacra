@@ -17,10 +17,9 @@ class PhysicsSystem(System):
     def __init__(self, game: Game) -> None:
         super().__init__(game)
         self._query = self.ecs.create_query(
-            all_of=['Blocker'])
+            all_of=[ 'Blocker' ])
 
-        self.passable = np.zeros((STAGE_WIDTH, STAGE_HEIGHT), dtype=np.bool, order="F")
-        self.passable[:] = True
+        self.passable = np.ones((STAGE_WIDTH, STAGE_HEIGHT), dtype=np.bool, order="F")
 
     def update(self, dt):
         for blocker in self._query.result:

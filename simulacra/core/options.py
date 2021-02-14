@@ -1,9 +1,12 @@
+from typing import Tuple
+
 CONSOLE_WIDTH: int = 192
 CONSOLE_HEIGHT: int = 56
 
 STAGE_SIZE: int = 64
 STAGE_WIDTH: int = STAGE_SIZE
 STAGE_HEIGHT: int = STAGE_SIZE
+STAGE_SHAPE: Tuple[int, int] = (STAGE_WIDTH, STAGE_HEIGHT)
 
 SCALE: int = 2
 TILE_SIZE: int = 16
